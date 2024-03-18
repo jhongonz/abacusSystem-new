@@ -1,0 +1,120 @@
+<?php
+
+namespace Core\Employee\Application\Factory;
+
+use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
+use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
+use Core\Employee\Domain\ValueObjects\EmployeeEmail;
+use Core\Employee\Domain\ValueObjects\EmployeeId;
+use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
+use Core\Employee\Domain\ValueObjects\EmployeeLastname;
+use Core\Employee\Domain\ValueObjects\EmployeeName;
+use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeState;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use DateTime;
+use Exception;
+
+class EmployeeFactory implements EmployeeFactoryContract
+{
+    /**
+     * @throws Exception
+     */
+    public function buildEmployeeFromArray(array $data): Employee
+    {
+        $data = $data[Employee::TYPE];
+        $employee = $this->buildEmployee(
+            $this->buildEmployeeId($data['id']),
+            $this->buildEmployeeIdentification($data['identification']),
+            $this->buildEmployeeName($data['name']),
+            $this->buildEmployeeLastname($data['lastname']),
+            $this->buildEmployeeState($data['state']),
+            $this->buildEmployeeCreatedAt(
+                new DateTime($data['createdAt']['date'])    
+            ),
+        );
+        
+        $employee->setAddress($this->buildEmployeeAddress($data['address']));
+        $employee->setPhone($this->buildEmployeePhone($data['phone']));
+        $employee->setEmail($this->buildEmployeeEmail($data['email']));
+        $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
+            new DateTime($data['updatedAt']['date'])    
+        ));
+        
+        return $employee;
+    }
+
+    public function buildEmployee(
+        EmployeeId $id,
+        EmployeeIdentification $identification,
+        EmployeeName $name,
+        null|EmployeeLastname $lastname,
+        null|EmployeeState $state,
+        null|EmployeeCreatedAt $createdAt
+    ): Employee {
+        
+        $employee = new Employee(
+            $id,
+            $identification,
+            $name
+         );
+        
+        if (!is_null($lastname)) $employee->setLastname($lastname);
+        if (!is_null($createdAt)) $employee->setCreatedAt($createdAt);
+        if (!is_null($state)) $employee->setState($state);
+        
+        return $employee;
+    }
+
+    public function buildEmployeeId(int $id): EmployeeId
+    {
+        return new EmployeeId($id);
+    }
+
+    public function buildEmployeeIdentification(string $identification): EmployeeIdentification
+    {
+        return new EmployeeIdentification($identification);
+    }
+
+    public function buildEmployeeName(string $name): EmployeeName
+    {
+        return new EmployeeName($name);
+    }
+
+    public function buildEmployeeLastname(string $lastname): EmployeeLastname
+    {
+        return new EmployeeLastname($lastname);
+    }
+
+    public function buildEmployeePhone(string $phone): EmployeePhone
+    {
+        return new EmployeePhone($phone);
+    }
+
+    public function buildEmployeeEmail(string $email): EmployeeEmail
+    {
+        return new EmployeeEmail($email);
+    }
+
+    public function buildEmployeeAddress(string $address): EmployeeAddress
+    {
+        return new EmployeeAddress($address);
+    }
+
+    public function buildEmployeeState(?int $state = null): EmployeeState
+    {
+        return new EmployeeState($state);
+    }
+
+    public function buildEmployeeCreatedAt(?DateTime $datetime = null): EmployeeCreatedAt
+    {
+        return new EmployeeCreatedAt($datetime);
+    }
+
+    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdateAt
+    {
+        return new EmployeeUpdateAt($datetime);
+    }
+}

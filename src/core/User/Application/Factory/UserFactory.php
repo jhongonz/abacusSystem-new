@@ -1,0 +1,107 @@
+<?php
+
+namespace Core\User\Application\Factory;
+
+use Core\User\Domain\Contracts\UserFactoryContract;
+use Core\User\Domain\User;
+use Core\User\Domain\ValueObjects\UserCreatedAt;
+use Core\User\Domain\ValueObjects\UserEmployeeId;
+use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserLogin;
+use Core\User\Domain\ValueObjects\UserPassword;
+use Core\User\Domain\ValueObjects\UserPhoto;
+use Core\User\Domain\ValueObjects\UserProfileId;
+use Core\User\Domain\ValueObjects\UserState;
+use Core\User\Domain\ValueObjects\UserUpdatedAt;
+use DateTime;
+use Exception;
+
+class UserFactory implements UserFactoryContract
+{
+    /**
+     * @throws Exception
+     */
+    public function buildUserFromArray(array $data): User
+    {
+        $data = $data[User::TYPE];
+        return $this->buildUser(
+            $this->buildId($data['id']),
+            $this->buildEmployeeId($data['employeeId']),
+            $this->buildProfileId($data['profileId']),
+            $this->buildLogin($data['login']),
+            $this->buildPassword($data['password']),
+            $this->buildState($data['state']),
+            $this->buildCreatedAt(
+                new DateTime($data['createdAt']['date'])
+            )
+        );
+    }
+
+    public function buildUser(
+        UserId $id,
+        UserEmployeeId $employeeId,
+        UserProfileId $profileId,
+        UserLogin $login,
+        UserPassword $password,
+        null|UserState $state,
+        null|UserCreatedAt $createdAt
+    ): User {
+        return new User(
+            $id,
+            $employeeId,
+            $profileId,
+            $login,
+            $password,
+            $state,
+            $createdAt
+        );
+    }
+
+    public function buildId(null|int $id = null): UserId
+    {
+        return new UserId($id);
+    }
+
+    public function buildEmployeeId(?int $employeeId = null): UserEmployeeId
+    {
+        return new UserEmployeeId($employeeId);
+    }
+
+    public function buildLogin(string $login): UserLogin
+    {
+        return new UserLogin($login);
+    }
+
+    public function buildPassword(string $password): UserPassword
+    {
+        return new UserPassword($password);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function buildState(?int $state = null): UserState
+    {
+        return new UserState($state);
+    }
+
+    public function buildCreatedAt(?DateTime $createdAt): UserCreatedAt
+    {
+        return new UserCreatedAt($createdAt);
+    }
+
+    public function buildUpdatedAt(?DateTime $updatedAt = null): UserUpdatedAt
+    {
+        return new UserUpdatedAt($updatedAt);
+    }
+
+    public function buildProfileId(?int $profileId = null): UserProfileId
+    {
+        return new UserProfileId($profileId);
+    }
+
+    public function buildUserPhoto(string $photo = ''): UserPhoto
+    {
+        return new UserPhoto($photo);
+    }
+}

@@ -1,0 +1,26 @@
+<?php
+
+namespace Core\Profile\Application\UseCases\SearchProfile;
+
+use Core\Profile\Application\UseCases\RequestService;
+use Core\Profile\Application\UseCases\UseCasesService;
+use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
+use Core\Profile\Domain\Profile;
+use Exception;
+
+class SearchProfileById extends UseCasesService
+{
+    public function __construct(ProfileRepositoryContract $profileRepository)
+    {
+        parent::__construct($profileRepository);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function execute(RequestService $request): null|Profile
+    {
+        $this->validateRequest($request, SearchProfileByIdRequest::class);
+        return $this->profileRepository->find($request->profileId());
+    }
+}
