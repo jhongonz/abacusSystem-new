@@ -147,7 +147,7 @@ var table = $('#content-data').DataTable({
                 type: 'warning'
             }).then(function(result) {
                 if(result.value) {
-                    axios.get("/modules/delete/" + _id)
+                    axios.get("/profiles/delete/" + _id)
                     .then(function (response){
                         $('#content-data').DataTable().ajax.reload(null, false);
                         toast.fire({
