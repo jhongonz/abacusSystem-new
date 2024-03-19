@@ -128,7 +128,7 @@ class ModuleController extends Controller implements HasMiddleware
 
         ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 
-        return response()->json(status:Response::HTTP_CREATED);
+        return response()->json(status:Response::HTTP_OK);
     }
 
     /**
