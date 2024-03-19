@@ -9,10 +9,10 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 interface ModuleRepositoryContract
 {
     public function find(ModuleId $id): null|Module;
-    
+
     public function getAll(array $filters = []): null|Modules;
 
     public function persistModule(Module $module): Module;
 
-    public function deleteModule(ModuleId $id);
+    public function deleteModule(ModuleId $id): void;
 }
