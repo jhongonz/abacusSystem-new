@@ -50,7 +50,7 @@ class UserController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
-    public function recoveryAccout(): JsonResponse|string
+    public function recoveryAccount(): JsonResponse|string
     {
         $view = view('user.recovery-account')->render();
         return $this->renderView($view);
@@ -63,19 +63,21 @@ class UserController extends Controller implements HasMiddleware
         );
 
         $employee = $this->employeeService->searchEmployeeByIdentification($identification);
+        dd($employee);
+        //$user = $this->userService->se
 
         $link = url('reset'.'/'.$employee->user()->id()->value());
     }
 
-    public function resetAccount(Request $request): Response|RedirectResponse
+    public function resetAccount(?int $id = null): Response|RedirectResponse
     {
-        if (is_null($request->iduser)) {
+        if (is_null($id)) {
             return redirect()->route('index');
         }
 
-        $idUser = $request->iduser;
+        $idUser = $id;
         return response()->view('user.restart-password',[
-            'idUser' => $idUser,
+            'idUser' => $id,
             'activeLink' => true
         ]);
     }

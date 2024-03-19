@@ -5,7 +5,6 @@ namespace Core\Profile\Infrastructure\Persistence\Repositories;
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
-use Core\Profile\Domain\Contracts\ModulesDataTransformerContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
@@ -21,12 +20,12 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
     private const PRIORITY_DEFAULT = 100;
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
-    
+
     private ModuleFactoryContract $moduleFactory;
     private ModuleDataTransformerContract $moduleDataTransformer;
     private int $priority;
     private string $keyPrefix;
-    
+
     public function __construct(
         ModuleFactoryContract $moduleFactory,
         ModuleDataTransformerContract $moduleDataTransformer,
