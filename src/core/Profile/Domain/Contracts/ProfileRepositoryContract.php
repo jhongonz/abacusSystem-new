@@ -19,7 +19,7 @@ interface ProfileRepositoryContract
 
     public function update(ProfileId $id, Profile $profile): void;
 
-    public function delete(ProfileId $id): void;
-    
+    public function deleteProfile(ProfileId $id): void;
+
     public function persistProfile(Profile $profile): Profile;
 }

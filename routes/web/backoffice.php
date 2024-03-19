@@ -38,6 +38,7 @@ Route::controller(ModuleController::class)->prefix('modules')->group(function(){
 
 Route::controller(ProfileController::class)->prefix('profiles')->group(function(){
     Route::get('','index')->name('profile.index');
-    Route::post('get-list','getProfiles')->name('profile.get-profiles');
-    Route::post('set-state','changeStateProfile')->name('profile.change-state-profile');
+    Route::post('/get-list','getProfiles')->name('profile.get-profiles');
+    Route::post('/set-state','changeStateProfile')->name('profile.change-state-profile');
+    Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
 });

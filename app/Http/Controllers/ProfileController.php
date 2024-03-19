@@ -78,6 +78,14 @@ class ProfileController extends Controller implements HasMiddleware
         return response()->json(status: Response::HTTP_CREATED);
     }
 
+    public function deleteProfile(int $id): JsonResponse
+    {
+        $profileId = $this->profileFactory->buildProfileId($id);
+        $this->profileService->deleteProfile($profileId);
+
+        return response()->json(status:Response::HTTP_OK);
+    }
+
     /**
      * @throws \Yajra\DataTables\Exceptions\Exception
      */
