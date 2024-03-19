@@ -137,6 +137,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         }
 
         try {
+            $profileModel->pivotModules()->detach();
             $profileModel->deleteOrFail();
         } catch (Throwable $e) {
             throw new ProfileDeleteException('Profile can not be deleted with id: '.$id->value(), $e->getTrace());
