@@ -12,11 +12,13 @@ use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 
 class Employee
 {
     public const TYPE = 'employee';
     private EmployeeId $id;
+    private EmployeeUserId $userId;
     private EmployeeIdentification $identification;
     private EmployeeName $name;
     private EmployeeLastname $lastname;
@@ -49,6 +51,7 @@ class Employee
         $this->createdAt = $createdAt;
 
         $this->updateAt = new EmployeeUpdateAt();
+        $this->userId = new EmployeeUserId();
     }
 
     public function id(): EmployeeId
@@ -158,6 +161,17 @@ class Employee
     public function setUpdatedAt(EmployeeUpdateAt $updateAt): self
     {
         $this->updateAt = $updateAt;
+        return $this;
+    }
+
+    public function userId(): EmployeeUserId
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(EmployeeUserId $id): self
+    {
+        $this->userId = $id;
         return $this;
     }
 }

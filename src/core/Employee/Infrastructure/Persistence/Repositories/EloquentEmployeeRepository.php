@@ -22,7 +22,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     private EmployeeTranslator $employeeTranslator;
     private UserTranslator $userTranslator;
     private int $priority;
-    
+
     public function __construct(
         EmployeeModel $model,
         EmployeeTranslator $translator,
@@ -81,11 +81,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
             throw new EmployeeNotFoundException('Employee not found with id: '. $identification->value());
         }
 
-        $user = $this->userTranslator->setModel($employeeModel->user())->toDomain();
-        $employee = $this->employeeTranslator->setModel($employeeModel)->toDomain();
-        $employee->setUser($user);
-        
-        return $employee;
+        return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
     public function save(Employee $employee): void

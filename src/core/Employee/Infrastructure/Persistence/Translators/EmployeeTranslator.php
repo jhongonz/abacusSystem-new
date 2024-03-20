@@ -13,7 +13,7 @@ class EmployeeTranslator implements TranslatorDomainContract
 {
     private EmployeeFactoryContract $employeeFactory;
     private EmployeeModel $employee;
-    
+
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
         EmployeeModel $employee,
@@ -44,21 +44,22 @@ class EmployeeTranslator implements TranslatorDomainContract
             $this->employeeFactory->buildEmployeeLastname($this->employee->lastname()),
             $this->employeeFactory->buildEmployeeState($this->employee->state()),
             $this->employeeFactory->buildEmployeeCreatedAt(
-                new DateTime($this->employee->createdAt())    
+                new DateTime($this->employee->createdAt())
             )
         );
-        
+
         $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt(
-            new DateTime($this->employee->updatedAt())    
+            new DateTime($this->employee->updatedAt())
         ));
-        
+
         $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
         $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
         $employee->setEmail($this->employeeFactory->buildEmployeeEmail($this->employee->email()));
-        
+        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
+
         return $employee;
     }
-    
+
     public function canTranslate(): string
     {
         return EmployeeModel::class;

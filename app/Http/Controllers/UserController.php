@@ -63,10 +63,8 @@ class UserController extends Controller implements HasMiddleware
         );
 
         $employee = $this->employeeService->searchEmployeeByIdentification($identification);
-        dd($employee);
-        //$user = $this->userService->se
 
-        $link = url('reset'.'/'.$employee->user()->id()->value());
+        $link = url('reset'.'/'.$employee->userId()->value());
     }
 
     public function resetAccount(?int $id = null): Response|RedirectResponse
