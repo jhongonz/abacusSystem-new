@@ -11,7 +11,6 @@ use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
 
 class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
@@ -20,18 +19,15 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
 
     private EmployeeModel $employeeModel;
     private EmployeeTranslator $employeeTranslator;
-    private UserTranslator $userTranslator;
     private int $priority;
 
     public function __construct(
         EmployeeModel $model,
         EmployeeTranslator $translator,
-        UserTranslator $userTranslator,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->employeeModel = $model;
         $this->employeeTranslator = $translator;
-        $this->userTranslator = $userTranslator;
         $this->priority = $priority;
     }
 

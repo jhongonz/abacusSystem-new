@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Exceptions\ProfileNotActiveException;
 use App\Http\Requests\User\LoginRequest;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
@@ -31,7 +32,7 @@ class HomeController extends Controller implements HasMiddleware
     private EmployeeFactoryContract $employeeFactory;
     private ProfileFactoryContract $profileFactory;
     private ProfileManagementContract $profileService;
-    
+
     public function __construct(
         UserFactoryContract $userFactory,
         UserManagementContract $userService,
@@ -60,10 +61,10 @@ class HomeController extends Controller implements HasMiddleware
     {
         $login = $this->userFactory->buildLogin($request->input('login'));
         $user = $this->userService->searchUserByLogin($login);
-        
+
         $employee = $this->getEmployee($user);
         $profile = $this->getProfile($user);
-        
+
         $credentials = [
             'user_login' => $user->login()->value(),
             'password' => $request->input('password'),
@@ -78,7 +79,7 @@ class HomeController extends Controller implements HasMiddleware
                     'profile' => $profile,
                     'employee' => $employee
                 ]);
-    
+
                 if ($request->ajax()) {
                     return response()->json();
                 }
@@ -88,38 +89,48 @@ class HomeController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
-        
+
         return !$request->ajax() ?
             back()->withInput() :
             response()->json(['message'=>'Bad credentials'],status:ResponseSymfony::HTTP_BAD_REQUEST);
     }
-    
+
     public function home(): JsonResponse|string
     {
         $view = view('home.index')->render();
         return $this->renderView($view);
     }
-    
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
         $request->session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect()->route('panel.login');
     }
-    
+
     private function getEmployee(User $user): Employee
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
         return $this->employeeService->searchEmployeeById($employeeId);
     }
 
+    /**
+     * @throws ProfileNotActiveException
+     */
     private function getProfile(User $user): Profile
     {
         $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());
-        return $this->profileService->searchProfileById($profileId);
+        $profile = $this->profileService->searchProfileById($profileId);
+
+        if ($profile->state()->isInactived()) {
+            $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
+            throw new ProfileNotActiveException('User is not authorized, contact with administrator');
+        }
+
+        return $profile;
     }
 
     /**
