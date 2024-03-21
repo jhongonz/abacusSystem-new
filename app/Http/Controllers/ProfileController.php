@@ -86,6 +86,18 @@ class ProfileController extends Controller implements HasMiddleware
         return response()->json(status:Response::HTTP_OK);
     }
 
+    public function getProfile(null|int $id = null):JsonResponse
+    {
+        $profile = null;
+        if (!is_null($id)) {
+            $profile = $this->profileService->searchProfileById(
+                $this->profileFactory->buildProfileId($id)
+            );
+        }
+
+        dd($profile );
+    }
+
     /**
      * @throws \Yajra\DataTables\Exceptions\Exception
      */
@@ -117,7 +129,7 @@ class ProfileController extends Controller implements HasMiddleware
         return [
             new Middleware('auth'),
             new Middleware('only.ajax-request', only:[
-                'getProfiles',
+                'getProfiles','getProfile'
             ]),
         ];
     }

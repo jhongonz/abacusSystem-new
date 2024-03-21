@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(HomeController::class)->group(function(){
     Route::get('/login','index')->name('login');
     Route::post('/login','authenticate')->name('authentication');
-    Route::get('/home','home')->name('home')->middleware('auth');
+    Route::get('/home','home')->name('home');
     Route::get('/logout','logout')->name('logout');
 });
 
@@ -41,5 +41,5 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function(
     Route::post('/get-list','getProfiles')->name('profile.get-profiles');
     Route::post('/set-state','changeStateProfile')->name('profile.change-state-profile');
     Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
-    Route::get('/get/{id?}')->whereNumber('id')->name('profile.get-profile');
+    Route::get('/get/{id?}','getProfile')->whereNumber('id')->name('profile.get-profile');
 });

@@ -104,7 +104,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
             var _id = $(this).data('id');
 
-            axios.get("{{ route('panel.module.get-module') }}/" + _id)
+            axios.get("{{ route('panel.profile.get-profile') }}/" + _id)
             .then(function (response){
                 $('#content-modal').html(response.data.html);
             })

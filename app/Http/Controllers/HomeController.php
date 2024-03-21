@@ -57,6 +57,9 @@ class HomeController extends Controller implements HasMiddleware
         return response()->view('home.login');
     }
 
+    /**
+     * @throws ProfileNotActiveException
+     */
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
         $login = $this->userFactory->buildLogin($request->input('login'));
