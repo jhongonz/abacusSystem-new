@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
@@ -21,12 +22,14 @@ class ProfileController extends Controller implements HasMiddleware
     private ProfileFactoryContract $profileFactory;
     private ProfileManagementContract $profileService;
     private ProfileDataTransformerContract $profileDataTransformer;
+    private ModuleManagementContract $moduleService;
     private DataTables $dataTable;
 
     public function __construct(
         ProfileFactoryContract $profileFactory,
         ProfileManagementContract $profileService,
         ProfileDataTransformerContract $profileDataTransformer,
+        ModuleManagementContract $moduleService,
         DataTables $dataTable,
         LoggerInterface $logger
     ) {
@@ -34,6 +37,7 @@ class ProfileController extends Controller implements HasMiddleware
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
         $this->profileDataTransformer = $profileDataTransformer;
+        $this->moduleService = $moduleService;
         $this->dataTable = $dataTable;
     }
 
@@ -86,7 +90,7 @@ class ProfileController extends Controller implements HasMiddleware
         return response()->json(status:Response::HTTP_OK);
     }
 
-    public function getProfile(null|int $id = null):JsonResponse
+    public function getProfile(null|int $id = null): JsonResponse
     {
         $profile = null;
         if (!is_null($id)) {
@@ -95,7 +99,15 @@ class ProfileController extends Controller implements HasMiddleware
             );
         }
 
-        dd($profile );
+        $modules = $this->moduleService->searchModules();
+
+        $view = view('profile.profile-form')
+            ->with('id', $id)
+            ->with('profile', $profile)
+            ->with('modules', $modules)
+            ->render();
+
+        return $this->renderView($view);
     }
 
     /**
