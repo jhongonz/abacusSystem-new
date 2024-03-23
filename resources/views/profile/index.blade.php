@@ -38,6 +38,7 @@
         <tr class="bg-grey">
             <th>Id</th>
             <th>Nombre</th>
+            <th>Descripción</th>
             <th>Estado</th>
             <th></th>
         </tr>
@@ -95,6 +96,7 @@ var table = $('#content-data').DataTable({
     columns: [
         {data: 'id', className: 'onclick-row', width: 100},
         {data: 'name', className: 'onclick-row'},
+        {data: 'description', className: 'onclick-row'},
         {data: 'state_literal', name: 'state', orderable: false, searchable:false, width: 50},
         {data: 'tools', orderable: false, searchable: false, width: 10}
     ],

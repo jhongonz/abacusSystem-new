@@ -48,16 +48,20 @@ class ProfileTranslator implements TranslatorDomainContract
             $this->profileFactory->buildProfileName($this->model->name()),
             $this->profileFactory->buildProfileState($this->model->state()),
             $this->profileFactory->buildProfileCreatedAt(
-                new DateTime($this->model->createdAt())    
+                new DateTime($this->model->createdAt())
             )
         );
-        
+
+        $profile->setDescription(
+            $this->profileFactory->buildProfileDescription($this->model->description())
+        );
+
         $profile->setUpdatedAt(
             $this->profileFactory->buildProfileUpdateAt(
                 new DateTime($this->model->updatedAt())
             )
         );
-        
+
         $modulesModel = $this->model->modules();
         $modules = array();
         /** @var Module $item */
@@ -67,7 +71,7 @@ class ProfileTranslator implements TranslatorDomainContract
             }
         }
         $profile->setModulesAggregator($modules);
-        
+
         return $profile;
     }
 
@@ -83,7 +87,7 @@ class ProfileTranslator implements TranslatorDomainContract
         foreach ($this->collection as $id) {
             $profiles->addId($id);
         }
-        
+
         return $profiles;
     }
 

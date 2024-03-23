@@ -30,7 +30,7 @@
 
                         <div class="form-group">
                             <label>Descripción del perfil</label>
-                            <textarea rows="3" cols="5" class="description form-control form-control-sm" name="description" id="description" placeholder="Descripción">@isset($profile){{$profile->name()->value()}}@endisset</textarea>
+                            <textarea rows="3" cols="5" class="description form-control form-control-sm" name="description" id="description" placeholder="Descripción">@isset($profile){{$profile->description()->value()}}@endisset</textarea>
                         </div>
 
                         <label class="font-weight-semibold"><i class="fas fa-cubes mr-2"></i>Módulos</label>

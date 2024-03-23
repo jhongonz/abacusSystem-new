@@ -56,6 +56,7 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfiles(Request $request): JsonResponse
     {
         $profiles = $this->profileService->searchProfiles($request->filters);
+        //dd($profiles);
         return $this->prepareListProfiles($profiles);
     }
 
