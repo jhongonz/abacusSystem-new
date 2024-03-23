@@ -35,40 +35,40 @@
 
                         <label class="font-weight-semibold"><i class="fas fa-cubes mr-2"></i>Módulos</label>
 
-                        {{--@foreach($modules as $module)
+                        @foreach($privileges as $index => $item)
+                            @if (count($item['children']) > 0)
 
-                            @if (count($module->children) > 0)
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label class="d-block font-weight-semibold"></label>
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" disabled>
-                                                <label class="custom-control-label">{{ $module->name }}</label>
+                                                <label class="custom-control-label">{{ $item['menu']['name'] }}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                @foreach($module->children as $child)
+                                @foreach($item['children'] as $menu)
+                                    @php $module = $menu['module'] @endphp
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group ml-2">
-
                                                 <div class="form-check form-check-inline">
                                                     <label class="form-check-label">
-                                                        <input type="checkbox" class="form-check-input-styled" name="modules" id="modules_{{$child->id}}" value="{{$child->id}}" {{$child->selected}}> {{$child->name}}
+                                                        <input type="checkbox" class="form-check-input-styled" name="modules" id="modules_{{$module->id()->value()}}" value="{{$module->id()->value()}}" @checked($menu['selected'])> {{$module->name()->value()}}
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <select name="permit" id="permit_{{$child->id}}" data-placeholder="Permiso" class="permit form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
+                                                <select name="permit" id="permit_{{$module->id()->value()}}" data-placeholder="Permiso" class="permit form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                                     <option></option>
-                                                    @foreach(PERMISSION as $index => $item)
+                                                    {{--@foreach(PERMISSION as $index => $item)
                                                         <option value="{{$index}}" @if($child->permission == $index) selected @endif>{{$item}}</option>
-                                                    @endforeach
+                                                    @endforeach--}}
                                                 </select>
                                             </div>
                                         </div>
@@ -80,8 +80,8 @@
                                         <div class="form-group">
                                             <label class="d-block font-weight-semibold"></label>
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="modules custom-control-input" name="modules" id="modules_{{$module->id}}" value="{{$module->id}}" {{$module->selected}}>
-                                                <label class="custom-control-label" for="modules_{{$module->id}}">{{ $module->name}}</label>
+                                                <input type="checkbox" class="modules custom-control-input" name="modules" id="modules_{{$module->id()->value()}}" value="{{$module->id()->value()}}" {{$module->expanded()}}>
+                                                <label class="custom-control-label" for="modules_{{$module->id()->value()}}">{{$module->name()->value()}}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                             @endif
-                        @endforeach--}}
+                        @endforeach
 
                     </div>
                 </form>
@@ -129,23 +129,18 @@
         var _modules = [];
         $("input[name = modules]").each(function () {
             if($(this).is(':checked')){
-                var _idPermit = 'permit_' + $(this).val();
-
-                if ($('#' + _idPermit).val() !== '') {
-                    var permit = {
-                        id: $(this).val(),
-                        pass: $('#' + _idPermit).val()
-                    };
-                }
+                var permit = {
+                    id: $(this).val(),
+                };
                 _modules.push(permit);
             }
         });
 
-        axios.post("{{ url('profile/store') }}",{
-            idProfile: "{{ $id }}",
+        axios.post("{{ route('panel.profile.store') }}",{
+            id: "{{ $id }}",
             name: $('#name').val(),
             modules: _modules,
-            permission: $('#permission').val(),
+            //permission: $('#permission').val(),
             description: $('#description').val()
         })
         .then(function (response){

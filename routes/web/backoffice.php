@@ -42,4 +42,6 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function(
     Route::post('/set-state','changeStateProfile')->name('profile.change-state-profile');
     Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
     Route::get('/get/{id?}','getProfile')->whereNumber('id')->name('profile.get-profile');
+    Route::post('/store', 'storeProfile')->name('profile.store');
+
 });

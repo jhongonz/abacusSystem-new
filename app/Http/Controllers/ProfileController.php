@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Profile\StoreProfileRequest;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
+use Core\Profile\Domain\Module;
+use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
+use Core\Profile\Domain\ValueObjects\ProfileId;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use JetBrains\PhpStorm\NoReturn;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -56,7 +61,6 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfiles(Request $request): JsonResponse
     {
         $profiles = $this->profileService->searchProfiles($request->filters);
-        //dd($profiles);
         return $this->prepareListProfiles($profiles);
     }
 
@@ -101,14 +105,48 @@ class ProfileController extends Controller implements HasMiddleware
         }
 
         $modules = $this->moduleService->searchModules();
+        $privileges = $this->retrievePrivilegesProfile($profile, $modules);
 
         $view = view('profile.profile-form')
             ->with('id', $id)
             ->with('profile', $profile)
             ->with('modules', $modules)
+            ->with('privileges', $privileges)
             ->render();
 
         return $this->renderView($view);
+    }
+
+    public function storeProfile(StoreProfileRequest $request): JsonResponse
+    {
+        $profileId = $this->profileFactory->buildProfileId($request->id);
+
+        try {
+            $method = (is_null($profileId->value())) ? 'createProfile' : 'updateProfile';
+            $this->{$method}($request, $profileId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
+            Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json(status:Response::HTTP_CREATED);
+    }
+
+    #[NoReturn] private function createProfile(StoreProfileRequest $request, ProfileId $profileId): void
+    {
+        dd('here');
+    }
+
+    private function updateProfile(StoreProfileRequest $request, ProfileId $profileId): void
+    {
+        $dataUpdate = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'modules' => $request->modules,
+        ];
+
+        $this->profileService->updateProfile($profileId, $dataUpdate);
     }
 
     /**
@@ -130,6 +168,27 @@ class ProfileController extends Controller implements HasMiddleware
         });
 
         return $datatable->escapeColumns([])->toJson();
+    }
+
+    public function retrievePrivilegesProfile(null|Profile $profile, Modules $modules): array
+    {
+        $modulesToProfile = $profile->modulesAggregator();
+        $parents = config('menu.options');
+        $privileges = [];
+
+        foreach($parents as $index => $item) {
+            $modulesParent = $modules->moduleElementsOfKey($index);
+            $privileges[$index]['menu'] = $item;
+            /**@var Module $module*/
+            foreach ($modulesParent as $module) {
+                $privileges[$index]['children'][] = [
+                    'module' => $module,
+                    'selected' => in_array($module->id()->value(), $modulesToProfile)
+                ];
+            }
+        }
+
+        return $privileges;
     }
 
     /**
