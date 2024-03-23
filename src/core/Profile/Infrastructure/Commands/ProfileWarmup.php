@@ -10,24 +10,24 @@ use Psr\Log\LoggerInterface;
 class ProfileWarmup extends Command
 {
     private ProfileRepositoryContract $readRepository;
-    
+
     /** @var ProfileRepositoryContract[] */
     private array $repositories;
     private LoggerInterface $logger;
     private ProfileFactoryContract $profileFactory;
-    
+
     public function __construct(
         LoggerInterface $logger,
         ProfileFactoryContract $profileFactory,
         ProfileRepositoryContract $readRepository,
         ProfileRepositoryContract ...$repositories,
     ) {
-        
+
         parent::__construct();
         $this->logger = $logger;
         $this->profileFactory = $profileFactory;
         $this->readRepository = $readRepository;
-        
+
         foreach ($repositories as $repository) {
             $this->repositories[] = $repository;
         }
@@ -57,7 +57,8 @@ class ProfileWarmup extends Command
             $profiles = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
-                foreach($profiles as $profile) {
+                foreach($profiles->aggregator() as $item) {
+                    $profile = $this->readRepository->find($this->profileFactory->buildProfileId($item));
                     $repository->persistProfile($profile);
                 }
             }

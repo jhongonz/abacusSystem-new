@@ -56,6 +56,10 @@ class ProfileTranslator implements TranslatorDomainContract
             $this->profileFactory->buildProfileDescription($this->model->description())
         );
 
+        $profile->setSearch(
+            $this->profileFactory->buildProfileSearch($this->model->search())
+        );
+
         $profile->setUpdatedAt(
             $this->profileFactory->buildProfileUpdateAt(
                 new DateTime($this->model->updatedAt())

@@ -32,6 +32,10 @@ class ProfileFactory implements ProfileFactoryContract
             )
         );
 
+        $profile->setDescription(
+            $this->buildProfileDescription($data['description'])
+        );
+
         $profile->setModulesAggregator($data['modulesAggregator']);
 
         if ($data['updatedAt']) {

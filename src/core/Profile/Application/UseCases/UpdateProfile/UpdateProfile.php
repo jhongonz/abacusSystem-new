@@ -50,4 +50,10 @@ class UpdateProfile extends UseCasesService
         $profile->description()->setValue($value);
         return $profile;
     }
+
+    private function changeName(Profile $profile, string $value): Profile
+    {
+        $profile->name()->setValue($value);
+        return $profile;
+    }
 }
