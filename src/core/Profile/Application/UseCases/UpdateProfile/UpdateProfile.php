@@ -56,4 +56,10 @@ class UpdateProfile extends UseCasesService
         $profile->name()->setValue($value);
         return $profile;
     }
+
+    private function changeModules(Profile $profile, array $modules): Profile
+    {
+        $profile->setModulesAggregator($modules);
+        return $profile;
+    }
 }
