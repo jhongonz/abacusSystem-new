@@ -3,7 +3,7 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\ViewServiceProvider::class,
-    
+
     /*
      * Package Service Providers...
      */
@@ -11,4 +11,5 @@ return [
     App\Providers\Service\EmployeeServiceProvider::class,
     App\Providers\Service\ProfileServiceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
+    Barryvdh\Debugbar\ServiceProvider::class,
 ];

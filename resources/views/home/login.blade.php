@@ -73,7 +73,7 @@ $('.show-password').click(function(e){
 
 $('.btn-login').click(function(e){
     e.preventDefault();
-    
+
     axios.post("{{ url('login') }}",{
         login : $('#user_login').val(),
         password : $('#password').val(),
@@ -84,13 +84,13 @@ $('.btn-login').click(function(e){
     })
     .catch(function (error){
         var response = error.response;
-        
+
         if (402 === response.status) {
             $.each(response.data.errors, function(index, value){
                 $('.' + index).addClass('border-danger');
             });
         }
-        
+
         toast.fire({
             text: response.data.message,
             type: 'error'
@@ -101,10 +101,10 @@ $('.btn-login').click(function(e){
 $('.form-recover').click(function(e){
     e.preventDefault();
 
-    axios.get("{{ url('/recovery-account') }}",axiosConfig)
+    axios.get("{{ url('users/recovery-account') }}",axiosConfig)
 	.then(function (response){
         var data = response.data;
-        
+
         $('#content-modal').html(data.html);
     });
 });

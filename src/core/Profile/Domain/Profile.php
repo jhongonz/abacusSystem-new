@@ -3,6 +3,7 @@
 namespace Core\Profile\Domain;
 
 use Core\Profile\Domain\ValueObjects\ProfileCreatedAt;
+use Core\Profile\Domain\ValueObjects\ProfileDescription;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileSearch;
@@ -18,6 +19,7 @@ class Profile
     private ProfileCreatedAt $createdAt;
     private ProfileUpdatedAt $updatedAt;
     private ProfileSearch $search;
+    private ProfileDescription $description;
     private Modules $modules;
 
     private array $modulesAggregator = [];
@@ -35,6 +37,7 @@ class Profile
         $this->search = new ProfileSearch();
         $this->updatedAt = new ProfileUpdatedAt();
         $this->modules = new Modules();
+        $this->description = new ProfileDescription();
     }
 
     public function id(): ProfileId
@@ -72,6 +75,17 @@ class Profile
     public function setSearch(ProfileSearch $search): self
     {
         $this->search = $search;
+        return $this;
+    }
+
+    public function description(): ProfileDescription
+    {
+        return $this->description;
+    }
+
+    public function setDescription(ProfileDescription $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -128,6 +142,7 @@ class Profile
     public function refreshSearch(): self
     {
         $dataSearch[] = $this->name()->value();
+        $dataSearch[] = $this->description()->value();
 
         $this->search()->setValue(implode(' ', $dataSearch));
         return $this;

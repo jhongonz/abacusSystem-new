@@ -157,8 +157,8 @@
 
 <script src="{{ asset('styles/backend_assets/js/app.js') }}"></script>
 <!-- <script src="{{ asset('styles/global_assets/js/demo_pages/components_modals.js') }}"></script> -->
-    <script src="{{ asset('styles/js/functions.js') }}?v={{$versionRandom}}"></script>
-    <script src="{{ asset('styles/js/actions.js') }}?v={{$versionRandom}}"></script>
+<script src="{{ asset('styles/js/functions.js') }}?v={{$versionRandom}}"></script>
+<script src="{{ asset('styles/js/actions.js') }}?v={{$versionRandom}}"></script>
 <!-- /theme JS files -->
 
 <script type="text/javascript">

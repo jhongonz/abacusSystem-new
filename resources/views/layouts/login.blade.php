@@ -71,7 +71,7 @@
 <script src="{{ asset('styles/global_assets/js/plugins/forms/styling/switchery.min.js') }}"></script>
 
 <script src="{{ asset('styles/backend_assets/js/app.js') }}"></script>
-<script src="{{ asset('styles/js/supervisor.js') }}"></script>
+<script src="{{ asset('styles/js/functions.js') }}"></script>
 <!-- /theme JS files -->
 
 @stack('javascript')

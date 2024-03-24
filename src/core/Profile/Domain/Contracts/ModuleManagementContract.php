@@ -10,7 +10,7 @@ interface ModuleManagementContract
 {
     public function searchModuleById(ModuleId $id): Module;
 
-    public function searchModules(array $filters): Modules;
+    public function searchModules(array $filters = []): Modules;
 
     public function createModule(Module $module): Module;
 

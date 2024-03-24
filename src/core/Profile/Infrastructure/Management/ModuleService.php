@@ -27,7 +27,7 @@ class ModuleService implements ModuleManagementContract
     private UpdateModule $updateModule;
     private DeleteModule $deleteModule;
     private CreateModule $createModule;
-    
+
     public function __construct(
         ModuleFactoryContract $moduleFactory,
         SearchModuleById $searchModuleById,
@@ -50,14 +50,14 @@ class ModuleService implements ModuleManagementContract
     public function searchModuleById(ModuleId $id): Module
     {
         $request = new SearchModuleByIdRequest($id);
-        
+
         return $this->searchModuleById->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function searchModules(array $filters): Modules
+    public function searchModules(array $filters = []): Modules
     {
         $request = new SearchModulesRequest($filters);
 
@@ -66,7 +66,7 @@ class ModuleService implements ModuleManagementContract
             $module = $this->searchModuleById($this->moduleFactory->buildModuleId($item));
             $modules->addItem($module);
         }
-        
+
         return $modules;
     }
 

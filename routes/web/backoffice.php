@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(HomeController::class)->group(function(){
     Route::get('/login','index')->name('login');
     Route::post('/login','authenticate')->name('authentication');
-    Route::get('/home','home')->name('home')->middleware('auth');
+    Route::get('/home','home')->name('home');
     Route::get('/logout','logout')->name('logout');
 });
 
@@ -21,9 +21,9 @@ Route::controller(UserController::class)->prefix('users')->group(function(){
     Route::get('/get/{id?}','getUser')->whereNumber('id')->name('user.get-user');
     Route::post('/store','storeUser')->name('user.store');
 
-    Route::get('/recovery-account','recoveryAccout')->name('user.recovery');
+    Route::get('/recovery-account','recoveryAccount')->name('user.recovery');
     Route::post('/validate-account','validateAccount')->name('user.validate-account');
-    Route::get('/reset-account/{iduser}','resetAccount')->name('user.reset-account');
+    Route::get('/reset-account/{id}','resetAccount')->whereNumber('id')->name('user.reset-account');
     Route::post('/reset-password','resetPassword')->name('user.reset-password');
 });
 
@@ -41,4 +41,7 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function(
     Route::post('/get-list','getProfiles')->name('profile.get-profiles');
     Route::post('/set-state','changeStateProfile')->name('profile.change-state-profile');
     Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
+    Route::get('/get/{id?}','getProfile')->whereNumber('id')->name('profile.get-profile');
+    Route::post('/store', 'storeProfile')->name('profile.store');
+
 });

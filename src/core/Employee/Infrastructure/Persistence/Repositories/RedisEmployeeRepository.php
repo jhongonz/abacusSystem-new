@@ -27,7 +27,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
 
     private EmployeeFactoryContract $employeeFactory;
     private EmployeeDataTransformerContract $dataTransformer;
-    
+
     public function __construct(
       EmployeeFactoryContract $employeeFactory,
       EmployeeDataTransformerContract $dataTransformer,
@@ -59,7 +59,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         try {
             $data = Redis::get($this->employeeKey($id));
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by id '. $id->value());   
+            throw new EmployeeNotFoundException('Employee not found by id '. $id->value());
         }
 
         if (!is_null($data)) {
@@ -80,7 +80,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         try {
             $data = Redis::get($this->employeeIdentificationKey($identification));
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by identification '. $identification->value());   
+            throw new EmployeeNotFoundException('Employee not found by identification '. $identification->value());
         }
 
         if (!is_null($data)) {
@@ -115,7 +115,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     {
         $employeeKey = $this->employeeKey($employee->id());
         $employeeIdentificationKey = $this->employeeIdentificationKey($employee->identification());
-        
+
         $employeeData = $this->dataTransformer->write($employee)->read();
 
         try {
@@ -127,12 +127,12 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
 
         return $employee;
     }
-    
+
     private function employeeKey(EmployeeId $id): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $id->value());
     }
-    
+
     private function employeeIdentificationKey(EmployeeIdentification $identification): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $identification->value());

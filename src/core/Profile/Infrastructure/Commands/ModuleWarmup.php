@@ -12,10 +12,10 @@ class ModuleWarmup extends Command
     private LoggerInterface $logger;
     private ModuleFactoryContract $moduleFactory;
     private ModuleRepositoryContract $readRepository;
-    
+
     /** @var ModuleRepositoryContract[] */
     private array $repositories;
-    
+
     public function __construct(
         LoggerInterface $logger,
         ModuleFactoryContract $moduleFactory,
@@ -26,7 +26,7 @@ class ModuleWarmup extends Command
         $this->logger = $logger;
         $this->moduleFactory = $moduleFactory;
         $this->readRepository = $readRepository;
-        
+
         foreach ($repositories as $repository) {
             $this->repositories[] = $repository;
         }
@@ -53,11 +53,12 @@ class ModuleWarmup extends Command
     {
         $modules = $this->readRepository->getAll();
         foreach($this->repositories as $repository) {
-            foreach ($modules as $module) {
+            foreach ($modules->aggregator() as $item) {
+                $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
                 $repository->persistModule($module);
             }
         }
-        
+
         $this->logger->info('Command executed');
     }
 }

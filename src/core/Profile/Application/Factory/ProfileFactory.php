@@ -6,6 +6,7 @@ use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileCreatedAt;
+use Core\Profile\Domain\ValueObjects\ProfileDescription;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileSearch;
@@ -27,16 +28,20 @@ class ProfileFactory implements ProfileFactoryContract
             $this->buildProfileName($data['name']),
             $this->buildProfileState($data['state']),
             $this->buildProfileCreatedAt(
-                new DateTime($data['createdAt']['date'])    
+                new DateTime($data['createdAt']['date'])
             )
         );
-        
+
+        $profile->setDescription(
+            $this->buildProfileDescription($data['description'])
+        );
+
         $profile->setModulesAggregator($data['modulesAggregator']);
-        
+
         if ($data['updatedAt']) {
             $profile->updatedAt()->setValue(new DateTime($data['updatedAt']['date']));
         }
-        
+
         return $profile;
     }
 
@@ -46,7 +51,7 @@ class ProfileFactory implements ProfileFactoryContract
         ProfileState $state = new ProfileState(),
         ProfileCreatedAt $createdAt = new ProfileCreatedAt()
     ): Profile {
-        
+
         return new Profile(
             $id,
             $name,
@@ -91,5 +96,10 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfileSearch(?string $search = null): ProfileSearch
     {
         return new ProfileSearch($search);
+    }
+
+    public function buildProfileDescription(?string $description = null): ProfileDescription
+    {
+        return new ProfileDescription($description);
     }
 }
