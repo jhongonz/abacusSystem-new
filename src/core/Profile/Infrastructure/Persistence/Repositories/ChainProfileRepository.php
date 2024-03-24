@@ -18,10 +18,10 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         Profile::class => 'persistProfile',
         Profiles::class => 'persistProfiles',
     ];
-    
+
     private string $domainToPersist;
     private bool $deleteSource = false;
-    
+
     function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -81,15 +81,26 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         $this->persistence(__FUNCTION__, $id, $profile);
     }
 
-    public function delete(ProfileId $id): void
+    /**
+     * @throws ProfileNotFoundException
+     * @throws Throwable
+     */
+    public function deleteProfile(ProfileId $id): void
     {
+        $this->deleteSource = true;
+
+        try {
+            $this->read(__FUNCTION__, $id);
+        } catch (Exception $exception) {
+            throw new ProfileNotFoundException($exception->getMessage());
+        }
     }
 
     public function persistProfile(Profile $profile): Profile
     {
         return $this->write(__FUNCTION__, $profile);
     }
-    
+
     public function persistProfiles(Profiles $profiles): Profiles
     {
         return $this->write(__FUNCTION__, $profiles);

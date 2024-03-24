@@ -30,15 +30,16 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
     {
         $data = $this->retrieveData();
         $data['state_literal'] = $this->profile->state()->formatHtmlToState();
-        
+
         return $data;
     }
-    
+
     private function retrieveData(): array
     {
         return [
             'id' => $this->profile->id()->value(),
             'name' => $this->profile->name()->value(),
+            'description' => $this->profile->description()->value(),
             'state' => $this->profile->state()->value(),
             'createdAt' => $this->profile->createdAt()->value(),
             'updatedAt' => $this->profile->updatedAt()->value(),

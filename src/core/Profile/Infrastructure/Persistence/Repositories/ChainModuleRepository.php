@@ -28,7 +28,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     public function find(ModuleId $id): null|Module
     {
         $this->domainToPersist = Module::class;
-        
+
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -70,12 +70,12 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      * @throws Throwable
      * @throws ModuleNotFoundException
      */
-    public function deleteModule(ModuleId $id)
+    public function deleteModule(ModuleId $id): void
     {
         $this->deleteSource = true;
 
         try {
-            return $this->read(__FUNCTION__, $id);
+            $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
             throw new ModuleNotFoundException($exception->getMessage());
         }

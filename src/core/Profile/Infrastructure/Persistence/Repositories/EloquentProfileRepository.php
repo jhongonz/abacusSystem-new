@@ -9,6 +9,7 @@ use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\Profile\Exceptions\ProfileDeleteException;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Translators\ProfileTranslator;
@@ -17,6 +18,7 @@ use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Throwable;
 
 class EloquentProfileRepository implements ProfileRepositoryContract, ChainPriority
 {
@@ -25,7 +27,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
     private ProfileTranslator $profileTranslator;
     private TranslatorContract $modelProfileTranslator;
     private int $priority;
-    
+
     public function __construct(
       ProfileModel $model,
       ProfileTranslator $translator,
@@ -53,7 +55,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         } catch (Exception $exception) {
             throw new ProfileNotFoundException('Profile not found with id: '. $id->value());
         }
-        
+
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }
 
@@ -72,7 +74,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         } catch (Exception $exception) {
             throw new ProfileNotFoundException('Profile not found with name: '. $name->value());
         }
-        
+
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }
 
@@ -86,13 +88,13 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
             /**@var Builder $queryBuilder*/
             $queryBuilder = $this->profileModel
                 ->where('pro_state','>',ProfileState::STATE_DELETE);
-            
+
             if (array_key_exists('q', $filters) && isset($filters['q'])) {
                 $queryBuilder->where('pro_name','like','%'.$filters['q'].'%');
             }
-            
+
             /**@var Collection $profileModel*/
-            $profileModel = $queryBuilder->get();
+            $profileModel = $queryBuilder->get(['pro_id']);
         } catch (Exception $exception) {
             throw new ProfilesNotFoundException('Profiles not found');
         }
@@ -105,7 +107,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
 
         $profiles = $this->profileTranslator->setCollection($collection)->toDomainCollection();
         $profiles->setFilters($filters);
-        
+
         return $profiles;
     }
 
@@ -119,9 +121,27 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         // TODO: Implement update() method.
     }
 
-    public function delete(ProfileId $id): void
+    /**
+     * @throws ProfileDeleteException
+     * @throws ProfileNotFoundException
+     */
+    public function deleteProfile(ProfileId $id): void
     {
-        // TODO: Implement delete() method.
+        /**@var ProfileModel $profileModel*/
+        $profileModel = $this->profileModel->where('pro_id', $id->value())
+            ->where('pro_state','>', ProfileState::STATE_DELETE)
+            ->first();
+
+        if (is_null($profileModel)) {
+            throw new ProfileNotFoundException('Profile not found with id: '. $id->value());
+        }
+
+        try {
+            $profileModel->pivotModules()->detach();
+            $profileModel->deleteOrFail();
+        } catch (Throwable $e) {
+            throw new ProfileDeleteException('Profile can not be deleted with id: '.$id->value(), $e->getTrace());
+        }
     }
 
     public function persistProfile(Profile $profile): Profile
@@ -130,9 +150,12 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         $profileModel = $this->modelProfileTranslator->executeTranslate($profile);
         $profileModel->save();
 
+
+        $profileModel->pivotModules()->sync($profile->modulesAggregator());
+
         return $profile;
     }
-    
+
     public function persistProfiles(Profiles $profiles): Profiles
     {
         return $profiles;

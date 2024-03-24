@@ -38,6 +38,7 @@
         <tr class="bg-grey">
             <th>Id</th>
             <th>Nombre</th>
+            <th>Descripción</th>
             <th>Estado</th>
             <th></th>
         </tr>
@@ -95,6 +96,7 @@ var table = $('#content-data').DataTable({
     columns: [
         {data: 'id', className: 'onclick-row', width: 100},
         {data: 'name', className: 'onclick-row'},
+        {data: 'description', className: 'onclick-row'},
         {data: 'state_literal', name: 'state', orderable: false, searchable:false, width: 50},
         {data: 'tools', orderable: false, searchable: false, width: 10}
     ],
@@ -104,7 +106,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
             var _id = $(this).data('id');
 
-            axios.get("{{ route('panel.module.get-module') }}/" + _id)
+            axios.get("{{ route('panel.profile.get-profile') }}/" + _id)
             .then(function (response){
                 $('#content-modal').html(response.data.html);
             })
@@ -147,7 +149,7 @@ var table = $('#content-data').DataTable({
                 type: 'warning'
             }).then(function(result) {
                 if(result.value) {
-                    axios.get("/modules/delete/" + _id)
+                    axios.get("{{ route('panel.profile.delete-profile') }}/" + _id)
                     .then(function (response){
                         $('#content-data').DataTable().ajax.reload(null, false);
                         toast.fire({
@@ -171,7 +173,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
     e.preventDefault();
     var data = table.row($(this).closest('tr')).data();
 
-    axios.get("{{ route('panel.module.get-module') }}/" + data.id)
+    axios.get("{{ route('panel.profile.get-profile') }}/" + data.id)
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })
@@ -186,7 +188,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
 $('.new-registry').click(function(e){
     e.preventDefault();
 
-    axios.get("{{ route('panel.module.get-module') }}/")
+    axios.get("{{ route('panel.profile.get-profile') }}/")
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })

@@ -13,4 +13,8 @@ interface ProfileManagementContract
     public function searchProfiles(array $filters = []): Profiles;
 
     public function updateProfile(ProfileId $id, array $data): void;
+
+    public function deleteProfile(ProfileId $id): void;
+
+    public function createProfile(Profile $profile): void;
 }

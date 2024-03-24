@@ -15,7 +15,7 @@ class ModuleTranslator implements TranslatorDomainContract
     private ModuleModel $model;
     private ModuleFactoryContract $moduleFactory;
     private array $collection;
-    
+
     public function __construct(
         ModuleModel $model,
         ModuleFactoryContract $factoryContract,
@@ -49,13 +49,17 @@ class ModuleTranslator implements TranslatorDomainContract
             $this->moduleFactory->buildModuleIcon($this->model->icon()),
             $this->moduleFactory->buildModuleState($this->model->state()),
             $this->moduleFactory->buildModuleCreatedAt(
-                new DateTime($this->model->createdAt())    
+                new DateTime($this->model->createdAt())
             ));
-        
+
+        $module->setSearch(
+            $this->moduleFactory->buildModuleSearch($this->model->search())
+        );
+
         $module->setUpdatedAt($this->moduleFactory->buildModuleUpdatedAt(
             new DateTime($this->model->updatedAt())
         ));
-        
+
         return $module;
     }
 
@@ -71,7 +75,7 @@ class ModuleTranslator implements TranslatorDomainContract
         foreach($this->collection as $id) {
             $modules->addId($id);
         }
-        
+
         return $modules;
     }
 

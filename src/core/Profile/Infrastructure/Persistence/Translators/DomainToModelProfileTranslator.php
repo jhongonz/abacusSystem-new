@@ -31,6 +31,7 @@ class DomainToModelProfileTranslator implements TranslatorContract
         $destiny->changeName($source->name()->value());
         $destiny->changeState($source->state()->value());
         $destiny->changeSearch($source->search()->value());
+        $destiny->changeDescription($source->description()->value());
         $destiny->changeCreatedAt($source->createdAt()->value());
 
         if (!is_null($source->updatedAt()->value())) {

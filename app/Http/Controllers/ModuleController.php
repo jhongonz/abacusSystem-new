@@ -89,7 +89,7 @@ class ModuleController extends Controller implements HasMiddleware
         return response()->json(status:Response::HTTP_CREATED);
     }
 
-    public function getModule(?int $id = null): JsonResponse
+    public function getModule(null|int $id = null): JsonResponse
     {
         $module = null;
         if (!is_null($id)) {
@@ -128,7 +128,7 @@ class ModuleController extends Controller implements HasMiddleware
 
         ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 
-        return response()->json(status:Response::HTTP_CREATED);
+        return response()->json(status:Response::HTTP_OK);
     }
 
     /**

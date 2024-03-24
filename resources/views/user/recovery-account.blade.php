@@ -41,7 +41,7 @@ $('.close-form').click(function(e){
 $('.send-credentials').click(function(e){
     e.preventDefault();
 
-    axios.post("{{ url('validate-account') }}",{
+    axios.post("{{ url('users/validate-account') }}",{
         identification: $('#identify').val(),
         email: $('#email').val()
     })
@@ -55,7 +55,7 @@ $('.send-credentials').click(function(e){
     })
     .catch(function (error){
         var response = error.response;
-        
+
         $.each(response.data.errors, function(index, value){
             $('.' + index).addClass('border-danger');
         });

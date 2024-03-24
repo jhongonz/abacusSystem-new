@@ -28,7 +28,7 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
 
     private ProfileFactoryContract $profileFactory;
     private ProfileDataTransformerContract $dataTransformer;
-    
+
     public function __construct(
       ProfileFactoryContract $profileFactory,
       ProfileDataTransformerContract $dataTransformer,
@@ -60,7 +60,7 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
         try {
             $data = Redis::get($this->profileKey($id));
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by id '. $id->value());   
+            throw new ProfileNotFoundException('Profile not found by id '. $id->value());
         }
 
         if (!is_null($data)) {
@@ -91,9 +91,9 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
         // TODO: Implement update() method.
     }
 
-    public function delete(ProfileId $id): void
+    public function deleteProfile(ProfileId $id): void
     {
-        // TODO: Implement delete() method.
+        Redis::delete($this->profileKey($id));
     }
 
     /**
@@ -102,7 +102,7 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
     public function persistProfile(Profile $profile): Profile
     {
         $profileKey = $this->profileKey($profile->id());
-        
+
         try {
             $profileData = $this->dataTransformer->write($profile)->read();
             Redis::set($profileKey, json_encode($profileData));
@@ -112,12 +112,12 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
 
         return $profile;
     }
-    
+
     public function persistProfiles(Profiles $profiles): Profiles
     {
         return $profiles;
     }
-    
+
     private function profileKey(ProfileId $id): string
     {
         return sprintf(self::PROFILE_KEY_FORMAT, $this->keyPrefix, $id->value());

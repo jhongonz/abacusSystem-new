@@ -4,16 +4,16 @@ namespace Core\Profile\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
 
-class ProfileName implements ValueObjectContract
+class ProfileDescription implements ValueObjectContract
 {
-    private string $value;
+    private null|string $value;
 
-    public function __construct(string $value)
+    public function __construct(null|string $value = null)
     {
         $this->value = $value;
     }
 
-    public function value(): string
+    public function value(): null|string
     {
         return $this->value;
     }

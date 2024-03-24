@@ -1,25 +1,25 @@
 <?php
 
-namespace Core\Profile\Domain\ValueObjects;
+namespace Core\Employee\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
 
-class ProfileName implements ValueObjectContract
+class EmployeeUserId implements ValueObjectContract
 {
-    private string $value;
+    private null|int $value;
 
-    public function __construct(string $value)
+    public function __construct(null|int $value = null)
     {
         $this->value = $value;
     }
 
-    public function value(): string
+    public function value(): null|int
     {
         return $this->value;
     }
 
     /**
-     * @param string $value
+     * @param int $value
      * @return $this
      */
     public function setValue($value): self

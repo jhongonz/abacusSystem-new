@@ -101,7 +101,7 @@ $('.save-data').click(function(e){
             }
         });
 
-        var msg = error.response.data.msg;
+        var msg = errors.response.data.msg;
         toast.fire({
             text: msg ?? 'Faltan datos necesarios',
             type: 'error'

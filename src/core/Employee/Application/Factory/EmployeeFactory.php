@@ -14,6 +14,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use DateTime;
 use Exception;
 
@@ -32,17 +33,17 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
             $this->buildEmployeeCreatedAt(
-                new DateTime($data['createdAt']['date'])    
+                new DateTime($data['createdAt']['date'])
             ),
         );
-        
+
         $employee->setAddress($this->buildEmployeeAddress($data['address']));
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
         $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-            new DateTime($data['updatedAt']['date'])    
+            new DateTime($data['updatedAt']['date'])
         ));
-        
+
         return $employee;
     }
 
@@ -54,17 +55,17 @@ class EmployeeFactory implements EmployeeFactoryContract
         null|EmployeeState $state,
         null|EmployeeCreatedAt $createdAt
     ): Employee {
-        
+
         $employee = new Employee(
             $id,
             $identification,
             $name
          );
-        
+
         if (!is_null($lastname)) $employee->setLastname($lastname);
         if (!is_null($createdAt)) $employee->setCreatedAt($createdAt);
         if (!is_null($state)) $employee->setState($state);
-        
+
         return $employee;
     }
 
@@ -103,6 +104,9 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeeAddress($address);
     }
 
+    /**
+     * @throws Exception
+     */
     public function buildEmployeeState(?int $state = null): EmployeeState
     {
         return new EmployeeState($state);
@@ -116,5 +120,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdateAt
     {
         return new EmployeeUpdateAt($datetime);
+    }
+
+    public function buildEmployeeUserId(?int $id = null): EmployeeUserId
+    {
+        return new EmployeeUserId($id);
     }
 }

@@ -17,9 +17,9 @@ class MenuComposer
 {
     private ModuleFactoryContract $moduleFactory;
     private array $menuOptions;
-    
+
     public function __construct(
-        ModuleFactoryContract $moduleFactory, 
+        ModuleFactoryContract $moduleFactory,
     ){
         $this->moduleFactory = $moduleFactory;
         $this->menuOptions = config('menu.options');
@@ -33,20 +33,21 @@ class MenuComposer
     {
         /**@var User $user*/
         $user = session()->get('user');
+
         /**@var Profile $profile*/
         $profile = session()->get('profile');
-        
+
         /**@var Employee $employee*/
         $employee = session()->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
-        
+
         $view->with('menu', $menu);
         $view->with('user', $user);
         $view->with('employee', $employee);
         $view->with('profile', $profile);
     }
-    
+
     private function prepareMenu(Modules $modules): array
     {
         $menuWithChildren = [];
@@ -73,7 +74,7 @@ class MenuComposer
 
         return array_merge($menuWithChildren, $menuUnique);
     }
-    
+
     private function getModuleMenu(array $data): Module
     {
         return $this->moduleFactory->buildModule(
@@ -93,8 +94,7 @@ class MenuComposer
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {
         $routeCurrent = Route::current()->uri();
-        
-        /**@var Module $item*/
+
         foreach ($modules as $item) {
             if ($item->route()->value() === $routeCurrent) {
                 $item->setExpanded(true);
