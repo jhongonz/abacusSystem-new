@@ -65,7 +65,6 @@ class ProfileWarmup extends Command
         } else {
             $profileId = $this->profileFactory->buildProfileId($this->option('id'));
             $profile = $this->readRepository->find($profileId);
-
             foreach ($this->repositories as $repository) {
                 $repository->persistProfile($profile);
             }

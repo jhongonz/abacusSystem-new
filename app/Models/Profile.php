@@ -84,7 +84,7 @@ class Profile extends Model
         return $this->attributes['pro_id'];
     }
 
-    public function changeId(int $id): void
+    public function changeId(?int $id): void
     {
         $this->attributes['pro_id'] = $id;
     }

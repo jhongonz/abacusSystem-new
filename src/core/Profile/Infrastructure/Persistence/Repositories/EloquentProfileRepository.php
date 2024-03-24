@@ -94,7 +94,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
             }
 
             /**@var Collection $profileModel*/
-            $profileModel = $queryBuilder->get();
+            $profileModel = $queryBuilder->get(['pro_id']);
         } catch (Exception $exception) {
             throw new ProfilesNotFoundException('Profiles not found');
         }
@@ -149,6 +149,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         /** @var ProfileModel $profileModel */
         $profileModel = $this->modelProfileTranslator->executeTranslate($profile);
         $profileModel->save();
+
 
         $profileModel->pivotModules()->sync($profile->modulesAggregator());
 

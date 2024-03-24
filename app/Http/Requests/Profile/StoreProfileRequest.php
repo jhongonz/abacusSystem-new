@@ -29,7 +29,7 @@ class StoreProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required','nullable','numeric'],
+            'id' => ['nullable','numeric'],
             'name' => ['required'],
             'modules' => ['required','array'],
             'description' => ['nullable','string']
@@ -44,7 +44,7 @@ class StoreProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'id.required' => 'El campo id es requerido',
+            //'id.required' => 'El campo id es requerido',
             'id.nullable' => 'El campo id, puede ser null o numerico',
             'id.numeric' => 'El campo id, puede ser null o numerico',
             'name.required' => 'El campo nombre es requerido',

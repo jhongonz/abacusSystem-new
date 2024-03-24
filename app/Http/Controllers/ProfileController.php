@@ -139,15 +139,21 @@ class ProfileController extends Controller implements HasMiddleware
 
     #[NoReturn] private function createProfile(StoreProfileRequest $request, ProfileId $profileId): void
     {
-        dd('here');
+        $profile = $this->profileFactory->buildProfile(
+            $profileId,
+            $this->profileFactory->buildProfileName($request->name)
+        );
+        $profile->description()->setValue($request->description);
+
+        $modulesAggregator = $this->getModulesAggregator($request);
+        $profile->setModulesAggregator($modulesAggregator);
+
+        $this->profileService->createProfile($profile);
     }
 
     private function updateProfile(StoreProfileRequest $request, ProfileId $profileId): void
     {
-        $modulesAggregator = [];
-        foreach ($request->modules as $item) {
-            $modulesAggregator[] = $item['id'];
-        }
+        $modulesAggregator = $this->getModulesAggregator($request);
 
         $dataUpdate = [
             'name' => $request->name,
@@ -181,7 +187,7 @@ class ProfileController extends Controller implements HasMiddleware
 
     public function retrievePrivilegesProfile(null|Profile $profile, Modules $modules): array
     {
-        $modulesToProfile = $profile->modulesAggregator();
+        $modulesToProfile = (!is_null($profile)) ? $profile->modulesAggregator() : [];
         $parents = config('menu.options');
         $privileges = [];
 
@@ -190,14 +196,26 @@ class ProfileController extends Controller implements HasMiddleware
             $privileges[$index]['menu'] = $item;
             /**@var Module $module*/
             foreach ($modulesParent as $module) {
-                $privileges[$index]['children'][] = [
-                    'module' => $module,
-                    'selected' => in_array($module->id()->value(), $modulesToProfile)
-                ];
+                if (!$module->state()->isInactived()) {
+                    $privileges[$index]['children'][] = [
+                        'module' => $module,
+                        'selected' => in_array($module->id()->value(), $modulesToProfile)
+                    ];
+                }
             }
         }
 
         return $privileges;
+    }
+
+    private function getModulesAggregator(Request $request) : array
+    {
+        $modulesAggregator = [];
+        foreach ($request->modules as $item) {
+            $modulesAggregator[] = $item['id'];
+        }
+
+        return $modulesAggregator;
     }
 
     /**

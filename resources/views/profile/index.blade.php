@@ -173,7 +173,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
     e.preventDefault();
     var data = table.row($(this).closest('tr')).data();
 
-    axios.get("{{ route('panel.module.get-module') }}/" + data.id)
+    axios.get("{{ route('panel.profile.get-profile') }}/" + data.id)
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })
@@ -188,7 +188,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
 $('.new-registry').click(function(e){
     e.preventDefault();
 
-    axios.get("{{ route('panel.module.get-module') }}/")
+    axios.get("{{ route('panel.profile.get-profile') }}/")
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })

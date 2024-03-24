@@ -2,6 +2,8 @@
 
 namespace Core\Profile\Infrastructure\Management;
 
+use Core\Profile\Application\UseCases\CreateProfile\CreateProfile;
+use Core\Profile\Application\UseCases\CreateProfile\CreateProfileRequest;
 use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfile;
 use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfileRequest;
 use Core\Profile\Application\UseCases\SearchProfile\SearchProfileById;
@@ -29,6 +31,7 @@ class ProfileService implements ProfileManagementContract
     private SearchProfiles $searchProfiles;
     private UpdateProfile $updateProfile;
     private DeleteProfile $deleteProfile;
+    private CreateProfile $createProfile;
 
     private LoggerInterface $logger;
 
@@ -40,6 +43,7 @@ class ProfileService implements ProfileManagementContract
         SearchProfiles $searchProfiles,
         UpdateProfile $updateProfile,
         DeleteProfile $deleteProfile,
+        CreateProfile $createProfile,
         LoggerInterface $logger,
     ) {
         $this->profileFactory = $profileFactory;
@@ -49,6 +53,7 @@ class ProfileService implements ProfileManagementContract
         $this->searchProfiles = $searchProfiles;
         $this->updateProfile = $updateProfile;
         $this->deleteProfile = $deleteProfile;
+        $this->createProfile = $createProfile;
         $this->logger = $logger;
     }
 
@@ -111,5 +116,14 @@ class ProfileService implements ProfileManagementContract
     {
         $request = new DeleteProfileRequest($id);
         $this->deleteProfile->execute($request);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createProfile(Profile $profile): void
+    {
+        $request = new CreateProfileRequest($profile);
+        $this->createProfile->execute($request);
     }
 }
