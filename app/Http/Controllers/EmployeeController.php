@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Core\Employee\Application\Factory\EmployeeFactory;
+use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employees;
 use Illuminate\Http\JsonResponse;
@@ -15,10 +16,12 @@ class EmployeeController extends Controller
 {
     private EmployeeManagementContract $employeeService;
     private EmployeeFactory $employeeFactory;
+    private EmployeeDataTransformerContract $employeeDataTransformer;
     private DataTables $dataTable;
     public function __construct(
         EmployeeManagementContract $employeeService,
         EmployeeFactory $employeeFactory,
+        EmployeeDataTransformerContract $employeeDataTransformer,
         DataTables $dataTable,
         LoggerInterface $logger
     ) {
@@ -26,6 +29,7 @@ class EmployeeController extends Controller
 
         $this->employeeService = $employeeService;
         $this->employeeFactory = $employeeFactory;
+        $this->employeeDataTransformer = $employeeDataTransformer;
         $this->dataTable = $dataTable;
     }
 
@@ -41,6 +45,7 @@ class EmployeeController extends Controller
     public function getEmployees(Request $request): JsonResponse
     {
         $employees = $this->employeeService->searchEmployees($request->filters);
+        dd($employees);
         return $this->prepareListEmployees($employees);
     }
 

@@ -29,6 +29,7 @@ Route::controller(UserController::class)->prefix('user')->group(function(){
 
 Route::controller(EmployeeController::class)->prefix('employees')->group(function (){
     Route::get('','index')->name('employee.index');
+    Route::post('/get-list','getEmployees')->name('employee.get-employees');
 });
 
 Route::controller(ModuleController::class)->prefix('modules')->group(function(){

@@ -76,7 +76,7 @@ var table = $('#content-data').DataTable({
     serverSide: true,
     displayStart: _start,
     ajax: {
-        url: "{{ route('panel.profile.get-profiles') }}",
+        url: "{{ route('panel.employee.get-employees') }}",
         type: 'POST',
         data: function(d) {
             d.filters = {
