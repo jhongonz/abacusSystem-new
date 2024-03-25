@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Listeners\ProfilesWarmup;
 use App\Listeners\UserRefreshSession;
@@ -28,7 +29,12 @@ class AppServiceProvider extends ServiceProvider
             ModuleUpdatedOrDeletedEvent::class,
             ProfilesWarmup::class
         );
-        
+
+        Event::listen(
+            ProfileUpdatedOrDeletedEvent::class,
+            ProfilesWarmup::class
+        );
+
         Event::listen(
             RefreshModulesSession::class,
             UserRefreshSession::class

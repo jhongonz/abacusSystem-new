@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
+use App\Events\User\RefreshModulesSession;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
@@ -83,6 +85,8 @@ class ProfileController extends Controller implements HasMiddleware
 
         try {
             $this->profileService->updateProfile($profileId, $dataUpdate);
+            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
+            RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
             $this->logger->error('Profile can not be updated with id: '. $profileId->value());
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -95,6 +99,8 @@ class ProfileController extends Controller implements HasMiddleware
     {
         $profileId = $this->profileFactory->buildProfileId($id);
         $this->profileService->deleteProfile($profileId);
+
+        ProfileUpdatedOrDeletedEvent::dispatch($profileId);
 
         return response()->json(status:Response::HTTP_OK);
     }
@@ -128,6 +134,7 @@ class ProfileController extends Controller implements HasMiddleware
         try {
             $method = (is_null($profileId->value())) ? 'createProfile' : 'updateProfile';
             $this->{$method}($request, $profileId);
+            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],

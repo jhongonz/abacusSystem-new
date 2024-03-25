@@ -112,6 +112,7 @@ class ModuleController extends Controller implements HasMiddleware
         try {
             $method = (is_null($moduleId->value())) ? 'createModule' : 'updateModule';
             $this->{$method}($request, $moduleId);
+            ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],

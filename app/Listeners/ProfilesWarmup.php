@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,8 +20,9 @@ class ProfilesWarmup
 
     /**
      * Handle the event.
+     * @param ModuleUpdatedOrDeletedEvent|ProfileUpdatedOrDeletedEvent $event
      */
-public function handle(ModuleUpdatedOrDeletedEvent $event): void
+    public function handle(ProfileUpdatedOrDeletedEvent|ModuleUpdatedOrDeletedEvent $event): void
     {
         ProcessCommandWarmup::dispatch('profile:warmup');
         ProcessCommandWarmup::dispatch('module:warmup');
