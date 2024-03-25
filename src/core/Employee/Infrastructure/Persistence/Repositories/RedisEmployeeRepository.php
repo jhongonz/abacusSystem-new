@@ -129,6 +129,11 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return $employee;
     }
 
+    public function persistEmployees(Employees $employees): Employees
+    {
+        return $employees;
+    }
+
     private function employeeKey(EmployeeId $id): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $id->value());

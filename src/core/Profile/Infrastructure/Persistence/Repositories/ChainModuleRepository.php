@@ -15,6 +15,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
 {
     private const FUNCTION_NAMES = [
         Module::class => 'persistModule',
+        Modules::class => 'persistModules',
     ];
 
     private string $domainToPersist;
@@ -40,6 +41,11 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         return $this->writeChain(__FUNCTION__, $module);
     }
 
+    public function persistModules(Modules $modules): Modules
+    {
+        return $this->writeChain(__FUNCTION__, $modules);
+    }
+
     function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -51,6 +57,8 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function getAll(array $filters = []): null|Modules
     {
+        $this->domainToPersist = Modules::class;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {

@@ -15,10 +15,12 @@ use Throwable;
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
     private const FUNCTION_NAMES = [
-        Employee::class => 'persistEmployee'
+        Employee::class => 'persistEmployee',
+        Employees::class => 'persistEmployees'
     ];
 
     private string $domainToPersist;
+    private bool $deleteSource = false;
 
     function functionNamePersist(): string
     {
@@ -75,16 +77,28 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         return $this->write(__FUNCTION__, $employee);
     }
 
+    public function persistEmployees(Employees $employees): Employees
+    {
+        return $this->write(__FUNCTION__, $employees);
+    }
+
     /**
      * @throws Throwable
      * @throws EmployeeNotFoundException
      */
     public function getAll(array $filters = []): null|Employees
     {
+        $this->domainToPersist = Employees::class;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
             throw new EmployeesNotFoundException('Employees no found');
         }
+    }
+
+    function functionNameDelete(): bool
+    {
+        return $this->deleteSource;
     }
 }

@@ -51,6 +51,9 @@ class EmployeeService implements EmployeeManagementContract
         return $this->searchEmployeeByIdentification->execute($request);
     }
 
+    /**
+     * @throws Exception
+     */
     public function searchEmployees(array $filters = []): Employees
     {
         $request = new SearchEmployeesRequest($filters);
