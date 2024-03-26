@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
+use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,13 +46,25 @@ class EmployeeController extends Controller
     public function getEmployees(Request $request): JsonResponse
     {
         $employees = $this->employeeService->searchEmployees($request->filters);
-        dd($employees);
         return $this->prepareListEmployees($employees);
     }
 
     private function prepareListEmployees(Employees $employees): JsonResponse
     {
+        $dataEmployees = [];
+        if ($employees->count()) {
+            /**@var Employee $item*/
+            foreach ($employees as $item) {
+                $dataEmployees[] = $this->employeeDataTransformer->write($item)->readToShare();
+            }
+        }
 
+        $datatable = $this->dataTable->collection(collect($dataEmployees));
+        $datatable->addColumn('tools', function(array $item) {
+            return $this->retrieveMenuOptionHtml($item);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     /**

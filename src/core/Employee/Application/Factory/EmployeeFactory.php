@@ -12,6 +12,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
@@ -43,6 +44,10 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
             new DateTime($data['updatedAt']['date'])
         ));
+
+        if (in_array('search', $data)) {
+            $employee->setSearch($this->buildEmployeeSearch($data['search']));
+        }
 
         return $employee;
     }
@@ -125,5 +130,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeUserId(?int $id = null): EmployeeUserId
     {
         return new EmployeeUserId($id);
+    }
+
+    public function buildEmployeeSearch(?string $search = null): EmployeeSearch
+    {
+        return new EmployeeSearch($search);
     }
 }

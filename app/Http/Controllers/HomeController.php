@@ -65,8 +65,13 @@ class HomeController extends Controller implements HasMiddleware
         $login = $this->userFactory->buildLogin($request->input('login'));
         $user = $this->userService->searchUserByLogin($login);
 
-        $employee = $this->getEmployee($user);
-        $profile = $this->getProfile($user);
+        try {
+            $employee = $this->getEmployee($user);
+            $profile = $this->getProfile($user);
+        } catch (Exception $exception) {
+            dd($exception);
+        }
+
 
         $credentials = [
             'user_login' => $user->login()->value(),
@@ -116,24 +121,29 @@ class HomeController extends Controller implements HasMiddleware
 
     private function getEmployee(User $user): Employee
     {
-        $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
-        return $this->employeeService->searchEmployeeById($employeeId);
+        try {
+            $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
+            return $this->employeeService->searchEmployeeById($employeeId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
     }
 
-    /**
-     * @throws ProfileNotActiveException
-     */
     private function getProfile(User $user): Profile
     {
-        $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());
-        $profile = $this->profileService->searchProfileById($profileId);
+        try {
+            $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());
+            $profile = $this->profileService->searchProfileById($profileId);
 
-        if ($profile->state()->isInactived()) {
-            $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
-            throw new ProfileNotActiveException('User is not authorized, contact with administrator');
+            if ($profile->state()->isInactived()) {
+                $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
+                throw new ProfileNotActiveException('User is not authorized, contact with administrator');
+            }
+
+            return $profile;
+        }  catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
-
-        return $profile;
     }
 
     /**

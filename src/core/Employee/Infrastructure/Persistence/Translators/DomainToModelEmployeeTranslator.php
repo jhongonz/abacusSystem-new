@@ -9,7 +9,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
 {
     private EmployeeModel $model;
     private string $canTranslate;
-    
+
     public function __construct(EmployeeModel $model)
     {
         $this->model = $model;
@@ -26,7 +26,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
         if (is_null($model)) {
             $model = $this->model->where('emp_id', $domain->id()->value())->first() ?: $this->createModel();
         }
-        
+
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());
         $model->changeName($domain->name()->value());
@@ -35,12 +35,13 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
         $model->changeEmail($domain->email()->value());
         $model->changeAddress($domain->address()->value());
         $model->changeState($domain->state()->value());
+        $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
-        
+
         if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
-        
+
         return $model;
     }
 
@@ -53,7 +54,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
     {
         return EmployeeModel::class;
     }
-    
+
     protected function createModel(): EmployeeModel
     {
         return new EmployeeModel();

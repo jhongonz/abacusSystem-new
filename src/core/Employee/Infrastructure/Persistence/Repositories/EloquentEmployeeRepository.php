@@ -113,7 +113,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
             $queryBuilder = $this->employeeModel->where('emp_state','>',EmployeeState::STATE_DELETE);
 
             if (array_key_exists('q', $filters) && isset($filters['q'])) {
-                //$queryBuilder->where('emp_search','like','%'.$filters['q'].'%');
+                $queryBuilder->where('emp_search','like','%'.$filters['q'].'%');
             }
 
             $employeeCollection = $queryBuilder->get(['emp_id']);

@@ -11,6 +11,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
@@ -46,6 +47,8 @@ interface EmployeeFactoryContract
     public function buildEmployeeAddress(string $address): EmployeeAddress;
 
     public function buildEmployeeState(null|int $state = null): EmployeeState;
+
+    public function buildEmployeeSearch(null|string $search = null): EmployeeSearch;
 
     public function buildEmployeeCreatedAt(null|DateTime $datetime = null): EmployeeCreatedAt;
 

@@ -4,11 +4,12 @@ namespace Core\Employee\Application\DataTransformer;
 
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Employee;
+use Exception;
 
 class EmployeeDataTransformer implements EmployeeDataTransformerContract
 {
     private Employee $employee;
-    
+
     public function write(Employee $employee): self
     {
         $this->employee = $employee;
@@ -18,18 +19,34 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     public function read(): array
     {
         return [
-            Employee::TYPE => [
-                'id' => $this->employee->id()->value(),
-                'identification' => $this->employee->identification()->value(),
-                'name' => $this->employee->name()->value(),
-                'lastname' => $this->employee->lastname()->value(),
-                'phone' => $this->employee->phone()->value(),
-                'email' => $this->employee->email()->value(),
-                'address' => $this->employee->address()->value(),
-                'state' => $this->employee->state()->value(),
-                'createdAt' => $this->employee->createdAt()->value(),
-                'updatedAt' => $this->employee->updatedAt()->value(),
-            ]
+            Employee::TYPE => $this->retrieveData()
+        ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function readToShare(): array
+    {
+        $data = $this->retrieveData();
+        $data['state_literal'] = $this->employee->state()->formatHtmlToState();
+
+        return $data;
+    }
+
+    private function retrieveData(): array
+    {
+        return [
+            'id' => $this->employee->id()->value(),
+            'identification' => $this->employee->identification()->value(),
+            'name' => $this->employee->name()->value(),
+            'lastname' => $this->employee->lastname()->value(),
+            'phone' => $this->employee->phone()->value(),
+            'email' => $this->employee->email()->value(),
+            'address' => $this->employee->address()->value(),
+            'state' => $this->employee->state()->value(),
+            'createdAt' => $this->employee->createdAt()->value(),
+            'updatedAt' => $this->employee->updatedAt()->value(),
         ];
     }
 }

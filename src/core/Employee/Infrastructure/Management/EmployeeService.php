@@ -8,6 +8,7 @@ use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentifica
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentificationRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployees;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeesRequest;
+use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
@@ -17,15 +18,18 @@ use Exception;
 
 class EmployeeService implements EmployeeManagementContract
 {
+    private EmployeeFactoryContract $employeeFactory;
     private SearchEmployeeById $searchEmployeeById;
     private SearchEmployeeByIdentification $searchEmployeeByIdentification;
     private SearchEmployees $searchEmployees;
 
     public function __construct(
+        EmployeeFactoryContract $employeeFactory,
         SearchEmployeeById $searchEmployeeById,
         SearchEmployeeByIdentification $searchEmployeeByIdentification,
         SearchEmployees $searchEmployees,
     ) {
+        $this->employeeFactory = $employeeFactory;
         $this->searchEmployeeById = $searchEmployeeById;
         $this->searchEmployeeByIdentification = $searchEmployeeByIdentification;
         $this->searchEmployees = $searchEmployees;
@@ -57,7 +61,12 @@ class EmployeeService implements EmployeeManagementContract
     public function searchEmployees(array $filters = []): Employees
     {
         $request = new SearchEmployeesRequest($filters);
+        $employees = $this->searchEmployees->execute($request);
+        foreach ($employees->aggregator() as $item) {
+            $employee = $this->searchEmployeeById($this->employeeFactory->buildEmployeeId($item));
+            $employees->addItem($employee);
+        }
 
-        return $this->searchEmployees->execute($request);
+        return $employees;
     }
 }

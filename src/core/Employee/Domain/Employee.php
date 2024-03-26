@@ -10,6 +10,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
@@ -26,6 +27,7 @@ class Employee
     private EmployeeEmail $email;
     private EmployeeAddress $address;
     private EmployeeState $state;
+    private EmployeeSearch $search;
     private EmployeeCreatedAt $createdAt;
     private EmployeeUpdateAt $updateAt;
 
@@ -50,6 +52,7 @@ class Employee
         $this->address = $address;
         $this->createdAt = $createdAt;
 
+        $this->search = new EmployeeSearch();
         $this->updateAt = new EmployeeUpdateAt();
         $this->userId = new EmployeeUserId();
     }
@@ -172,6 +175,32 @@ class Employee
     public function setUserId(EmployeeUserId $id): self
     {
         $this->userId = $id;
+        return $this;
+    }
+
+    public function search(): EmployeeSearch
+    {
+        return $this->search;
+    }
+
+    public function setSearch(EmployeeSearch $search): self
+    {
+        $this->search = $search;
+        return $this;
+    }
+
+    public function refreshSearch(): self
+    {
+        $data = [
+            $this->identification()->value(),
+            $this->name()->value(),
+            $this->lastname()->value(),
+            $this->phone()->value(),
+            $this->email()->value(),
+            $this->address(),
+        ];
+
+        $this->search()->setValue(implode(' ', $data));
         return $this;
     }
 }
