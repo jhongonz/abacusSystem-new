@@ -9,7 +9,7 @@ class DomainToModelModuleTranslator implements TranslatorContract
 {
     private ModuleModel $model;
     private string $canTranslator;
-    
+
     public function __construct(
         ModuleModel $model,
     ) {
@@ -18,30 +18,30 @@ class DomainToModelModuleTranslator implements TranslatorContract
     }
 
     /**
-     * @param Module $source
-     * @param null|ModuleModel $destiny
+     * @param Module $domain
+     * @param null|ModuleModel $model
      * @return ModuleModel
      */
-    public function executeTranslate($source, $destiny = null): ModuleModel
+    public function executeTranslate($domain, $model = null): ModuleModel
     {
-        if (is_null($destiny)) {
-            $destiny = $this->model->where('mod_id', $source->id()->value())->first() ?: $this->createModel();
+        if (is_null($model)) {
+            $model = $this->model->where('mod_id', $domain->id()->value())->first() ?: $this->createModel();
         }
-        
-        $destiny->changeId($source->id()->value());
-        $destiny->changeName($source->name()->value());
-        $destiny->changeMenuKey($source->menuKey()->value());
-        $destiny->changeRoute($source->route()->value());
-        $destiny->changeIcon($source->icon()->value());
-        $destiny->changeState($source->state()->value());
-        $destiny->changeSearch($source->search()->value());
-        $destiny->changeCreatedAt($source->createdAt()->value());
-        
-        if (!is_null($source->updatedAt()->value())) {
-            $destiny->changeUpdatedAt($source->updatedAt()->value());
+
+        $model->changeId($domain->id()->value());
+        $model->changeName($domain->name()->value());
+        $model->changeMenuKey($domain->menuKey()->value());
+        $model->changeRoute($domain->route()->value());
+        $model->changeIcon($domain->icon()->value());
+        $model->changeState($domain->state()->value());
+        $model->changeSearch($domain->search()->value());
+        $model->changeCreatedAt($domain->createdAt()->value());
+
+        if (!is_null($domain->updatedAt()->value())) {
+            $model->changeUpdatedAt($domain->updatedAt()->value());
         }
-        
-        return $destiny;
+
+        return $model;
     }
 
     public function canTranslate(): string
@@ -53,7 +53,7 @@ class DomainToModelModuleTranslator implements TranslatorContract
     {
         return ModuleModel::class;
     }
-    
+
     private function createModel(): ModuleModel
     {
         return new ModuleModel();
