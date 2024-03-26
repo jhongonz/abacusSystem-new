@@ -14,10 +14,11 @@ use Core\User\Infrastructure\Persistence\Repositories\RedisUserRepository;
 use Core\User\Infrastructure\Persistence\Translators\DomainToModelUserTranslator;
 use Core\User\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Core\User\Domain\Contracts\UserFactoryContract;
 
-class UserServiceProvider extends ServiceProvider
+class UserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container bindings that should be registered
@@ -30,24 +31,39 @@ class UserServiceProvider extends ServiceProvider
         UserDataTransformerContract::class => UserDataTransformer::class,
         TranslatorContract::class => DomainToModelUserTranslator::class,
     ];
-    
+
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->app->singleton(UserRepositoryContract::class, function (Application $app){
+        $this->app->singletonIf(UserRepositoryContract::class, function (Application $app){
             $chainRepository = new ChainUserRepository();
-            
+
             $chainRepository->addRepository(
                 $app->make(RedisUserRepository::class)
             )
             ->addRepository(
-                $app->make(EloquentUserRepository::class)    
+                $app->make(EloquentUserRepository::class)
             );
-            
+
             return $chainRepository;
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<int, string>
+     */
+    public function provides(): array
+    {
+        return [
+            UserFactoryContract::class,
+            UserManagementContract::class,
+            UserDataTransformerContract::class,
+            TranslatorContract::class
+        ];
     }
 
     /**
@@ -55,6 +71,6 @@ class UserServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
     }
 }

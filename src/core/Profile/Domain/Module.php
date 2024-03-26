@@ -46,8 +46,8 @@ class Module
 
         $this->search = new ModuleSearch();
         $this->updatedAt = new ModuleUpdatedAt();
-        $this->options = [];
-        $this->expanded = false;
+        //$this->options = [];
+        //$this->expanded = false;
     }
 
     public function id(): ModuleId

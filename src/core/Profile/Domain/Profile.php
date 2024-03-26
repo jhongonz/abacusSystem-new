@@ -141,8 +141,10 @@ class Profile
 
     public function refreshSearch(): self
     {
-        $dataSearch[] = $this->name()->value();
-        $dataSearch[] = $this->description()->value();
+        $dataSearch = [
+            $this->name()->value(),
+            $this->description()->value(),
+        ];
 
         $this->search()->setValue(implode(' ', $dataSearch));
         return $this;
