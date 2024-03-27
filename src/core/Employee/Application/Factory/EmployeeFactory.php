@@ -38,6 +38,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             ),
         );
 
+        $employee->setUserId($this->buildEmployeeUserId($data['userId']));
         $employee->setAddress($this->buildEmployeeAddress($data['address']));
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));

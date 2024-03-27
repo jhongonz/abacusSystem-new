@@ -118,7 +118,6 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         $employeeIdentificationKey = $this->employeeIdentificationKey($employee->identification());
 
         $employeeData = $this->dataTransformer->write($employee)->read();
-
         try {
             Redis::set($employeeKey, json_encode($employeeData));
             Redis::set($employeeIdentificationKey, json_encode($employeeData));

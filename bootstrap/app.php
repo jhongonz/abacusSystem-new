@@ -15,7 +15,7 @@ $application->withRouting(
 
 $application->withMiddleware(function (Middleware $middleware) {
     $middleware->redirectGuestsTo('/login');
-    
+
     $middleware->alias([
         'only.ajax-request' => OnlyAjaxRequest::class,
     ]);
@@ -29,6 +29,7 @@ $application->withCommands([
     //__DIR__.'/../src/core/Profile/Infrastructure/Commands',
     \Core\Profile\Infrastructure\Commands\ModuleWarmup::class,
     \Core\Profile\Infrastructure\Commands\ProfileWarmup::class,
+    \Core\Employee\Infrastructure\Commands\EmployeeWarmup::class,
 ]);
-   
+
 return $application->create();

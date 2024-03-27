@@ -8,6 +8,8 @@ use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentifica
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentificationRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployees;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeesRequest;
+use Core\Employee\Application\UseCases\UpdateEmployee\UpdateEmployee;
+use Core\Employee\Application\UseCases\UpdateEmployee\UpdateEmployeeRequest;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
@@ -22,17 +24,20 @@ class EmployeeService implements EmployeeManagementContract
     private SearchEmployeeById $searchEmployeeById;
     private SearchEmployeeByIdentification $searchEmployeeByIdentification;
     private SearchEmployees $searchEmployees;
+    private UpdateEmployee $updateEmployee;
 
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
         SearchEmployeeById $searchEmployeeById,
         SearchEmployeeByIdentification $searchEmployeeByIdentification,
         SearchEmployees $searchEmployees,
+        UpdateEmployee $updateEmployee,
     ) {
         $this->employeeFactory = $employeeFactory;
         $this->searchEmployeeById = $searchEmployeeById;
         $this->searchEmployeeByIdentification = $searchEmployeeByIdentification;
         $this->searchEmployees = $searchEmployees;
+        $this->updateEmployee = $updateEmployee;
     }
 
     /**
@@ -68,5 +73,15 @@ class EmployeeService implements EmployeeManagementContract
         }
 
         return $employees;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function updateEmployee(EmployeeId $id, array $data): void
+    {
+        $request = new UpdateEmployeeRequest($id, $data);
+
+        $this->updateEmployee->execute($request);
     }
 }

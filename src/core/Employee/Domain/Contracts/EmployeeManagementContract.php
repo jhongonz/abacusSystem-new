@@ -14,4 +14,6 @@ interface EmployeeManagementContract
     public function searchEmployeeByIdentification(EmployeeIdentification $identification): null|Employee;
 
     public function searchEmployees(array $filters = []): Employees;
+
+    public function updateEmployee(EmployeeId $id, array $data): void;
 }

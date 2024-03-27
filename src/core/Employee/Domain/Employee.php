@@ -197,7 +197,7 @@ class Employee
             $this->lastname()->value(),
             $this->phone()->value(),
             $this->email()->value(),
-            $this->address(),
+            $this->address()->value(),
         ];
 
         $this->search()->setValue(implode(' ', $data));

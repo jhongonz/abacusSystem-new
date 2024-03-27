@@ -8,6 +8,7 @@ use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
+use Core\Employee\Infrastructure\Commands\EmployeeWarmup;
 use Core\Employee\Infrastructure\Management\EmployeeService;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
@@ -17,6 +18,7 @@ use Core\Employee\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
+use Psr\Log\LoggerInterface;
 
 class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -48,6 +50,16 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             );
 
             return $chainRepository;
+        });
+
+        #Commands
+        $this->app->singletonIf(EmployeeWarmup::class, function (Application $app){
+            return new EmployeeWarmup(
+                $app->make(LoggerInterface::class),
+                $app->make(EmployeeFactoryContract::class),
+                $app->make(EloquentEmployeeRepository::class),
+                $app->make(RedisEmployeeRepository::class),
+            );
         });
     }
 
