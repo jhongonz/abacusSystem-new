@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
@@ -74,6 +75,7 @@ class EmployeeController extends Controller
 
         try {
             $this->employeeService->updateEmployee($employeeId, $dataUpdate);
+            EmployeeUpdateOrDeletedEvent::dispatch($employeeId);
         } catch (Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$employeeId->value());
 
