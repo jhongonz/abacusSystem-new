@@ -6,9 +6,11 @@ use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
+use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Listeners\EmployeeWarmup;
 use App\Listeners\ProfilesWarmup;
 use App\Listeners\UserRefreshSession;
+use App\Listeners\UserWarmup;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,6 +47,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             EmployeeUpdateOrDeletedEvent::class,
             EmployeeWarmup::class
+        );
+
+        Event::listen(
+            UserUpdateOrDeleteEvent::class,
+            UserWarmup::class
         );
     }
 }

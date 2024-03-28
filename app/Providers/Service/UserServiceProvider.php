@@ -7,6 +7,7 @@ use Core\User\Application\Factory\UserFactory;
 use Core\User\Domain\Contracts\UserDataTransformerContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\Contracts\UserRepositoryContract;
+use Core\User\Infrastructure\Commands\UserWarmup;
 use Core\User\Infrastructure\Management\UserService;
 use Core\User\Infrastructure\Persistence\Repositories\ChainUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
@@ -17,6 +18,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Core\User\Domain\Contracts\UserFactoryContract;
+use Psr\Log\LoggerInterface;
 
 class UserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -48,6 +50,16 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             );
 
             return $chainRepository;
+        });
+
+        #Commands
+        $this->app->singletonIf(UserWarmup::class, function (Application $app){
+            return new UserWarmup(
+                $app->make(LoggerInterface::class),
+                $app->make(UserFactoryContract::class),
+                $app->make(EloquentUserRepository::class),
+                $app->make(RedisUserRepository::class),
+            );
         });
     }
 

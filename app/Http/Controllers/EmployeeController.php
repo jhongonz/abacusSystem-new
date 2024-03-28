@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
+use App\Events\User\UserUpdateOrDeleteEvent;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
@@ -75,7 +76,6 @@ class EmployeeController extends Controller
 
         try {
             $this->employeeService->updateEmployee($employeeId, $dataUpdate);
-            EmployeeUpdateOrDeletedEvent::dispatch($employeeId);
         } catch (Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$employeeId->value());
 
@@ -91,6 +91,7 @@ class EmployeeController extends Controller
                 $user->state()->setValue($employee->state()->value());
                 $dataUpdate['state'] = $user->state()->value();
                 $this->userService->updateUser($user->id(), $dataUpdate);
+                UserUpdateOrDeleteEvent::dispatch($user->id());
             } catch (Exception $exception) {
                 $message = sprintf('User with ID:%d by employee with ID: %d can not be updated',
                     $user->id()->value(),
