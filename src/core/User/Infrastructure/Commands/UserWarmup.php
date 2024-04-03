@@ -4,6 +4,7 @@ namespace Core\User\Infrastructure\Commands;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserRepositoryContract;
+use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 
@@ -38,7 +39,7 @@ class UserWarmup extends Command
      * @var string
      */
     protected $signature = 'user:warmup
-                            {id: The ID user}';
+                            {id : The ID user}';
 
     /**
      * The console command description.
@@ -53,9 +54,15 @@ class UserWarmup extends Command
     public function handle(): void
     {
         $userId = $this->userFactory->buildId($this->argument('id'));
-        $user = $this->readRepository->find($userId);
-        foreach ($this->repositories as $repository) {
-            $repository->persistUser($user);
+
+        try {
+            $user = $this->readRepository->find($userId);
+
+            foreach ($this->repositories as $repository) {
+                $repository->persistUser($user);
+            }
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
         $this->logger->info('User command executed');

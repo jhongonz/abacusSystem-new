@@ -4,6 +4,7 @@ namespace Core\Employee\Infrastructure\Commands;
 
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
+use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 
@@ -53,9 +54,15 @@ class EmployeeWarmup extends Command
     public function handle(): void
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($this->argument('id'));
-        $employee = $this->readRepository->find($employeeId);
-        foreach ($this->repositories as $repository) {
-            $repository->persistEmployee($employee);
+
+        try {
+            $employee = $this->readRepository->find($employeeId);
+
+            foreach ($this->repositories as $repository) {
+                $repository->persistEmployee($employee);
+            }
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
         $this->logger->info('Employee command executed');
