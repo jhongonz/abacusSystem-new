@@ -110,7 +110,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
             var _id = $(this).data('id');
 
-            axios.get("{{ route('panel.profile.get-profile') }}/" + _id)
+            axios.get("{{ route('panel.employee.get-employee') }}/" + _id)
             .then(function (response){
                 $('#content-modal').html(response.data.html);
             })
@@ -177,7 +177,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
     e.preventDefault();
     var data = table.row($(this).closest('tr')).data();
 
-    axios.get("{{ route('panel.profile.get-profile') }}/" + data.id)
+    axios.get("{{ route('panel.employee.get-employee') }}/" + data.id)
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })
@@ -192,7 +192,7 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
 $('.new-registry').click(function(e){
     e.preventDefault();
 
-    axios.get("{{ route('panel.profile.get-profile') }}/")
+    axios.get("{{ route('panel.employee.get-employee') }}/")
     .then(function (response){
         $('#content-modal').html(response.data.html);
     })

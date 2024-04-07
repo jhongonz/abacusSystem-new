@@ -233,7 +233,7 @@ class ProfileController extends Controller implements HasMiddleware
     public static function middleware(): Middleware|array
     {
         return [
-            new Middleware('auth'),
+            new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
                 'getProfiles','getProfile'
             ]),

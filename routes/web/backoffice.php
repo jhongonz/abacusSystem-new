@@ -31,6 +31,7 @@ Route::controller(EmployeeController::class)->prefix('employees')->group(functio
     Route::get('','index')->name('employee.index');
     Route::post('/get-list','getEmployees')->name('employee.get-employees');
     Route::post('/set-state','changeStateEmployee')->name('employee.change-state-employee');
+    Route::get('/get/{id?}','getEmployee')->name('employee.get-employee');
 });
 
 Route::controller(ModuleController::class)->prefix('modules')->group(function(){
@@ -49,5 +50,4 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function(
     Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
     Route::get('/get/{id?}','getProfile')->whereNumber('id')->name('profile.get-profile');
     Route::post('/store', 'storeProfile')->name('profile.store');
-
 });

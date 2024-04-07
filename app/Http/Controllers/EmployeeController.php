@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
@@ -14,12 +13,13 @@ use Core\User\Domain\Contracts\UserManagementContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
 
-class EmployeeController extends Controller
+class EmployeeController extends Controller implements HasMiddleware
 {
     private EmployeeManagementContract $employeeService;
     private EmployeeFactory $employeeFactory;
@@ -55,6 +55,9 @@ class EmployeeController extends Controller
         return $this->renderView($view);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getEmployees(Request $request): JsonResponse
     {
         $employees = $this->employeeService->searchEmployees($request->filters);
@@ -104,6 +107,20 @@ class EmployeeController extends Controller
         return response()->json(status:Response::HTTP_CREATED);
     }
 
+    public function getEmployee(null|int $id = null): JsonResponse
+    {
+        $employee = null;
+        if (!is_null($id)) {
+            $employee = $this->employeeService->searchEmployeeById(
+                $this->employeeFactory->buildEmployeeId($id)
+            );
+        }
+        dd($employee);
+    }
+
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     private function prepareListEmployees(Employees $employees): JsonResponse
     {
         $dataEmployees = [];
@@ -130,9 +147,9 @@ class EmployeeController extends Controller
     public static function middleware(): Middleware|array
     {
         return [
-            new Middleware('auth'),
+            new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
-                'getEmployees',
+                'getEmployees','getEmployee'
             ]),
         ];
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\OnlyAjaxRequest;
+use App\Http\Middleware\VerifySession;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,7 @@ $application->withMiddleware(function (Middleware $middleware) {
 
     $middleware->alias([
         'only.ajax-request' => OnlyAjaxRequest::class,
+        'verify-session' => VerifySession::class,
     ]);
 });
 

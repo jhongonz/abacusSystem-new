@@ -55,7 +55,7 @@
 				</li>
 				<!-- /main -->
 
-				@if (count($menu) > 0)
+				@if (isset($menu) and count($menu) > 0)
 					@foreach($menu as $option)
 						@if($option->haveChildren())
 							<li class="nav-item nav-item-submenu p-0 @if($option->expanded()) nav-item-open @endif">
