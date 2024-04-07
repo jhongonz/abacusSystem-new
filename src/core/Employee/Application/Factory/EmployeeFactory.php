@@ -5,6 +5,7 @@ namespace Core\Employee\Application\Factory;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
@@ -136,5 +137,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeSearch(?string $search = null): EmployeeSearch
     {
         return new EmployeeSearch($search);
+    }
+
+    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate
+    {
+        return new EmployeeBirthdate($date);
     }
 }

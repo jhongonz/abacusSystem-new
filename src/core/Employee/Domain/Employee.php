@@ -3,6 +3,7 @@
 namespace Core\Employee\Domain;
 
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
@@ -30,6 +31,7 @@ class Employee
     private EmployeeSearch $search;
     private EmployeeCreatedAt $createdAt;
     private EmployeeUpdateAt $updateAt;
+    private EmployeeBirthdate $birthdate;
 
     public function __construct(
         EmployeeId $id,
@@ -55,6 +57,7 @@ class Employee
         $this->search = new EmployeeSearch();
         $this->updateAt = new EmployeeUpdateAt();
         $this->userId = new EmployeeUserId();
+        $this->birthdate = new EmployeeBirthdate();
     }
 
     public function id(): EmployeeId
@@ -201,6 +204,17 @@ class Employee
         ];
 
         $this->search()->setValue(implode(' ', $data));
+        return $this;
+    }
+
+    public function birthdate(): EmployeeBirthdate
+    {
+        return $this->birthdate;
+    }
+
+    public function setBirthdate(EmployeeBirthdate $date): self
+    {
+        $this->birthdate = $date;
         return $this;
     }
 }

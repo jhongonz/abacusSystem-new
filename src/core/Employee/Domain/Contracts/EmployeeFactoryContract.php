@@ -4,6 +4,7 @@ namespace Core\Employee\Domain\Contracts;
 
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
@@ -53,4 +54,6 @@ interface EmployeeFactoryContract
     public function buildEmployeeCreatedAt(null|DateTime $datetime = null): EmployeeCreatedAt;
 
     public function buildEmployeeUpdatedAt(null|DateTime $datetime = null): EmployeeUpdateAt;
+
+    public function buildEmployeeBirthdate(null|DateTime $date = null): EmployeeBirthdate;
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -48,6 +49,7 @@ class Employee extends Model
         'emp_name',
         'emp_lastname',
         'emp_phone_number',
+        'emp_birthdate',
         'emp_email',
         'emp_address',
         'emp_search',
@@ -175,5 +177,18 @@ class Employee extends Model
     public function changeSearch(string $search): void
     {
         $this->attributes['emp_search'] = $search;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function birthdate(): null|DateTime
+    {
+        return new DateTime($this->attributes['emp_birthdate']);
+    }
+
+    public function changeBirthdate(DateTime $date): void
+    {
+        $this->attributes['emp_birthdate'] = $date;
     }
 }
