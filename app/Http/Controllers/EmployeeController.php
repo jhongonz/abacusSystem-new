@@ -8,6 +8,7 @@ use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
+use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Exception;
@@ -26,6 +27,7 @@ class EmployeeController extends Controller implements HasMiddleware
     private EmployeeDataTransformerContract $employeeDataTransformer;
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
+    private ProfileManagementContract $profileService;
     private DataTables $dataTable;
     public function __construct(
         EmployeeManagementContract $employeeService,
@@ -33,6 +35,7 @@ class EmployeeController extends Controller implements HasMiddleware
         EmployeeDataTransformerContract $employeeDataTransformer,
         UserFactoryContract $userFactory,
         UserManagementContract $userService,
+        ProfileManagementContract $profileService,
         DataTables $dataTable,
         LoggerInterface $logger
     ) {
@@ -43,6 +46,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $this->employeeDataTransformer = $employeeDataTransformer;
         $this->userFactory = $userFactory;
         $this->userService = $userService;
+        $this->profileService = $profileService;
         $this->dataTable = $dataTable;
     }
 
@@ -109,13 +113,24 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function getEmployee(null|int $id = null): JsonResponse
     {
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $employee = null;
-        if (!is_null($id)) {
-            $employee = $this->employeeService->searchEmployeeById(
-                $this->employeeFactory->buildEmployeeId($id)
-            );
+
+        if (!is_null($employeeId->value())) {
+            $employee = $this->employeeService->searchEmployeeById($employeeId);
         }
-        dd($employee);
+
+        $profiles = $this->profileService->searchProfiles();
+        $userId = $employee->userId();
+
+        $view = view('employee.employee-form')
+            ->with('userId', $userId)
+            ->with('employeeId', $employeeId)
+            ->with('employee', $employee)
+            ->with('profiles', $profiles)
+            ->render();
+
+        return $this->renderView($view);
     }
 
     /**
