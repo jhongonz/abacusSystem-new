@@ -63,12 +63,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            {{--<div class="col-sm-2">
+                            <div class="col-sm-2">
                                 <div class="form-group">
                                     <label>Fecha de nacimiento</label>
-                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->emp_birthdate}}@endisset">
+                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->birthdate()->value()}}@endisset">
                                 </div>
-                            </div>--}}
+                            </div>
                             <div class="col-sm-2">
                                 <label>Estado Civil</label>
                                 <select name="marital_status" id="marital_status" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
@@ -78,12 +78,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            {{--<div class="col-sm-2">
-                                <div class="form-group">
-                                    <label>Nro de hijos</label>
-                                    <input type="text" class="children form-control form-control-sm" id="children" name="children" placeholder="Numero de hijos" value="@isset($employee){{$employee->emp_children}}@endisset">
-                                </div>
-                            </div>--}}
                             <div class="col-sm-3">
                                 <label>Telefono</label>
                                 <input type="text" class="phone form-control form-control form-control-sm" name="phone" id="phone" placeholder="Telefono" onkeypress="return valideKeyNumber(event)" maxlength="15" value="@isset($employee){{$employee->phone()->value()}}@endisset">
@@ -211,147 +205,131 @@
 @stop
 
 @section('javascript')
-    @parent
-    <script type="text/javascript">
-        var target = "{!! getTargetForm('employee') !!}";
+@parent
+<script type="text/javascript">
+    var target = "{!! getTargetForm('employee') !!}";
 
-        $('.form-control-uniform').uniform({
-            fileButtonClass: 'action btn bg-blue',
-            fileButtonHtml: 'Elegir archivo',
-            fileDefaultHtml: 'No hay archivo seleccionado'
+    $('.form-control-uniform').uniform({
+        fileButtonClass: 'action btn bg-blue',
+        fileButtonHtml: 'Elegir archivo',
+        fileDefaultHtml: 'No hay archivo seleccionado'
+    });
+
+    $('#photo').on('change',function(e){
+        e.preventDefault();
+        _data = new FormData();
+        _data.append('file', $(this)[0].files[0]);
+
+        axios.post("{{ url('employee/account-image') }}",_data)
+        .then(function (response){
+            var data = response.data;
+
+            $('#token').val(data.token);
+            $('.showPhoto').removeAttr('src');
+            $('.showPhoto').attr('src',data.url);
         });
+    });
 
-        $('#photo').on('change',function(e){
-            e.preventDefault();
-            _data = new FormData();
-            _data.append('file', $(this)[0].files[0]);
+    $(".pickadate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        minDate: '-70Y',
+        maxDate: '-15Y'
+    });
 
-            axios.post("{{ url('employee/account-image') }}",_data)
-                .then(function (response){
-                    var data = response.data;
+    $('.form-check-input-styled').uniform({
+        wrapperClass: 'border-primary text-primary'
+    });
 
-                    $('#token').val(data.token);
-                    $('.showPhoto').removeAttr('src');
-                    $('.showPhoto').attr('src',data.url);
-                });
-        });
+    $('.select').select2({
+        minimumResultsForSearch: Infinity
+    });
 
-        $(".pickadate").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            minDate: '-70Y',
-            maxDate: '-15Y',
-        });
+    $('.save-data').click(function(e){
+        e.preventDefault();
 
-        $('.form-check-input-styled').uniform({
-            wrapperClass: 'border-primary text-primary'
-        });
+        axios.post("{{ url('employee/save') }}",{
+            idEmployee: "{{ $idEmployee }}",
+            idUser: "{{ $idUser }}",
+            identifier: $('#identifier').val(),
+            typeDocument: $('#typeDocument').val(),
+            name: $('#name').val(),
+            lastname: $('#lastname').val(),
+            email: $('#email').val(),
+            login: $('#username').val(),
+            phone: $('#phone').val(),
+            address: $('#address').val(),
+            observations: $('#observations').val(),
+            profile: $('#profileUser').val(),
+            birthdate: $('#birthdate').val(),
+            password: $('#password').val(),
+            password_confirmation: $('#repeat').val(),
+            token: $('#token').val(),
 
-        $('.select').select2({
-            minimumResultsForSearch: Infinity
-        });
+            position: $('#position').val(),
+            area: $('#area').val(),
+            level: $('#level').val(),
+            salary: $('#salary').val(),
+            name_emergency: $('#name_emergency').val(),
+            phone_emergency: $('#phone_emergency').val(),
 
-        $('.save-data').click(function(e){
-            e.preventDefault();
+            marital_status: $('#marital_status').val(),
+            children: $('#children').val()
+        })
+        .then(function (response){
+            toast.fire({
+                text: 'Registro guardado',
+                type: 'success'
+            });
+        })
+        .catch(function ($response) {
+            var data = response.data;
 
-            axios.post("{{ url('employee/save') }}",{
-                idEmployee: "{{ $idEmployee }}",
-                idUser: "{{ $idUser }}",
-                identifier: $('#identifier').val(),
-                typeDocument: $('#typeDocument').val(),
-                name: $('#name').val(),
-                lastname: $('#lastname').val(),
-                email: $('#email').val(),
-                login: $('#username').val(),
-                phone: $('#phone').val(),
-                address: $('#address').val(),
-                observations: $('#observations').val(),
-                profile: $('#profileUser').val(),
-                birthdate: $('#birthdate').val(),
-                password: $('#password').val(),
-                password_confirmation: $('#repeat').val(),
-                token: $('#token').val(),
+            var objectSelects = ['typeDocument','profileUser'];
+            var errors = data.errors;
 
-                position: $('#position').val(),
-                area: $('#area').val(),
-                level: $('#level').val(),
-                salary: $('#salary').val(),
-                name_emergency: $('#name_emergency').val(),
-                phone_emergency: $('#phone_emergency').val(),
-
-                marital_status: $('#marital_status').val(),
-                children: $('#children').val()
-            })
-                .then(function (response){
-                    var data = response.data;
-
-                    if (data.status == STATUS_OK)
-                    {
-                        toast.fire({
-                            text: 'Registro guardado',
-                            type: 'success'
-                        });
-                    }
-                    else
-                    {
-                        var objectSelects = ['typeDocument','profileUser'];
-                        var errors = data.errors;
-
-                        $.each(errors, function(index, element) {
-
-                            if (objectSelects.includes(index))
-                            {
-                                $('.' + index).addClass('has-error');
-                            }
-                            else
-                            {
-                                $('.' + index).addClass('border-danger');
-                            }
-                        });
-
-                        toast.fire({
-                            text: 'Error en datos ingresados',
-                            type: 'error'
-                        });
-                    }
-
-                });
-        });
-
-        $('a[data-toggle = "tab"]').on('shown.bs.tab', function (e) {
-            var _target = $(e.target).attr("href") // activated tab
-
-            if (_target != target)
-            {
-                /* axios.post("{{ url('setting/set-target-form') }}",{
-            target: _target,
-            url: 'employee'
-        });*/
-            }
-        });
-
-        $(document).ready(function(){
-
-            if (target)
-            {
-                $('.nav-tabs a[href="'+ target +'"]').tab('show');
-            }
-            else
-            {
-                $('.nav-tabs a[href="#personal"]').tab('show');
-            }
-
-            $(".return-site").click(function(e){
-                e.preventDefault();
-
-                axios.get("{{ url('employee') }}")
-                    .then(function (response){
-                        var data = response.data;
-                        $("#content-body").html(data.html);
-                        window.history.pushState("data","Title","{{ url('employee') }}");
-                    });
+            $.each(errors, function(index, element) {
+                if (objectSelects.includes(index)) {
+                    $('.' + index).addClass('has-error');
+                } else {
+                    $('.' + index).addClass('border-danger');
+                }
             });
 
+            toast.fire({
+                text: 'Error en datos ingresados',
+                type: 'error'
+            });
         });
-    </script>
+    });
+
+    $('a[data-toggle = "tab"]').on('shown.bs.tab', function (e) {
+        var _target = $(e.target).attr("href");
+
+        if (_target != target) {
+            axios.post("{{ url('setting/set-target-form') }}",{
+                target: _target,
+                url: 'employee',
+            });
+        }
+    });
+
+    $(document).ready(function(){
+        if (target) {
+            $('.nav-tabs a[href="'+ target +'"]').tab('show');
+        } else {
+            $('.nav-tabs a[href="#personal"]').tab('show');
+        }
+
+        $(".return-site").click(function(e){
+            e.preventDefault();
+
+            axios.get("{{ url('employee') }}").then(function (response){
+                var data = response.data;
+                $("#content-body").html(data.html);
+                window.history.pushState("data","Title","{{ url('employee') }}");
+            });
+        });
+    });
+</script>
 @stop

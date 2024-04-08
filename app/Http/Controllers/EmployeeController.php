@@ -121,7 +121,7 @@ class EmployeeController extends Controller implements HasMiddleware
         }
 
         $profiles = $this->profileService->searchProfiles();
-        $userId = $employee->userId();
+        $userId = (!is_null($employee)) ? $employee->userId() : null;
 
         $view = view('employee.employee-form')
             ->with('userId', $userId)

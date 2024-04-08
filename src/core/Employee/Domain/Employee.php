@@ -10,6 +10,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
+use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
@@ -32,6 +33,7 @@ class Employee
     private EmployeeCreatedAt $createdAt;
     private EmployeeUpdateAt $updateAt;
     private EmployeeBirthdate $birthdate;
+    private EmployeeObservations $observations;
 
     public function __construct(
         EmployeeId $id,
@@ -58,6 +60,7 @@ class Employee
         $this->updateAt = new EmployeeUpdateAt();
         $this->userId = new EmployeeUserId();
         $this->birthdate = new EmployeeBirthdate();
+        $this->observations = new EmployeeObservations();
     }
 
     public function id(): EmployeeId
@@ -201,6 +204,7 @@ class Employee
             $this->phone()->value(),
             $this->email()->value(),
             $this->address()->value(),
+            $this->observations()->value(),
         ];
 
         $this->search()->setValue(implode(' ', $data));
@@ -215,6 +219,17 @@ class Employee
     public function setBirthdate(EmployeeBirthdate $date): self
     {
         $this->birthdate = $date;
+        return $this;
+    }
+
+    public function observations(): EmployeeObservations
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(EmployeeObservations $observations): self
+    {
+        $this->observations = $observations;
         return $this;
     }
 }

@@ -62,6 +62,7 @@ class EmployeeTranslator implements TranslatorDomainContract
         $employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
         $employee->setSearch($this->employeeFactory->buildEmployeeSearch($this->employee->search()));
         $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
+        $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
 
         return $employee;
     }

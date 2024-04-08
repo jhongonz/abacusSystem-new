@@ -52,6 +52,7 @@ class Employee extends Model
         'emp_birthdate',
         'emp_email',
         'emp_address',
+        'emp_observations',
         'emp_search',
         'emp_state',
         'created_at',
@@ -190,5 +191,15 @@ class Employee extends Model
     public function changeBirthdate(DateTime $date): void
     {
         $this->attributes['emp_birthdate'] = $date;
+    }
+
+    public function observations(): null|string
+    {
+        return $this->attributes['emp_observations'];
+    }
+
+    public function changeObservations(null|string $observations): void
+    {
+        $this->attributes['emp_observations'] = $observations;
     }
 }

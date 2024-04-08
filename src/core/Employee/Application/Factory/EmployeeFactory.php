@@ -12,6 +12,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
+use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
@@ -47,6 +48,12 @@ class EmployeeFactory implements EmployeeFactoryContract
             new DateTime($data['updatedAt']['date'])
         ));
 
+        $employee->setBirthdate($this->buildEmployeeBirthdate(
+            new DateTime($data['birthdate']['date'])
+        ));
+
+        $employee->setObservations($this->buildEmployeeObservations($data['observations']));
+
         if (in_array('search', $data)) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
         }
@@ -76,7 +83,7 @@ class EmployeeFactory implements EmployeeFactoryContract
         return $employee;
     }
 
-    public function buildEmployeeId(int $id): EmployeeId
+    public function buildEmployeeId(null|int $id = null): EmployeeId
     {
         return new EmployeeId($id);
     }
@@ -142,5 +149,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate
     {
         return new EmployeeBirthdate($date);
+    }
+
+    public function buildEmployeeObservations(?string $observations = null): EmployeeObservations
+    {
+        return new EmployeeObservations($observations);
     }
 }
