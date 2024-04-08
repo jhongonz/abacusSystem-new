@@ -164,7 +164,7 @@ class EmployeeController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
-                'getEmployees','getEmployee'
+                'getEmployees'
             ]),
         ];
     }

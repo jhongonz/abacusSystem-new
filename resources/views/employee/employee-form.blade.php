@@ -94,10 +94,10 @@
                                 <label>Dirección</label>
                                 <textarea rows="3" cols="5" class="address form-control form-control form-control-sm" name="address" placeholder="Dirección" id="address">@isset($employee){{$employee->address()->value()}}@endisset</textarea>
                             </div>
-                            {{--<div class="col-sm-6">
+                            <div class="col-sm-6">
                                 <label>Observaciones</label>
-                                <textarea rows="3" cols="5" class="observations form-control form-control form-control-sm" name="observations" placeholder="Observaciones" id="observations">@isset($employee){{$employee->emp_observations}}@endisset</textarea>
-                            </div>--}}
+                                <textarea rows="3" cols="5" class="observations form-control form-control form-control-sm" name="observations" placeholder="Observaciones" id="observations">@isset($employee){{$employee->observations()->value()}}@endisset</textarea>
+                            </div>
                         </div>
                         {{--<div class="row">
                             <div class="col-sm-6 mt-4">
@@ -121,48 +121,6 @@
                             </div>
                         </div>--}}
                     </div>
-                    {{--<div class="tab-pane fade show" id="laboral">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Cargo Laboral</label>
-                                    <input type="text" class="position form-control form-control form-control-sm" name="position" id="position" placeholder="Posicion" value="@isset($employee){{$employee->emp_position}}@endisset">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Area Laboral</label>
-                                    <input type="text" class="area form-control form-control form-control-sm" name="area" id="area" placeholder="Área" value="@isset($employee){{$employee->emp_area}}@endisset">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Nivel Profesional</label>
-                                    <input type="text" class="level form-control form-control form-control-sm" name="level" id="level" placeholder="Nivel" value="@isset($employee){{$employee->emp_level}}@endisset">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Salario</label>
-                                    <input type="text" class="salary form-control form-control form-control-sm" name="salary" id="salary" placeholder="Salario" value="@isset($employee){{$employee->emp_salary}}@endisset" onkeypress="return valideKeyNumber(event,true);">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Contacto de emergencia (Nombre)</label>
-                                    <input type="text" class="name_emergency form-control form-control form-control-sm" name="name_emergency" id="name_emergency" placeholder="Contacto de emergencia" value="@isset($employee){{$employee->emp_contact_emergency_name}}@endisset">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Contacto de emergencia</label>
-                                    <input type="text" class="phone_emergency form-control form-control form-control-sm" name="phone_emergency" id="phone_emergency" placeholder="Contacto de emergencia" value="@isset($employee){{$employee->emp_contact_emergency_phone}}@endisset" onkeypress="return valideKeyNumber(event);">
-                                </div>
-                            </div>
-                        </div>
-                    </div>--}}
                     {{--<div class="tab-pane fade show" id="login">
                         <div class="row">
                             <div class="col-sm-3">
@@ -207,15 +165,13 @@
 @section('javascript')
 @parent
 <script type="text/javascript">
-    var target = "{!! getTargetForm('employee') !!}";
-
     $('.form-control-uniform').uniform({
         fileButtonClass: 'action btn bg-blue',
         fileButtonHtml: 'Elegir archivo',
         fileDefaultHtml: 'No hay archivo seleccionado'
     });
 
-    $('#photo').on('change',function(e){
+    $('#photo').on('change',function(e) {
         e.preventDefault();
         _data = new FormData();
         _data.append('file', $(this)[0].files[0]);
@@ -303,24 +259,7 @@
         });
     });
 
-    $('a[data-toggle = "tab"]').on('shown.bs.tab', function (e) {
-        var _target = $(e.target).attr("href");
-
-        if (_target != target) {
-            axios.post("{{ url('setting/set-target-form') }}",{
-                target: _target,
-                url: 'employee',
-            });
-        }
-    });
-
     $(document).ready(function(){
-        if (target) {
-            $('.nav-tabs a[href="'+ target +'"]').tab('show');
-        } else {
-            $('.nav-tabs a[href="#personal"]').tab('show');
-        }
-
         $(".return-site").click(function(e){
             e.preventDefault();
 
