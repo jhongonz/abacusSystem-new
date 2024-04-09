@@ -29,6 +29,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
 
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());
+        $model->changeIdentificationType($domain->identificationType()->value());
         $model->changeName($domain->name()->value());
         $model->changeLastname($domain->lastname()->value());
         $model->changePhone($domain->phone()->value());

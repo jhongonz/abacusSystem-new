@@ -8,6 +8,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
+use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -23,6 +24,7 @@ class Employee
     private EmployeeId $id;
     private EmployeeUserId $userId;
     private EmployeeIdentification $identification;
+    private EmployeeIdentificationType $identificationType;
     private EmployeeName $name;
     private EmployeeLastname $lastname;
     private EmployeePhone $phone;
@@ -61,6 +63,7 @@ class Employee
         $this->userId = new EmployeeUserId();
         $this->birthdate = new EmployeeBirthdate();
         $this->observations = new EmployeeObservations();
+        $this->identificationType = new EmployeeIdentificationType();
     }
 
     public function id(): EmployeeId
@@ -230,6 +233,17 @@ class Employee
     public function setObservations(EmployeeObservations $observations): self
     {
         $this->observations = $observations;
+        return $this;
+    }
+
+    public function identificationType(): EmployeeIdentificationType
+    {
+        return $this->identificationType;
+    }
+
+    public function setIdentificationType(EmployeeIdentificationType $type): self
+    {
+        $this->identificationType = $type;
         return $this;
     }
 }

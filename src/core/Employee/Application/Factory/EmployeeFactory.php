@@ -10,6 +10,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
+use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -40,6 +41,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             ),
         );
 
+        $employee->setIdentificationType($this->buildEmployeeIdentificationType($data['identification_type']));
         $employee->setUserId($this->buildEmployeeUserId($data['userId']));
         $employee->setAddress($this->buildEmployeeAddress($data['address']));
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
@@ -154,5 +156,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeObservations(?string $observations = null): EmployeeObservations
     {
         return new EmployeeObservations($observations);
+    }
+
+    public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType
+    {
+        return new EmployeeIdentificationType($type);
     }
 }

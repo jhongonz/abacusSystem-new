@@ -112,7 +112,8 @@ var table = $('#content-data').DataTable({
 
             axios.get("{{ route('panel.employee.get-employee') }}/" + _id)
             .then(function (response){
-                $('#content-modal').html(response.data.html);
+                $('#content-body').html(response.data.html);
+                window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + _id);
             })
             .catch(function(error){
                 toast.fire({
@@ -179,7 +180,8 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
 
     axios.get("{{ route('panel.employee.get-employee') }}/" + data.id)
     .then(function (response){
-        $('#content-modal').html(response.data.html);
+        $('#content-body').html(response.data.html);
+        window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + data.id);
     })
     .catch(function(error){
         toast.fire({
@@ -194,7 +196,8 @@ $('.new-registry').click(function(e){
 
     axios.get("{{ route('panel.employee.get-employee') }}/")
     .then(function (response){
-        $('#content-modal').html(response.data.html);
+        $('#content-body').html(response.data.html);
+        window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/");
     })
     .catch(function(error){
         toast.fire({

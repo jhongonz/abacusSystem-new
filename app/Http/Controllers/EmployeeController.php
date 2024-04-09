@@ -111,22 +111,25 @@ class EmployeeController extends Controller implements HasMiddleware
         return response()->json(status:Response::HTTP_CREATED);
     }
 
-    public function getEmployee(null|int $id = null): JsonResponse
+    public function getEmployee(null|int $id = null): JsonResponse|string
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $employee = null;
+        $user = null;
 
         if (!is_null($employeeId->value())) {
             $employee = $this->employeeService->searchEmployeeById($employeeId);
+            $user = $this->userService->searchUserById($this->userFactory->buildId($employee->userId()->value()));
         }
 
         $profiles = $this->profileService->searchProfiles();
-        $userId = (!is_null($employee)) ? $employee->userId() : null;
+        $userId = (!is_null($employee)) ? $employee->userId()->value() : null;
 
         $view = view('employee.employee-form')
             ->with('userId', $userId)
-            ->with('employeeId', $employeeId)
+            ->with('employeeId', $employeeId->value())
             ->with('employee', $employee)
+            ->with('user', $user)
             ->with('profiles', $profiles)
             ->render();
 

@@ -31,7 +31,7 @@ Route::controller(EmployeeController::class)->prefix('employees')->group(functio
     Route::get('','index')->name('employee.index');
     Route::post('/get-list','getEmployees')->name('employee.get-employees');
     Route::post('/set-state','changeStateEmployee')->name('employee.change-state-employee');
-    Route::get('/get/{id?}','getEmployee')->name('employee.get-employee');
+    Route::get('/edit/{id?}','getEmployee')->name('employee.get-employee');
 });
 
 Route::controller(ModuleController::class)->prefix('modules')->group(function(){

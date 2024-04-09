@@ -26,7 +26,6 @@
             <form>
                 <ul class="nav nav-tabs nav-tabs-bottom">
                     <li class="nav-item"><a href="#personal" class="nav-link" data-toggle="tab">Datos Personales</a></li>
-                    <li class="nav-item"><a href="#laboral" class="nav-link" data-toggle="tab">Datos Laborales</a></li>
                     <li class="nav-item"><a href="#login" class="nav-link" data-toggle="tab">Datos de Acceso</a></li>
                 </ul>
                 <div class="tab-content">
@@ -38,7 +37,7 @@
                                     <select name="typeDocument" id="typeDocument" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                         <option></option>
                                         @foreach(config('configurations.document-type') as $index => $type)
-                                            <option value="{{$index}}">{{$type}}</option>
+                                            <option value="{{$index}}" @isset($employee) @if($employee->identificationType()->value() == $index) selected @endif @endisset>{{$type}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -66,17 +65,8 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label>Fecha de nacimiento</label>
-                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->birthdate()->value()}}@endisset">
+                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->birthdate()->toString()}}@endisset">
                                 </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <label>Estado Civil</label>
-                                <select name="marital_status" id="marital_status" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
-                                    <option></option>
-                                    @foreach(config('configurations.marital-type') as $index => $type)
-                                        {{--<option value="{{$index}}" @isset($employee) @if($employee->emp_marital_status == $index) selected @endif @endisset>{{$type}}</option>--}}
-                                    @endforeach
-                                </select>
                             </div>
                             <div class="col-sm-3">
                                 <label>Telefono</label>
@@ -99,7 +89,7 @@
                                 <textarea rows="3" cols="5" class="observations form-control form-control form-control-sm" name="observations" placeholder="Observaciones" id="observations">@isset($employee){{$employee->observations()->value()}}@endisset</textarea>
                             </div>
                         </div>
-                        {{--<div class="row">
+                        <div class="row">
                             <div class="col-sm-6 mt-4">
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -119,23 +109,23 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>--}}
+                        </div>
                     </div>
-                    {{--<div class="tab-pane fade show" id="login">
+                    <div class="tab-pane fade show" id="login">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>Login</label>
-                                    <input type="text" class="login form-control form-control-sm" name="username" id="username" placeholder="Username" value="@isset($employee){{$employee->user->user_login}}@endisset">
+                                    <input type="text" class="login form-control form-control-sm" name="username" id="username" placeholder="Username" value="@isset($user){{$user->login()->value()}}@endisset">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group profile">
                                     <label>Perfil</label>
-                                    <select name="profileUser" id="profileUser" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" @isset($employee) @if($employee->user->profile->pro_id == ROOT_PROFILE_ADMIN) disabled @endif @endisset data-fouc>
+                                    <select name="profileUser" id="profileUser" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" @isset($user) @if($user->profileId()->value() == 1) disabled @endif @endisset data-fouc>
                                         <option></option>
                                         @foreach($profiles as $profile)
-                                            <option value="{{$profile->pro_id}}" @isset($employee) @if($employee->user->profile->pro_id == $profile->pro_id) selected @endif @endisset>{{$profile->pro_name}}</option>
+                                            <option value="{{$profile->id()->value()}}" @isset($user) @if($user->profileId()->value() == $profile->id()->value()) selected @endif @endisset>{{$profile->name()->value()}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -155,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>--}}
+                    </div>
                 </div>
             </form>
         </div>
@@ -165,110 +155,102 @@
 @section('javascript')
 @parent
 <script type="text/javascript">
-    $('.form-control-uniform').uniform({
-        fileButtonClass: 'action btn bg-blue',
-        fileButtonHtml: 'Elegir archivo',
-        fileDefaultHtml: 'No hay archivo seleccionado'
-    });
+$('.form-control-uniform').uniform({
+    fileButtonClass: 'action btn bg-blue',
+    fileButtonHtml: 'Elegir archivo',
+    fileDefaultHtml: 'No hay archivo seleccionado'
+});
 
-    $('#photo').on('change',function(e) {
+$(".pickadate").datepicker({
+    changeMonth: true,
+    changeYear: true,
+    minDate: '-70Y',
+    maxDate: '-15Y'
+});
+
+$('.form-check-input-styled').uniform({
+    wrapperClass: 'border-primary text-primary'
+});
+
+$('.select').select2({
+    minimumResultsForSearch: Infinity
+});
+
+$('#photo').on('change',function(e) {
+    e.preventDefault();
+    _data = new FormData();
+    _data.append('file', $(this)[0].files[0]);
+
+    axios.post("{{ url('employee/account-image') }}",_data)
+    .then(function (response){
+        var data = response.data;
+
+        $('#token').val(data.token);
+        $('.showPhoto').removeAttr('src');
+        $('.showPhoto').attr('src',data.url);
+    });
+});
+
+$('.save-data').click(function(e){
+    e.preventDefault();
+
+    axios.post("{{ url('employee/save') }}",{
+        employeeId: "{{ $employeeId }}",
+        userId: "{{ $userId }}",
+        identifier: $('#identifier').val(),
+        typeDocument: $('#typeDocument').val(),
+        name: $('#name').val(),
+        lastname: $('#lastname').val(),
+        email: $('#email').val(),
+        login: $('#username').val(),
+        phone: $('#phone').val(),
+        address: $('#address').val(),
+        observations: $('#observations').val(),
+        profile: $('#profileUser').val(),
+        birthdate: $('#birthdate').val(),
+        password: $('#password').val(),
+        password_confirmation: $('#repeat').val(),
+        token: $('#token').val(),
+    })
+    .then(function (response){
+        toast.fire({
+            text: 'Registro guardado',
+            type: 'success'
+        });
+    })
+    .catch(function ($response) {
+        var data = response.data;
+
+        var objectSelects = ['typeDocument','profileUser'];
+        var errors = data.errors;
+
+        $.each(errors, function(index, element) {
+            if (objectSelects.includes(index)) {
+                $('.' + index).addClass('has-error');
+            } else {
+                $('.' + index).addClass('border-danger');
+            }
+        });
+
+        toast.fire({
+            text: 'Error en datos ingresados',
+            type: 'error'
+        });
+    });
+});
+
+$(document).ready(function(){
+    $('.nav-tabs a[href="#personal"]').tab('show');
+
+    $(".return-site").click(function(e){
         e.preventDefault();
-        _data = new FormData();
-        _data.append('file', $(this)[0].files[0]);
 
-        axios.post("{{ url('employee/account-image') }}",_data)
-        .then(function (response){
+        axios.get("{{ route('panel.employee.index') }}").then(function (response){
             var data = response.data;
-
-            $('#token').val(data.token);
-            $('.showPhoto').removeAttr('src');
-            $('.showPhoto').attr('src',data.url);
+            $("#content-body").html(data.html);
+            window.history.pushState("data","Title","{{ url('employee') }}");
         });
     });
-
-    $(".pickadate").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        minDate: '-70Y',
-        maxDate: '-15Y'
-    });
-
-    $('.form-check-input-styled').uniform({
-        wrapperClass: 'border-primary text-primary'
-    });
-
-    $('.select').select2({
-        minimumResultsForSearch: Infinity
-    });
-
-    $('.save-data').click(function(e){
-        e.preventDefault();
-
-        axios.post("{{ url('employee/save') }}",{
-            idEmployee: "{{ $idEmployee }}",
-            idUser: "{{ $idUser }}",
-            identifier: $('#identifier').val(),
-            typeDocument: $('#typeDocument').val(),
-            name: $('#name').val(),
-            lastname: $('#lastname').val(),
-            email: $('#email').val(),
-            login: $('#username').val(),
-            phone: $('#phone').val(),
-            address: $('#address').val(),
-            observations: $('#observations').val(),
-            profile: $('#profileUser').val(),
-            birthdate: $('#birthdate').val(),
-            password: $('#password').val(),
-            password_confirmation: $('#repeat').val(),
-            token: $('#token').val(),
-
-            position: $('#position').val(),
-            area: $('#area').val(),
-            level: $('#level').val(),
-            salary: $('#salary').val(),
-            name_emergency: $('#name_emergency').val(),
-            phone_emergency: $('#phone_emergency').val(),
-
-            marital_status: $('#marital_status').val(),
-            children: $('#children').val()
-        })
-        .then(function (response){
-            toast.fire({
-                text: 'Registro guardado',
-                type: 'success'
-            });
-        })
-        .catch(function ($response) {
-            var data = response.data;
-
-            var objectSelects = ['typeDocument','profileUser'];
-            var errors = data.errors;
-
-            $.each(errors, function(index, element) {
-                if (objectSelects.includes(index)) {
-                    $('.' + index).addClass('has-error');
-                } else {
-                    $('.' + index).addClass('border-danger');
-                }
-            });
-
-            toast.fire({
-                text: 'Error en datos ingresados',
-                type: 'error'
-            });
-        });
-    });
-
-    $(document).ready(function(){
-        $(".return-site").click(function(e){
-            e.preventDefault();
-
-            axios.get("{{ url('employee') }}").then(function (response){
-                var data = response.data;
-                $("#content-body").html(data.html);
-                window.history.pushState("data","Title","{{ url('employee') }}");
-            });
-        });
-    });
+});
 </script>
 @stop

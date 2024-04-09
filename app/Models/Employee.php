@@ -46,6 +46,7 @@ class Employee extends Model
      */
     protected $fillable = [
         'emp_identification',
+        'emp_identification_type',
         'emp_name',
         'emp_lastname',
         'emp_phone_number',
@@ -201,5 +202,15 @@ class Employee extends Model
     public function changeObservations(null|string $observations): void
     {
         $this->attributes['emp_observations'] = $observations;
+    }
+
+    public function identificationType(): string
+    {
+        return $this->attributes['emp_identification_type'];
+    }
+
+    public function changeIdentificationType(string $type): void
+    {
+        $this->attributes['emp_identification_type'] = $type;
     }
 }

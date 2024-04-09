@@ -52,6 +52,7 @@ class EmployeeTranslator implements TranslatorDomainContract
             )
         );
 
+        $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
         $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt(
             new DateTime($this->employee->updatedAt())
         ));
