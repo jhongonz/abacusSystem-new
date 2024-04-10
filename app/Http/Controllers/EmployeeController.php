@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Events\User\UserUpdateOrDeleteEvent;
+use App\Http\Requests\Employee\StoreEmployeeRequest;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
+use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
+use Core\User\Domain\ValueObjects\UserId;
+use DateTime;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use JetBrains\PhpStorm\NoReturn;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -136,6 +141,23 @@ class EmployeeController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
+    {
+        $employeeId = $this->employeeFactory->buildEmployeeId($request->employeeId);
+        $userId = $this->userFactory->buildId($request->userId);
+
+        try {
+            $method = (is_null($employeeId->value())) ? 'createEmployee' : 'updateEmployee';
+            $this->{$method}($request, $employeeId, $userId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json(status:Response::HTTP_CREATED);
+    }
+
     /**
      * @throws \Yajra\DataTables\Exceptions\Exception
      */
@@ -155,6 +177,26 @@ class EmployeeController extends Controller implements HasMiddleware
         });
 
         return $datatable->escapeColumns([])->toJson();
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[NoReturn] private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
+    {
+        $dataUpdate = [
+            'identifier' => $request->identifier,
+            'typeDocument' => $request->typeDocument,
+            'name' => $request->name,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'observations' => $request->observations,
+            'birthdate' => DateTime::createFromFormat('d/m/Y',$request->birthdate)
+        ];
+
+        $this->employeeService->updateEmployee($employeeId, $dataUpdate);
     }
 
     /**

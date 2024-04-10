@@ -194,7 +194,7 @@ $('#photo').on('change',function(e) {
 $('.save-data').click(function(e){
     e.preventDefault();
 
-    axios.post("{{ url('employee/save') }}",{
+    axios.post("{{ route('panel.employee.store') }}",{
         employeeId: "{{ $employeeId }}",
         userId: "{{ $userId }}",
         identifier: $('#identifier').val(),
