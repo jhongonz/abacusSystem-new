@@ -11,6 +11,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -55,6 +56,7 @@ class EmployeeFactory implements EmployeeFactoryContract
         ));
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
+        $employee->setImage($this->buildEmployeeImage($data['image']));
 
         if (in_array('search', $data)) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
@@ -161,5 +163,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType
     {
         return new EmployeeIdentificationType($type);
+    }
+
+    public function buildEmployeeImage(?string $image = null): EmployeeImage
+    {
+        return new EmployeeImage($image);
     }
 }

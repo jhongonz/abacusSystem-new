@@ -48,6 +48,7 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
             'address' => $this->employee->address()->value(),
             'birthdate' => $this->employee->birthdate()->value(),
             'observations' => $this->employee->observations()->value(),
+            'image' => $this->employee->image()->value(),
             'search' => $this->employee->search()->value(),
             'state' => $this->employee->state()->value(),
             'createdAt' => $this->employee->createdAt()->value(),

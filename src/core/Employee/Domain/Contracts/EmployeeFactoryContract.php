@@ -10,6 +10,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -62,4 +63,6 @@ interface EmployeeFactoryContract
     public function buildEmployeeObservations(null|string $observations = null): EmployeeObservations;
 
     public function buildEmployeeIdentificationType(null|string $type = null): EmployeeIdentificationType;
+
+    public function buildEmployeeImage(null|string $image = null): EmployeeImage;
 }

@@ -20,6 +20,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\ImageManager;
 use JetBrains\PhpStorm\NoReturn;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +36,12 @@ class EmployeeController extends Controller implements HasMiddleware
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
     private ProfileManagementContract $profileService;
+    private ImageManager $imageManager;
     private DataTables $dataTable;
+    private string $imagePathTmp;
+    private string $imagePathFull;
+    private string $imagePathSmall;
+
     public function __construct(
         EmployeeManagementContract $employeeService,
         EmployeeFactory $employeeFactory,
@@ -42,6 +50,7 @@ class EmployeeController extends Controller implements HasMiddleware
         UserManagementContract $userService,
         ProfileManagementContract $profileService,
         DataTables $dataTable,
+        ImageManager $imageManager,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
@@ -53,6 +62,10 @@ class EmployeeController extends Controller implements HasMiddleware
         $this->userService = $userService;
         $this->profileService = $profileService;
         $this->dataTable = $dataTable;
+        $this->imageManager = $imageManager;
+        $this->imagePathTmp = '/images/tmp/';
+        $this->imagePathFull = '/images/full/';
+        $this->imagePathSmall = '/images/small/';
     }
 
     public function index(): JsonResponse|string
@@ -121,10 +134,13 @@ class EmployeeController extends Controller implements HasMiddleware
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $employee = null;
         $user = null;
+        $urlFile = null;
 
         if (!is_null($employeeId->value())) {
             $employee = $this->employeeService->searchEmployeeById($employeeId);
             $user = $this->userService->searchUserById($this->userFactory->buildId($employee->userId()->value()));
+
+            $urlFile = url($this->imagePathFull.$employee->image()->value()).'?v='.Str::random(10);
         }
 
         $profiles = $this->profileService->searchProfiles();
@@ -136,6 +152,7 @@ class EmployeeController extends Controller implements HasMiddleware
             ->with('employee', $employee)
             ->with('user', $user)
             ->with('profiles', $profiles)
+            ->with('image',$urlFile)
             ->render();
 
         return $this->renderView($view);
@@ -179,6 +196,19 @@ class EmployeeController extends Controller implements HasMiddleware
         return $datatable->escapeColumns([])->toJson();
     }
 
+    public function setImageEmployee(Request $request): JsonResponse
+    {
+        $originalImage = $request->file('file')->getRealPath();
+        $random = Str::random(10);
+        $filename = $random.'.jpg';
+
+        $image = $this->imageManager->read($originalImage);
+        $image->save(public_path($this->imagePathTmp).$filename, quality: 70);
+        $imageUrl = url($this->imagePathTmp.$filename);
+
+        return response()->json(['token'=>$random,'url'=>$imageUrl], Response::HTTP_CREATED);
+    }
+
     /**
      * @throws Exception
      */
@@ -196,6 +226,18 @@ class EmployeeController extends Controller implements HasMiddleware
             'birthdate' => DateTime::createFromFormat('d/m/Y',$request->birthdate)
         ];
 
+        if (isset($request->token)) {
+            $imageTmp = public_path($this->imagePathTmp.$request->token.'.jpg');
+            $filename = Str::uuid()->toString().'.jpg';
+
+            $image = $this->imageManager->read($imageTmp);
+            $image->save(public_path($this->imagePathFull.$filename));
+            $image->resize(150,150);
+            $image->save(public_path($this->imagePathSmall.$filename));
+
+            $dataUpdate['image'] = $filename;
+        }
+
         $this->employeeService->updateEmployee($employeeId, $dataUpdate);
     }
 
@@ -209,7 +251,7 @@ class EmployeeController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
-                'getEmployees'
+                'getEmployees','setImageEmployee'
             ]),
         ];
     }

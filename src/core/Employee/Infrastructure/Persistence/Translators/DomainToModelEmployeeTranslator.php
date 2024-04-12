@@ -18,10 +18,10 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
 
     /**
      * @param Employee $domain
-     * @param EmployeeModel $model
+     * @param null|EmployeeModel $model
      * @return EmployeeModel
      */
-    public function executeTranslate($domain,$model): EmployeeModel
+    public function executeTranslate($domain,$model = null): EmployeeModel
     {
         if (is_null($model)) {
             $model = $this->model->where('emp_id', $domain->id()->value())->first() ?: $this->createModel();
@@ -37,6 +37,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
         $model->changeEmail($domain->email()->value());
         $model->changeAddress($domain->address()->value());
         $model->changeObservations($domain->observations()->value());
+        $model->changeImage($domain->image()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());

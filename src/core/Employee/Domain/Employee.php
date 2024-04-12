@@ -9,6 +9,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -36,6 +37,7 @@ class Employee
     private EmployeeUpdateAt $updateAt;
     private EmployeeBirthdate $birthdate;
     private EmployeeObservations $observations;
+    private EmployeeImage $image;
 
     public function __construct(
         EmployeeId $id,
@@ -64,6 +66,7 @@ class Employee
         $this->birthdate = new EmployeeBirthdate();
         $this->observations = new EmployeeObservations();
         $this->identificationType = new EmployeeIdentificationType();
+        $this->image = new EmployeeImage();
     }
 
     public function id(): EmployeeId
@@ -244,6 +247,17 @@ class Employee
     public function setIdentificationType(EmployeeIdentificationType $type): self
     {
         $this->identificationType = $type;
+        return $this;
+    }
+
+    public function image(): EmployeeImage
+    {
+        return $this->image;
+    }
+
+    public function setImage(EmployeeImage $image): self
+    {
+        $this->image = $image;
         return $this;
     }
 }

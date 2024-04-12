@@ -54,6 +54,7 @@ class Employee extends Model
         'emp_email',
         'emp_address',
         'emp_observations',
+        'emp_image',
         'emp_search',
         'emp_state',
         'created_at',
@@ -212,5 +213,15 @@ class Employee extends Model
     public function changeIdentificationType(string $type): void
     {
         $this->attributes['emp_identification_type'] = $type;
+    }
+
+    public function image(): null|string
+    {
+        return $this->attributes['emp_image'];
+    }
+
+    public function changeImage(string $image): void
+    {
+        $this->attributes['emp_image'] = $image;
     }
 }

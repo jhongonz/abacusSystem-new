@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Profile\Domain\ValueObjects;
+namespace Core\Employee\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
 
-class ProfileDescription implements ValueObjectContract
+class EmployeeImage implements ValueObjectContract
 {
     private null|string $value;
 

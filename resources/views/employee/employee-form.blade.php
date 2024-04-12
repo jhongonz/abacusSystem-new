@@ -181,13 +181,11 @@ $('#photo').on('change',function(e) {
     _data = new FormData();
     _data.append('file', $(this)[0].files[0]);
 
-    axios.post("{{ url('employee/account-image') }}",_data)
+    axios.post("{{ route('panel.employee.set-image') }}",_data)
     .then(function (response){
-        var data = response.data;
-
-        $('#token').val(data.token);
+        $('#token').val(response.data.token);
         $('.showPhoto').removeAttr('src');
-        $('.showPhoto').attr('src',data.url);
+        $('.showPhoto').attr('src',response.data.url);
     });
 });
 

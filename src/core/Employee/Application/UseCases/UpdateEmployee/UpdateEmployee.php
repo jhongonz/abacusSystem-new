@@ -99,4 +99,10 @@ class UpdateEmployee extends UseCasesService
         $employee->state()->setValue($state);
         return $employee;
     }
+
+    public function changeImage(Employee $employee, string $image): Employee
+    {
+        $employee->image()->setValue($image);
+        return $employee;
+    }
 }

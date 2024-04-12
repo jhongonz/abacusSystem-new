@@ -32,6 +32,7 @@ Route::controller(EmployeeController::class)->prefix('employees')->group(functio
     Route::post('/get-list','getEmployees')->name('employee.get-employees');
     Route::post('/set-state','changeStateEmployee')->name('employee.change-state-employee');
     Route::get('/edit/{id?}','getEmployee')->name('employee.get-employee');
+    Route::post('/set-image','setImageEmployee')->name('employee.set-image');
     Route::post('/store','storeEmployee')->name('employee.store');
 });
 
