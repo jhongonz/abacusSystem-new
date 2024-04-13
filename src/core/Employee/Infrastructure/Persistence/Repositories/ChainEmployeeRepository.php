@@ -4,20 +4,24 @@ namespace Core\Employee\Infrastructure\Persistence\Repositories;
 
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
+use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Exception;
 use Throwable;
 
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
     private const FUNCTION_NAMES = [
-        Employee::class => 'persistEmployee'
+        Employee::class => 'persistEmployee',
+        Employees::class => 'persistEmployees'
     ];
 
     private string $domainToPersist;
-    
+    private bool $deleteSource = false;
+
     function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -71,5 +75,30 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     public function persistEmployee(Employee $employee): Employee
     {
         return $this->write(__FUNCTION__, $employee);
+    }
+
+    public function persistEmployees(Employees $employees): Employees
+    {
+        return $this->write(__FUNCTION__, $employees);
+    }
+
+    /**
+     * @throws Throwable
+     * @throws EmployeeNotFoundException
+     */
+    public function getAll(array $filters = []): null|Employees
+    {
+        $this->domainToPersist = Employees::class;
+
+        try {
+            return $this->read(__FUNCTION__, $filters);
+        } catch (Exception $exception) {
+            throw new EmployeesNotFoundException('Employees no found');
+        }
+    }
+
+    function functionNameDelete(): bool
+    {
+        return $this->deleteSource;
     }
 }

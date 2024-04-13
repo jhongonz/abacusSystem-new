@@ -5,13 +5,17 @@ namespace Core\Employee\Infrastructure\Persistence\Repositories;
 use App\Models\Employee as EmployeeModel;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
+use Core\Employee\Exceptions\EmployeesNotFoundException;
+use Core\Employee\Infrastructure\Persistence\Translators\DomainToModelEmployeeTranslator;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 
 class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
 {
@@ -19,15 +23,18 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
 
     private EmployeeModel $employeeModel;
     private EmployeeTranslator $employeeTranslator;
+    private DomainToModelEmployeeTranslator $modelEmployeeTranslator;
     private int $priority;
 
     public function __construct(
         EmployeeModel $model,
         EmployeeTranslator $translator,
+        DomainToModelEmployeeTranslator $modelEmployeeTranslator,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->employeeModel = $model;
         $this->employeeTranslator = $translator;
+        $this->modelEmployeeTranslator = $modelEmployeeTranslator;
         $this->priority = $priority;
     }
 
@@ -95,8 +102,46 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         // TODO: Implement delete() method.
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistEmployee(Employee $employee): Employee
     {
+        $employeeModel = $this->modelEmployeeTranslator->executeTranslate($employee);
+        $employeeModel->save();
+
+        $employee->id()->setValue($employeeModel->id());
+
         return $employee;
+    }
+
+    /**
+     * @throws EmployeesNotFoundException
+     */
+    public function getAll(array $filters = []): null|Employees
+    {
+        try {
+            /**@var  Builder $queryBuilder*/
+            $queryBuilder = $this->employeeModel->where('emp_state','>',EmployeeState::STATE_DELETE);
+
+            if (array_key_exists('q', $filters) && isset($filters['q'])) {
+                $queryBuilder->where('emp_search','like','%'.$filters['q'].'%');
+            }
+
+            $employeeCollection = $queryBuilder->get(['emp_id']);
+        } catch (Exception $exception) {
+            throw new EmployeesNotFoundException('Employees not found');
+        }
+
+        $collection = [];
+        /**@var EmployeeModel $employeeModel*/
+        foreach ($employeeCollection as $employeeModel) {
+            $collection[] = $employeeModel->id();
+        }
+
+        $employees = $this->employeeTranslator->setCollection($collection)->toDomainCollection();
+        $employees->setFilters($filters);
+
+        return $employees;
     }
 }

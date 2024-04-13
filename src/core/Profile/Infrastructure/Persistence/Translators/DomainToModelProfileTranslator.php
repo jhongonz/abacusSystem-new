@@ -17,28 +17,28 @@ class DomainToModelProfileTranslator implements TranslatorContract
     }
 
     /**
-     * @param Profile $source
-     * @param ProfileModel $destiny
+     * @param Profile $domain
+     * @param ProfileModel $model
      * @return ProfileModel
      */
-    public function executeTranslate($source,$destiny = null): ProfileModel
+    public function executeTranslate($domain, $model = null): ProfileModel
     {
-        if (is_null($destiny)) {
-            $destiny = $this->model->where('pro_id', $source->id()->value())->first() ?: $this->createModel();
+        if (is_null($model)) {
+            $model = $this->model->where('pro_id', $domain->id()->value())->first() ?: $this->createModel();
         }
 
-        $destiny->changeId($source->id()->value());
-        $destiny->changeName($source->name()->value());
-        $destiny->changeState($source->state()->value());
-        $destiny->changeSearch($source->search()->value());
-        $destiny->changeDescription($source->description()->value());
-        $destiny->changeCreatedAt($source->createdAt()->value());
+        $model->changeId($domain->id()->value());
+        $model->changeName($domain->name()->value());
+        $model->changeState($domain->state()->value());
+        $model->changeSearch($domain->search()->value());
+        $model->changeDescription($domain->description()->value());
+        $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (!is_null($source->updatedAt()->value())) {
-            $destiny->changeUpdatedAt($source->updatedAt()->value());
+        if (!is_null($domain->updatedAt()->value())) {
+            $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
-        return $destiny;
+        return $model;
     }
 
     public function canTranslate(): string

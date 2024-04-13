@@ -59,13 +59,13 @@ class ModuleController extends Controller implements HasMiddleware
      */
     public function getModules(Request $request): JsonResponse
     {
-        $modules = $this->moduleService->searchModules($request->filters);
+        $modules = $this->moduleService->searchModules($request->input('filters'));
         return $this->prepareListModules($modules);
     }
 
     public function changeStateModule(Request $request): JsonResponse
     {
-        $moduleId = $this->moduleFactory->buildModuleId($request->id);
+        $moduleId = $this->moduleFactory->buildModuleId($request->input('id'));
         $module = $this->moduleService->searchModuleById($moduleId);
 
         if ($module->state()->isNew() || $module->state()->isInactived()) {
@@ -107,11 +107,12 @@ class ModuleController extends Controller implements HasMiddleware
 
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
-        $moduleId = $this->moduleFactory->buildModuleId($request->id);
+        $moduleId = $this->moduleFactory->buildModuleId($request->input('id'));
 
         try {
             $method = (is_null($moduleId->value())) ? 'createModule' : 'updateModule';
             $this->{$method}($request, $moduleId);
+            ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
@@ -157,14 +158,14 @@ class ModuleController extends Controller implements HasMiddleware
      */
     #[NoReturn] private function createModule(StoreModuleRequest $request, ModuleId $id): void
     {
-        $this->validateRoute($request->route);
+        $this->validateRoute($request->input('route'));
 
         $module = $this->moduleFactory->buildModule(
             $id,
-            $this->moduleFactory->buildModuleMenuKey($request->key),
-            $this->moduleFactory->buildModuleName($request->name),
-            $this->moduleFactory->buildModuleRoute($request->route),
-            $this->moduleFactory->buildModuleIcon($request->icon),
+            $this->moduleFactory->buildModuleMenuKey($request->input('key')),
+            $this->moduleFactory->buildModuleName($request->input('name')),
+            $this->moduleFactory->buildModuleRoute($request->input('route')),
+            $this->moduleFactory->buildModuleIcon($request->input('icon')),
         );
 
         $this->moduleService->createModule($module);
@@ -175,13 +176,13 @@ class ModuleController extends Controller implements HasMiddleware
      */
     #[NoReturn] public function updateModule(StoreModuleRequest $request, ModuleId $id): void
     {
-        $this->validateRoute($request->route);
+        $this->validateRoute($request->input('route'));
 
         $dataUpdate = [
-            'name' => $request->name,
-            'route' => $request->route,
-            'icon' => $request->icon,
-            'key' => $request->key,
+            'name' => $request->input('name'),
+            'route' => $request->input('route'),
+            'icon' => $request->input('icon'),
+            'key' => $request->input('key'),
         ];
 
         $this->moduleService->updateModule($id, $dataUpdate);
@@ -217,7 +218,7 @@ class ModuleController extends Controller implements HasMiddleware
     public static function middleware(): Middleware|array
     {
         return [
-            new Middleware('auth'),
+            new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
                 'getModules',
                 'changeStateModule',

@@ -41,6 +41,11 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         return $this->writeChain(__FUNCTION__, $module);
     }
 
+    public function persistModules(Modules $modules): Modules
+    {
+        return $this->writeChain(__FUNCTION__, $modules);
+    }
+
     function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -59,11 +64,6 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         } catch (Exception $exception) {
             throw new ModulesNotFoundException('Modules no found');
         }
-    }
-
-    public function persistModules(Modules $modules): Modules
-    {
-        return $this->write(__FUNCTION__, $modules);
     }
 
     /**

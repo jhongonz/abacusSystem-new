@@ -10,5 +10,6 @@ interface UserManagementContract
 {
     public function searchUserById(UserId $id): null|User;
     public function searchUserByLogin(UserLogin $login): null|User;
-    public function updateUser(UserId $id, array $data): User;
+    public function updateUser(UserId $id, array $data): void;
+    public function createUser(User $user): void;
 }

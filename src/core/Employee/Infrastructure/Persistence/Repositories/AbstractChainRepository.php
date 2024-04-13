@@ -12,30 +12,31 @@ abstract class AbstractChainRepository
 {
     /** @var ChainPriority[] */
     private array $repositories;
-    
+
     abstract function functionNamePersist(): string;
-    
+    abstract function functionNameDelete(): bool;
+
     public function addRepository(ChainPriority $repository): self
     {
         $this->repositories[] = $repository;
-        
+
         usort($this->repositories, $this->prioritySort());
-        
+
         return $this;
     }
-    
+
     protected function write(string $functionName, ...$source)
     {
         $result = null;
         $repository = end($this->repositories);
-        
+
         do {
             $callabe = [$repository, $functionName];
             if (is_callable($callabe)) {
                 $result = call_user_func_array($callabe, $source);
             }
         } while (false !== ($repository = prev($this->repositories)));
-        
+
         return $result;
     }
 
@@ -45,8 +46,11 @@ abstract class AbstractChainRepository
     protected function read(string $functionName, ...$source)
     {
         $result = $this->readFromRepositories($functionName, ...$source);
-        $this->persistence($this->functionNamePersist(), $result);
-    
+
+        if (!$this->functionNameDelete()) {
+            $this->persistence($this->functionNamePersist(), $result);
+        }
+
         return $result;
     }
 
@@ -57,7 +61,7 @@ abstract class AbstractChainRepository
     {
         $result = null;
         $lastThrowable = new SourceNotFoundException('Source not found');
-        
+
         $repository = reset($this->repositories);
         do {
             try {
@@ -70,14 +74,14 @@ abstract class AbstractChainRepository
                 $lastThrowable = $throwable;
             }
         } while ((null === $result) and (false !== ($repository = next($this->repositories))));
-        
+
         if (is_null($result)) {
             throw $lastThrowable;
         }
-        
+
         return $result;
     }
-    
+
     protected function persistence(string $functionName, ...$sources): void
     {
         while (false !== ($repository = prev($this->repositories))) {
@@ -90,14 +94,14 @@ abstract class AbstractChainRepository
             }
         }
     }
-    
+
     private function prioritySort(): Closure
     {
         return static function (ChainPriority $current, ChainPriority $next) {
             if ($current->priority() === $next->priority()) {
                 return 0;
             }
-            
+
             return ($current->priority() < $next->priority()) ? 1 : -1;
         };
     }

@@ -5,13 +5,18 @@ namespace Core\Employee\Application\Factory;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
+use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
+use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
@@ -37,12 +42,30 @@ class EmployeeFactory implements EmployeeFactoryContract
             ),
         );
 
+        $employee->setIdentificationType($this->buildEmployeeIdentificationType($data['identification_type']));
+        $employee->setUserId($this->buildEmployeeUserId($data['userId']));
         $employee->setAddress($this->buildEmployeeAddress($data['address']));
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
-        $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-            new DateTime($data['updatedAt']['date'])
-        ));
+
+        if (!is_null($data['updatedAt'])) {
+            $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
+                new DateTime($data['updatedAt']['date'])
+            ));
+        }
+
+        if (!is_null($data['birthdate'])) {
+            $employee->setBirthdate($this->buildEmployeeBirthdate(
+                new DateTime($data['birthdate']['date'])
+            ));
+        }
+
+        $employee->setObservations($this->buildEmployeeObservations($data['observations']));
+        $employee->setImage($this->buildEmployeeImage($data['image']));
+
+        if (in_array('search', $data)) {
+            $employee->setSearch($this->buildEmployeeSearch($data['search']));
+        }
 
         return $employee;
     }
@@ -51,9 +74,9 @@ class EmployeeFactory implements EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        null|EmployeeLastname $lastname,
-        null|EmployeeState $state,
-        null|EmployeeCreatedAt $createdAt
+        EmployeeLastname $lastname = new EmployeeLastname(),
+        EmployeeState $state = new EmployeeState(),
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
     ): Employee {
 
         $employee = new Employee(
@@ -69,7 +92,7 @@ class EmployeeFactory implements EmployeeFactoryContract
         return $employee;
     }
 
-    public function buildEmployeeId(int $id): EmployeeId
+    public function buildEmployeeId(null|int $id = null): EmployeeId
     {
         return new EmployeeId($id);
     }
@@ -125,5 +148,30 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeUserId(?int $id = null): EmployeeUserId
     {
         return new EmployeeUserId($id);
+    }
+
+    public function buildEmployeeSearch(?string $search = null): EmployeeSearch
+    {
+        return new EmployeeSearch($search);
+    }
+
+    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate
+    {
+        return new EmployeeBirthdate($date);
+    }
+
+    public function buildEmployeeObservations(?string $observations = null): EmployeeObservations
+    {
+        return new EmployeeObservations($observations);
+    }
+
+    public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType
+    {
+        return new EmployeeIdentificationType($type);
+    }
+
+    public function buildEmployeeImage(?string $image = null): EmployeeImage
+    {
+        return new EmployeeImage($image);
     }
 }
