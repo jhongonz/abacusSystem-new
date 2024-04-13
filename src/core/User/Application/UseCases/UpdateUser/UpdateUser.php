@@ -20,10 +20,10 @@ class UpdateUser extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request)
+    public function execute(RequestService $request): ?User
     {
         $this->validateRequest($request, UpdateUserRequest::class);
-        
+
         $user = $this->userRepository->find($request->userId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);
@@ -32,10 +32,10 @@ class UpdateUser extends UseCasesService
                 $user = $this->{$methodName}($user, $value);
             }
         }
-        
+
         return $this->userRepository->persistUser($user);
     }
-    
+
     private function changeEmployeeId(User $user, int $value): User
     {
         $user->employeeId()->setValue($value);

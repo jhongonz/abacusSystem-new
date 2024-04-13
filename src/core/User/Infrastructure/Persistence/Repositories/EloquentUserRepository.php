@@ -17,12 +17,12 @@ use Exception;
 class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 {
     private const PRIORITY_DEFAULT = 50;
-    
+
     private UserModel $userModel;
     private UserTranslator $userTranslator;
     private TranslatorContract $modelUserTranslator;
     private int $priority;
-    
+
     public function __construct(
         UserModel $userModel,
         UserTranslator $userTranslator,
@@ -67,16 +67,17 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         } catch (Exception $exception) {
             throw new UserNotFoundException('User not found with login: '. $login->value());
         }
-        
+
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
-    
+
     public function persistUser(User $user): User
     {
         /** @var UserModel $userModel */
         $userModel = $this->modelUserTranslator->executeTranslate($user);
         $userModel->save();
-        
+        $user->id()->setValue($userModel->id());
+
         return $user;
     }
 

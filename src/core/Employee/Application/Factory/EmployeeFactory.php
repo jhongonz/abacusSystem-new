@@ -47,13 +47,18 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setAddress($this->buildEmployeeAddress($data['address']));
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
-        $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-            new DateTime($data['updatedAt']['date'])
-        ));
 
-        $employee->setBirthdate($this->buildEmployeeBirthdate(
-            new DateTime($data['birthdate']['date'])
-        ));
+        if (!is_null($data['updatedAt'])) {
+            $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
+                new DateTime($data['updatedAt']['date'])
+            ));
+        }
+
+        if (!is_null($data['birthdate'])) {
+            $employee->setBirthdate($this->buildEmployeeBirthdate(
+                new DateTime($data['birthdate']['date'])
+            ));
+        }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
         $employee->setImage($this->buildEmployeeImage($data['image']));

@@ -47,20 +47,16 @@ class EmployeeTranslator implements TranslatorDomainContract
             $this->employeeFactory->buildEmployeeName($this->employee->name()),
             $this->employeeFactory->buildEmployeeLastname($this->employee->lastname()),
             $this->employeeFactory->buildEmployeeState($this->employee->state()),
-            $this->employeeFactory->buildEmployeeCreatedAt(
-                new DateTime($this->employee->createdAt())
-            )
+            $this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt())
         );
 
         $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
-        $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt(
-            new DateTime($this->employee->updatedAt())
-        ));
+        $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt($this->employee->updatedAt()));
 
         $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
         $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
         $employee->setEmail($this->employeeFactory->buildEmployeeEmail($this->employee->email()));
-        //$employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
+        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
         $employee->setSearch($this->employeeFactory->buildEmployeeSearch($this->employee->search()));
         $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
         $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));

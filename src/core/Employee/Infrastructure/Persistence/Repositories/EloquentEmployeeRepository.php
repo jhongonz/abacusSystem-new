@@ -109,6 +109,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     {
         $employeeModel = $this->modelEmployeeTranslator->executeTranslate($employee);
         $employeeModel->save();
+
         $employee->id()->setValue($employeeModel->id());
 
         return $employee;

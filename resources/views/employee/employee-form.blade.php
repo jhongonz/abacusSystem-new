@@ -24,6 +24,9 @@
     <div class="card m-0 border-0">
         <div class="card-body">
             <form>
+                <input type="hidden" name="userId" id="userId" value="{{$userId}}">
+                <input type="hidden" name="employeeId" id="employeeId" value="{{$employeeId}}">
+
                 <ul class="nav nav-tabs nav-tabs-bottom">
                     <li class="nav-item"><a href="#personal" class="nav-link" data-toggle="tab">Datos Personales</a></li>
                     <li class="nav-item"><a href="#login" class="nav-link" data-toggle="tab">Datos de Acceso</a></li>
@@ -193,8 +196,8 @@ $('.save-data').click(function(e){
     e.preventDefault();
 
     axios.post("{{ route('panel.employee.store') }}",{
-        employeeId: "{{ $employeeId }}",
-        userId: "{{ $userId }}",
+        employeeId: $('#employeeId').val(),
+        userId: $('#userId').val(),
         identifier: $('#identifier').val(),
         typeDocument: $('#typeDocument').val(),
         name: $('#name').val(),
@@ -211,6 +214,10 @@ $('.save-data').click(function(e){
         token: $('#token').val(),
     })
     .then(function (response){
+
+        $('#employeeId').val(response.data.employeeId);
+        $('#userId').val(response.data.userId);
+
         toast.fire({
             text: 'Registro guardado',
             type: 'success'
@@ -246,7 +253,7 @@ $(document).ready(function(){
         axios.get("{{ route('panel.employee.index') }}").then(function (response){
             var data = response.data;
             $("#content-body").html(data.html);
-            window.history.pushState("data","Title","{{ url('employee') }}");
+            window.history.pushState("data","Title","{{ route('panel.employee.index') }}");
         });
     });
 });

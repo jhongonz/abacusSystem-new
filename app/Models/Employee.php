@@ -152,22 +152,28 @@ class Employee extends Model
         $this->attributes['emp_state'] = $state;
     }
 
-    public function createdAt(): null|string
+    /**
+     * @throws Exception
+     */
+    public function createdAt(): null|DateTime
     {
-        return $this->attributes['created_at'];
+        return ($this->attributes['created_at']) ? new DateTime($this->attributes['created_at']) : $this->attributes['created_at'];
     }
 
-    public function changeCreatedAt(DateTime $datetime): void
+    public function changeCreatedAt(?DateTime $datetime): void
     {
         $this->attributes['created_at'] = $datetime;
     }
 
-    public function updatedAt(): null|string
+    /**
+     * @throws Exception
+     */
+    public function updatedAt(): null|DateTime
     {
-        return $this->attributes['updated_at'];
+        return ($this->attributes['updated_at']) ? new DateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
     }
 
-    public function changeUpdatedAt(DateTime $datetime): void
+    public function changeUpdatedAt(?DateTime $datetime): void
     {
         $this->attributes['updated_at'] = $datetime;
     }
@@ -187,10 +193,10 @@ class Employee extends Model
      */
     public function birthdate(): null|DateTime
     {
-        return new DateTime($this->attributes['emp_birthdate']);
+        return ($this->attributes['emp_birthdate']) ? new DateTime($this->attributes['emp_birthdate']) : $this->attributes['emp_birthdate'];
     }
 
-    public function changeBirthdate(DateTime $date): void
+    public function changeBirthdate(?DateTime $date): void
     {
         $this->attributes['emp_birthdate'] = $date;
     }

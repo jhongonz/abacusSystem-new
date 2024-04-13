@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Traits\UserTrait;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
@@ -20,7 +21,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use JetBrains\PhpStorm\NoReturn;
@@ -30,6 +30,8 @@ use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller implements HasMiddleware
 {
+    use UserTrait;
+
     private EmployeeManagementContract $employeeService;
     private EmployeeFactory $employeeFactory;
     private EmployeeDataTransformerContract $employeeDataTransformer;
@@ -172,7 +174,7 @@ class EmployeeController extends Controller implements HasMiddleware
                 Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(status:Response::HTTP_CREATED);
+        return response()->json(['userId'=>$userId->value(),'employeeId'=>$employeeId->value()],Response::HTTP_CREATED);
     }
 
     /**
@@ -269,12 +271,15 @@ class EmployeeController extends Controller implements HasMiddleware
             }
 
             $user = $this->userFactory->buildUser(
-                $this->userFactory->buildId(),
+                $userId,
                 $this->userFactory->buildEmployeeId($employee->id()->value()),
-                $this->userFactory->buildProfileId($request->input('profile')),
+                $this->userFactory->buildProfileId((int) $request->input('profile')),
                 $this->userFactory->buildLogin($request->input('login')),
                 $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
             );
+            $user->photo()->setValue($filename ?? '');
+
+            $this->userService->createUser($user);
         }
     }
 
@@ -290,11 +295,6 @@ class EmployeeController extends Controller implements HasMiddleware
         unlink($imageTmp);
 
         return $filename;
-    }
-
-    private function makeHashPassword(string $password): string
-    {
-        return Hash::make($password);
     }
 
     /**
