@@ -20,8 +20,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 use JetBrains\PhpStorm\NoReturn;
 use Psr\Log\LoggerInterface;
@@ -88,7 +88,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function changeStateEmployee(Request $request):JsonResponse
     {
-        $employeeId = $this->employeeFactory->buildEmployeeId($request->id);
+        $employeeId = $this->employeeFactory->buildEmployeeId($request->input('id'));
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
         if ($employee->state()->isNew() || $employee->state()->isInactived()) {
@@ -160,8 +160,8 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
-        $employeeId = $this->employeeFactory->buildEmployeeId($request->employeeId);
-        $userId = $this->userFactory->buildId($request->userId);
+        $employeeId = $this->employeeFactory->buildEmployeeId($request->input('employeeId'));
+        $userId = $this->userFactory->buildId($request->input('userId'));
 
         try {
             $method = (is_null($employeeId->value())) ? 'createEmployee' : 'updateEmployee';
@@ -215,30 +215,38 @@ class EmployeeController extends Controller implements HasMiddleware
     #[NoReturn] private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
         $dataUpdate = [
-            'identifier' => $request->identifier,
-            'typeDocument' => $request->typeDocument,
-            'name' => $request->name,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'observations' => $request->observations,
-            'birthdate' => DateTime::createFromFormat('d/m/Y',$request->birthdate)
+            'identifier' => $request->input('identifier'),
+            'typeDocument' => $request->input('typeDocument'),
+            'name' => $request->input('name'),
+            'lastname' => $request->input('lastname'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'observations' => $request->input('observations'),
+            'birthdate' => DateTime::createFromFormat('d/m/Y',$request->input('birthdate'))
         ];
 
-        if (isset($request->token)) {
-            $imageTmp = public_path($this->imagePathTmp.$request->token.'.jpg');
+        if (!is_null($request->input('token'))) {
+            $imageTmp = public_path($this->imagePathTmp.$request->input('token').'.jpg');
             $filename = Str::uuid()->toString().'.jpg';
 
             $image = $this->imageManager->read($imageTmp);
             $image->save(public_path($this->imagePathFull.$filename));
             $image->resize(150,150);
             $image->save(public_path($this->imagePathSmall.$filename));
+            unlink($imageTmp);
 
             $dataUpdate['image'] = $filename;
         }
 
         $this->employeeService->updateEmployee($employeeId, $dataUpdate);
+
+        if (!is_null($request->input('password')) && !is_null($userId->value())) {
+            $dataUpdate = [
+                'password'=> Hash::make($request->input('password'))
+            ];
+            $this->userService->updateUser($userId, $dataUpdate);
+        }
     }
 
     /**

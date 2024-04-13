@@ -66,13 +66,13 @@ class ProfileController extends Controller implements HasMiddleware
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        $profiles = $this->profileService->searchProfiles($request->filters);
+        $profiles = $this->profileService->searchProfiles($request->input('filters'));
         return $this->prepareListProfiles($profiles);
     }
 
     public function changeStateProfile(Request $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->id);
+        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
         $profile = $this->profileService->searchProfileById($profileId);
 
         if ($profile->state()->isNew() || $profile->state()->isInactived()) {
@@ -129,7 +129,7 @@ class ProfileController extends Controller implements HasMiddleware
 
     public function storeProfile(StoreProfileRequest $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->id);
+        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
 
         try {
             $method = (is_null($profileId->value())) ? 'createProfile' : 'updateProfile';
@@ -148,9 +148,9 @@ class ProfileController extends Controller implements HasMiddleware
     {
         $profile = $this->profileFactory->buildProfile(
             $profileId,
-            $this->profileFactory->buildProfileName($request->name)
+            $this->profileFactory->buildProfileName($request->input('name'))
         );
-        $profile->description()->setValue($request->description);
+        $profile->description()->setValue($request->input('description'));
 
         $modulesAggregator = $this->getModulesAggregator($request);
         $profile->setModulesAggregator($modulesAggregator);
@@ -163,8 +163,8 @@ class ProfileController extends Controller implements HasMiddleware
         $modulesAggregator = $this->getModulesAggregator($request);
 
         $dataUpdate = [
-            'name' => $request->name,
-            'description' => $request->description,
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
             'modules' => $modulesAggregator,
         ];
 
@@ -218,7 +218,7 @@ class ProfileController extends Controller implements HasMiddleware
     private function getModulesAggregator(Request $request) : array
     {
         $modulesAggregator = [];
-        foreach ($request->modules as $item) {
+        foreach ($request->input('modules') as $item) {
             $modulesAggregator[] = $item['id'];
         }
 
