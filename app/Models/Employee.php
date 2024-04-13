@@ -67,7 +67,7 @@ class Employee extends Model
         return $this->hasOne(User::class,'user__emp_id','emp_id');
     }
 
-    public function user(): User
+    public function user(): ?User
     {
         return $this->relationWithUser;
     }
@@ -77,7 +77,7 @@ class Employee extends Model
         return $this->attributes['emp_id'];
     }
 
-    public function changeId(int $id): void
+    public function changeId(?int $id): void
     {
         $this->attributes['emp_id'] = $id;
     }
@@ -220,7 +220,7 @@ class Employee extends Model
         return $this->attributes['emp_image'];
     }
 
-    public function changeImage(string $image): void
+    public function changeImage(?string $image): void
     {
         $this->attributes['emp_image'] = $image;
     }

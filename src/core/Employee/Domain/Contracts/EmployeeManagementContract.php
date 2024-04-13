@@ -16,4 +16,6 @@ interface EmployeeManagementContract
     public function searchEmployees(array $filters = []): Employees;
 
     public function updateEmployee(EmployeeId $id, array $data): void;
+
+    public function createEmployee(Employee $employee): void;
 }

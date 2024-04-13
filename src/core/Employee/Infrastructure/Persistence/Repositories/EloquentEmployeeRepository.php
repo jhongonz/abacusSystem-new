@@ -102,11 +102,14 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         // TODO: Implement delete() method.
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistEmployee(Employee $employee): Employee
     {
-        /** @var EmployeeModel $employeeModel*/
         $employeeModel = $this->modelEmployeeTranslator->executeTranslate($employee);
         $employeeModel->save();
+        $employee->id()->setValue($employeeModel->id());
 
         return $employee;
     }

@@ -69,9 +69,9 @@ class EmployeeFactory implements EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        null|EmployeeLastname $lastname,
-        null|EmployeeState $state,
-        null|EmployeeCreatedAt $createdAt
+        EmployeeLastname $lastname = new EmployeeLastname(),
+        EmployeeState $state = new EmployeeState(),
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
     ): Employee {
 
         $employee = new Employee(

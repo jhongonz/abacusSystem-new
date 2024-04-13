@@ -227,15 +227,7 @@ class EmployeeController extends Controller implements HasMiddleware
         ];
 
         if (!is_null($request->input('token'))) {
-            $imageTmp = public_path($this->imagePathTmp.$request->input('token').'.jpg');
-            $filename = Str::uuid()->toString().'.jpg';
-
-            $image = $this->imageManager->read($imageTmp);
-            $image->save(public_path($this->imagePathFull.$filename));
-            $image->resize(150,150);
-            $image->save(public_path($this->imagePathSmall.$filename));
-            unlink($imageTmp);
-
+            $filename = $this->saveImage($request->input('token'));
             $dataUpdate['image'] = $filename;
         }
 
@@ -243,10 +235,66 @@ class EmployeeController extends Controller implements HasMiddleware
 
         if (!is_null($request->input('password')) && !is_null($userId->value())) {
             $dataUpdate = [
-                'password'=> Hash::make($request->input('password'))
+                'password'=> $this->makeHashPassword($request->input('password'))
             ];
             $this->userService->updateUser($userId, $dataUpdate);
         }
+    }
+
+    #[NoReturn] private function createEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
+    {
+        $employee = $this->employeeFactory->buildEmployee(
+            $employeeId,
+            $this->employeeFactory->buildEmployeeIdentification($request->input('identifier')),
+            $this->employeeFactory->buildEmployeeName($request->input('name')),
+            $this->employeeFactory->buildEmployeeLastname($request->input('lastname'))
+        );
+
+        $employee->identificationType()->setValue($request->input('typeDocument'));
+        $employee->observations()->setValue($request->input('observations'));
+        $employee->phone()->setValue($request->input('phone'));
+        $employee->email()->setValue($request->input('email'));
+        $employee->address()->setValue($request->input('address'));
+        $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
+
+        $this->employeeService->createEmployee($employee);
+
+        if (!is_null($employee->id()->value())) {
+
+            if (!is_null($request->input('token'))) {
+                $filename = $this->saveImage($request->input('token'));
+                $dataUpdate['image'] = $filename;
+
+                $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
+            }
+
+            $user = $this->userFactory->buildUser(
+                $this->userFactory->buildId(),
+                $this->userFactory->buildEmployeeId($employee->id()->value()),
+                $this->userFactory->buildProfileId($request->input('profile')),
+                $this->userFactory->buildLogin($request->input('login')),
+                $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
+            );
+        }
+    }
+
+    private function saveImage(string $token): string
+    {
+        $imageTmp = public_path($this->imagePathTmp.$token.'.jpg');
+        $filename = Str::uuid()->toString().'.jpg';
+
+        $image = $this->imageManager->read($imageTmp);
+        $image->save(public_path($this->imagePathFull.$filename));
+        $image->resize(150,150);
+        $image->save(public_path($this->imagePathSmall.$filename));
+        unlink($imageTmp);
+
+        return $filename;
+    }
+
+    private function makeHashPassword(string $password): string
+    {
+        return Hash::make($password);
     }
 
     /**

@@ -30,8 +30,8 @@ class StoreEmployeeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'employeeId' => ['required','nullable'],
-            'userId' => ['required','nullable'],
+            'employeeId' => ['nullable'],
+            'userId' => ['nullable'],
             'identifier' => ['required'],
             'typeDocument' => ['required'],
             'name' => ['required'],
@@ -59,8 +59,6 @@ class StoreEmployeeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'employeeId.required' => 'El id del empleado es requerido y puede ser null',
-            'userId.required' => 'El id del usuario es requerido y puede ser null',
             'identifier.required' => 'El campo identifier es requerido',
             'typeDocument.required' => 'El campo typeDocument es requerido',
             'name.required' => 'El campo name es requerido',
