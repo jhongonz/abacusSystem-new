@@ -13,7 +13,7 @@ class UserTranslator implements TranslatorDomainContract
 {
     private UserFactoryContract $factory;
     private UserModel $user;
-    
+
     public function __construct(
         UserFactoryContract $factory,
         UserModel $user,
@@ -48,11 +48,12 @@ class UserTranslator implements TranslatorDomainContract
                 new DateTime($this->user->createAt())
             )
         );
-        
+
+        $user->setPhoto($this->factory->buildUserPhoto($this->user->photo()));
         $user->setUpdatedAt($this->factory->buildUpdatedAt(
             new DateTime($this->user->updatedAt()))
         );
-        
+
         return $user;
     }
 

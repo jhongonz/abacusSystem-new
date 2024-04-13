@@ -24,7 +24,7 @@ class UserFactory implements UserFactoryContract
     public function buildUserFromArray(array $data): User
     {
         $data = $data[User::TYPE];
-        return $this->buildUser(
+        $user = $this->buildUser(
             $this->buildId($data['id']),
             $this->buildEmployeeId($data['employeeId']),
             $this->buildProfileId($data['profileId']),
@@ -35,6 +35,9 @@ class UserFactory implements UserFactoryContract
                 new DateTime($data['createdAt']['date'])
             )
         );
+        $user->photo()->setValue($data['photo']);
+
+        return $user;
     }
 
     public function buildUser(

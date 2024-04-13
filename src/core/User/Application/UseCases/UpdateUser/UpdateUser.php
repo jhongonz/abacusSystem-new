@@ -25,6 +25,7 @@ class UpdateUser extends UseCasesService
         $this->validateRequest($request, UpdateUserRequest::class);
 
         $user = $this->userRepository->find($request->userId());
+
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);
 

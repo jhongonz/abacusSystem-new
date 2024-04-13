@@ -8,7 +8,7 @@ use Core\User\Domain\User;
 class UserDataTransformer implements UserDataTransformerContract
 {
     private User $user;
-    
+
     public function write(User $user): self
     {
         $this->user = $user;
@@ -25,6 +25,7 @@ class UserDataTransformer implements UserDataTransformerContract
                 'login' => $this->user->login()->value(),
                 'password' => $this->user->password()->value(),
                 'state' => $this->user->state()->value(),
+                'photo' => $this->user->photo()->value(),
                 'createdAt' => $this->user->createdAt()->value(),
                 'updatedAt' => $this->user->updatedAt()->value(),
             ]
