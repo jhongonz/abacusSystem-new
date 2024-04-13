@@ -46,7 +46,7 @@ class ProfileWarmup extends Command
      *
      * @var string
      */
-    protected $description = 'Warmup all of profile';
+    protected $description = 'Warmup profiles in memory';
 
     /**
      * Execute the console command.

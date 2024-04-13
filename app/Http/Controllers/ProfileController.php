@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
+use App\Events\User\RefreshModulesSession;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
@@ -64,13 +66,13 @@ class ProfileController extends Controller implements HasMiddleware
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        $profiles = $this->profileService->searchProfiles($request->filters);
+        $profiles = $this->profileService->searchProfiles($request->input('filters'));
         return $this->prepareListProfiles($profiles);
     }
 
     public function changeStateProfile(Request $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->id);
+        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
         $profile = $this->profileService->searchProfileById($profileId);
 
         if ($profile->state()->isNew() || $profile->state()->isInactived()) {
@@ -83,6 +85,8 @@ class ProfileController extends Controller implements HasMiddleware
 
         try {
             $this->profileService->updateProfile($profileId, $dataUpdate);
+            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
+            RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
             $this->logger->error('Profile can not be updated with id: '. $profileId->value());
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -95,6 +99,8 @@ class ProfileController extends Controller implements HasMiddleware
     {
         $profileId = $this->profileFactory->buildProfileId($id);
         $this->profileService->deleteProfile($profileId);
+
+        ProfileUpdatedOrDeletedEvent::dispatch($profileId);
 
         return response()->json(status:Response::HTTP_OK);
     }
@@ -123,11 +129,12 @@ class ProfileController extends Controller implements HasMiddleware
 
     public function storeProfile(StoreProfileRequest $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->id);
+        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
 
         try {
             $method = (is_null($profileId->value())) ? 'createProfile' : 'updateProfile';
             $this->{$method}($request, $profileId);
+            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
@@ -141,9 +148,9 @@ class ProfileController extends Controller implements HasMiddleware
     {
         $profile = $this->profileFactory->buildProfile(
             $profileId,
-            $this->profileFactory->buildProfileName($request->name)
+            $this->profileFactory->buildProfileName($request->input('name'))
         );
-        $profile->description()->setValue($request->description);
+        $profile->description()->setValue($request->input('description'));
 
         $modulesAggregator = $this->getModulesAggregator($request);
         $profile->setModulesAggregator($modulesAggregator);
@@ -156,8 +163,8 @@ class ProfileController extends Controller implements HasMiddleware
         $modulesAggregator = $this->getModulesAggregator($request);
 
         $dataUpdate = [
-            'name' => $request->name,
-            'description' => $request->description,
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
             'modules' => $modulesAggregator,
         ];
 
@@ -211,7 +218,7 @@ class ProfileController extends Controller implements HasMiddleware
     private function getModulesAggregator(Request $request) : array
     {
         $modulesAggregator = [];
-        foreach ($request->modules as $item) {
+        foreach ($request->input('modules') as $item) {
             $modulesAggregator[] = $item['id'];
         }
 
@@ -226,7 +233,7 @@ class ProfileController extends Controller implements HasMiddleware
     public static function middleware(): Middleware|array
     {
         return [
-            new Middleware('auth'),
+            new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
                 'getProfiles','getProfile'
             ]),

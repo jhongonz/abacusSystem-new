@@ -19,22 +19,22 @@ class User extends Authenticatable
      *
      * @var string
      */
-protected $table = 'users';
+    protected $table = 'users';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-protected $primaryKey = 'user_id';
+    protected $primaryKey = 'user_id';
 
     /**
      * The model's default values for attributes.
      *
      * @var array
      */
-protected $attributes = [
-    'user_state' => 1,
+    protected $attributes = [
+        'user_state' => 1,
     ];
 
     /**
@@ -42,8 +42,8 @@ protected $attributes = [
      *
      * @var array<int, string>
      */
-protected $fillable = [
-    'user_login',
+    protected $fillable = [
+        'user_login',
         'password',
         'user__emp_id',
         'user__pro_id',
@@ -58,8 +58,8 @@ protected $fillable = [
      *
      * @var array<int, string>
      */
-protected $hidden = [
-    'password',
+    protected $hidden = [
+        'password',
         'user_remember_token',
     ];
 
@@ -68,8 +68,8 @@ protected $hidden = [
      *
      * @var array<string, string>
      */
-protected $casts = [
-    'email_verified_at' => 'datetime',
+    protected $casts = [
+        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
@@ -80,98 +80,98 @@ protected $casts = [
         return $this->belongsTo(Employee::class,'user__emp_id','emp_id');
     }
 
-public function employee(): Employee
-{
-    return $this->relationWithEmployee;
-}
+    public function employee(): Employee
+    {
+        return $this->relationWithEmployee;
+    }
 
-public function relationWithProfile(): BelongsTo
-{
-    return $this->belongsTo(Profile::class,'user__pro_id','pro_id');
-}
+    public function relationWithProfile(): BelongsTo
+    {
+        return $this->belongsTo(Profile::class,'user__pro_id','pro_id');
+    }
 
-public function profile(): Profile
-{
-    return $this->relationWithProfile;
-}
+    public function profile(): Profile
+    {
+        return $this->relationWithProfile;
+    }
 
-public function id(): null|int
-{
-    return $this->attributes['user_id'];
-}
+    public function id(): null|int
+    {
+        return $this->attributes['user_id'];
+    }
 
-public function changeId(int $id): void
-{
-    $this->attributes['user_id'] = $id;
-}
+    public function changeId(?int $id): void
+    {
+        $this->attributes['user_id'] = $id;
+    }
 
-public function employeeId(): null|int
-{
-    return $this->attributes['user__emp_id'];
-}
+    public function employeeId(): null|int
+    {
+        return $this->attributes['user__emp_id'];
+    }
 
-public function changeEmployeeId(int $id): void
-{
-    $this->attributes['user__emp_id'] = $id;
-}
+    public function changeEmployeeId(int $id): void
+    {
+        $this->attributes['user__emp_id'] = $id;
+    }
 
-public function profileId(): null|int
-{
-    return $this->attributes['user__pro_id'];
-}
+    public function profileId(): null|int
+    {
+        return $this->attributes['user__pro_id'];
+    }
 
-public function changeProfileId(int $id): void
-{
-    $this->attributes['user__pro_id'] = $id;
-}
+    public function changeProfileId(int $id): void
+    {
+        $this->attributes['user__pro_id'] = $id;
+    }
 
-public function login(): null|string
-{
-    return $this->attributes['user_login'];
-}
+    public function login(): null|string
+    {
+        return $this->attributes['user_login'];
+    }
 
-public function changeLogin(string $login): void
-{
-    $this->attributes['user_login'] = $login;
-}
+    public function changeLogin(string $login): void
+    {
+        $this->attributes['user_login'] = $login;
+    }
 
-public function password(): null|string
-{
-    return $this->attributes['password'];
-}
+    public function password(): null|string
+    {
+        return $this->attributes['password'];
+    }
 
-public function changePassword(string $password): void
-{
-    $this->attributes['password'] = $password;
-}
+    public function changePassword(string $password): void
+    {
+        $this->attributes['password'] = $password;
+    }
 
-public function state(): null|int
-{
-    return $this->attributes['user_state'];
-}
+    public function state(): null|int
+    {
+        return $this->attributes['user_state'];
+    }
 
-public function changeState(int $state): void
-{
-    $this->attributes['user_state'] = $state;
-}
+    public function changeState(int $state): void
+    {
+        $this->attributes['user_state'] = $state;
+    }
 
-public function createAt(): null|string
-{
-    return $this->attributes['created_at'];
-}
+    public function createAt(): null|string
+    {
+        return $this->attributes['created_at'];
+    }
 
-public function changeCreatedAt(DateTime $datetime): void
-{
-    $this->attributes['created_at'] = $datetime;
-}
+    public function changeCreatedAt(DateTime $datetime): void
+    {
+        $this->attributes['created_at'] = $datetime;
+    }
 
-public function updatedAt(): null|string
-{
-    return $this->attributes['updated_at'];
-}
+    public function updatedAt(): null|string
+    {
+        return $this->attributes['updated_at'];
+    }
 
-public function changeUpdatedAt(null|DateTime $datetime): void
-{
-    $this->attributes['updated_at'] = $datetime;
-}
+    public function changeUpdatedAt(null|DateTime $datetime): void
+    {
+        $this->attributes['updated_at'] = $datetime;
+    }
 }

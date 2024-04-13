@@ -28,10 +28,11 @@ use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelModuleTrans
 use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelProfileTranslator;
 use Core\Profile\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
 
-class ProfileServiceProvider extends ServiceProvider
+class ProfileServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container bindings that should be registered
@@ -106,6 +107,24 @@ class ProfileServiceProvider extends ServiceProvider
                 $app->make(RedisModuleRepository::class),
             );
         });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<int, string>
+     */
+    public function provides(): array
+    {
+        return [
+            ProfileFactoryContract::class,
+            ProfileDataTransformerContract::class,
+            ProfileManagementContract::class,
+
+            ModuleFactoryContract::class,
+            ModuleDataTransformerContract::class,
+            ModuleManagementContract::class,
+        ];
     }
 
     /**

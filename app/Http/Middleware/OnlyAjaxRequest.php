@@ -18,7 +18,7 @@ class OnlyAjaxRequest
         if (!$request->ajax()) {
             return redirect()->route('index');
         }
-        
+
         return $next($request);
     }
 }

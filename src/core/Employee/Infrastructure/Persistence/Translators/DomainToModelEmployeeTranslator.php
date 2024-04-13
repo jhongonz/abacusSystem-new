@@ -9,7 +9,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
 {
     private EmployeeModel $model;
     private string $canTranslate;
-    
+
     public function __construct(EmployeeModel $model)
     {
         $this->model = $model;
@@ -18,29 +18,34 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
 
     /**
      * @param Employee $domain
-     * @param EmployeeModel $model
+     * @param null|EmployeeModel $model
      * @return EmployeeModel
      */
-    public function executeTranslate($domain,$model): EmployeeModel
+    public function executeTranslate($domain,$model = null): EmployeeModel
     {
         if (is_null($model)) {
             $model = $this->model->where('emp_id', $domain->id()->value())->first() ?: $this->createModel();
         }
-        
+
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());
+        $model->changeIdentificationType($domain->identificationType()->value());
         $model->changeName($domain->name()->value());
         $model->changeLastname($domain->lastname()->value());
         $model->changePhone($domain->phone()->value());
+        $model->changeBirthdate($domain->birthdate()->value());
         $model->changeEmail($domain->email()->value());
         $model->changeAddress($domain->address()->value());
+        $model->changeObservations($domain->observations()->value());
+        $model->changeImage($domain->image()->value());
         $model->changeState($domain->state()->value());
+        $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
-        
+
         if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
-        
+
         return $model;
     }
 
@@ -53,7 +58,7 @@ class DomainToModelEmployeeTranslator implements TranslatorContract
     {
         return EmployeeModel::class;
     }
-    
+
     protected function createModel(): EmployeeModel
     {
         return new EmployeeModel();

@@ -5,6 +5,7 @@ namespace Core\Employee\Infrastructure\Persistence\Translators;
 use App\Models\Employee as EmployeeModel;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use DateTime;
 use Exception;
@@ -13,13 +14,16 @@ class EmployeeTranslator implements TranslatorDomainContract
 {
     private EmployeeFactoryContract $employeeFactory;
     private EmployeeModel $employee;
+    private array $collection;
 
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
         EmployeeModel $employee,
+        array $collection = [],
     ) {
         $this->employeeFactory = $employeeFactory;
         $this->employee = $employee;
+        $this->collection = $collection;
     }
 
     /**
@@ -43,21 +47,38 @@ class EmployeeTranslator implements TranslatorDomainContract
             $this->employeeFactory->buildEmployeeName($this->employee->name()),
             $this->employeeFactory->buildEmployeeLastname($this->employee->lastname()),
             $this->employeeFactory->buildEmployeeState($this->employee->state()),
-            $this->employeeFactory->buildEmployeeCreatedAt(
-                new DateTime($this->employee->createdAt())
-            )
+            $this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt())
         );
 
-        $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt(
-            new DateTime($this->employee->updatedAt())
-        ));
+        $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
+        $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt($this->employee->updatedAt()));
 
         $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
         $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
         $employee->setEmail($this->employeeFactory->buildEmployeeEmail($this->employee->email()));
         $employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
+        $employee->setSearch($this->employeeFactory->buildEmployeeSearch($this->employee->search()));
+        $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
+        $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
+        $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
 
         return $employee;
+    }
+
+    public function setCollection(array $collection): self
+    {
+        $this->collection = $collection;
+        return $this;
+    }
+
+    public function toDomainCollection(): Employees
+    {
+        $employees = new Employees();
+        foreach ($this->collection as $id) {
+            $employees->addId($id);
+        }
+
+        return $employees;
     }
 
     public function canTranslate(): string

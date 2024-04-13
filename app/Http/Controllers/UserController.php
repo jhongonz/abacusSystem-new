@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\RecoveryAccountRequest;
 use App\Http\Requests\User\ResetPasswordRequest;
+use App\Traits\UserTrait;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
@@ -17,10 +18,12 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response as ResponseFundation;
+use Symfony\Component\HttpFoundation\Response as ResponseFoundation;
 
 class UserController extends Controller implements HasMiddleware
 {
+    use UserTrait;
+
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
     private EmployeeFactoryContract $employeeFactory;
@@ -88,12 +91,12 @@ class UserController extends Controller implements HasMiddleware
 
         $dataUpdate = [
             'state'=> UserState::STATE_ACTIVE,
-            'password' => Hash::make($request->input('password'))
+            'password' => $this->makeHashPassword($request->input('password'))
         ];
 
         $this->userService->updateUser($idUser, $dataUpdate);
 
-        return response()->json(status:ResponseFundation::HTTP_CREATED);
+        return response()->json(status:ResponseFoundation::HTTP_CREATED);
     }
 
     /**
@@ -104,6 +107,7 @@ class UserController extends Controller implements HasMiddleware
     public static function middleware(): Middleware|array
     {
         return [
+            new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only: ['recoveryAccout','resetPassword']),
         ];
     }

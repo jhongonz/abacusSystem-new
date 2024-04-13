@@ -37,7 +37,8 @@ class ModuleWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'module:warmup';
+    protected $signature = 'module:warmup
+                            {--id=0 : The ID module}';
 
     /**
      * The console command description.
@@ -51,10 +52,19 @@ class ModuleWarmup extends Command
      */
     public function handle(): void
     {
-        $modules = $this->readRepository->getAll();
-        foreach($this->repositories as $repository) {
-            foreach ($modules->aggregator() as $item) {
-                $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
+        if ($this->option('id') == 0) {
+            $modules = $this->readRepository->getAll();
+
+            foreach($this->repositories as $repository) {
+                foreach ($modules->aggregator() as $item) {
+                    $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
+                    $repository->persistModule($module);
+                }
+            }
+        } else {
+            $moduleId = $this->moduleFactory->buildModuleId($this->option('id'));
+            $module = $this->readRepository->find($moduleId);
+            foreach ($this->repositories as $repository) {
                 $repository->persistModule($module);
             }
         }

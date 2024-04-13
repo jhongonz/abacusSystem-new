@@ -43,8 +43,8 @@ class UserFactory implements UserFactoryContract
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        null|UserState $state,
-        null|UserCreatedAt $createdAt
+        UserState $state = new UserState(),
+        UserCreatedAt $createdAt = new UserCreatedAt()
     ): User {
         return new User(
             $id,

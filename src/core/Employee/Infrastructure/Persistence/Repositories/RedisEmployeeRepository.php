@@ -6,6 +6,7 @@ use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
@@ -117,7 +118,6 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         $employeeIdentificationKey = $this->employeeIdentificationKey($employee->identification());
 
         $employeeData = $this->dataTransformer->write($employee)->read();
-
         try {
             Redis::set($employeeKey, json_encode($employeeData));
             Redis::set($employeeIdentificationKey, json_encode($employeeData));
@@ -128,6 +128,11 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return $employee;
     }
 
+    public function persistEmployees(Employees $employees): Employees
+    {
+        return $employees;
+    }
+
     private function employeeKey(EmployeeId $id): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $id->value());
@@ -136,5 +141,10 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     private function employeeIdentificationKey(EmployeeIdentification $identification): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $identification->value());
+    }
+
+    public function getAll(array $filters = []): null|Employees
+    {
+        return null;
     }
 }
