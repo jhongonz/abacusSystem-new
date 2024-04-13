@@ -48,6 +48,7 @@ class User extends Authenticatable
         'user__emp_id',
         'user__pro_id',
         'user_state',
+        'user_photo',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -173,5 +174,15 @@ class User extends Authenticatable
     public function changeUpdatedAt(null|DateTime $datetime): void
     {
         $this->attributes['updated_at'] = $datetime;
+    }
+
+    public function photo(): null|string
+    {
+        return $this->attributes['user_photo'];
+    }
+
+    public function changePhoto(?string $photo): void
+    {
+        $this->attributes['user_photo'] = $photo;
     }
 }

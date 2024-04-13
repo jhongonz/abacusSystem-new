@@ -33,6 +33,7 @@ class DomainToModelUserTranslator implements TranslatorContract
         $model->changeLogin($domain->login()->value());
         $model->changePassword($domain->password()->value());
         $model->changeState($domain->state()->value());
+        $model->changePhoto($domain->photo()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
         if (!is_null($domain->updatedAt()->value())) {

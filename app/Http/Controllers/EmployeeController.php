@@ -216,6 +216,7 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     #[NoReturn] private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
+        $dataUpdateUser = [];
         $dataUpdate = [
             'identifier' => $request->input('identifier'),
             'typeDocument' => $request->input('typeDocument'),
@@ -231,15 +232,17 @@ class EmployeeController extends Controller implements HasMiddleware
         if (!is_null($request->input('token'))) {
             $filename = $this->saveImage($request->input('token'));
             $dataUpdate['image'] = $filename;
+            $dataUpdateUser['image'] = $filename;
         }
 
         $this->employeeService->updateEmployee($employeeId, $dataUpdate);
 
-        if (!is_null($request->input('password')) && !is_null($userId->value())) {
-            $dataUpdate = [
-                'password'=> $this->makeHashPassword($request->input('password'))
-            ];
-            $this->userService->updateUser($userId, $dataUpdate);
+        if (!is_null($request->input('password'))) {
+            $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
+        }
+
+        if (!is_null($userId->value()) && $dataUpdateUser) {
+            $this->userService->updateUser($userId, $dataUpdateUser);
         }
     }
 

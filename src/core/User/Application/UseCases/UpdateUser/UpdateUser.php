@@ -80,4 +80,10 @@ class UpdateUser extends UseCasesService
         $user->updatedAt()->setValue($value);
         return $user;
     }
+
+    public function changeImage(User $user, string $image): User
+    {
+        $user->photo()->setValue($image);
+        return $user;
+    }
 }
