@@ -48,17 +48,14 @@ class ModuleTranslator implements TranslatorDomainContract
             $this->moduleFactory->buildModuleRoute($this->model->route()),
             $this->moduleFactory->buildModuleIcon($this->model->icon()),
             $this->moduleFactory->buildModuleState($this->model->state()),
-            $this->moduleFactory->buildModuleCreatedAt(
-                new DateTime($this->model->createdAt())
-            ));
+            $this->moduleFactory->buildModuleCreatedAt($this->model->createdAt())
+        );
 
         $module->setSearch(
             $this->moduleFactory->buildModuleSearch($this->model->search())
         );
 
-        $module->setUpdatedAt($this->moduleFactory->buildModuleUpdatedAt(
-            new DateTime($this->model->updatedAt())
-        ));
+        $module->setUpdatedAt($this->moduleFactory->buildModuleUpdatedAt($this->model->updatedAt()));
 
         return $module;
     }

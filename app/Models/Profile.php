@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -104,6 +105,11 @@ class Profile extends Model
         return $this->attributes['pro_state'];
     }
 
+    public function changeState(int $state): void
+    {
+        $this->attributes['pro_state'] = $state;
+    }
+
     public function search(): null|string
     {
         return $this->attributes['pro_search'];
@@ -124,14 +130,12 @@ class Profile extends Model
         $this->attributes['pro_description'] = $description;
     }
 
-    public function changeState(int $state): void
+    /**
+     * @throws Exception
+     */
+    public function createdAt(): null|DateTime
     {
-        $this->attributes['pro_state'] = $state;
-    }
-
-    public function createdAt(): null|string
-    {
-        return $this->attributes['created_at'];
+        return ($this->attributes['created_at']) ? new DateTime($this->attributes['created_at']) : $this->attributes['created_at'];
     }
 
     public function changeCreatedAt(DateTime $datetime): void
@@ -139,9 +143,12 @@ class Profile extends Model
         $this->attributes['created_at'] = $datetime;
     }
 
-    public function updatedAt(): null|string
+    /**
+     * @throws Exception
+     */
+    public function updatedAt(): null|DateTime
     {
-        return $this->attributes['updated_at'];
+        return ($this->attributes['updated_at']) ? new DateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
     }
 
     public function changeUpdatedAt(DateTime $datetime): void

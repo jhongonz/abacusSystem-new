@@ -26,7 +26,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
     private ModuleTranslator $moduleTranslator;
     private TranslatorContract $modelModuleTranslator;
     private int $priority;
-    
+
     public function __construct(
         ModuleModel $model,
         ModuleTranslator $moduleTranslator,
@@ -65,7 +65,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         } catch (Exception $exception) {
             throw new ModuleNotFoundException('Module not found with id: '. $id->value());
         }
-        
+
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 
@@ -74,6 +74,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         /** @var ModuleModel $moduleModel */
         $moduleModel = $this->modelModuleTranslator->executeTranslate($module);
         $moduleModel->save();
+        $module->id()->setValue($moduleModel->id());
 
         return $module;
     }
@@ -87,17 +88,17 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         try {
             /** @var Builder $queryBuilder*/
             $queryBuilder = $this->moduleModel->where('mod_state','>',ModuleState::STATE_DELETE);
-                
+
             if (array_key_exists('q', $filters) && isset($filters['q'])) {
                 $queryBuilder->where('mod_search','like','%'.$filters['q'].'%');
             }
-            
+
             /** @var Collection $moduleCollection*/
             $moduleCollection = $queryBuilder->get(['mod_id']);
         } catch (Exception $exception) {
             throw new ModulesNotFoundException('Modules not found');
         }
-        
+
         $collection = [];
         /** @var ModuleModel $moduleModel */
         foreach ($moduleCollection as $moduleModel) {
@@ -106,7 +107,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
 
         $modules = $this->moduleTranslator->setCollection($collection)->toDomainCollection();
         $modules->setFilters($filters);
-        
+
         return $modules;
     }
 

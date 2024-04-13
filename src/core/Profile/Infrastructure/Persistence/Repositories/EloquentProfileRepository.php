@@ -149,6 +149,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         /** @var ProfileModel $profileModel */
         $profileModel = $this->modelProfileTranslator->executeTranslate($profile);
         $profileModel->save();
+        $profile->id()->setValue($profileModel->id());
 
         $profileModel->pivotModules()->sync($profile->modulesAggregator());
 
