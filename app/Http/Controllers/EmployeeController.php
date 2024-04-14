@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\UserTrait;
@@ -84,7 +85,7 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function getEmployees(Request $request): JsonResponse
     {
-        $employees = $this->employeeService->searchEmployees($request->filters);
+        $employees = $this->employeeService->searchEmployees($request->input('filters'));
         return $this->prepareListEmployees($employees);
     }
 
@@ -168,6 +169,8 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $method = (is_null($employeeId->value())) ? 'createEmployee' : 'updateEmployee';
             $this->{$method}($request, $employeeId, $userId);
+            EmployeeUpdateOrDeletedEvent::dispatch($employeeId);
+            UserUpdateOrDeleteEvent::dispatch($userId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],

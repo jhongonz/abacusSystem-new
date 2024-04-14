@@ -92,16 +92,6 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $this;
     }
 
-    public function save(User $user): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(UserId $id, User $user): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function delete(UserId $id): void
     {
         // TODO: Implement delete() method.

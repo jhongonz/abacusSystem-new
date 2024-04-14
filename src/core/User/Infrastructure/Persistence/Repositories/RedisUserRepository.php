@@ -88,14 +88,14 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
     public function persistUser(User $user): User
     {
         $userLoginKey = $this->userLoginKey($user->login());
-        $userkey = $this->userKey($user->id());
+        $userKey = $this->userKey($user->id());
 
         $userData = $this->dataTransformer->write($user)->read();
         try {
             Redis::set($userLoginKey, json_encode($userData));
-            Redis::set($userkey, json_encode($userData));
+            Redis::set($userKey, json_encode($userData));
         } catch (Exception $exception) {
-            throw new UserPersistException('It could not persist User with key '.$userkey.' in redis');
+            throw new UserPersistException('It could not persist User with key '.$userKey.' in redis');
         }
 
         return $user;
@@ -120,16 +120,6 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
     private function userKey(UserId $id): string
     {
         return sprintf(self::USER_KEY_FORMAT, $this->keyPrefix, $id->value());
-    }
-
-    public function save(User $user): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(UserId $id, User $user): void
-    {
-        // TODO: Implement update() method.
     }
 
     public function delete(UserId $id): void
