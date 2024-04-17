@@ -18,6 +18,7 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     ];
 
     private string $domainToPersist;
+    private bool $deleteSource = false;
 
     function functionNamePersist(): string
     {
@@ -71,6 +72,11 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     {
         $this->domainToPersist = User::class;
 
-        return $this->writeChain(__FUNCTION__, $user);
+        return $this->write(__FUNCTION__, $user);
+    }
+
+    function functionNameDelete(): bool
+    {
+        return $this->deleteSource;
     }
 }
