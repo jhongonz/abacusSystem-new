@@ -65,7 +65,7 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
 
     public function delete(UserId $id): void
     {
-        // TODO: Implement delete() method.
+        $this->deleteSource = true;
     }
 
     public function persistUser(User $user): User
