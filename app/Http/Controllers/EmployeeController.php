@@ -105,7 +105,7 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $this->employeeService->updateEmployee($employeeId, $dataUpdate);
         } catch (Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$employeeId->value());
+            $this->logger->error('Employee can not be updated with id: '.$employeeId->value(), $exception->getTrace());
 
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -125,7 +125,7 @@ class EmployeeController extends Controller implements HasMiddleware
                     $user->id()->value(),
                     $employeeId->value()
                 );
-                $this->logger->error($message);
+                $this->logger->error($message, $exception->getTrace());
             }
         }
 
@@ -265,28 +265,29 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee->address()->setValue($request->input('address'));
         $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
 
-        $this->employeeService->createEmployee($employee);
-
-        if (!is_null($employee->id()->value())) {
-
-            if (!is_null($request->input('token'))) {
-                $filename = $this->saveImage($request->input('token'));
-                $dataUpdate['image'] = $filename;
-
-                $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
-            }
-
-            $user = $this->userFactory->buildUser(
-                $userId,
-                $this->userFactory->buildEmployeeId($employee->id()->value()),
-                $this->userFactory->buildProfileId((int) $request->input('profile')),
-                $this->userFactory->buildLogin($request->input('login')),
-                $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
-            );
-            $user->photo()->setValue($filename ?? '');
-
-            $this->userService->createUser($user);
+        try {
+            $this->employeeService->createEmployee($employee);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
+
+        if (!is_null($request->input('token'))) {
+            $filename = $this->saveImage($request->input('token'));
+            $dataUpdate['image'] = $filename;
+
+            $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
+        }
+
+        $user = $this->userFactory->buildUser(
+            $userId,
+            $this->userFactory->buildEmployeeId($employee->id()->value()),
+            $this->userFactory->buildProfileId((int) $request->input('profile')),
+            $this->userFactory->buildLogin($request->input('login')),
+            $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
+        );
+        $user->photo()->setValue($filename ?? '');
+
+        $this->userService->createUser($user);
     }
 
     private function saveImage(string $token): string
