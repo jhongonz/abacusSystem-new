@@ -58,19 +58,9 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         }
     }
 
-    public function save(Employee $employee): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(EmployeeId $id, Employee $employee): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function delete(EmployeeId $id): void
     {
-        // TODO: Implement delete() method.
+        $this->deleteSource = true;
     }
 
     public function persistEmployee(Employee $employee): Employee

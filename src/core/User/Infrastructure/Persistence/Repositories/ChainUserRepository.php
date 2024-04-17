@@ -53,16 +53,6 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
         }
     }
 
-    public function save(User $user): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(UserId $id, User $user): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function delete(UserId $id): void
     {
         $this->deleteSource = true;

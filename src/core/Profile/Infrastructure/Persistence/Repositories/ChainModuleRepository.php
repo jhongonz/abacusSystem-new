@@ -39,12 +39,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
 
     public function persistModule(Module $module): Module
     {
-        return $this->writeChain(__FUNCTION__, $module);
-    }
-
-    public function persistModules(Modules $modules): Modules
-    {
-        return $this->writeChain(__FUNCTION__, $modules);
+        return $this->write(__FUNCTION__, $module);
     }
 
     function functionNamePersist(): string

@@ -15,10 +15,6 @@ interface EmployeeRepositoryContract
 
     public function getAll(array $filters = []): null|Employees;
 
-    public function save(Employee $employee): void;
-
-    public function update(EmployeeId $id, Employee $employee): void;
-
     public function delete(EmployeeId $id): void;
 
     public function persistEmployee(Employee $employee): Employee;
