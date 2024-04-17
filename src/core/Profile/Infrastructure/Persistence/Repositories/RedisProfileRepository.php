@@ -71,9 +71,23 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
         return null;
     }
 
+    /**
+     * @throws ProfileNotFoundException
+     */
     public function findCriteria(ProfileName $name): null|Profile
     {
-        // TODO: Implement findCriteria() method.
+        try {
+            $data = Redis::get($this->profileKeyWithName($name));
+        } catch (Exception $exception) {
+            throw new ProfileNotFoundException('Profile not found by name '. $name->value());
+        }
+
+        if (!is_null($data)) {
+            $dataArray = json_decode($data, true);
+            return $this->profileFactory->buildProfileFromArray($dataArray);
+        }
+
+        return null;
     }
 
     public function getAll(array $filters = []): null|Profiles
@@ -92,10 +106,12 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
     public function persistProfile(Profile $profile): Profile
     {
         $profileKey = $this->profileKey($profile->id());
+        $profileKeyName = $this->profileKeyWithName($profile->name());
 
         try {
             $profileData = $this->dataTransformer->write($profile)->read();
             Redis::set($profileKey, json_encode($profileData));
+            Redis::set($profileKeyName, json_encode($profileData));
         } catch (Exception $exception) {
             throw new ProfilePersistException('It could not persist Profile with key '.$profileKey.' in redis');
         }
@@ -111,5 +127,10 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
     private function profileKey(ProfileId $id): string
     {
         return sprintf(self::PROFILE_KEY_FORMAT, $this->keyPrefix, $id->value());
+    }
+
+    private function profileKeyWithName(ProfileName $name): string
+    {
+        return sprintf(self::PROFILE_KEY_FORMAT, $this->keyPrefix, $name->value());
     }
 }
