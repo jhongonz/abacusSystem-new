@@ -81,16 +81,6 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
         return null;
     }
 
-    public function save(Profile $profile): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(ProfileId $id, Profile $profile): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function deleteProfile(ProfileId $id): void
     {
         Redis::delete($this->profileKey($id));

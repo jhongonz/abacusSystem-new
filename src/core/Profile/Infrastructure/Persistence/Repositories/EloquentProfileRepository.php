@@ -111,16 +111,6 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         return $profiles;
     }
 
-    public function save(Profile $profile): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(ProfileId $id, Profile $profile): void
-    {
-        // TODO: Implement update() method.
-    }
-
     /**
      * @throws ProfileDeleteException
      * @throws ProfileNotFoundException
