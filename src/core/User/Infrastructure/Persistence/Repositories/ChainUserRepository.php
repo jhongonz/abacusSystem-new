@@ -2,6 +2,7 @@
 
 namespace Core\User\Infrastructure\Persistence\Repositories;
 
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
@@ -15,9 +16,9 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     private const FUNCTION_NAMES = [
         User::class => 'persistUser'
     ];
-    
+
     private string $domainToPersist;
-    
+
     function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -29,7 +30,7 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     public function find(UserId $id): null|User
     {
         $this->domainToPersist = User::class;
-        
+
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -69,7 +70,7 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     public function persistUser(User $user): User
     {
         $this->domainToPersist = User::class;
-        
+
         return $this->writeChain(__FUNCTION__, $user);
     }
 }

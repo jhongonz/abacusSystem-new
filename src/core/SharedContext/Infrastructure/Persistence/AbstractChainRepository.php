@@ -1,10 +1,9 @@
 <?php
 
-namespace Core\User\Infrastructure\Persistence\Repositories;
+namespace Core\SharedContext\Infrastructure\Persistence;
 
 use Closure;
-use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use Core\User\Exceptions\SourceNotFoundException;
+use Core\SharedContext\Exceptions\SourceNotFoundException;
 use Exception;
 use Throwable;
 
@@ -12,38 +11,38 @@ abstract class AbstractChainRepository
 {
     /** @var ChainPriority[] */
     private array $repositories;
-    
+
     abstract function functionNamePersist(): string;
-    
+
     public function addRepository(ChainPriority $repository): self
     {
         $this->repositories[] = $repository;
-        
+
         usort($this->repositories, $this->prioritySort());
-        
+
         return $this;
     }
-    
+
     protected function write(string $functionName, ...$source)
     {
         $result = null;
         $repository = end($this->repositories);
-        
+
         do {
             $callabe = [$repository, $functionName];
             if (is_callable($callabe)) {
                 $result = call_user_func_array($callabe, $source);
             }
         } while (false !== ($repository = prev($this->repositories)));
-        
+
         return $result;
     }
-    
+
     protected function writeChain(string $functionName, ...$source)
     {
         $result = null;
         $repository = end($this->repositories);
-        
+
         do {
             $callable = [$repository, $functionName];
             if (is_callable($callable)) {
@@ -51,7 +50,7 @@ abstract class AbstractChainRepository
                 $result = call_user_func_array($callable, $source);
             }
         } while (false !== ($repository = prev($this->repositories)));
-        
+
         return $result;
     }
 
@@ -62,7 +61,7 @@ abstract class AbstractChainRepository
     {
         $result = $this->readFromRepositories($functionName, ...$source);
         $this->persistence($this->functionNamePersist(), $result);
-    
+
         return $result;
     }
 
@@ -73,7 +72,7 @@ abstract class AbstractChainRepository
     {
         $result = null;
         $lastThrowable = new SourceNotFoundException('Source not found');
-        
+
         $repository = reset($this->repositories);
         do {
             try {
@@ -85,14 +84,14 @@ abstract class AbstractChainRepository
                 $lastThrowable = $throwable;
             }
         } while ((null === $result) and (false !== ($repository = next($this->repositories))));
-        
+
         if (is_null($result)) {
             throw $lastThrowable;
         }
-        
+
         return $result;
     }
-    
+
     protected function persistence(string $functionName, ...$sources): void
     {
         while (false !== ($repository = prev($this->repositories))) {
@@ -105,14 +104,14 @@ abstract class AbstractChainRepository
             }
         }
     }
-    
+
     private function prioritySort(): Closure
     {
         return static function (ChainPriority $current, ChainPriority $next) {
             if ($current->priority() === $next->priority()) {
                 return 0;
             }
-            
+
             return ($current->priority() < $next->priority()) ? 1 : -1;
         };
     }

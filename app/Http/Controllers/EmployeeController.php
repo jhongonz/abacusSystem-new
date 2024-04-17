@@ -105,7 +105,7 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $this->employeeService->updateEmployee($employeeId, $dataUpdate);
         } catch (Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$employeeId->value());
+            $this->logger->error('Employee can not be updated with id: '.$employeeId->value(), $exception->getTrace());
 
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -125,7 +125,7 @@ class EmployeeController extends Controller implements HasMiddleware
                     $user->id()->value(),
                     $employeeId->value()
                 );
-                $this->logger->error($message);
+                $this->logger->error($message, $exception->getTrace());
             }
         }
 

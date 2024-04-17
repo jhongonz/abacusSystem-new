@@ -8,6 +8,7 @@ use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
