@@ -4,6 +4,8 @@ namespace Core\Employee\Infrastructure\Management;
 
 use Core\Employee\Application\UseCases\CreateEmployee\CreateEmployee;
 use Core\Employee\Application\UseCases\CreateEmployee\CreateEmployeeRequest;
+use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployee;
+use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployeeRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeById;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentification;
@@ -28,6 +30,7 @@ class EmployeeService implements EmployeeManagementContract
     private SearchEmployees $searchEmployees;
     private UpdateEmployee $updateEmployee;
     private CreateEmployee $createEmployee;
+    private DeleteEmployee $deleteEmployee;
 
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
@@ -36,6 +39,7 @@ class EmployeeService implements EmployeeManagementContract
         SearchEmployees $searchEmployees,
         UpdateEmployee $updateEmployee,
         CreateEmployee $createEmployee,
+        DeleteEmployee $deleteEmployee,
     ) {
         $this->employeeFactory = $employeeFactory;
         $this->searchEmployeeById = $searchEmployeeById;
@@ -43,6 +47,7 @@ class EmployeeService implements EmployeeManagementContract
         $this->searchEmployees = $searchEmployees;
         $this->updateEmployee = $updateEmployee;
         $this->createEmployee = $createEmployee;
+        $this->deleteEmployee = $deleteEmployee;
     }
 
     /**
@@ -98,5 +103,15 @@ class EmployeeService implements EmployeeManagementContract
         $request = new CreateEmployeeRequest($employee);
 
         $this->createEmployee->execute($request);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteEmployee(EmployeeId $id): void
+    {
+        $request = new DeleteEmployeeRequest($id);
+
+        $this->deleteEmployee->execute($request);
     }
 }
