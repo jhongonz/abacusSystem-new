@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Http\Requests\Profile\StoreProfileRequest;
-use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
@@ -27,7 +26,6 @@ use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller implements HasMiddleware
 {
-    private ModuleFactoryContract $moduleFactory;
     private ProfileFactoryContract $profileFactory;
     private ProfileManagementContract $profileService;
     private ProfileDataTransformerContract $profileDataTransformer;
@@ -35,7 +33,6 @@ class ProfileController extends Controller implements HasMiddleware
     private DataTables $dataTable;
 
     public function __construct(
-        ModuleFactoryContract $moduleFactory,
         ProfileFactoryContract $profileFactory,
         ProfileManagementContract $profileService,
         ProfileDataTransformerContract $profileDataTransformer,
@@ -44,7 +41,6 @@ class ProfileController extends Controller implements HasMiddleware
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
-        $this->moduleFactory = $moduleFactory;
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
         $this->profileDataTransformer = $profileDataTransformer;

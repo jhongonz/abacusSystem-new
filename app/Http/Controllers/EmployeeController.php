@@ -214,6 +214,12 @@ class EmployeeController extends Controller implements HasMiddleware
         return response()->json(['token'=>$random,'url'=>$imageUrl], Response::HTTP_CREATED);
     }
 
+    public function deleteEmployee(int $id): JsonResponse
+    {
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
+        dd($employeeId);
+    }
+
     /**
      * @throws Exception
      */

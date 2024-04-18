@@ -34,6 +34,7 @@ Route::controller(EmployeeController::class)->prefix('employees')->group(functio
     Route::get('/edit/{id?}','getEmployee')->name('employee.get-employee');
     Route::post('/set-image','setImageEmployee')->name('employee.set-image');
     Route::post('/store','storeEmployee')->name('employee.store');
+    Route::get('/delete/{id}','deleteEmployee')->name('employee.delete-employee');
 });
 
 Route::controller(ModuleController::class)->prefix('modules')->group(function(){
