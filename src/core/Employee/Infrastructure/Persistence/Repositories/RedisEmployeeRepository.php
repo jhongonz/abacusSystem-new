@@ -94,19 +94,9 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return null;
     }
 
-    public function save(Employee $employee): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(EmployeeId $id, Employee $employee): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function delete(EmployeeId $id): void
     {
-        // TODO: Implement delete() method.
+        Redis::delete($this->employeeKey($id));
     }
 
     /**

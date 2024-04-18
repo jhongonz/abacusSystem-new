@@ -124,6 +124,6 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
 
     public function delete(UserId $id): void
     {
-        // TODO: Implement delete() method.
+        Redis::delete($this->userKey($id));
     }
 }

@@ -94,7 +94,12 @@ class ProfileController extends Controller implements HasMiddleware
     public function deleteProfile(int $id): JsonResponse
     {
         $profileId = $this->profileFactory->buildProfileId($id);
-        $this->profileService->deleteProfile($profileId);
+
+        try{
+            $this->profileService->deleteProfile($profileId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
 
         ProfileUpdatedOrDeletedEvent::dispatch($profileId);
 

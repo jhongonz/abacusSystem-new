@@ -217,7 +217,26 @@ class EmployeeController extends Controller implements HasMiddleware
     public function deleteEmployee(int $id): JsonResponse
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
-        dd($employeeId);
+        $employee = $this->employeeService->searchEmployeeById($employeeId);
+
+        try {
+            $this->employeeService->deleteEmployee($employeeId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
+
+        if (!is_null($employee->userId()->value())) {
+
+            $userId = $this->userFactory->buildId($employee->userId()->value());
+
+            try {
+                $this->userService->deleteUser($userId);
+            } catch (Exception $exception) {
+                $this->logger->error($exception->getMessage(), $exception->getTrace());
+            }
+        }
+
+        return response()->json(status:Response::HTTP_OK);
     }
 
     /**

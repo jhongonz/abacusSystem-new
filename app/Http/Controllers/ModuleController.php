@@ -125,7 +125,12 @@ class ModuleController extends Controller implements HasMiddleware
     public function deleteModule(int $id): JsonResponse
     {
         $moduleId = $this->moduleFactory->buildModuleId($id);
-        $this->moduleService->deleteModule($moduleId);
+
+        try {
+            $this->moduleService->deleteModule($moduleId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
 
         ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 

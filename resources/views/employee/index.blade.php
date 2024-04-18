@@ -154,7 +154,7 @@ var table = $('#content-data').DataTable({
                 type: 'warning'
             }).then(function(result) {
                 if(result.value) {
-                    axios.get("{{ route('panel.employee.delete-employee') }}/" + _id)
+                    axios.get("{{url('/employees/delete')}}/" + _id)
                     .then(function (response){
                         $('#content-data').DataTable().ajax.reload(null, false);
                         toast.fire({

@@ -9,10 +9,12 @@ use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use App\Models\User as UserModel;
 use Core\User\Domain\ValueObjects\UserState;
+use Core\User\Exceptions\UserDeleteException;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Translators\TranslatorContract;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
+use Throwable;
 
 class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 {
@@ -92,8 +94,25 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $this;
     }
 
+    /**
+     * @throws UserNotFoundException
+     * @throws UserDeleteException
+     */
     public function delete(UserId $id): void
     {
-        // TODO: Implement delete() method.
+        /**@var UserModel $userModel */
+        $userModel = $this->userModel->where('user_id', $id->value())
+            ->where('user_state','>', UserState::STATE_DELETE)
+            ->first();
+
+        if (is_null($userModel)) {
+            throw new UserNotFoundException('User not found with id: '. $id->value());
+        }
+
+        try {
+            $userModel->deleteOrFail();
+        } catch (Throwable $exception) {
+            throw new UserDeleteException($exception->getMessage(), $exception->getTrace());
+        }
     }
 }
