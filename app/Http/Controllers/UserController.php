@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\RecoveryAccountRequest;
 use App\Http\Requests\User\ResetPasswordRequest;
 use App\Traits\UserTrait;
+use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
@@ -72,11 +74,13 @@ class UserController extends Controller implements HasMiddleware
 
     public function resetAccount(?int $id = null): Response|RedirectResponse
     {
-        if (is_null($id)) {
+        try {
+            Assertion::notNull($id);
+        } catch (AssertionFailedException $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             return redirect()->route('index');
         }
 
-        $idUser = $id;
         return response()->view('user.restart-password',[
             'idUser' => $id,
             'activeLink' => true

@@ -6,6 +6,8 @@ use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Http\Exceptions\RouteNotFoundException;
 use App\Http\Requests\Module\StoreModuleRequest;
+use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
@@ -82,7 +84,7 @@ class ModuleController extends Controller implements HasMiddleware
             ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
             RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
-            $this->logger->error('Module can not be updated with id: '. $moduleId->value());
+            $this->logger->error('Module can not be updated with id: '. $moduleId->value(), $exception->getTrace());
 
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -211,8 +213,10 @@ class ModuleController extends Controller implements HasMiddleware
         }
         $slugs = array_unique($slugs);
 
-        if (!in_array($route, $slugs, true)) {
-            $this->logger->info('Route not found - Route: '.$route);
+        try {
+            Assertion::inArray($route, $slugs);
+        } catch (AssertionFailedException $exception) {
+            $this->logger->warning('Route not found - Route: '.$route, $exception->getTrace());
             throw new RouteNotFoundException('Route not found', Response::HTTP_NOT_FOUND);
         }
     }
