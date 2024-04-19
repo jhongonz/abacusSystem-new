@@ -290,7 +290,6 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $employee->identificationType()->setValue($request->input('typeDocument'));
         $employee->observations()->setValue($request->input('observations'));
-        $employee->phone()->setValue($request->input('phone'));
         $employee->email()->setValue($request->input('email'));
         $employee->address()->setValue($request->input('address'));
         $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
