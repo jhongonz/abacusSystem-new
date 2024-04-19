@@ -14,6 +14,7 @@ use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
+use Core\Profile\Domain\ValueObjects\ProfileState;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -96,6 +97,7 @@ class ProfileController extends Controller implements HasMiddleware
         $profileId = $this->profileFactory->buildProfileId($id);
 
         try{
+            $this->profileService->updateProfile($profileId,['state'=>ProfileState::STATE_DELETE]);
             $this->profileService->deleteProfile($profileId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());

@@ -12,10 +12,12 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
+use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserState;
 use DateTime;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -220,6 +222,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
         try {
+            $this->employeeService->updateEmployee($employeeId,['state'=> EmployeeState::STATE_DELETE]);
             $this->employeeService->deleteEmployee($employeeId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -230,6 +233,7 @@ class EmployeeController extends Controller implements HasMiddleware
             $userId = $this->userFactory->buildId($employee->userId()->value());
 
             try {
+                $this->userService->updateUser($userId,['state'=>UserState::STATE_DELETE]);
                 $this->userService->deleteUser($userId);
             } catch (Exception $exception) {
                 $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -339,7 +343,7 @@ class EmployeeController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
-                'getEmployees','setImageEmployee'
+                'getEmployees','setImageEmployee','deleteEmployee','changeStateEmployee','storeEmployee'
             ]),
         ];
     }
