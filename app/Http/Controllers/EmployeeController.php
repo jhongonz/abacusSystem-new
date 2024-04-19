@@ -224,6 +224,7 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $this->employeeService->updateEmployee($employeeId,['state'=> EmployeeState::STATE_DELETE]);
             $this->employeeService->deleteEmployee($employeeId);
+            $this->deleteImage($employee->phone()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
@@ -328,9 +329,15 @@ class EmployeeController extends Controller implements HasMiddleware
         $image->save(public_path($this->imagePathFull.$filename));
         $image->resize(150,150);
         $image->save(public_path($this->imagePathSmall.$filename));
-        unlink($imageTmp);
+        @unlink($imageTmp);
 
         return $filename;
+    }
+
+    private function deleteImage(string $photo): void
+    {
+        @unlink(public_path($this->imagePathFull.$photo));
+        @unlink(public_path($this->imagePathSmall.$photo));
     }
 
     /**
