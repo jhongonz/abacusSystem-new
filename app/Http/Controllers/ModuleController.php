@@ -6,12 +6,15 @@ use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Http\Exceptions\RouteNotFoundException;
 use App\Http\Requests\Module\StoreModuleRequest;
+use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
+use Core\Profile\Domain\ValueObjects\ModuleState;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -81,7 +84,7 @@ class ModuleController extends Controller implements HasMiddleware
             ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
             RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
-            $this->logger->error('Module can not be updated with id: '. $moduleId->value());
+            $this->logger->error('Module can not be updated with id: '. $moduleId->value(), $exception->getTrace());
 
             return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -125,7 +128,13 @@ class ModuleController extends Controller implements HasMiddleware
     public function deleteModule(int $id): JsonResponse
     {
         $moduleId = $this->moduleFactory->buildModuleId($id);
-        $this->moduleService->deleteModule($moduleId);
+
+        try {
+            $this->moduleService->updateModule($moduleId,['state'=>ModuleState::STATE_DELETE]);
+            $this->moduleService->deleteModule($moduleId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
 
         ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 
@@ -204,8 +213,10 @@ class ModuleController extends Controller implements HasMiddleware
         }
         $slugs = array_unique($slugs);
 
-        if (!in_array($route, $slugs, true)) {
-            $this->logger->info('Route not found - Route: '.$route);
+        try {
+            Assertion::inArray($route, $slugs);
+        } catch (AssertionFailedException $exception) {
+            $this->logger->warning('Route not found - Route: '.$route, $exception->getTrace());
             throw new RouteNotFoundException('Route not found', Response::HTTP_NOT_FOUND);
         }
     }

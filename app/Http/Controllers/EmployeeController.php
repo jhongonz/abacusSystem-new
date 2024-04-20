@@ -12,10 +12,12 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
+use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserState;
 use DateTime;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -214,6 +216,34 @@ class EmployeeController extends Controller implements HasMiddleware
         return response()->json(['token'=>$random,'url'=>$imageUrl], Response::HTTP_CREATED);
     }
 
+    public function deleteEmployee(int $id): JsonResponse
+    {
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
+        $employee = $this->employeeService->searchEmployeeById($employeeId);
+
+        try {
+            $this->employeeService->updateEmployee($employeeId,['state'=> EmployeeState::STATE_DELETE]);
+            $this->employeeService->deleteEmployee($employeeId);
+            $this->deleteImage($employee->phone()->value());
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
+
+        if (!is_null($employee->userId()->value())) {
+
+            $userId = $this->userFactory->buildId($employee->userId()->value());
+
+            try {
+                $this->userService->updateUser($userId,['state'=>UserState::STATE_DELETE]);
+                $this->userService->deleteUser($userId);
+            } catch (Exception $exception) {
+                $this->logger->error($exception->getMessage(), $exception->getTrace());
+            }
+        }
+
+        return response()->json(status:Response::HTTP_OK);
+    }
+
     /**
      * @throws Exception
      */
@@ -260,7 +290,6 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $employee->identificationType()->setValue($request->input('typeDocument'));
         $employee->observations()->setValue($request->input('observations'));
-        $employee->phone()->setValue($request->input('phone'));
         $employee->email()->setValue($request->input('email'));
         $employee->address()->setValue($request->input('address'));
         $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
@@ -299,9 +328,15 @@ class EmployeeController extends Controller implements HasMiddleware
         $image->save(public_path($this->imagePathFull.$filename));
         $image->resize(150,150);
         $image->save(public_path($this->imagePathSmall.$filename));
-        unlink($imageTmp);
+        @unlink($imageTmp);
 
         return $filename;
+    }
+
+    private function deleteImage(string $photo): void
+    {
+        @unlink(public_path($this->imagePathFull.$photo));
+        @unlink(public_path($this->imagePathSmall.$photo));
     }
 
     /**
@@ -314,7 +349,7 @@ class EmployeeController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth','verify-session']),
             new Middleware('only.ajax-request', only:[
-                'getEmployees','setImageEmployee'
+                'getEmployees','setImageEmployee','deleteEmployee','changeStateEmployee','storeEmployee'
             ]),
         ];
     }

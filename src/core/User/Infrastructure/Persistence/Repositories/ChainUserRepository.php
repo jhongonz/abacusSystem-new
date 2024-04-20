@@ -53,9 +53,19 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
         }
     }
 
+    /**
+     * @throws UserNotFoundException
+     * @throws Throwable
+     */
     public function delete(UserId $id): void
     {
         $this->deleteSource = true;
+
+        try {
+            $this->read(__FUNCTION__, $id);
+        } catch (Exception $exception) {
+            throw new UserNotFoundException($exception->getMessage());
+        }
     }
 
     public function persistUser(User $user): User

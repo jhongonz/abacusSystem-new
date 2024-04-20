@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Http\Requests\Profile\StoreProfileRequest;
-use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
@@ -15,6 +14,7 @@ use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
+use Core\Profile\Domain\ValueObjects\ProfileState;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,7 +27,6 @@ use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller implements HasMiddleware
 {
-    private ModuleFactoryContract $moduleFactory;
     private ProfileFactoryContract $profileFactory;
     private ProfileManagementContract $profileService;
     private ProfileDataTransformerContract $profileDataTransformer;
@@ -35,7 +34,6 @@ class ProfileController extends Controller implements HasMiddleware
     private DataTables $dataTable;
 
     public function __construct(
-        ModuleFactoryContract $moduleFactory,
         ProfileFactoryContract $profileFactory,
         ProfileManagementContract $profileService,
         ProfileDataTransformerContract $profileDataTransformer,
@@ -44,7 +42,6 @@ class ProfileController extends Controller implements HasMiddleware
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
-        $this->moduleFactory = $moduleFactory;
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
         $this->profileDataTransformer = $profileDataTransformer;
@@ -98,7 +95,13 @@ class ProfileController extends Controller implements HasMiddleware
     public function deleteProfile(int $id): JsonResponse
     {
         $profileId = $this->profileFactory->buildProfileId($id);
-        $this->profileService->deleteProfile($profileId);
+
+        try{
+            $this->profileService->updateProfile($profileId,['state'=>ProfileState::STATE_DELETE]);
+            $this->profileService->deleteProfile($profileId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
 
         ProfileUpdatedOrDeletedEvent::dispatch($profileId);
 

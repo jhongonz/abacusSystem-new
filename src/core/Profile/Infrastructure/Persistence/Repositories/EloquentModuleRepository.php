@@ -135,7 +135,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         try {
             $moduleModel->deleteOrFail();
         } catch (Exception $exception) {
-            throw new ModuleDeleteException('Module can not be deleted with id: '. $id->value());
+            throw new ModuleDeleteException('Module can not be deleted with id: '. $id->value(), $exception->getTrace());
         }
     }
 }

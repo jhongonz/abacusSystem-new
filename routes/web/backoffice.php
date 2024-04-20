@@ -31,16 +31,17 @@ Route::controller(EmployeeController::class)->prefix('employees')->group(functio
     Route::get('','index')->name('employee.index');
     Route::post('/get-list','getEmployees')->name('employee.get-employees');
     Route::post('/set-state','changeStateEmployee')->name('employee.change-state-employee');
-    Route::get('/edit/{id?}','getEmployee')->name('employee.get-employee');
+    Route::get('/edit/{id?}','getEmployee')->whereNumber('id')->name('employee.get-employee');
     Route::post('/set-image','setImageEmployee')->name('employee.set-image');
     Route::post('/store','storeEmployee')->name('employee.store');
+    Route::get('/delete/{id}','deleteEmployee')->whereNumber('id')->name('employee.delete-employee');
 });
 
 Route::controller(ModuleController::class)->prefix('modules')->group(function(){
     Route::get('','index')->name('module.index');
     Route::post('/get-list', 'getModules')->name('module.get-modules');
     Route::post('/set-state','changeStateModule')->name('module.change-state-module');
-    Route::get('/delete/{id}','deleteModule')->whereNumber('id')->name('module.delete-module');
+    Route::get('/delete/{id}','deleteModule')->name('module.delete-module');
     Route::get('/get/{id?}','getModule')->whereNumber('id')->name('module.get-module');
     Route::post('/store', 'storeModule')->name('module.store');
 });
@@ -49,7 +50,7 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function(
     Route::get('','index')->name('profile.index');
     Route::post('/get-list','getProfiles')->name('profile.get-profiles');
     Route::post('/set-state','changeStateProfile')->name('profile.change-state-profile');
-    Route::get('/delete/{id?}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
+    Route::get('/delete/{id}','deleteProfile')->whereNumber('id')->name('profile.delete-profile');
     Route::get('/get/{id?}','getProfile')->whereNumber('id')->name('profile.get-profile');
     Route::post('/store', 'storeProfile')->name('profile.store');
 });

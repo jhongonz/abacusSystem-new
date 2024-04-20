@@ -15,10 +15,6 @@ interface ProfileRepositoryContract
 
     public function getAll(array $filters = []): null|Profiles;
 
-    public function save(Profile $profile): void;
-
-    public function update(ProfileId $id, Profile $profile): void;
-
     public function deleteProfile(ProfileId $id): void;
 
     public function persistProfile(Profile $profile): Profile;

@@ -9,6 +9,7 @@ use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
+use Core\Employee\Exceptions\EmployeeDeleteException;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Translators\DomainToModelEmployeeTranslator;
@@ -16,6 +17,8 @@ use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use JetBrains\PhpStorm\NoReturn;
+use Throwable;
 
 class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
 {
@@ -87,19 +90,26 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
-    public function save(Employee $employee): void
+    /**
+     * @throws EmployeeNotFoundException
+     * @throws EmployeeDeleteException
+     */
+    #[NoReturn] public function delete(EmployeeId $id): void
     {
-        // TODO: Implement save() method.
-    }
+        /** @var EmployeeModel $employeeModel */
+        $employeeModel = $this->employeeModel->where('emp_id', $id->value())
+            ->where('emp_state','>',EmployeeState::STATE_DELETE)
+            ->first();
 
-    public function update(EmployeeId $id, Employee $employee): void
-    {
-        // TODO: Implement update() method.
-    }
+        if (is_null($employeeModel)) {
+            throw new EmployeeNotFoundException('Employee not found with id: '. $id->value());
+        }
 
-    public function delete(EmployeeId $id): void
-    {
-        // TODO: Implement delete() method.
+        try {
+            $employeeModel->deleteOrFail();
+        } catch (Throwable $exception) {
+            throw new EmployeeDeleteException($exception->getMessage(), $exception->getTrace());
+        }
     }
 
     /**

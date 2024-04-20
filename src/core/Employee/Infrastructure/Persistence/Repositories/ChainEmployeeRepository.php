@@ -58,9 +58,19 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         }
     }
 
+    /**
+     * @throws Throwable
+     * @throws EmployeeNotFoundException
+     */
     public function delete(EmployeeId $id): void
     {
         $this->deleteSource = true;
+
+        try {
+            $this->read(__FUNCTION__, $id);
+        } catch (Exception $exception) {
+            throw new EmployeeNotFoundException($exception->getMessage());
+        }
     }
 
     public function persistEmployee(Employee $employee): Employee

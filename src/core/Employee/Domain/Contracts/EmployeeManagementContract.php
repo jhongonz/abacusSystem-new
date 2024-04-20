@@ -18,4 +18,6 @@ interface EmployeeManagementContract
     public function updateEmployee(EmployeeId $id, array $data): void;
 
     public function createEmployee(Employee $employee): void;
+
+    public function deleteEmployee(EmployeeId $id): void;
 }

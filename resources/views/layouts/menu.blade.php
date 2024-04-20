@@ -21,7 +21,7 @@
 			<div class="card-body">
 				<div class="media">
 					<div class="mr-3">
-                        <a data-fancybox="gallery" href="@isset($user){{$user->photo()->value()}}@endisset"><img src="@isset($user){{$user->photo()->value()}}@endisset" width="38" height="38" class="rounded-circle" alt=""></a>
+                        <a data-fancybox="gallery" href="@isset($image){{$image}}@endisset"><img src="@isset($image){{$image}}@endisset" width="38" height="38" class="rounded-circle" alt=""></a>
 					</div>
 
 					<div class="media-body">
