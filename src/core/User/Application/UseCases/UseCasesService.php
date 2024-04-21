@@ -6,9 +6,6 @@ use Core\User\Domain\Contracts\UserRepositoryContract;
 use Exception;
 use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class UseCasesService implements ServiceContract
 {
     protected UserRepositoryContract $userRepository;

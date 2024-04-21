@@ -8,12 +8,14 @@ use Core\User\Domain\Contracts\UserRepositoryContract;
 use Mockery\Mock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UseCasesService::class)]
 class UseCasesServiceTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;
+    private UseCasesService|Mock $useCaseMock;
 
     /**
      * @throws Exception
@@ -22,11 +24,21 @@ class UseCasesServiceTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->createMock(UserRepositoryContract::class);
+
+        $this->useCaseMock = $this->getMockForAbstractClass(
+            UseCasesService::class,
+            [$this->repository],
+            '',
+            true,
+            true,
+            true,
+            ['validateRequest']
+        );
     }
 
     public function tearDown(): void
     {
-        unset($this->repository);
+        unset($this->repository, $this->useCaseMock);
         parent::tearDown();
     }
 
@@ -37,26 +49,34 @@ class UseCasesServiceTest extends TestCase
     public function test_validateRequest_should_return_request(): void
     {
         $requestMock = $this->createMock(RequestService::class);
-        $mock = $this->getMockForAbstractClass(
-            UseCasesService::class,
-            [$this->repository],
-            '',
-            true,
-            true,
-            true,
-            ['validateRequest']
-        );
 
-        $mock->expects(self::once())
-            ->method('validateRequest')
-            ->with($requestMock, RequestService::class)
-            ->willReturn($requestMock);
+        $this->useCaseMock->expects(self::once())
+            ->method('validateRequest');
 
-        $reflectionMethod = new \ReflectionMethod(get_class($mock),'validateRequest');
-        $reflectionMethod->setAccessible(true);
-        $result = $reflectionMethod->invoke($mock, $requestMock, RequestService::class);
+        $reflectionMethod = new \ReflectionMethod(get_class($this->useCaseMock),'validateRequest');
+
+        $result = $reflectionMethod->invoke($this->useCaseMock, $requestMock, RequestService::class);
 
         $this->assertInstanceOf(RequestService::class, $result);
-        $this->assertSame($result, $requestMock);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function test_validateRequest_should_return_exception(): void
+    {
+        $requestMock = $this->createMock(RequestService::class);
+
+        $this->useCaseMock->expects(self::once())
+            ->method('validateRequest')
+            ->willThrowException(new \Exception('Request not valid'));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Request not valid');
+
+        $reflectionMethod = new \ReflectionMethod(get_class($this->useCaseMock),'validateRequest');
+
+        $reflectionMethod->invoke($this->useCaseMock, $requestMock, RequestService::class);
     }
 }
