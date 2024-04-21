@@ -12,12 +12,12 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\Mock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use Tests\TestCase;
 
+#[CoversClass(User::class)]
 class UserTest extends TestCase
 {
     private UserId|Mock $userId;

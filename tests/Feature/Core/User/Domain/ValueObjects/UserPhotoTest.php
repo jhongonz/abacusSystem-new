@@ -3,10 +3,10 @@
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserPhoto;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
+#[CoversClass(UserPhoto::class)]
 class UserPhotoTest extends TestCase
 {
     private UserPhoto $valueObject;

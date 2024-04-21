@@ -3,11 +3,11 @@
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserId;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
+#[CoversClass(UserId::class)]
 class UserIdTest extends TestCase
 {
     private UserId $valueObject;

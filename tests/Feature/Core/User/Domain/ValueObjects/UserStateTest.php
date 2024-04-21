@@ -4,11 +4,10 @@ namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserState;
 use Exception;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use JetBrains\PhpStorm\NoReturn;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
+#[CoversClass(UserState::class)]
 class UserStateTest extends TestCase
 {
     private UserState $valueObject;

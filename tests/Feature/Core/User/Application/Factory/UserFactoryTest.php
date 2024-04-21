@@ -8,31 +8,25 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
 use DateTime;
 use Exception;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Mockery\Mock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use Tests\Feature\Core\User\Application\Factory\DataProvider\DataProviderUserFactory;
 use Tests\TestCase;
 
+#[CoversClass(UserFactory::class)]
 class UserFactoryTest extends TestCase
 {
-    private UserFactory|Mock $factoryMock;
     private UserFactory $factory;
 
-    /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
     public function setUp(): void
     {
         parent::setUp();
-        $this->factoryMock = $this->createMock(UserFactory::class);
         $this->factory = new UserFactory();
     }
 
     public function tearDown(): void
     {
-        unset($this->factoryMock,$this->factory);
+        unset($this->factory);
         parent::tearDown();
     }
 

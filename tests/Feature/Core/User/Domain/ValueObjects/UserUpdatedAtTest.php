@@ -4,10 +4,10 @@ namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
 use DateTime;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
+#[CoversClass(UserUpdatedAt::class)]
 class UserUpdatedAtTest extends TestCase
 {
     private UserUpdatedAt $valueObject;

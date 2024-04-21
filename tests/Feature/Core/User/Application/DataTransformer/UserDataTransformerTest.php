@@ -14,14 +14,14 @@ use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
 use DateTime;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\Mock;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use Tests\Feature\Core\User\Application\DataTransformer\DataProvider\DataProviderDataTransformer;
 use Tests\TestCase;
 
+#[CoversClass(UserDataTransformer::class)]
 class UserDataTransformerTest extends TestCase
 {
     private User|Mock $user;
