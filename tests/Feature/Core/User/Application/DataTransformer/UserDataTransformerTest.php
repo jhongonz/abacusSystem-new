@@ -17,7 +17,9 @@ use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\Mock;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use Tests\Feature\Core\User\Application\DataTransformer\DataProvider\DataProviderDataTransformer;
 use Tests\TestCase;
 
 class UserDataTransformerTest extends TestCase
@@ -51,24 +53,9 @@ class UserDataTransformerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_read_should_return_array(): void
+    #[DataProviderExternal(DataProviderDataTransformer::class,'provider')]
+    public function test_read_should_return_array(array $expected, DateTime $datetime): void
     {
-        $datetime = new DateTime('2024-04-20 22:08:42');
-
-        $expected = [
-            'user' => [
-                'id' => 1,
-                'employeeId' => 1,
-                'profileId' => 1,
-                'login' => 'login',
-                'password' => '12345',
-                'state' => 1,
-                'photo' => 'test.jpg',
-                'createdAt' => $datetime,
-                'updatedAt' => $datetime,
-            ]
-        ];
-
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
             ->method('value')
@@ -128,5 +115,6 @@ class UserDataTransformerTest extends TestCase
 
         $this->assertSame($expected, $result);
         $this->assertIsArray($result);
+        $this->assertArrayHasKey(User::TYPE, $result);
     }
 }

@@ -1,0 +1,79 @@
+User (Tests\Feature\Core\User\Domain\User)
+ [x] Id should return user id
+ [x] Set id should change id and return object
+ [x] Employee id should return employee id
+ [x] Set employee id should change id and return object
+ [x] Profile id should return profile id
+ [x] Set profile id should change id and return object
+ [x] Login should return login
+ [x] Set login should change id and return object
+ [x] Password should return password
+ [x] Set password should change id and return object
+ [x] State should return state
+ [x] Set state should change id and return object
+ [x] Created at should return created at
+ [x] Set created at should change id and return object
+ [x] Updated at should return updated at
+ [x] Set updated at should change id and return object
+ [x] Photo should return photo
+ [x] Set photo should change id and return object
+
+User Created At (Tests\Feature\Core\User\Domain\ValueObjects\UserCreatedAt)
+ [x] Value should return datetime
+ [x] SetValue should change value and return object
+
+User Data Transformer (Tests\Feature\Core\User\Application\DataTransformer\UserDataTransformer)
+ [x] Write should return object
+ [x] Read should return array with data set #0
+
+User Employee Id (Tests\Feature\Core\User\Domain\ValueObjects\UserEmployeeId)
+ [x] Value should return int
+ [x] Value should return null
+ [x] SetValue should change value and return object
+ [x] SetValue should return exception
+
+User Factory (Tests\Feature\Core\User\Application\Factory\UserFactory)
+ [x] BuildUserFromArray should return user with data set #0
+ [x] BuildUpdatedAt should return value object
+ [x] BuildUserPhoto should return value object
+
+User Id (Tests\Feature\Core\User\Domain\ValueObjects\UserId)
+ [x] Value should return int
+ [x] Value should return null
+ [x] SetValue should change value and return object
+ [x] SetValue should return exception
+
+User Login (Tests\Feature\Core\User\Domain\ValueObjects\UserLogin)
+ [x] Value should return string
+ [x] SetValue should change value and return object
+
+User Password (Tests\Feature\Core\User\Domain\ValueObjects\UserPassword)
+ [x] Value should return string
+ [x] SetValue should change value and return object
+
+User Photo (Tests\Feature\Core\User\Domain\ValueObjects\UserPhoto)
+ [x] Value should return string
+ [x] SetValue should change value and return object
+
+User Profile Id (Tests\Feature\Core\User\Domain\ValueObjects\UserProfileId)
+ [x] Value should return int
+ [x] Value should return null
+ [x] SetValue should change value and return object
+
+User State (Tests\Feature\Core\User\Domain\ValueObjects\UserState)
+ [x] Value return should integer
+ [x] Value literal should return string
+ [x] Set value should change state
+ [x] Set value should return exception
+ [x] Activate should change state and return int
+ [x] Inactivate should change state and return int
+ [x] Is new should return bool and true
+ [x] Is actived should return bool and true
+ [x] Is inactived should return bool and true
+ [x] FormatHtmlToState should return string html
+
+User Updated At (Tests\Feature\Core\User\Domain\ValueObjects\UserUpdatedAt)
+ [x] Value should return datetime
+ [x] Value should return null
+ [x] SetValue should change value and return object
+
