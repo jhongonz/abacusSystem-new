@@ -1,9 +1,12 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Tests\Feature\Core\User\Application\UseCases\SearchUser;
 
 use Core\User\Application\UseCases\SearchUser\SearchUserByLoginRequest;
-use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Mockery\Mock;
 use PHPUnit\Framework\Attributes\CoversClass;

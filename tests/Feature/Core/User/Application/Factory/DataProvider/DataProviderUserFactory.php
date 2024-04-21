@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Tests\Feature\Core\User\Application\Factory\DataProvider;
 
 use DateTime;

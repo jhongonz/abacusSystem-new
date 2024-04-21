@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Tests\Feature\Core\User\Application\UseCases\SearchUser;
 
 use Core\User\Application\UseCases\SearchUser\SearchUserByIdRequest;
