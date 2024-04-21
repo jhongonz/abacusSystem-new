@@ -1,3 +1,16 @@
+Create User (Tests\Feature\Core\User\Application\UseCases\CreateUser\CreateUser)
+ [x] Execute should return User object
+ [x] Execute should return exception
+
+Create User Request (Tests\Feature\Core\User\Application\UseCases\CreateUser\CreateUserRequest)
+ [x] User should return user domain
+
+Delete User (Tests\Feature\Core\User\Application\UseCases\DeleteUser\DeleteUser)
+ [x] Execute should return user object
+
+Delete User Request (Tests\Feature\Core\User\Application\UseCases\DeleteUser\DeleteUserRequest)
+ [x] UserId should return value object
+
 User (Tests\Feature\Core\User\Domain\User)
  [x] Id should return user id
  [x] Set id should change id and return object
