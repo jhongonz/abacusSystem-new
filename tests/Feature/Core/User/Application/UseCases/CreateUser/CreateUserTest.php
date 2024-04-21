@@ -65,6 +65,7 @@ class CreateUserTest extends TestCase
     public function test_execute_should_return_exception(): void
     {
         $requestMock = $this->createMock(DeleteUserRequest::class);
+
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');
 

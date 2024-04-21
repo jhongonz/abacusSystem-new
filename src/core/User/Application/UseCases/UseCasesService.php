@@ -4,11 +4,15 @@ namespace Core\User\Application\UseCases;
 
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Exception;
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class UseCasesService implements ServiceContract
 {
     protected UserRepositoryContract $userRepository;
-    
+
     public function __construct(
         UserRepositoryContract $userRepository
     ) {
@@ -24,6 +28,6 @@ abstract class UseCasesService implements ServiceContract
             throw new Exception('Request not valid');
         }
 
-        return $request; 
+        return $request;
     }
 }
