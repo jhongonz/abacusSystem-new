@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Infrastructure\Commands;
 
 use Core\User\Domain\Contracts\UserFactoryContract;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\UseCases\UpdateUser;
 
 use Core\User\Application\UseCases\RequestService;
@@ -9,7 +13,7 @@ class UpdateUserRequest implements RequestService
 {
     private UserId $id;
     private array $data;
-    
+
     public function __construct(
       UserId $id,
       array $data,
@@ -17,12 +21,12 @@ class UpdateUserRequest implements RequestService
         $this->id = $id;
         $this->data = $data;
     }
-    
+
     public function userId(): UserId
     {
         return $this->id;
     }
-    
+
     public function data(): array
     {
         return $this->data;

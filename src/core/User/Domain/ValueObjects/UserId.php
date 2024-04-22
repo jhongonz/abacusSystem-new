@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
@@ -7,13 +11,13 @@ use Core\SharedContext\Model\ValueObjectContract;
 class UserId implements ValueObjectContract
 {
     private null|int $value;
-    
+
     public function __construct(null|int $value = null)
     {
         if (!is_null($value)) $this->validate($value);
         $this->value = $value;
     }
-    
+
     public function value(): null|int
     {
         return $this->value;
@@ -27,10 +31,10 @@ class UserId implements ValueObjectContract
     {
         $this->validate($value);
         $this->value = $value;
-        
+
         return $this;
     }
-    
+
     private function validate(int $value): void
     {
         $options = [

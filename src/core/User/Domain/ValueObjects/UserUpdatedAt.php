@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
@@ -8,12 +12,12 @@ use DateTime;
 class UserUpdatedAt implements ValueObjectContract
 {
     private null|DateTime $value;
-    
+
     public function __construct(null|DateTime $value = null)
     {
         $this->value = $value;
     }
-    
+
     public function value(): null|DateTime
     {
         return $this->value;
