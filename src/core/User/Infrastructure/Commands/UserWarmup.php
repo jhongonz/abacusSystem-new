@@ -11,6 +11,7 @@ use Core\User\Domain\Contracts\UserRepositoryContract;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class UserWarmup extends Command
 {
@@ -55,7 +56,7 @@ class UserWarmup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $userId = $this->userFactory->buildId($this->argument('id'));
 
@@ -70,5 +71,6 @@ class UserWarmup extends Command
         }
 
         $this->logger->info('User command executed');
+        return CommandSymfony::SUCCESS;
     }
 }
