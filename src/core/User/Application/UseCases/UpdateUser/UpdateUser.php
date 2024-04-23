@@ -24,7 +24,7 @@ class UpdateUser extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): ?User
+    public function execute(RequestService $request): User
     {
         $this->validateRequest($request, UpdateUserRequest::class);
 

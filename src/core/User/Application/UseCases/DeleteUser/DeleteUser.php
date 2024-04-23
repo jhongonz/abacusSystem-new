@@ -22,7 +22,7 @@ class DeleteUser extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|User
+    public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteUserRequest::class);
         $this->userRepository->delete($request->userId());
