@@ -49,13 +49,13 @@ class UserTranslator implements TranslatorDomainContract
             $this->factory->buildPassword($this->user->password()),
             $this->factory->buildState($this->user->state()),
             $this->factory->buildCreatedAt(
-                new DateTime($this->user->createAt())
+                $this->getDateTime($this->user->createAt())
             )
         );
 
         $user->setPhoto($this->factory->buildUserPhoto($this->user->photo()));
         $user->setUpdatedAt($this->factory->buildUpdatedAt(
-            new DateTime($this->user->updatedAt()))
+            $this->getDateTime($this->user->updatedAt()))
         );
 
         return $user;
@@ -64,5 +64,13 @@ class UserTranslator implements TranslatorDomainContract
     public function canTranslate(): string
     {
         return UserModel::class;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }
