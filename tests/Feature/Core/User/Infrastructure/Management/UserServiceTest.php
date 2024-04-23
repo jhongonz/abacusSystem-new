@@ -7,12 +7,17 @@
 namespace Tests\Feature\Core\User\Infrastructure\Management;
 
 use Core\User\Application\UseCases\CreateUser\CreateUser;
+use Core\User\Application\UseCases\CreateUser\CreateUserRequest;
 use Core\User\Application\UseCases\DeleteUser\DeleteUser;
+use Core\User\Application\UseCases\DeleteUser\DeleteUserRequest;
 use Core\User\Application\UseCases\SearchUser\SearchUserById;
+use Core\User\Application\UseCases\SearchUser\SearchUserByIdRequest;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLogin;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLoginRequest;
 use Core\User\Application\UseCases\UpdateUser\UpdateUser;
+use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
 use Core\User\Domain\User;
+use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Infrastructure\Management\UserService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -103,5 +108,99 @@ class UserServiceTest extends TestCase
         $result = $this->userService->searchUserByLogin($loginMock);
 
         $this->assertNull($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_search_user_by_id_should_return_user(): void
+    {
+        $userIdMock = $this->createMock(UserId::class);
+        $request = new SearchUserByIdRequest($userIdMock);
+
+        $userMock = $this->createMock(User::class);
+        $this->searchUserById->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn($userMock);
+
+        $result = $this->userService->searchUserById($userIdMock);
+
+        $this->assertSame($userMock, $result);
+        $this->assertInstanceOf(User::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_search_user_by_id_should_return_null(): void
+    {
+        $userIdMock = $this->createMock(UserId::class);
+        $request = new SearchUserByIdRequest($userIdMock);
+
+        $this->searchUserById->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn(null);
+
+        $result = $this->userService->searchUserById($userIdMock);
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_update_user_should_void(): void
+    {
+        $dataUpdate = [];
+        $userIdMock = $this->createMock(UserId::class);
+        $userMock = $this->createMock(User::class);
+
+        $request = new UpdateUserRequest($userIdMock, $dataUpdate);
+
+        $this->updateUser->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn($userMock);
+
+        $this->userService->updateUser($userIdMock, $dataUpdate);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_create_user_should_void(): void
+    {
+        $userMock = $this->createMock(User::class);
+        $request = new CreateUserRequest($userMock);
+
+        $this->createUser->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn($userMock);
+
+        $this->userService->createUser($userMock);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_delete_user_should_void(): void
+    {
+        $userIdMock = $this->createMock(UserId::class);
+        $request = new DeleteUserRequest($userIdMock);
+
+        $this->deleteUser->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn(null);
+
+        $this->userService->deleteUser($userIdMock);
     }
 }
