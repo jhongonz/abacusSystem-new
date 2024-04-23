@@ -68,6 +68,7 @@ class UserWarmup extends Command
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+            return CommandSymfony::FAILURE;
         }
 
         $this->logger->info('User command executed');
