@@ -121,9 +121,10 @@ class UserTranslatorTest extends TestCase
             ->method('buildState')
             ->willReturn($stateMock);
 
+        $datetime = new \DateTime('2024-04-22 22:05:00');
         $this->userModel->expects(self::once())
-            ->method('createAt')
-            ->willReturn('2024-04-22 22:05:00');
+            ->method('createdAt')
+            ->willReturn($datetime);
 
         $createdAtMock = $this->createMock(UserCreatedAt::class);
         $this->userFactory->expects(self::once())
@@ -148,7 +149,7 @@ class UserTranslatorTest extends TestCase
 
         $this->userModel->expects(self::once())
             ->method('updatedAt')
-            ->willReturn('2024-04-22 22:05:00');
+            ->willReturn($datetime);
 
         $updatedAt = $this->createMock(UserUpdatedAt::class);
         $this->userFactory->expects(self::once())

@@ -191,7 +191,7 @@ class User extends Authenticatable
     /**
      * @throws Exception
      */
-    public function updatedAt(): null|string
+    public function updatedAt(): null|DateTime
     {
         return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
 
