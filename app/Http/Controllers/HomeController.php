@@ -64,7 +64,6 @@ class HomeController extends Controller implements HasMiddleware
      */
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
-        //dd($this->makeHashPassword($request->input('password')));
         $login = $this->userFactory->buildLogin($request->input('login'));
         $user = $this->userService->searchUserByLogin($login);
 

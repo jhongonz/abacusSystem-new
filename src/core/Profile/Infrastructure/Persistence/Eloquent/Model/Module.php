@@ -42,7 +42,7 @@ class Module extends Model
      */
     protected $fillable = [
         'mod_id',
-        'mod__menu_key',
+        'mod_menu_key',
         'mod_name',
         'mod_route',
         'mod_icon',
