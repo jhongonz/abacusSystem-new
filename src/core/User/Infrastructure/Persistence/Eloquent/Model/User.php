@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace Core\User\Infrastructure\Persistence\Eloquent\Model;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Employee;
+use App\Models\Profile;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

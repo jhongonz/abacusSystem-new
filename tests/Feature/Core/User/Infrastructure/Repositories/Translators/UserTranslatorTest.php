@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Core\User\Infrastructure\Repositories\Translators;
 
-use App\Models\User as UserModel;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
@@ -41,7 +41,6 @@ class UserTranslatorTest extends TestCase
         $this->userModel = $this->createMock(UserModel::class);
         $this->translator = new UserTranslator(
             $this->userFactory,
-            $this->userModel
         );
     }
 
@@ -55,13 +54,9 @@ class UserTranslatorTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @throws Exception
-     */
     public function test_setModel_should_return_self(): void
     {
-        $modelMock = $this->createMock(UserModel::class);
-        $return = $this->translator->setModel($modelMock);
+        $return = $this->translator->setModel($this->userModel);
 
         $this->assertInstanceOf(UserTranslator::class, $return);
     }
@@ -178,13 +173,9 @@ class UserTranslatorTest extends TestCase
             )
             ->willReturn($userMock);
 
+        $this->translator->setModel($this->userModel);
         $result = $this->translator->toDomain();
 
         $this->assertInstanceOf(User::class, $result);
-    }
-
-    public function test_canTranslate_should_return_class(): void
-    {
-        $this->assertSame(UserModel::class, $this->translator->canTranslate());
     }
 }

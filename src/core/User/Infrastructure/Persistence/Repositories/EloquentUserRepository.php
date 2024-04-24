@@ -7,38 +7,37 @@
 namespace Core\User\Infrastructure\Persistence\Repositories;
 
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
-use App\Models\User as UserModel;
-use Core\User\Domain\ValueObjects\UserState;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Exceptions\UserDeleteException;
 use Core\User\Exceptions\UserNotFoundException;
-use Core\User\Infrastructure\Persistence\Translators\TranslatorContract;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Throwable;
 
 class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 {
     private const PRIORITY_DEFAULT = 50;
-
-    private UserModel $userModel;
+    private DatabaseManager $database;
     private UserTranslator $userTranslator;
-    private TranslatorContract $modelUserTranslator;
+    private UserModel $model;
     private int $priority;
 
     public function __construct(
-        UserModel $userModel,
+        DatabaseManager $database,
         UserTranslator $userTranslator,
-        TranslatorContract $modelUserTranslator,
         int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->userModel = $userModel;
+        $this->database = $database;
         $this->userTranslator = $userTranslator;
-        $this->modelUserTranslator = $modelUserTranslator;
         $this->priority = $priority;
+
+        $this->model = new UserModel();
     }
 
     /**
@@ -48,10 +47,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     {
         try {
             /** @var UserModel $userModel */
-            $userModel = $this->userModel
-                ->where('user_id', $id->value())
-                ->where('user_state','>',UserState::STATE_DELETE)
-                ->firstOrFail();
+            $userModel = $this->database->table($this->model->getTable())
+                ->where('user_id',$id->value())
+                ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
+                ->first();
+
         } catch (Exception $exception) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
@@ -66,10 +66,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     {
         try {
             /** @var UserModel $userModel */
-            $userModel = $this->userModel
+            $userModel = $this->database->table($this->model->getTable())
                 ->where('user_login', $login->value())
-                ->where('user_state','>',UserState::STATE_DELETE)
-                ->firstOrFail();
+                ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
+                ->first();
+
         } catch (Exception $exception) {
             throw new UserNotFoundException('User not found with login: '. $login->value());
         }
@@ -77,10 +78,12 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistUser(User $user): User
     {
-        /** @var UserModel $userModel */
-        $userModel = $this->modelUserTranslator->executeTranslate($user);
+        $userModel = $this->domainToModel($user);
         $userModel->save();
         $user->id()->setValue($userModel->id());
 
@@ -105,8 +108,9 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     public function delete(UserId $id): void
     {
         /**@var UserModel $userModel */
-        $userModel = $this->userModel->where('user_id', $id->value())
-            ->where('user_state','>', UserState::STATE_DELETE)
+        $userModel = $this->database->table($this->model->getTable())
+            ->where('user_id', $id->value())
+            ->where('user_state','>',ValueObjectStatus::STATE_DELETE)
             ->first();
 
         if (is_null($userModel)) {
@@ -118,5 +122,35 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         } catch (Throwable $exception) {
             throw new UserDeleteException($exception->getMessage(), $exception->getTrace());
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
+    {
+        if (is_null($model)) {
+            $model = $this->find($domain->id()) ?: $this->createUserModel();
+        }
+
+        $model->changeId($domain->id()->value());
+        $model->changeEmployeeId($domain->employeeId()->value());
+        $model->changeProfileId($domain->profileId()->value());
+        $model->changeLogin($domain->login()->value());
+        $model->changePassword($domain->password()->value());
+        $model->changeState($domain->state()->value());
+        $model->changePhoto($domain->photo()->value());
+        $model->changeCreatedAt($domain->createdAt()->value());
+
+        if (!is_null($domain->updatedAt()->value())) {
+            $model->changeUpdatedAt($domain->updatedAt()->value());
+        }
+
+        return $model;
+    }
+
+    protected function createUserModel(): UserModel
+    {
+        return $this->model;
     }
 }

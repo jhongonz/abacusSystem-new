@@ -6,7 +6,7 @@
 
 namespace Core\User\Infrastructure\Persistence\Translators;
 
-use App\Models\User as UserModel;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
@@ -16,14 +16,12 @@ use Exception;
 class UserTranslator implements TranslatorDomainContract
 {
     private UserFactoryContract $factory;
-    private UserModel $user;
+    private UserModel $model;
 
     public function __construct(
         UserFactoryContract $factory,
-        UserModel $user,
     ) {
         $this->factory = $factory;
-        $this->user = $user;
     }
 
     /**
@@ -32,7 +30,7 @@ class UserTranslator implements TranslatorDomainContract
      */
     public function setModel($model): self
     {
-        $this->user = $model;
+        $this->model = $model;
         return $this;
     }
 
@@ -42,28 +40,23 @@ class UserTranslator implements TranslatorDomainContract
     public function toDomain(): User
     {
         $user = $this->factory->buildUser(
-            $this->factory->buildId($this->user->id()),
-            $this->factory->buildEmployeeId($this->user->employeeId()),
-            $this->factory->buildProfileId($this->user->profileId()),
-            $this->factory->buildLogin($this->user->login()),
-            $this->factory->buildPassword($this->user->password()),
-            $this->factory->buildState($this->user->state()),
+            $this->factory->buildId($this->model->id()),
+            $this->factory->buildEmployeeId($this->model->employeeId()),
+            $this->factory->buildProfileId($this->model->profileId()),
+            $this->factory->buildLogin($this->model->login()),
+            $this->factory->buildPassword($this->model->password()),
+            $this->factory->buildState($this->model->state()),
             $this->factory->buildCreatedAt(
-                $this->getDateTime($this->user->createAt())
+                $this->getDateTime($this->model->createAt())
             )
         );
 
-        $user->setPhoto($this->factory->buildUserPhoto($this->user->photo()));
+        $user->setPhoto($this->factory->buildUserPhoto($this->model->photo()));
         $user->setUpdatedAt($this->factory->buildUpdatedAt(
-            $this->getDateTime($this->user->updatedAt()))
+            $this->getDateTime($this->model->updatedAt()))
         );
 
         return $user;
-    }
-
-    public function canTranslate(): string
-    {
-        return UserModel::class;
     }
 
     /**
