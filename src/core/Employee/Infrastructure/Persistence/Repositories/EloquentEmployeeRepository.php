@@ -142,8 +142,8 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         }
 
         $collection = [];
-        /**@var EmployeeModel $employeeModel*/
-        foreach ($employeeCollection as $employeeModel) {
+        foreach ($employeeCollection as $item) {
+            $employeeModel = $this->createModel((array) $item);
             $collection[] = $employeeModel->id();
         }
 

@@ -93,16 +93,15 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
                 $queryBuilder->where('pro_name','like','%'.$filters['q'].'%');
             }
 
-            /**@var Collection $profileModel*/
-            $profileModel = $queryBuilder->get(['pro_id']);
+            $profileCollection = $queryBuilder->get(['pro_id']);
         } catch (Exception $exception) {
             throw new ProfilesNotFoundException('Profiles not found');
         }
 
         $collection = [];
-        /**@var ProfileModel $item*/
-        foreach($profileModel as $item) {
-            $collection[] = $item->id();
+        foreach($profileCollection as $item) {
+            $profileModel = $this->createModel((array) $item);
+            $collection[] = $profileModel->id();
         }
 
         $profiles = $this->profileTranslator->setCollection($collection)->toDomainCollection();
