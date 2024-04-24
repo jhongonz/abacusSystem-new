@@ -72,7 +72,6 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             UserFactoryContract::class,
             UserManagementContract::class,
             UserDataTransformerContract::class,
-            TranslatorContract::class
         ];
     }
 
