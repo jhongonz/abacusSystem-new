@@ -41,6 +41,7 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'mod_id',
         'mod__menu_key',
         'mod_name',
         'mod_route',

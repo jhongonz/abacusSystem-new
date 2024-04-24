@@ -36,7 +36,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         $this->moduleTranslator = $moduleTranslator;
         $this->priority = $priority;
 
-        $this->model = new ModuleModel();
+        $this->model = $this->createModel();
     }
 
     public function priority(): int
@@ -56,17 +56,16 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      */
     public function find(ModuleId $id): null|Module
     {
-        try {
-            /** @var ModuleModel $moduleModel */
-            $moduleModel = $this->database->table($this->model->getTable())
-                ->where('mod_id', $id->value())
-                ->where('mod_state','>',ValueObjectStatus::STATE_DELETE)
-                ->first();
+        $data = $this->database->table($this->model->getTable())
+            ->where('mod_id', $id->value())
+            ->where('mod_state','>',ValueObjectStatus::STATE_DELETE)
+            ->first();
 
-        } catch (Exception $exception) {
+        if (is_null($data)) {
             throw new ModuleNotFoundException('Module not found with id: '. $id->value());
         }
 
+        $moduleModel = $this->createModel((array) $data);
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 
@@ -123,14 +122,14 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      */
     public function deleteModule(ModuleId $id): void
     {
-        /** @var ModuleModel $moduleModel */
-        $moduleModel = $this->database->table($this->model->getTable())
+        $data = $this->database->table($this->model->getTable())
             ->find($id->value());
 
-        if (is_null($moduleModel)){
+        if (is_null($data)){
             throw new ModuleNotFoundException('Module not found with id: '. $id->value());
         }
 
+        $moduleModel = $this->createModel($data);
         try {
             $moduleModel->deleteOrFail();
         } catch (Exception $exception) {
@@ -141,7 +140,8 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
     protected function domainToModel(Module $domain, ?ModuleModel $model = null): ModuleModel
     {
         if (is_null($model)) {
-            $model = $this->database->table($this->model->getTable())->find($domain->id()->value()) ?: $this->createModel();
+            $data = $this->database->table($this->model->getTable())->find($domain->id()->value());
+            $model = $this->createModel($data);
         }
 
         $model->changeId($domain->id()->value());
@@ -160,8 +160,8 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         return $model;
     }
 
-    protected function createModel(): ModuleModel
+    protected function createModel(array $data = []): ModuleModel
     {
-        return $this->model;
+        return new ModuleModel($data);
     }
 }

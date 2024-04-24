@@ -3,9 +3,10 @@
 namespace Core\User\Infrastructure\Persistence\Eloquent\Model;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Employee;
-use App\Models\Profile;
+use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
 use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,6 +46,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'user_login',
         'password',
         'user__emp_id',
@@ -76,6 +78,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected Employee $relationWithEmployee;
+    protected Profile $relationWithProfile;
     protected $touches = ['relationWithEmployee','relationWithProfile'];
 
     /**
@@ -170,9 +174,13 @@ class User extends Authenticatable
         $this->attributes['user_state'] = $state;
     }
 
-    public function createAt(): null|string
+    /**
+     * @throws Exception
+     */
+    public function createdAt(): null|DateTime
     {
-        return $this->attributes['created_at'];
+        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+
     }
 
     public function changeCreatedAt(DateTime $datetime): void
@@ -180,9 +188,13 @@ class User extends Authenticatable
         $this->attributes['created_at'] = $datetime;
     }
 
+    /**
+     * @throws Exception
+     */
     public function updatedAt(): null|string
     {
-        return $this->attributes['updated_at'];
+        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
+
     }
 
     public function changeUpdatedAt(null|DateTime $datetime): void
@@ -198,5 +210,13 @@ class User extends Authenticatable
     public function changePhoto(?string $photo): void
     {
         $this->attributes['user_photo'] = $photo;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }

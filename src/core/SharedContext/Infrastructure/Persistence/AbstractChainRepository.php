@@ -55,7 +55,7 @@ abstract class AbstractChainRepository
 
     /**
      * @throws Throwable
-     */
+         */
     protected function readFromRepositories(string $functionName, ...$source)
     {
         $result = null;
@@ -69,7 +69,6 @@ abstract class AbstractChainRepository
                     $result = call_user_func_array($callable, $source);
                 }
             } catch (Throwable $throwable) {
-                dump($throwable);
                 $lastThrowable = $throwable;
             }
         } while ((null === $result) and (false !== ($repository = next($this->repositories))));

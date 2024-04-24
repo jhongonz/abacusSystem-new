@@ -45,9 +45,11 @@ class Profile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'pro_id',
         'pro_name',
         'pro_description',
         'pro_state',
+        'pro_search',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -46,6 +46,7 @@ class Employee extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'emp_id',
         'emp_identification',
         'emp_identification_type',
         'emp_name',

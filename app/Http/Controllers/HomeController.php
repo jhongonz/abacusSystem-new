@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Exceptions\ProfileNotActiveException;
 use App\Http\Requests\User\LoginRequest;
+use App\Traits\UserTrait;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
 
 class HomeController extends Controller implements HasMiddleware
 {
+    use UserTrait;
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
     private EmployeeManagementContract $employeeService;
@@ -62,6 +64,7 @@ class HomeController extends Controller implements HasMiddleware
      */
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
+        //dd($this->makeHashPassword($request->input('password')));
         $login = $this->userFactory->buildLogin($request->input('login'));
         $user = $this->userService->searchUserByLogin($login);
 

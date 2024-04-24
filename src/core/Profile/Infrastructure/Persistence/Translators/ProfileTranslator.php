@@ -9,7 +9,6 @@ use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 use Exception;
 
 class ProfileTranslator implements TranslatorDomainContract
@@ -43,9 +42,7 @@ class ProfileTranslator implements TranslatorDomainContract
             $this->profileFactory->buildProfileId($this->model->id()),
             $this->profileFactory->buildProfileName($this->model->name()),
             $this->profileFactory->buildProfileState($this->model->state()),
-            $this->profileFactory->buildProfileCreatedAt(
-                $this->getDateTime($this->model->createdAt())
-            )
+            $this->profileFactory->buildProfileCreatedAt($this->model->createdAt())
         );
 
         $profile->setDescription(
@@ -57,9 +54,7 @@ class ProfileTranslator implements TranslatorDomainContract
         );
 
         $profile->setUpdatedAt(
-            $this->profileFactory->buildProfileUpdateAt(
-                $this->getDateTime($this->model->updatedAt())
-            )
+            $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
         );
 
         $modulesModel = $this->model->modules();
@@ -89,13 +84,5 @@ class ProfileTranslator implements TranslatorDomainContract
         }
 
         return $profiles;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getDateTime(?string $datetime = null): DateTime
-    {
-        return new DateTime($datetime);
     }
 }

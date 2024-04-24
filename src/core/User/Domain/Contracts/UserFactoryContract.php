@@ -48,5 +48,5 @@ interface UserFactoryContract
 
     public function buildUpdatedAt(null|DateTime $updatedAt): UserUpdatedAt;
 
-    public function buildUserPhoto(string $photo = ''): UserPhoto;
+    public function buildUserPhoto(?string $photo = null): UserPhoto;
 }

@@ -37,7 +37,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         $this->userTranslator = $userTranslator;
         $this->priority = $priority;
 
-        $this->model = new UserModel();
+        $this->model = $this->createUserModel();
     }
 
     /**
@@ -45,17 +45,16 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function find(UserId $id): null|User
     {
-        try {
-            /** @var UserModel $userModel */
-            $userModel = $this->database->table($this->model->getTable())
-                ->where('user_id',$id->value())
-                ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
-                ->first();
+        $data = $this->database->table($this->model->getTable())
+            ->where('user_id',$id->value())
+            ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
+            ->first();
 
-        } catch (Exception $exception) {
+        if (is_null($data)) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
 
+        $userModel = $this->createUserModel((array) $data);
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
@@ -64,17 +63,16 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function findCriteria(UserLogin $login): null|User
     {
-        try {
-            /** @var UserModel $userModel */
-            $userModel = $this->database->table($this->model->getTable())
-                ->where('user_login', $login->value())
-                ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
-                ->first();
+        $data = $this->database->table($this->model->getTable())
+            ->where('user_login', $login->value())
+            ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
+            ->first();
 
-        } catch (Exception $exception) {
+        if (is_null($data)) {
             throw new UserNotFoundException('User not found with login: '. $login->value());
         }
 
+        $userModel = $this->createUserModel((array) $data);
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
@@ -107,16 +105,13 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function delete(UserId $id): void
     {
-        /**@var UserModel $userModel */
-        $userModel = $this->database->table($this->model->getTable())
-            ->where('user_id', $id->value())
-            ->where('user_state','>',ValueObjectStatus::STATE_DELETE)
-            ->first();
+        $data = $this->database->table($this->model->getTable())->find($id->value());
 
-        if (is_null($userModel)) {
+        if (is_null($data)) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
 
+        $userModel = $this->createUserModel((array) $data);
         try {
             $userModel->deleteOrFail();
         } catch (Throwable $exception) {
@@ -130,7 +125,8 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
     {
         if (is_null($model)) {
-            $model = $this->database->table($this->model->getTable())->find($domain->id()->value()) ?: $this->createUserModel();
+            $data = $this->database->table($this->model->getTable())->find($domain->id()->value());
+            $model = $this->createUserModel($data);
         }
 
         $model->changeId($domain->id()->value());
@@ -149,8 +145,8 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $model;
     }
 
-    protected function createUserModel(): UserModel
+    protected function createUserModel(array $data = []): UserModel
     {
-        return $this->model;
+        return new UserModel($data);
     }
 }

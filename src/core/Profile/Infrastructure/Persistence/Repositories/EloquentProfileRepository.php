@@ -37,7 +37,7 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         $this->profileTranslator = $translator;
         $this->priority = $priority;
 
-        $this->model = new ProfileModel();
+        $this->model = $this->createModel();
     }
 
     /**
@@ -46,18 +46,16 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
      */
     public function find(ProfileId $id): null|Profile
     {
-        try {
-            /** @var ProfileModel $profileModel */
+        $data = $this->database->table($this->model->getTable())
+            ->where('pro_id', $id->value())
+            ->where('pro_state','>', ValueObjectStatus::STATE_DELETE)
+            ->first();
 
-            $profileModel = $this->database->table($this->model->getTable())
-                ->where('pro_id', $id->value())
-                ->where('pro_state','>', ValueObjectStatus::STATE_DELETE)
-                ->first();
-
-        } catch (Exception $exception) {
+        if (is_null($data)) {
             throw new ProfileNotFoundException('Profile not found with id: '. $id->value());
         }
 
+        $profileModel = $this->createModel((array) $data);
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }
 
@@ -67,17 +65,16 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
      */
     public function findCriteria(ProfileName $name): null|Profile
     {
-        try {
-            /** @var ProfileModel $profileModel */
-            $profileModel = $this->database->table($this->model->getTable())
-                ->where('pro_name', $name->value())
-                ->where('pro_state','>', ValueObjectStatus::STATE_DELETE)
-                ->first();
+        $data = $this->database->table($this->model->getTable())
+            ->where('pro_name', $name->value())
+            ->where('pro_state','>', ValueObjectStatus::STATE_DELETE)
+            ->first();
 
-        } catch (Exception $exception) {
+        if (is_null($data)) {
             throw new ProfileNotFoundException('Profile not found with name: '. $name->value());
         }
 
+        $profileModel = $this->createModel((array) $data);
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }
 
@@ -120,7 +117,6 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
      */
     public function deleteProfile(ProfileId $id): void
     {
-        /**@var ProfileModel $profileModel*/
         $profileModel = $this->database->table($this->model->getTable())->find($id->value());
 
         if (is_null($profileModel)) {
@@ -130,14 +126,13 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         try {
             $profileModel->pivotModules()->detach();
             $profileModel->deleteOrFail();
-        } catch (Throwable $e) {
-            throw new ProfileDeleteException('Profile can not be deleted with id: '.$id->value(), $e->getTrace());
+        } catch (Throwable $exception) {
+            throw new ProfileDeleteException('Profile can not be deleted with id: '.$id->value(), $exception->getTrace());
         }
     }
 
     public function persistProfile(Profile $profile): Profile
     {
-        /** @var ProfileModel $profileModel */
         $profileModel = $this->domainToModel($profile);
         $profileModel->save();
         $profile->id()->setValue($profileModel->id());
@@ -163,10 +158,11 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         return $this;
     }
 
-    protected function domainToModel(Profile $domain, ?ProfileModel $model = null): Profile
+    protected function domainToModel(Profile $domain, ?ProfileModel $model = null): ProfileModel
     {
         if (is_null($model)) {
-            $model = $this->database->table($this->model->getTable())->find($domain->id()->value()) ?: $this->createModel();
+            $data = $this->database->table($this->model->getTable())->find($domain->id()->value());
+            $model = $this->createModel($data);
         }
 
         $model->changeId($domain->id()->value());
@@ -183,8 +179,8 @@ class EloquentProfileRepository implements ProfileRepositoryContract, ChainPrior
         return $model;
     }
 
-    protected function createModel(): ProfileModel
+    protected function createModel(array $data = []): ProfileModel
     {
-        return $this->model;
+        return new ProfileModel($data);
     }
 }

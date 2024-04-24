@@ -10,7 +10,6 @@ use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
-use DateTime;
 use Exception;
 
 class UserTranslator implements TranslatorDomainContract
@@ -46,24 +45,12 @@ class UserTranslator implements TranslatorDomainContract
             $this->factory->buildLogin($this->model->login()),
             $this->factory->buildPassword($this->model->password()),
             $this->factory->buildState($this->model->state()),
-            $this->factory->buildCreatedAt(
-                $this->getDateTime($this->model->createAt())
-            )
+            $this->factory->buildCreatedAt($this->model->createdAt())
         );
 
         $user->setPhoto($this->factory->buildUserPhoto($this->model->photo()));
-        $user->setUpdatedAt($this->factory->buildUpdatedAt(
-            $this->getDateTime($this->model->updatedAt()))
-        );
+        $user->setUpdatedAt($this->factory->buildUpdatedAt($this->model->updatedAt()));
 
         return $user;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getDateTime(?string $datetime = null): DateTime
-    {
-        return new DateTime($datetime);
     }
 }
