@@ -89,6 +89,14 @@ class User extends Authenticatable
      */
     protected string $mainSearchField = 'user_login';
 
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        $this->relationWithEmployee = new Employee();
+        $this->relationWithProfile = new Profile();
+    }
+
     public function getSearchField(): string
     {
         return $this->mainSearchField;
@@ -116,62 +124,67 @@ class User extends Authenticatable
 
     public function id(): null|int
     {
-        return $this->attributes['user_id'];
+        return $this->getAttribute('user_id');
     }
 
-    public function changeId(?int $id): void
+    public function changeId(?int $id): self
     {
-        $this->attributes['user_id'] = $id;
+        $this->setAttribute('user_id', $id);
+        return $this;
     }
 
     public function employeeId(): null|int
     {
-        return $this->attributes['user__emp_id'];
+        return $this->getAttribute('user__emp_id');
     }
 
-    public function changeEmployeeId(int $id): void
+    public function changeEmployeeId(int $id): self
     {
-        $this->attributes['user__emp_id'] = $id;
+        $this->setAttribute('user__emp_id',$id);
+        return $this;
     }
 
     public function profileId(): null|int
     {
-        return $this->attributes['user__pro_id'];
+        return $this->getAttribute('user__pro_id');
     }
 
-    public function changeProfileId(int $id): void
+    public function changeProfileId(int $id): self
     {
-        $this->attributes['user__pro_id'] = $id;
+        $this->setAttribute('user__pro_id',$id);
+        return $this;
     }
 
     public function login(): null|string
     {
-        return $this->attributes['user_login'];
+        return $this->getAttribute('user_login');
     }
 
-    public function changeLogin(string $login): void
+    public function changeLogin(string $login): self
     {
-        $this->attributes['user_login'] = $login;
+        $this->setAttribute('user_login',$login);
+        return $this;
     }
 
     public function password(): null|string
     {
-        return $this->attributes['password'];
+        return $this->getAttribute('password');
     }
 
-    public function changePassword(string $password): void
+    public function changePassword(string $password): self
     {
-        $this->attributes['password'] = $password;
+        $this->setAttribute('password',$password);
+        return $this;
     }
 
     public function state(): null|int
     {
-        return $this->attributes['user_state'];
+        return $this->getAttribute('user_state');
     }
 
     public function changeState(int $state): void
     {
-        $this->attributes['user_state'] = $state;
+        $this->setAttribute('user_state',$state);
     }
 
     /**
@@ -179,13 +192,15 @@ class User extends Authenticatable
      */
     public function createdAt(): null|DateTime
     {
-        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+        $dateTime = $this->getAttribute('created_at');
+        return ($dateTime) ? $this->getDateTime($dateTime) : $dateTime;
 
     }
 
-    public function changeCreatedAt(DateTime $datetime): void
+    public function changeCreatedAt(DateTime $datetime): self
     {
-        $this->attributes['created_at'] = $datetime;
+        $this->setAttribute('created_at', $datetime);
+        return $this;
     }
 
     /**
@@ -193,23 +208,25 @@ class User extends Authenticatable
      */
     public function updatedAt(): null|DateTime
     {
-        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
-
+        $datetime = $this->getAttribute('updated_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeUpdatedAt(null|DateTime $datetime): void
+    public function changeUpdatedAt(null|DateTime $datetime): self
     {
-        $this->attributes['updated_at'] = $datetime;
+        $this->setAttribute('updated_at', $datetime);
+        return $this;
     }
 
     public function photo(): null|string
     {
-        return $this->attributes['user_photo'];
+        return $this->getAttribute('user_photo');
     }
 
-    public function changePhoto(?string $photo): void
+    public function changePhoto(?string $photo): self
     {
-        $this->attributes['user_photo'] = $photo;
+        $this->setAttribute('user_photo', $photo);
+        return $this;
     }
 
     /**

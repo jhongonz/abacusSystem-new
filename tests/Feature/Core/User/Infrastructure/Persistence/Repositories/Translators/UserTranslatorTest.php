@@ -4,9 +4,8 @@
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  */
 
-namespace Tests\Feature\Core\User\Infrastructure\Repositories\Translators;
+namespace Tests\Feature\Core\User\Infrastructure\Persistence\Repositories\Translators;
 
-use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
@@ -18,6 +17,7 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
