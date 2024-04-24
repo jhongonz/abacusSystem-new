@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -134,7 +135,7 @@ class Profile extends Model
      */
     public function createdAt(): null|DateTime
     {
-        return ($this->attributes['created_at']) ? new DateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
     }
 
     public function changeCreatedAt(DateTime $datetime): void
@@ -147,11 +148,19 @@ class Profile extends Model
      */
     public function updatedAt(): null|DateTime
     {
-        return ($this->attributes['updated_at']) ? new DateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
+        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
     }
 
     public function changeUpdatedAt(DateTime $datetime): void
     {
         $this->attributes['updated_at'] = $datetime;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }

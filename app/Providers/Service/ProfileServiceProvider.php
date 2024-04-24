@@ -24,9 +24,6 @@ use Core\Profile\Infrastructure\Persistence\Repositories\EloquentModuleRepositor
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisModuleRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisProfileRepository;
-use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelModuleTranslator;
-use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelProfileTranslator;
-use Core\Profile\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -80,14 +77,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
 
             return $chainRepository;
         });
-
-        $this->app->when(EloquentProfileRepository::class)
-            ->needs(TranslatorContract::class)
-            ->give(DomainToModelProfileTranslator::class);
-
-        $this->app->when(EloquentModuleRepository::class)
-            ->needs(TranslatorContract::class)
-            ->give(DomainToModelModuleTranslator::class);
 
         #Commands
         $this->app->singletonIf(ProfileWarmup::class, function(Application $app){

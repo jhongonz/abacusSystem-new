@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Privileges extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
