@@ -13,10 +13,12 @@ class DomainToModelUserTranslator implements TranslatorContract
 {
     private UserModel $model;
     private string $canTranslate;
+    private string $mainSearchField;
 
     public function __construct(UserModel $model)
     {
         $this->model = $model;
+        $this->mainSearchField = $this->model->getSearchField();
         $this->canTranslate = User::class;
     }
 
@@ -28,7 +30,7 @@ class DomainToModelUserTranslator implements TranslatorContract
     public function executeTranslate($domain,$model = null): UserModel
     {
         if (is_null($model)) {
-            $model = $this->model->where('user_login', $domain->login()->value())->first() ?: $this->createModel();
+            $model = $this->model->where($this->mainSearchField, $domain->login()->value())->first() ?: $this->createModel();
         }
 
         $model->changeId($domain->id()->value());

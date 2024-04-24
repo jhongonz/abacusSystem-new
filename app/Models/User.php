@@ -76,6 +76,18 @@ class User extends Authenticatable
 
     protected $touches = ['relationWithEmployee','relationWithProfile'];
 
+    /**
+     * The search field associated with the table.
+     *
+     * @var string
+     */
+    protected string $mainSearchField = 'user_login';
+
+    public function getSearchField(): string
+    {
+        return $this->mainSearchField;
+    }
+
     public function relationWithEmployee(): BelongsTo
     {
         return $this->belongsTo(Employee::class,'user__emp_id','emp_id');

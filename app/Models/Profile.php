@@ -45,7 +45,6 @@ class Profile extends Model
      */
     protected $fillable = [
         'pro_name',
-        'pro_name',
         'pro_description',
         'pro_state',
         'created_at',
