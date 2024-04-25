@@ -182,9 +182,10 @@ class User extends Authenticatable
         return $this->getAttribute('user_state');
     }
 
-    public function changeState(int $state): void
+    public function changeState(int $state): self
     {
         $this->setAttribute('user_state',$state);
+        return $this;
     }
 
     /**
