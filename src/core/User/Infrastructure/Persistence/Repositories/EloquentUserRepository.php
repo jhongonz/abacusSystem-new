@@ -31,13 +31,13 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     public function __construct(
         DatabaseManager $database,
         UserTranslator $userTranslator,
+        UserModel $model,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->database = $database;
         $this->userTranslator = $userTranslator;
         $this->priority = $priority;
-
-        $this->model = $this->createUserModel();
+        $this->model = $model;
     }
 
     /**
@@ -45,10 +45,10 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function find(UserId $id): null|User
     {
-        $data = $this->database->table($this->model->getTable())
+        $builder = $this->database->table($this->model->getTable())
             ->where('user_id',$id->value())
-            ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
-            ->first();
+            ->where('user_state','>', ValueObjectStatus::STATE_DELETE);
+        $data = $builder->first();
 
         if (is_null($data)) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
