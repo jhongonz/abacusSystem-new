@@ -15,6 +15,9 @@ use Core\User\Exceptions\UserNotFoundException;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainUserRepository extends AbstractChainRepository implements UserRepositoryContract
 {
     private const FUNCTION_NAMES = [

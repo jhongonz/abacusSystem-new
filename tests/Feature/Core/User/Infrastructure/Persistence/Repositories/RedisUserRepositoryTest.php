@@ -8,6 +8,7 @@ use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Exceptions\UserNotFoundException;
+use Core\User\Exceptions\UserPersistException;
 use Core\User\Infrastructure\Persistence\Repositories\RedisUserRepository;
 use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,7 +20,6 @@ use Tests\TestCase;
 #[CoversClass(RedisUserRepository::class)]
 class RedisUserRepositoryTest extends TestCase
 {
-    private const USER_KEY_FORMAT = '%s::%s';
     private UserFactoryContract|MockObject $userFactory;
     private UserDataTransformerContract|MockObject $dataTransformer;
     private LoggerInterface|MockObject $logger;
@@ -227,6 +227,116 @@ class RedisUserRepositoryTest extends TestCase
         $this->expectExceptionMessage('User not found by id 1');
 
         $this->repository->find($userIdMock);
+    }
+
+    /**
+     * @throws Exception
+     * @throws UserPersistException
+     */
+    public function test_persistUser_should_return_user_object(): void
+    {
+        $loginKey = 'user::login-test';
+        $userIdKey = 'user::1';
+
+        $loginMock = $this->createMock(UserLogin::class);
+        $loginMock->expects(self::once())
+            ->method('value')
+            ->willReturn('login-test');
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $userMock = $this->createMock(User::class);
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($loginMock);
+
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userIdMock);
+
+        $this->dataTransformer->expects(self::once())
+            ->method('write')
+            ->with($userMock)
+            ->willReturnSelf();
+
+        $userData = [];
+        $this->dataTransformer->expects(self::once())
+            ->method('read')
+            ->willReturn($userData);
+
+        Redis::shouldReceive('set')
+            ->once()
+            ->with($loginKey, json_encode($userData))
+            ->andReturnUndefined();
+
+        Redis::shouldReceive('set')
+            ->once()
+            ->with($userIdKey, json_encode($userData))
+            ->andReturnUndefined();
+
+        $result = $this->repository->persistUser($userMock);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertSame($userMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws UserPersistException
+     */
+    public function test_persistUser_should_return_exception(): void
+    {
+        $loginKey = 'user::login-test';
+        $userIdKey = 'user::1';
+
+        $loginMock = $this->createMock(UserLogin::class);
+        $loginMock->expects(self::once())
+            ->method('value')
+            ->willReturn('login-test');
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $userMock = $this->createMock(User::class);
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($loginMock);
+
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userIdMock);
+
+        $this->dataTransformer->expects(self::once())
+            ->method('write')
+            ->with($userMock)
+            ->willReturnSelf();
+
+        $userData = [];
+        $this->dataTransformer->expects(self::once())
+            ->method('read')
+            ->willReturn($userData);
+
+        Redis::shouldReceive('set')
+            ->once()
+            ->with($loginKey, json_encode($userData))
+            ->andThrow(
+                UserPersistException::class,
+                'It could not persist User with key '.$userIdKey.' in redis'
+            );
+
+        $this->logger->expects(self::once())
+            ->method('error')
+            ->with('It could not persist User with key '.$userIdKey.' in redis');
+
+        $this->expectException(UserPersistException::class);
+        $this->expectExceptionMessage('It could not persist User with key '.$userIdKey.' in redis');
+
+        $this->repository->persistUser($userMock);
     }
 
     public function test_priority_should_return_int(): void
