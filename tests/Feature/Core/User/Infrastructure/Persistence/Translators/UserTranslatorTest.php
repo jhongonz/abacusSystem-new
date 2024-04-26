@@ -4,7 +4,7 @@
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  */
 
-namespace Tests\Feature\Core\User\Infrastructure\Persistence\Repositories\Translators;
+namespace Tests\Feature\Core\User\Infrastructure\Persistence\Translators;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;

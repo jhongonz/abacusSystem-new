@@ -17,6 +17,7 @@ use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Exceptions\UserPersistException;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
 class RedisUserRepository implements UserRepositoryContract, ChainPriority
 {
@@ -31,15 +32,18 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
 
     private UserFactoryContract $userFactory;
     private UserDataTransformerContract $dataTransformer;
+    private LoggerInterface $logger;
 
     public function __construct(
         UserFactoryContract $userFactory,
         UserDataTransformerContract $dataTransformer,
+        LoggerInterface $logger,
         string $keyPrefix = 'user',
         int $priority = self::PRIORITY_DEFAULT,
     ) {
         $this->userFactory = $userFactory;
         $this->dataTransformer = $dataTransformer;
+        $this->logger = $logger;
         $this->keyPrefix = $keyPrefix;
         $this->priority = $priority;
     }
@@ -52,6 +56,7 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
         try {
             $data = Redis::get($this->userLoginKey($login));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by login '. $login->value());
         }
 
@@ -73,6 +78,7 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
         try {
             $data = Redis::get($this->userKey($id));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by id '. $id->value());
         }
 
@@ -99,6 +105,7 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
             Redis::set($userLoginKey, json_encode($userData));
             Redis::set($userKey, json_encode($userData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserPersistException('It could not persist User with key '.$userKey.' in redis');
         }
 
