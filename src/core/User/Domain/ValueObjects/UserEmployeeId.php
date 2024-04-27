@@ -1,19 +1,24 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
+use InvalidArgumentException;
 
 class UserEmployeeId implements ValueObjectContract
 {
     private null|int $value;
-    
+
     public function __construct(null|int $value = null)
     {
         if (!is_null($value)) $this->validate($value);
         $this->value = $value;
     }
-    
+
     public function value(): null|int
     {
         return $this->value;
@@ -25,10 +30,12 @@ class UserEmployeeId implements ValueObjectContract
      */
     public function setValue($value): self
     {
+        $this->validate($value);
+
         $this->value = $value;
         return $this;
     }
-    
+
     private function validate(int $id): void
     {
         $options = [
@@ -38,7 +45,7 @@ class UserEmployeeId implements ValueObjectContract
         ];
 
         if (!filter_var($id, FILTER_VALIDATE_INT, $options)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('<%s> does not allow the value <%s>.', static::class, $id)
             );
         }

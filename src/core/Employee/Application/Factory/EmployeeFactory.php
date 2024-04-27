@@ -117,12 +117,12 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeePhone($phone);
     }
 
-    public function buildEmployeeEmail(string $email): EmployeeEmail
+    public function buildEmployeeEmail(?string $email = null): EmployeeEmail
     {
         return new EmployeeEmail($email);
     }
 
-    public function buildEmployeeAddress(string $address): EmployeeAddress
+    public function buildEmployeeAddress(?string $address = null): EmployeeAddress
     {
         return new EmployeeAddress($address);
     }

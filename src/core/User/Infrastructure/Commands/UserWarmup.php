@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Infrastructure\Commands;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
@@ -7,6 +11,7 @@ use Core\User\Domain\Contracts\UserRepositoryContract;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class UserWarmup extends Command
 {
@@ -51,7 +56,7 @@ class UserWarmup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $userId = $this->userFactory->buildId($this->argument('id'));
 
@@ -63,8 +68,10 @@ class UserWarmup extends Command
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+            return CommandSymfony::FAILURE;
         }
 
         $this->logger->info('User command executed');
+        return CommandSymfony::SUCCESS;
     }
 }

@@ -12,7 +12,6 @@ use Core\User\Infrastructure\Management\UserService;
 use Core\User\Infrastructure\Persistence\Repositories\ChainUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\RedisUserRepository;
-use Core\User\Infrastructure\Persistence\Translators\DomainToModelUserTranslator;
 use Core\User\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -31,7 +30,6 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
         UserFactoryContract::class => UserFactory::class,
         UserManagementContract::class => UserService::class,
         UserDataTransformerContract::class => UserDataTransformer::class,
-        TranslatorContract::class => DomainToModelUserTranslator::class,
     ];
 
     /**
@@ -74,7 +72,6 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             UserFactoryContract::class,
             UserManagementContract::class,
             UserDataTransformerContract::class,
-            TranslatorContract::class
         ];
     }
 

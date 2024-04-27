@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\DataTransformer;
 
 use Core\User\Domain\Contracts\UserDataTransformerContract;

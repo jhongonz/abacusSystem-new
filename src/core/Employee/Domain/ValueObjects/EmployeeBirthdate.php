@@ -21,7 +21,7 @@ class EmployeeBirthdate implements ValueObjectContract
 
     public function toString(): null|string
     {
-        return $this->value->format('d/m/Y');
+        return ($this->value) ? $this->value->format('d/m/Y') : null;
     }
 
     /**

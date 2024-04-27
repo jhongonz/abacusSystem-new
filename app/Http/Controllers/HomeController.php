@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Exceptions\ProfileNotActiveException;
 use App\Http\Requests\User\LoginRequest;
+use App\Traits\UserTrait;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
 
 class HomeController extends Controller implements HasMiddleware
 {
+    use UserTrait;
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
     private EmployeeManagementContract $employeeService;

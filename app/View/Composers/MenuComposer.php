@@ -39,7 +39,6 @@ class MenuComposer
 
         /**@var Profile $profile*/
         $profile = session()->get('profile');
-
         /**@var Employee $employee*/
         $employee = session()->get('employee');
 

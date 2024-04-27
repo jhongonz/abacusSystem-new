@@ -13,8 +13,6 @@ use Core\Employee\Infrastructure\Management\EmployeeService;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\RedisEmployeeRepository;
-use Core\Employee\Infrastructure\Persistence\Translators\DomainToModelEmployeeTranslator;
-use Core\Employee\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -31,7 +29,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
         EmployeeFactoryContract::class => EmployeeFactory::class,
         EmployeeManagementContract::class => EmployeeService::class,
         EmployeeDataTransformerContract::class => EmployeeDataTransformer::class,
-        TranslatorContract::class => DomainToModelEmployeeTranslator::class,
     ];
 
     /**
@@ -74,7 +71,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             EmployeeFactoryContract::class,
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
-            TranslatorContract::class,
         ];
     }
 

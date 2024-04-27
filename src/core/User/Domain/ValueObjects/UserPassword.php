@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
@@ -7,12 +11,12 @@ use Core\SharedContext\Model\ValueObjectContract;
 class UserPassword implements ValueObjectContract
 {
     private string $value;
-    
+
     public function __construct(string $value)
     {
         $this->value = $value;
     }
-    
+
     public function value(): string
     {
         return $this->value;

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\UseCases\UpdateUser;
 
 use Core\User\Application\UseCases\RequestService;
@@ -20,7 +24,7 @@ class UpdateUser extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): ?User
+    public function execute(RequestService $request): User
     {
         $this->validateRequest($request, UpdateUserRequest::class);
 

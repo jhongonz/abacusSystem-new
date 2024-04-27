@@ -1,19 +1,23 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
 
 class UserPhoto implements ValueObjectContract
 {
-    private string $value;
-    
-    public function __construct(string $value = '')
+    private ?string $value;
+
+    public function __construct(?string $value = null)
     {
         $this->value = $value;
     }
 
-    public function value(): string
+    public function value(): ?string
     {
         return $this->value;
     }

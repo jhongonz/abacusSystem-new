@@ -2,12 +2,11 @@
 
 namespace Core\Employee\Infrastructure\Persistence\Translators;
 
-use App\Models\Employee as EmployeeModel;
+use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
-use DateTime;
 use Exception;
 
 class EmployeeTranslator implements TranslatorDomainContract
@@ -18,12 +17,8 @@ class EmployeeTranslator implements TranslatorDomainContract
 
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
-        EmployeeModel $employee,
-        array $collection = [],
     ) {
         $this->employeeFactory = $employeeFactory;
-        $this->employee = $employee;
-        $this->collection = $collection;
     }
 
     /**
@@ -79,10 +74,5 @@ class EmployeeTranslator implements TranslatorDomainContract
         }
 
         return $employees;
-    }
-
-    public function canTranslate(): string
-    {
-        return EmployeeModel::class;
     }
 }

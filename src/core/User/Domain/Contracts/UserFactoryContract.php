@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Domain\Contracts;
 
 use Core\User\Domain\User;
@@ -44,5 +48,5 @@ interface UserFactoryContract
 
     public function buildUpdatedAt(null|DateTime $updatedAt): UserUpdatedAt;
 
-    public function buildUserPhoto(string $photo = ''): UserPhoto;
+    public function buildUserPhoto(?string $photo = null): UserPhoto;
 }

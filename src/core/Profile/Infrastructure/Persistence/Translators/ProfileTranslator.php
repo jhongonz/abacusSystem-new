@@ -2,14 +2,13 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Translators;
 
-use App\Models\Module;
-use App\Models\Profile as ProfileModel;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 use Exception;
 
 class ProfileTranslator implements TranslatorDomainContract
@@ -20,12 +19,8 @@ class ProfileTranslator implements TranslatorDomainContract
 
     public function __construct(
         ProfileFactoryContract $profileFactory,
-        ProfileModel $model,
-        array $collection = [],
     ) {
         $this->profileFactory = $profileFactory;
-        $this->model = $model;
-        $this->collection = $collection;
     }
 
     /**
@@ -47,9 +42,7 @@ class ProfileTranslator implements TranslatorDomainContract
             $this->profileFactory->buildProfileId($this->model->id()),
             $this->profileFactory->buildProfileName($this->model->name()),
             $this->profileFactory->buildProfileState($this->model->state()),
-            $this->profileFactory->buildProfileCreatedAt(
-                new DateTime($this->model->createdAt())
-            )
+            $this->profileFactory->buildProfileCreatedAt($this->model->createdAt())
         );
 
         $profile->setDescription(
@@ -61,9 +54,7 @@ class ProfileTranslator implements TranslatorDomainContract
         );
 
         $profile->setUpdatedAt(
-            $this->profileFactory->buildProfileUpdateAt(
-                new DateTime($this->model->updatedAt())
-            )
+            $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
         );
 
         $modulesModel = $this->model->modules();
@@ -93,10 +84,5 @@ class ProfileTranslator implements TranslatorDomainContract
         }
 
         return $profiles;
-    }
-
-    public function canTranslate(): string
-    {
-        return ProfileModel::class;
     }
 }

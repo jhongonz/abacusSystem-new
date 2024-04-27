@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\UseCases\DeleteUser;
 
 use Core\User\Application\UseCases\RequestService;

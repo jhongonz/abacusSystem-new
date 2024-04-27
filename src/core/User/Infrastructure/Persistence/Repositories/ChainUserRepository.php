@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Infrastructure\Persistence\Repositories;
 
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
@@ -11,6 +15,9 @@ use Core\User\Exceptions\UserNotFoundException;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainUserRepository extends AbstractChainRepository implements UserRepositoryContract
 {
     private const FUNCTION_NAMES = [

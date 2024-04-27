@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\UseCases\SearchUser;
 
 use Core\User\Application\UseCases\RequestService;
@@ -21,7 +25,7 @@ class SearchUserById extends UseCasesService
     public function execute(RequestService $request): null|User
     {
         $this->validateRequest($request, SearchUserByIdRequest::class);
-        
+
         return $this->userRepository->find($request->userId());
     }
 }

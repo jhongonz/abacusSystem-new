@@ -46,9 +46,9 @@ interface EmployeeFactoryContract
 
     public function buildEmployeePhone(string $phone): EmployeePhone;
 
-    public function buildEmployeeEmail(string $email): EmployeeEmail;
+    public function buildEmployeeEmail(?string $email = null): EmployeeEmail;
 
-    public function buildEmployeeAddress(string $address): EmployeeAddress;
+    public function buildEmployeeAddress(null|string $address): EmployeeAddress;
 
     public function buildEmployeeState(null|int $state = null): EmployeeState;
 

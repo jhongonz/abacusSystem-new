@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\Factory;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
@@ -103,7 +107,7 @@ class UserFactory implements UserFactoryContract
         return new UserProfileId($profileId);
     }
 
-    public function buildUserPhoto(string $photo = ''): UserPhoto
+    public function buildUserPhoto(?string $photo = null): UserPhoto
     {
         return new UserPhoto($photo);
     }

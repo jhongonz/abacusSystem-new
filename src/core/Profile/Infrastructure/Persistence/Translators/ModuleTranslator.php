@@ -2,12 +2,11 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Translators;
 
-use App\Models\Module as ModuleModel;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
-use DateTime;
 use Exception;
 
 class ModuleTranslator implements TranslatorDomainContract
@@ -17,13 +16,9 @@ class ModuleTranslator implements TranslatorDomainContract
     private array $collection;
 
     public function __construct(
-        ModuleModel $model,
         ModuleFactoryContract $factoryContract,
-        array $collection = [],
     ) {
-        $this->model = $model;
         $this->moduleFactory = $factoryContract;
-        $this->collection = $collection;
     }
 
     /**
@@ -74,10 +69,5 @@ class ModuleTranslator implements TranslatorDomainContract
         }
 
         return $modules;
-    }
-
-    public function canTranslate(): string
-    {
-        return ModuleModel::class;
     }
 }
