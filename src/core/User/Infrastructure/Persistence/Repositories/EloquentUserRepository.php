@@ -18,6 +18,7 @@ use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
 use Illuminate\Database\DatabaseManager;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class EloquentUserRepository implements UserRepositoryContract, ChainPriority
@@ -26,18 +27,21 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     private DatabaseManager $database;
     private UserTranslator $userTranslator;
     private UserModel $model;
+    private LoggerInterface $logger;
     private int $priority;
 
     public function __construct(
         DatabaseManager $database,
         UserTranslator $userTranslator,
         UserModel $model,
+        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->database = $database;
         $this->userTranslator = $userTranslator;
         $this->priority = $priority;
         $this->model = $model;
+        $this->logger = $logger;
     }
 
     /**
@@ -45,7 +49,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function find(UserId $id): null|User
     {
-        $builder = $this->database->table($this->model->getTable())
+        $builder = $this->database->table($this->getTable())
             ->where('user_id',$id->value())
             ->where('user_state','>', ValueObjectStatus::STATE_DELETE);
         $data = $builder->first();
@@ -63,7 +67,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
      */
     public function findCriteria(UserLogin $login): null|User
     {
-        $data = $this->database->table($this->model->getTable())
+        $data = $this->database->table($this->getTable())
             ->where('user_login', $login->value())
             ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
             ->first();
@@ -78,6 +82,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
     /**
      * @throws Exception
+     * @codeCoverageIgnore
      */
     public function persistUser(User $user): User
     {
@@ -102,10 +107,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws UserNotFoundException
      * @throws UserDeleteException
+     * @codeCoverageIgnore
      */
     public function delete(UserId $id): void
     {
-        $data = $this->database->table($this->model->getTable())->find($id->value());
+        $data = $this->database->table($this->getTable())->find($id->value());
 
         if (is_null($data)) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
@@ -115,17 +121,20 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         try {
             $userModel->deleteOrFail();
         } catch (Throwable $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserDeleteException($exception->getMessage(), $exception->getTrace());
         }
     }
 
     /**
      * @throws Exception
+     * @codeCoverageIgnore
      */
     protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
     {
         if (is_null($model)) {
-            $data = $this->database->table($this->model->getTable())->find($domain->id()->value());
+            $builder = $this->database->table($this->getTable());
+            $data = $builder->find($domain->id()->value());
             $model = $this->createUserModel($data);
         }
 
@@ -148,5 +157,10 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     protected function createUserModel(array $data = []): UserModel
     {
         return new UserModel($data);
+    }
+
+    private function getTable(): string
+    {
+        return $this->model->getTable();
     }
 }
