@@ -58,7 +58,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
 
-        $userModel = $this->createUserModel((array) $data);
+        $userModel = $this->updateAttributesModelUser((array) $data);
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
@@ -76,7 +76,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
             throw new UserNotFoundException('User not found with login: '. $login->value());
         }
 
-        $userModel = $this->createUserModel((array) $data);
+        $userModel = $this->updateAttributesModelUser((array) $data);
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
@@ -93,12 +93,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         $id = $userModel->id();
         if (is_null($userModel->id())) {
             $id = $builder->insertGetId($dataModel);
+            $user->id()->setValue($id);
         } else {
-            $builder->where('user_id', $userModel->id());
+            $builder->where('user_id', $id);
             $builder->update($dataModel);
         }
-
-        $user->id()->setValue($id);
 
         return $user;
     }
@@ -126,7 +125,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
 
-        $userModel = $this->createUserModel((array) $data);
+        $userModel = $this->updateAttributesModelUser((array) $data);
         try {
             $userModel->deleteOrFail();
         } catch (Throwable $exception) {
@@ -143,7 +142,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         if (is_null($model)) {
             $builder = $this->database->table($this->getTable());
             $data = $builder->find($domain->id()->value());
-            $model = $this->createUserModel($data);
+            $model = $this->updateAttributesModelUser($data);
         }
 
         $model->changeId($domain->id()->value());
@@ -162,7 +161,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $model;
     }
 
-    private function createUserModel(array $data = []): UserModel
+    private function updateAttributesModelUser(array $data = []): UserModel
     {
         $this->model->fill($data);
         return $this->model;
