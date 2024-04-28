@@ -676,7 +676,6 @@ class EloquentUserRepositoryTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws UserDeleteException
      */
     public function test_delete_user_null_should_return_exception(): void
     {

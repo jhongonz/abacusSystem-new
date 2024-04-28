@@ -13,7 +13,6 @@ use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
-use Core\User\Exceptions\UserDeleteException;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
