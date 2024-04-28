@@ -25,9 +25,11 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Tests\Feature\Core\User\Infrastructure\Persistence\Repositories\DataProvider\DataProviderEloquentRepository;
 use Tests\TestCase;
 
 #[CoversClass(EloquentUserRepository::class)]
@@ -279,20 +281,9 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistUser_should_return_user_object(): void
+    #[DataProviderExternal(DataProviderEloquentRepository::class,'providerInsert')]
+    public function test_persistUser_should_return_user_object($dataInsert, $dateCreated): void
     {
-        $datetime = new \DateTime('2024-04-28 09:46:00');
-        $dataInsert = [
-            "user_state" => 1,
-            "user_id" => null,
-            "user__emp_id" => 1,
-            "user__pro_id" => 1,
-            "user_login" => "login",
-            "user_photo" => "image.jpg",
-            "created_at" => '2024-04-28T09:46:00.000000Z',
-            "updated_at" => '2024-04-28T09:46:00.000000Z',
-        ];
-
         $userMock = $this->createMock(UserDomain::class);
 
         $userIdMock = $this->createMock(UserId::class);
@@ -396,7 +387,7 @@ class EloquentUserRepositoryTest extends TestCase
         $createdAtMock = $this->createMock(UserCreatedAt::class);
         $createdAtMock->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dateCreated);
 
         $userMock->expects(self::once())
             ->method('createdAt')
@@ -404,13 +395,13 @@ class EloquentUserRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('changeCreatedAt')
-            ->with($datetime)
+            ->with($dateCreated)
             ->willReturnSelf();
 
         $updatedAtMock = $this->createMock(UserUpdatedAt::class);
         $updatedAtMock->expects(self::exactly(2))
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dateCreated);
 
         $userMock->expects(self::exactly(2))
             ->method('updatedAt')
@@ -418,7 +409,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('changeUpdatedAt')
-            ->with($datetime)
+            ->with($dateCreated)
             ->willReturnSelf();
 
         $userIdMock->expects(self::once())
@@ -450,13 +441,192 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('users')
             ->andReturn($builderMock);
 
-        $this->model->expects(self::exactly(2))
+        $this->model->expects(self::once())
             ->method('id')
             ->willReturn(null);
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
             ->with($dataInsert)
+            ->andReturn(2);
+
+        $result = $this->repository->persistUser($userMock);
+
+        $this->assertInstanceOf(UserDomain::class, $result);
+        $this->assertSame($result, $userMock);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[DataProviderExternal(DataProviderEloquentRepository::class,'providerUpdate')]
+    public function test_persistUser_should_update_model_and_return_user_object($dataReturn, $dataUpdate, $dateUpdated): void
+    {
+        $userMock = $this->createMock(UserDomain::class);
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(10);
+
+        $userMock->expects(self::exactly(2))
+            ->method('id')
+            ->willReturn($userIdMock);
+
+        $this->model->expects(self::once())
+            ->method('changeId')
+            ->with(10)
+            ->willReturnSelf();
+
+        $employeeId = $this->createMock(UserEmployeeId::class);
+        $employeeId->expects(self::once())
+            ->method('value')
+            ->willReturn(5);
+
+        $userMock->expects(self::once())
+            ->method('employeeId')
+            ->willReturn($employeeId);
+
+        $this->model->expects(self::once())
+            ->method('changeEmployeeId')
+            ->with(5)
+            ->willReturnSelf();
+
+        $profileId = $this->createMock(UserProfileId::class);
+        $profileId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileId);
+
+        $this->model->expects(self::once())
+            ->method('changeProfileId')
+            ->with(1)
+            ->willReturnSelf();
+
+        $loginMock = $this->createMock(UserLogin::class);
+        $loginMock->expects(self::once())
+            ->method('value')
+            ->willReturn('login');
+
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($loginMock);
+
+        $this->model->expects(self::once())
+            ->method('changeLogin')
+            ->with('login')
+            ->willReturnSelf();
+
+        $passwordMock = $this->createMock(UserPassword::class);
+        $passwordMock->expects(self::once())
+            ->method('value')
+            ->willReturn('12345');
+
+        $userMock->expects(self::once())
+            ->method('password')
+            ->willReturn($passwordMock);
+
+        $this->model->expects(self::once())
+            ->method('changePassword')
+            ->with('12345')
+            ->willReturnSelf();
+
+        $stateMock = $this->createMock(UserState::class);
+        $stateMock->expects(self::once())
+            ->method('value')
+            ->willReturn(2);
+
+        $userMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(2)
+            ->willReturnSelf();
+
+        $photoMock = $this->createMock(UserPhoto::class);
+        $photoMock->expects(self::once())
+            ->method('value')
+            ->willReturn('image.jpg');
+
+        $userMock->expects(self::once())
+            ->method('photo')
+            ->willReturn($photoMock);
+
+        $this->model->expects(self::once())
+            ->method('changePhoto')
+            ->with('image.jpg')
+            ->willReturnSelf();
+
+        $createdAtMock = $this->createMock(UserCreatedAt::class);
+        $createdAtMock->expects(self::once())
+            ->method('value')
+            ->willReturn($dateUpdated);
+
+        $userMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAtMock);
+
+        $this->model->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($dateUpdated)
+            ->willReturnSelf();
+
+        $updatedAtMock = $this->createMock(UserUpdatedAt::class);
+        $updatedAtMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn($dateUpdated);
+
+        $userMock->expects(self::exactly(2))
+            ->method('updatedAt')
+            ->willReturn($updatedAtMock);
+
+        $this->model->expects(self::once())
+            ->method('changeUpdatedAt')
+            ->with($dateUpdated)
+            ->willReturnSelf();
+
+        $this->model->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('users');
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn($dataUpdate);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with($dataReturn)
+            ->willReturnSelf();
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(10)
+            ->andReturn($dataReturn);
+
+        $this->database->shouldReceive('table')
+            ->times(2)
+            ->with('users')
+            ->andReturn($builderMock);
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(10);
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('user_id', 10)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('update')
+            ->once()
+            ->with($dataUpdate)
             ->andReturn(2);
 
         $result = $this->repository->persistUser($userMock);
