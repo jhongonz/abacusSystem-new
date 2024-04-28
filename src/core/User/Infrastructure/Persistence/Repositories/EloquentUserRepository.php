@@ -18,8 +18,6 @@ use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
 use Illuminate\Database\DatabaseManager;
-use Psr\Log\LoggerInterface;
-use Throwable;
 
 class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 {
@@ -27,21 +25,18 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     private DatabaseManager $database;
     private UserTranslator $userTranslator;
     private UserModel $model;
-    private LoggerInterface $logger;
     private int $priority;
 
     public function __construct(
         DatabaseManager $database,
         UserTranslator $userTranslator,
         UserModel $model,
-        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->database = $database;
         $this->userTranslator = $userTranslator;
         $this->priority = $priority;
         $this->model = $model;
-        $this->logger = $logger;
     }
 
     /**
@@ -115,23 +110,18 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
     /**
      * @throws UserNotFoundException
-     * @throws UserDeleteException
      */
     public function delete(UserId $id): void
     {
-        $data = $this->database->table($this->getTable())->find($id->value());
+        $builder = $this->database->table($this->getTable());
+        $dataUser = $builder->find($id->value());
 
-        if (is_null($data)) {
+        if (is_null($dataUser)) {
             throw new UserNotFoundException('User not found with id: '. $id->value());
         }
 
-        $userModel = $this->updateAttributesModelUser((array) $data);
-        try {
-            $userModel->deleteOrFail();
-        } catch (Throwable $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new UserDeleteException($exception->getMessage(), $exception->getTrace());
-        }
+        $builder->where('user_id', $id->value());
+        $builder->delete();
     }
 
     /**

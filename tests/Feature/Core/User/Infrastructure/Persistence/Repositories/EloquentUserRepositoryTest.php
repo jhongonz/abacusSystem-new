@@ -16,6 +16,7 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
+use Core\User\Exceptions\UserDeleteException;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
@@ -39,7 +40,6 @@ class EloquentUserRepositoryTest extends TestCase
     private UserTranslator|MockObject $translator;
     private User|MockObject $model;
     private EloquentUserRepository $repository;
-    private LoggerInterface|MockObject $logger;
     private int $priority;
 
     /**
@@ -51,14 +51,12 @@ class EloquentUserRepositoryTest extends TestCase
         $this->database = $this->mock(DatabaseManager::class);
         $this->translator = $this->createMock(UserTranslator::class);
         $this->model = $this->createMock(User::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->priority = 50;
 
         $this->repository = new EloquentUserRepository(
             $this->database,
             $this->translator,
             $this->model,
-            $this->logger,
             $this->priority
         );
     }
@@ -281,7 +279,7 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderEloquentRepository::class,'providerInsert')]
+    #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerInsert')]
     public function test_persistUser_should_return_user_object($dataInsert, $dateCreated): void
     {
         $userMock = $this->createMock(UserDomain::class);
@@ -460,8 +458,8 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderEloquentRepository::class,'providerUpdate')]
-    public function test_persistUser_should_update_model_and_return_user_object($dataReturn, $dataUpdate, $dateUpdated): void
+    #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerUpdate')]
+    public function test_persistUser_should_update_model_and_return_user_object(array $dataReturn, array $dataUpdate, \DateTime $dateUpdated): void
     {
         $userMock = $this->createMock(UserDomain::class);
 
@@ -633,5 +631,78 @@ class EloquentUserRepositoryTest extends TestCase
 
         $this->assertInstanceOf(UserDomain::class, $result);
         $this->assertSame($result, $userMock);
+    }
+
+    /**
+     * @throws UserNotFoundException
+     * @throws UserDeleteException
+     * @throws Exception
+     */
+    #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerDelete')]
+    public function test_delete_should_delete_row(array $dataReturn): void
+    {
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(7);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(7)
+            ->andReturn($dataReturn);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('users');
+
+        $this->database->shouldReceive('table')
+            ->once()
+            ->with('users')
+            ->andReturn($builderMock);
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('user_id',7)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('delete')
+            ->andReturn(1);
+
+        $this->repository->delete($userIdMock);
+
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @throws Exception
+     * @throws UserDeleteException
+     */
+    public function test_delete_user_null_should_return_exception(): void
+    {
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(7);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(7)
+            ->andReturn(null);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('users');
+
+        $this->database->shouldReceive('table')
+            ->once()
+            ->with('users')
+            ->andReturn($builderMock);
+
+        $this->expectException(UserNotFoundException::class);
+        $this->expectExceptionMessage('User not found with id: 7');
+
+        $this->repository->delete($userIdMock);
     }
 }
