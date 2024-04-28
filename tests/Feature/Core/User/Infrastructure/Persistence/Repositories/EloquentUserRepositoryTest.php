@@ -22,6 +22,7 @@ use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -107,10 +108,9 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('users')
             ->andReturn($builderMock);
 
-        $userModel = new User([]);
         $this->translator->expects(self::once())
             ->method('setModel')
-            ->with($userModel)
+            ->with($this->model)
             ->willReturnSelf();
 
         $userMock = $this->createMock(UserDomain::class);
@@ -200,10 +200,9 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('users')
             ->andReturn($builderMock);
 
-        $userModel = new User([]);
         $this->translator->expects(self::once())
             ->method('setModel')
-            ->with($userModel)
+            ->with($this->model)
             ->willReturnSelf();
 
         $userMock = $this->createMock(UserDomain::class);
@@ -280,8 +279,20 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    /*public function test_persistUser_should_return_user_object(): void
+    public function test_persistUser_should_return_user_object(): void
     {
+        $datetime = new \DateTime('2024-04-28 09:46:00');
+        $dataInsert = [
+            "user_state" => 1,
+            "user_id" => null,
+            "user__emp_id" => 1,
+            "user__pro_id" => 1,
+            "user_login" => "login",
+            "user_photo" => "image.jpg",
+            "created_at" => '2024-04-28T09:46:00.000000Z',
+            "updated_at" => '2024-04-28T09:46:00.000000Z',
+        ];
+
         $userMock = $this->createMock(UserDomain::class);
 
         $userIdMock = $this->createMock(UserId::class);
@@ -309,7 +320,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('changeEmployeeId')
-            ->with(null)
+            ->with(1)
             ->willReturnSelf();
 
         $profileId = $this->createMock(UserProfileId::class);
@@ -323,7 +334,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('changeProfileId')
-            ->with(3)
+            ->with(1)
             ->willReturnSelf();
 
         $loginMock = $this->createMock(UserLogin::class);
@@ -382,7 +393,6 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('image.jpg')
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
         $createdAtMock = $this->createMock(UserCreatedAt::class);
         $createdAtMock->expects(self::once())
             ->method('value')
@@ -411,13 +421,22 @@ class EloquentUserRepositoryTest extends TestCase
             ->with($datetime)
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
-            ->method('save')
-            ->willReturn(false);
-
         $userIdMock->expects(self::once())
             ->method('setValue')
             ->with(2)
+            ->willReturnSelf();
+
+        $this->model->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('users');
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn($dataInsert);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
@@ -427,17 +446,22 @@ class EloquentUserRepositoryTest extends TestCase
             ->andReturn([]);
 
         $this->database->shouldReceive('table')
-            ->once()
+            ->times(2)
             ->with('users')
             ->andReturn($builderMock);
 
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('users');
+        $this->model->expects(self::exactly(2))
+            ->method('id')
+            ->willReturn(null);
+
+        $builderMock->shouldReceive('insertGetId')
+            ->once()
+            ->with($dataInsert)
+            ->andReturn(2);
 
         $result = $this->repository->persistUser($userMock);
 
         $this->assertInstanceOf(UserDomain::class, $result);
-        //$this->assertSame($result, $userMock);
-    }*/
+        $this->assertSame($result, $userMock);
+    }
 }

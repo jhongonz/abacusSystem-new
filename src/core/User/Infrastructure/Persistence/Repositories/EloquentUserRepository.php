@@ -82,13 +82,23 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
     /**
      * @throws Exception
-     * @codeCoverageIgnore
      */
     public function persistUser(User $user): User
     {
         $userModel = $this->domainToModel($user);
-        $userModel->save();
-        $user->id()->setValue($userModel->id());
+        $dataModel = $userModel->toArray();
+
+        $builder = $this->database->table($this->getTable());
+
+        $id = $userModel->id();
+        if (is_null($userModel->id())) {
+            $id = $builder->insertGetId($dataModel);
+        } else {
+            $builder->where('user_id', $userModel->id());
+            $builder->update($dataModel);
+        }
+
+        $user->id()->setValue($id);
 
         return $user;
     }
@@ -107,7 +117,6 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws UserNotFoundException
      * @throws UserDeleteException
-     * @codeCoverageIgnore
      */
     public function delete(UserId $id): void
     {
@@ -128,7 +137,6 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
     /**
      * @throws Exception
-     * @codeCoverageIgnore
      */
     protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
     {
@@ -154,9 +162,10 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         return $model;
     }
 
-    protected function createUserModel(array $data = []): UserModel
+    private function createUserModel(array $data = []): UserModel
     {
-        return new UserModel($data);
+        $this->model->fill($data);
+        return $this->model;
     }
 
     private function getTable(): string
