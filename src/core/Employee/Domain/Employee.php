@@ -203,7 +203,6 @@ class Employee
 
     /**
      * @return $this
-     * @codeCoverageIgnore
      */
     public function refreshSearch(): self
     {

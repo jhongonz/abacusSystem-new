@@ -363,4 +363,64 @@ class EmployeeTest extends TestCase
         $this->assertSame($result, $this->employee);
         $this->assertSame($observations, $this->employee->observations());
     }
+
+    /**
+     * @throws Exception
+     */
+    public function test_refreshSearch_should_change_and_return_self(): void
+    {
+        $identificationMock = $this->createMock(EmployeeIdentification::class);
+        $identificationMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setIdentification($identificationMock);
+
+        $nameMock = $this->createMock(EmployeeName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setName($nameMock);
+
+        $lastnameMock = $this->createMock(EmployeeLastname::class);
+        $lastnameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setLastname($lastnameMock);
+
+        $phoneMock = $this->createMock(EmployeePhone::class);
+        $phoneMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setPhone($phoneMock);
+
+        $emailMock = $this->createMock(EmployeeEmail::class);
+        $emailMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setEmail($emailMock);
+
+        $addressMock = $this->createMock(EmployeeAddress::class);
+        $addressMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setAddress($addressMock);
+
+        $observationsMock = $this->createMock(EmployeeObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $this->employee->setObservations($observationsMock);
+
+        $dataExpected = 'test test test test test test test';
+        $searchMock = $this->createMock(EmployeeSearch::class);
+        $searchMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected)
+            ->willReturnSelf();
+        $this->employee->setSearch($searchMock);
+
+        $result = $this->employee->refreshSearch();
+
+        $this->assertInstanceOf(Employee::class, $result);
+    }
 }

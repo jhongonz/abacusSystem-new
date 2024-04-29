@@ -20,7 +20,7 @@ class Employees extends ArrayIterator
 
     /**
      * @param Employee $item
-     * @return self
+     * @return $this
      */
     public function addItem($item): self
     {
