@@ -8,7 +8,14 @@ namespace Tests\Feature\Core\User\Application\Factory;
 
 use Core\User\Application\Factory\UserFactory;
 use Core\User\Domain\User;
+use Core\User\Domain\ValueObjects\UserCreatedAt;
+use Core\User\Domain\ValueObjects\UserEmployeeId;
+use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserLogin;
+use Core\User\Domain\ValueObjects\UserPassword;
 use Core\User\Domain\ValueObjects\UserPhoto;
+use Core\User\Domain\ValueObjects\UserProfileId;
+use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
 use DateTime;
 use Exception;
@@ -44,16 +51,33 @@ class UserFactoryTest extends TestCase
         $data = $dataUser['user'];
 
         $this->assertInstanceOf(User::class, $result);
+
         $this->assertSame($result->id()->value(), $data['id']);
+        $this->assertInstanceOf(UserId::class, $result->id());
+
         $this->assertSame($result->employeeId()->value(), $data['employeeId']);
+        $this->assertInstanceOf(UserEmployeeId::class, $result->employeeId());
+
         $this->assertSame($result->profileId()->value(), $data['profileId']);
+        $this->assertInstanceOf(UserProfileId::class, $result->profileId());
+
         $this->assertSame($result->login()->value(), $data['login']);
+        $this->assertInstanceOf(UserLogin::class, $result->login());
+
         $this->assertSame($result->password()->value(), $data['password']);
+        $this->assertInstanceOf(UserPassword::class, $result->password());
+
         $this->assertSame($result->state()->value(), $data['state']);
-        $this->assertInstanceOf(DateTime::class, $result->createdAt()->value());
+        $this->assertInstanceOf(UserState::class, $result->state());
+
         $this->assertSame(json_decode(json_encode($result->createdAt()->value()),true), $data['createdAt']);
+        $this->assertInstanceOf(UserCreatedAt::class, $result->createdAt());
+
         $this->assertNull($result->updatedAt()->value());
+        $this->assertInstanceOf(UserUpdatedAt::class, $result->updatedAt());
+
         $this->assertSame($result->photo()->value(), $data['photo']);
+        $this->assertInstanceOf(UserPhoto::class, $result->photo());
     }
 
     public function test_buildUpdatedAt_should_return_value_object(): void

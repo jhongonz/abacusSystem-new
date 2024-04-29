@@ -38,7 +38,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
             $this->buildEmployeeCreatedAt(
-                new DateTime($data['createdAt']['date'])
+                $this->getDateTime($data['createdAt']['date'])
             ),
         );
 
@@ -50,20 +50,20 @@ class EmployeeFactory implements EmployeeFactoryContract
 
         if (!is_null($data['updatedAt'])) {
             $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-                new DateTime($data['updatedAt']['date'])
+                $this->getDateTime($data['updatedAt']['date'])
             ));
         }
 
         if (!is_null($data['birthdate'])) {
             $employee->setBirthdate($this->buildEmployeeBirthdate(
-                new DateTime($data['birthdate']['date'])
+                $this->getDateTime($data['birthdate']['date'])
             ));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
         $employee->setImage($this->buildEmployeeImage($data['image']));
 
-        if (in_array('search', $data)) {
+        if (array_key_exists('search', $data)) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
         }
 
@@ -173,5 +173,13 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeImage(?string $image = null): EmployeeImage
     {
         return new EmployeeImage($image);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }
