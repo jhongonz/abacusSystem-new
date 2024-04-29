@@ -71,7 +71,7 @@ class ProfileService implements ProfileManagementContract
                 $moduleId = $this->moduleFactory->buildModuleId($item);
                 $module = $this->moduleService->searchModuleById($moduleId);
 
-                if ($module->state()->isActived()) {
+                if ($module->state()->isActivated()) {
                     $modules->addItem($module);
                 }
             } catch (Exception $exception) {

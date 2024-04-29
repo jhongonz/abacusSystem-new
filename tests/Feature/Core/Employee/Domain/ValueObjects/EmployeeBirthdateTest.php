@@ -59,6 +59,6 @@ class EmployeeBirthdateTest extends TestCase
 
         $this->assertSame($result, $this->valueObject);
         $this->assertSame($datetime, $result->value());
-        $this->assertInstanceOf(DateTime::class, $result->value());
+        $this->assertInstanceOf(DateTime::class, $this->valueObject->value());
     }
 }

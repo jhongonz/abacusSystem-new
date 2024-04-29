@@ -73,7 +73,7 @@ class ModuleController extends Controller implements HasMiddleware
 
         if ($module->state()->isNew() || $module->state()->isInactived()) {
             $module->state()->activate();
-        } else if ($module->state()->isActived()) {
+        } else if ($module->state()->isActivated()) {
             $module->state()->inactive();
         }
 
