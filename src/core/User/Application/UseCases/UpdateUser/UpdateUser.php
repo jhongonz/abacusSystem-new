@@ -74,19 +74,19 @@ class UpdateUser extends UseCasesService
         return $user;
     }
 
-    public function changeCreatedAt(User $user, DateTime $value): User
+    private function changeCreatedAt(User $user, DateTime $value): User
     {
         $user->createdAt()->setValue($value);
         return $user;
     }
 
-    public function changeUpdatedAt(User $user, DateTime $value): User
+    private function changeUpdatedAt(User $user, DateTime $value): User
     {
         $user->updatedAt()->setValue($value);
         return $user;
     }
 
-    public function changeImage(User $user, string $image): User
+    private function changeImage(User $user, string $image): User
     {
         $user->photo()->setValue($image);
         return $user;
