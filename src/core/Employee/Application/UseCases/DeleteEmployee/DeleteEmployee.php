@@ -5,8 +5,6 @@ namespace Core\Employee\Application\UseCases\DeleteEmployee;
 use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
-use Core\Employee\Domain\Employee;
-use Core\Employee\Domain\Employees;
 use Exception;
 
 class DeleteEmployee extends UseCasesService
@@ -19,7 +17,7 @@ class DeleteEmployee extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Employee|Employees
+    public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteEmployeeRequest::class);
         $this->employeeRepository->delete($request->employeeId());
