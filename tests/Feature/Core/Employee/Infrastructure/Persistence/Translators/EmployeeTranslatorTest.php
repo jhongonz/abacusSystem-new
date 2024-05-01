@@ -4,14 +4,23 @@ namespace Tests\Feature\Core\Employee\Infrastructure\Persistence\Translators;
 
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee as EmployeeDomain;
+use Core\Employee\Domain\Employees;
+use Core\Employee\Domain\ValueObjects\EmployeeAddress;
+use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
+use Core\Employee\Domain\ValueObjects\EmployeeEmail;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
+use Core\Employee\Domain\ValueObjects\EmployeeObservations;
+use Core\Employee\Domain\ValueObjects\EmployeePhone;
+use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
@@ -40,7 +49,7 @@ class EmployeeTranslatorTest extends TestCase
     {
         unset(
             $this->factory,
-            $this->translator
+            $this->translator,
         );
         parent::tearDown();
     }
@@ -156,6 +165,48 @@ class EmployeeTranslatorTest extends TestCase
             ->with($updatedAtMock)
             ->willReturnSelf();
 
+        $modelMock->expects(self::once())
+            ->method('address')
+            ->willReturn('test');
+
+        $addressMock = $this->createMock(EmployeeAddress::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeAddress')
+            ->with('test')
+            ->willReturn($addressMock);
+        $employeeMock->expects(self::once())
+            ->method('setAddress')
+            ->with($addressMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('phone')
+            ->willReturn('12345');
+
+        $phoneMock = $this->createMock(EmployeePhone::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeePhone')
+            ->with('12345')
+            ->willReturn($phoneMock);
+        $employeeMock->expects(self::once())
+            ->method('setPhone')
+            ->with($phoneMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('email')
+            ->willReturn('test@some.com');
+
+        $emailMock = $this->createMock(EmployeeEmail::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeEmail')
+            ->with('test@some.com')
+            ->willReturn($emailMock);
+        $employeeMock->expects(self::once())
+            ->method('setEmail')
+            ->with($emailMock)
+            ->willReturnSelf();
+
         $userMock = $this->createMock(User::class);
         $userMock->expects(self::once())
             ->method('id')
@@ -164,6 +215,72 @@ class EmployeeTranslatorTest extends TestCase
         $modelMock->expects(self::once())
             ->method('user')
             ->willReturn($userMock);
+
+        $userIdMock = $this->createMock(EmployeeUserId::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeUserId')
+            ->with(1)
+            ->willReturn($userIdMock);
+        $employeeMock->expects(self::once())
+            ->method('setUserId')
+            ->with($userIdMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('search')
+            ->willReturn('testing');
+
+        $searchMock = $this->createMock(EmployeeSearch::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeSearch')
+            ->with('testing')
+            ->willReturn($searchMock);
+        $employeeMock->expects(self::once())
+            ->method('setSearch')
+            ->with($searchMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('birthdate')
+            ->willReturn($dateTime);
+
+        $birthdateMock = $this->createMock(EmployeeBirthdate::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeBirthdate')
+            ->with($dateTime)
+            ->willReturn($birthdateMock);
+        $employeeMock->expects(self::once())
+            ->method('setBirthdate')
+            ->with($birthdateMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('observations')
+            ->willReturn('test');
+
+        $observationsMock = $this->createMock(EmployeeObservations::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeObservations')
+            ->with('test')
+            ->willReturn($observationsMock);
+        $employeeMock->expects(self::once())
+            ->method('setObservations')
+            ->with($observationsMock)
+            ->willReturnSelf();
+
+        $modelMock->expects(self::once())
+            ->method('image')
+            ->willReturn('image.jpg');
+
+        $imageMock = $this->createMock(EmployeeImage::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeImage')
+            ->with('image.jpg')
+            ->willReturn($imageMock);
+        $employeeMock->expects(self::once())
+            ->method('setImage')
+            ->with($imageMock)
+            ->willReturnSelf();
 
         $this->factory->expects(self::once())
             ->method('buildEmployee')
@@ -182,5 +299,24 @@ class EmployeeTranslatorTest extends TestCase
 
         $this->assertInstanceOf(EmployeeDomain::class, $result);
         $this->assertSame($result, $employeeMock);
+    }
+
+    public function test_setCollection_should_return_self(): void
+    {
+        $result = $this->translator->setCollection([1]);
+
+        $this->assertInstanceOf(EmployeeTranslator::class, $result);
+        $this->assertSame($result, $this->translator);
+    }
+
+    public function test_toDomainCollection_should_return_employees(): void
+    {
+        $this->translator->setCollection([1]);
+        $result = $this->translator->toDomainCollection();
+
+        $this->assertInstanceOf(Employees::class, $result);
+        $this->assertIsArray($result->aggregator());
+        $this->assertCount(1, $result->aggregator());
+        $this->assertSame([1], $result->aggregator());
     }
 }

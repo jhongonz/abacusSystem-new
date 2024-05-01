@@ -19,6 +19,7 @@ class EmployeeTranslator implements TranslatorDomainContract
         EmployeeFactoryContract $employeeFactory,
     ) {
         $this->employeeFactory = $employeeFactory;
+        $this->collection = [];
     }
 
     /**
