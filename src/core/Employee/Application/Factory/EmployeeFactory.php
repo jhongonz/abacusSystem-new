@@ -112,7 +112,7 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeeLastname($lastname);
     }
 
-    public function buildEmployeePhone(string $phone): EmployeePhone
+    public function buildEmployeePhone(?string $phone = null): EmployeePhone
     {
         return new EmployeePhone($phone);
     }

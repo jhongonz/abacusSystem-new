@@ -64,6 +64,37 @@ class Employee extends Model
         'deleted_at',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime'
+    ];
+
+    protected User $relationWithUser;
+    protected $touches = ['relationWithUser'];
+
+    /**
+     * The search field associated with the table.
+     *
+     * @var string
+     */
+    protected string $mainSearchField = 'emp_search';
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+
+    public function getSearchField(): string
+    {
+        return $this->mainSearchField;
+    }
+
     public function relationWithUser(): HasOne
     {
         return $this->hasOne(User::class,'user__emp_id','emp_id');
@@ -76,82 +107,82 @@ class Employee extends Model
 
     public function id(): null|int
     {
-        return $this->attributes['emp_id'];
+        return $this->getAttribute('emp_id');
     }
 
     public function changeId(?int $id): void
     {
-        $this->attributes['emp_id'] = $id;
+        $this->setAttribute('emp_id', $id);
     }
 
     public function identification(): null|string
     {
-        return $this->attributes['emp_identification'];
+        return $this->getAttribute('emp_identification');
     }
 
     public function changeIdentification(string $identification): void
     {
-        $this->attributes['emp_identification'] = $identification;
+        $this->setAttribute('emp_identification', $identification);
     }
 
     public function name(): null|string
     {
-        return $this->attributes['emp_name'];
+        return $this->getAttribute('emp_name');
     }
 
     public function changeName(string $name): void
     {
-        $this->attributes['emp_name'] = $name;
+        $this->setAttribute('emp_name', $name);
     }
 
     public function lastname(): null|string
     {
-        return $this->attributes['emp_lastname'];
+        return $this->getAttribute('emp_lastname');
     }
 
     public function changeLastname(string $lastname): void
     {
-        $this->attributes['emp_lastname'] = $lastname;
+        $this->setAttribute('emp_lastname', $lastname);
     }
 
     public function phone(): null|string
     {
-        return $this->attributes['emp_phone_number'];
+        return $this->getAttribute('emp_phone_number');
     }
 
     public function changePhone(string $phone): void
     {
-        $this->attributes['emp_phone_number'] = $phone;
+        $this->setAttribute('emp_phone_number', $phone);
     }
 
     public function email(): null|string
     {
-        return $this->attributes['emp_email'];
+        return $this->getAttribute('emp_email');
     }
 
     public function changeEmail(string $email): void
     {
-        $this->attributes['emp_email'] = $email;
+        $this->setAttribute('emp_email', $email);
     }
 
     public function address(): null|string
     {
-        return $this->attributes['emp_address'];
+        return $this->getAttribute('emp_address');
     }
 
     public function changeAddress(string $address): void
     {
-        $this->attributes['emp_address'] = $address;
+        $this->setAttribute('emp_address', $address);
     }
 
     public function state(): null|int
     {
-        return $this->attributes['emp_state'];
+        return $this->getAttribute('emp_state');
     }
 
     public function changeState(int $state): void
     {
-        $this->attributes['emp_state'] = $state;
+        $this->setAttribute('emp_state', $state);
     }
 
     /**
@@ -159,12 +190,13 @@ class Employee extends Model
      */
     public function createdAt(): null|DateTime
     {
-        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+        $datetime = $this->getAttribute('created_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeCreatedAt(?DateTime $datetime): void
     {
-        $this->attributes['created_at'] = $datetime;
+        $this->setAttribute('created_at', $datetime);
     }
 
     /**
@@ -172,22 +204,23 @@ class Employee extends Model
      */
     public function updatedAt(): null|DateTime
     {
-        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
+        $datetime = $this->getAttribute('updated_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): void
     {
-        $this->attributes['updated_at'] = $datetime;
+        $this->setAttribute('updated_at', $datetime);
     }
 
     public function search(): null|string
     {
-        return $this->attributes['emp_search'];
+        return $this->getAttribute('emp_search');
     }
 
     public function changeSearch(string $search): void
     {
-        $this->attributes['emp_search'] = $search;
+        $this->setAttribute('emp_search', $search);
     }
 
     /**
@@ -195,42 +228,43 @@ class Employee extends Model
      */
     public function birthdate(): null|DateTime
     {
-        return ($this->attributes['emp_birthdate']) ? $this->getDateTime($this->attributes['emp_birthdate']) : $this->attributes['emp_birthdate'];
+        $datetime = $this->getAttribute('emp_birthdate');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeBirthdate(?DateTime $date): void
     {
-        $this->attributes['emp_birthdate'] = $date;
+        $this->setAttribute('emp_birthdate', $date);
     }
 
     public function observations(): null|string
     {
-        return $this->attributes['emp_observations'];
+        return $this->getAttribute('emp_observations');
     }
 
     public function changeObservations(null|string $observations): void
     {
-        $this->attributes['emp_observations'] = $observations;
+        $this->setAttribute('emp_observations', $observations);
     }
 
     public function identificationType(): string
     {
-        return $this->attributes['emp_identification_type'];
+        return $this->getAttribute('emp_identification_type');
     }
 
     public function changeIdentificationType(string $type): void
     {
-        $this->attributes['emp_identification_type'] = $type;
+        $this->setAttribute('emp_identification_type', $type);
     }
 
     public function image(): null|string
     {
-        return $this->attributes['emp_image'];
+        return $this->getAttribute('emp_image');
     }
 
     public function changeImage(?string $image): void
     {
-        $this->attributes['emp_image'] = $image;
+        $this->setAttribute('emp_image', $image);
     }
 
     /**
