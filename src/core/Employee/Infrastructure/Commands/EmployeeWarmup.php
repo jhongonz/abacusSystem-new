@@ -7,6 +7,7 @@ use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class EmployeeWarmup extends Command
 {
@@ -51,7 +52,7 @@ class EmployeeWarmup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($this->argument('id'));
 
@@ -63,8 +64,10 @@ class EmployeeWarmup extends Command
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+            return CommandSymfony::FAILURE;
         }
 
         $this->logger->info('Employee command executed');
+        return CommandSymfony::SUCCESS;
     }
 }

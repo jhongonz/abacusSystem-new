@@ -13,6 +13,9 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
     private const FUNCTION_NAMES = [
