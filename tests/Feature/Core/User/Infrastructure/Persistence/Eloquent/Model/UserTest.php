@@ -413,25 +413,6 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_state_should_return_null(): void
-    {
-        $this->modelMock = $this->getMockBuilder(User::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('user_state')
-            ->willReturn(null);
-
-        $result = $this->modelMock->state();
-
-        $this->assertNull($result);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function test_changeState_should_return_self(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)

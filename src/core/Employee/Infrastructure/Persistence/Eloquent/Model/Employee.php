@@ -75,7 +75,6 @@ class Employee extends Model
         'deleted_at' => 'datetime'
     ];
 
-    protected User $relationWithUser;
     protected $touches = ['relationWithUser'];
 
     /**
@@ -84,11 +83,6 @@ class Employee extends Model
      * @var string
      */
     protected string $mainSearchField = 'emp_search';
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
 
     public function getSearchField(): string
     {
@@ -100,9 +94,9 @@ class Employee extends Model
         return $this->hasOne(User::class,'user__emp_id','emp_id');
     }
 
-    public function user(): ?User
+    public function user(): Model
     {
-        return $this->relationWithUser;
+        return $this->relationWithUser()->getModel();
     }
 
     public function id(): null|int
@@ -110,9 +104,10 @@ class Employee extends Model
         return $this->getAttribute('emp_id');
     }
 
-    public function changeId(?int $id): void
+    public function changeId(int $id): self
     {
         $this->setAttribute('emp_id', $id);
+        return $this;
     }
 
     public function identification(): null|string
@@ -120,9 +115,10 @@ class Employee extends Model
         return $this->getAttribute('emp_identification');
     }
 
-    public function changeIdentification(string $identification): void
+    public function changeIdentification(string $identification): self
     {
         $this->setAttribute('emp_identification', $identification);
+        return $this;
     }
 
     public function name(): null|string
@@ -130,9 +126,10 @@ class Employee extends Model
         return $this->getAttribute('emp_name');
     }
 
-    public function changeName(string $name): void
+    public function changeName(string $name): self
     {
         $this->setAttribute('emp_name', $name);
+        return $this;
     }
 
     public function lastname(): null|string
@@ -140,9 +137,10 @@ class Employee extends Model
         return $this->getAttribute('emp_lastname');
     }
 
-    public function changeLastname(string $lastname): void
+    public function changeLastname(string $lastname): self
     {
         $this->setAttribute('emp_lastname', $lastname);
+        return $this;
     }
 
     public function phone(): null|string
@@ -150,9 +148,10 @@ class Employee extends Model
         return $this->getAttribute('emp_phone_number');
     }
 
-    public function changePhone(string $phone): void
+    public function changePhone(string $phone): self
     {
         $this->setAttribute('emp_phone_number', $phone);
+        return $this;
     }
 
     public function email(): null|string
@@ -160,9 +159,10 @@ class Employee extends Model
         return $this->getAttribute('emp_email');
     }
 
-    public function changeEmail(string $email): void
+    public function changeEmail(string $email): self
     {
         $this->setAttribute('emp_email', $email);
+        return $this;
     }
 
     public function address(): null|string
@@ -170,19 +170,21 @@ class Employee extends Model
         return $this->getAttribute('emp_address');
     }
 
-    public function changeAddress(string $address): void
+    public function changeAddress(string $address): self
     {
         $this->setAttribute('emp_address', $address);
+        return $this;
     }
 
-    public function state(): null|int
+    public function state(): int
     {
         return $this->getAttribute('emp_state');
     }
 
-    public function changeState(int $state): void
+    public function changeState(int $state): self
     {
         $this->setAttribute('emp_state', $state);
+        return $this;
     }
 
     /**
@@ -194,9 +196,10 @@ class Employee extends Model
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): void
+    public function changeCreatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+        return $this;
     }
 
     /**
@@ -208,9 +211,10 @@ class Employee extends Model
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): void
+    public function changeUpdatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+        return $this;
     }
 
     public function search(): null|string
@@ -218,9 +222,10 @@ class Employee extends Model
         return $this->getAttribute('emp_search');
     }
 
-    public function changeSearch(string $search): void
+    public function changeSearch(string $search): self
     {
         $this->setAttribute('emp_search', $search);
+        return $this;
     }
 
     /**
@@ -232,9 +237,10 @@ class Employee extends Model
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeBirthdate(?DateTime $date): void
+    public function changeBirthdate(?DateTime $date): self
     {
         $this->setAttribute('emp_birthdate', $date);
+        return $this;
     }
 
     public function observations(): null|string
@@ -242,9 +248,10 @@ class Employee extends Model
         return $this->getAttribute('emp_observations');
     }
 
-    public function changeObservations(null|string $observations): void
+    public function changeObservations(null|string $observations): self
     {
         $this->setAttribute('emp_observations', $observations);
+        return $this;
     }
 
     public function identificationType(): string
@@ -252,9 +259,10 @@ class Employee extends Model
         return $this->getAttribute('emp_identification_type');
     }
 
-    public function changeIdentificationType(string $type): void
+    public function changeIdentificationType(string $type): self
     {
         $this->setAttribute('emp_identification_type', $type);
+        return $this;
     }
 
     public function image(): null|string
@@ -262,9 +270,10 @@ class Employee extends Model
         return $this->getAttribute('emp_image');
     }
 
-    public function changeImage(?string $image): void
+    public function changeImage(?string $image): self
     {
         $this->setAttribute('emp_image', $image);
+        return $this;
     }
 
     /**
