@@ -84,12 +84,12 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
         $builder = $this->database->table($this->getTable());
 
-        $id = $userModel->id();
-        if (is_null($id)) {
-            $id = $builder->insertGetId($dataModel);
-            $user->id()->setValue($id);
+        $userId = $userModel->id();
+        if (is_null($userId)) {
+            $userId = $builder->insertGetId($dataModel);
+            $user->id()->setValue($userId);
         } else {
-            $builder->where('user_id', $id);
+            $builder->where('user_id', $userId);
             $builder->update($dataModel);
         }
 

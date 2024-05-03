@@ -288,11 +288,9 @@ class EloquentUserRepositoryTest extends TestCase
         $userIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(null);
-
         $userMock->expects(self::exactly(3))
             ->method('id')
             ->willReturn($userIdMock);
-
         $this->model->expects(self::once())
             ->method('changeId')
             ->with(null)
@@ -302,11 +300,9 @@ class EloquentUserRepositoryTest extends TestCase
         $employeeId->expects(self::once())
             ->method('value')
             ->willReturn(1);
-
         $userMock->expects(self::once())
             ->method('employeeId')
             ->willReturn($employeeId);
-
         $this->model->expects(self::once())
             ->method('changeEmployeeId')
             ->with(1)
@@ -316,11 +312,9 @@ class EloquentUserRepositoryTest extends TestCase
         $profileId->expects(self::once())
             ->method('value')
             ->willReturn(1);
-
         $userMock->expects(self::once())
             ->method('profileId')
             ->willReturn($profileId);
-
         $this->model->expects(self::once())
             ->method('changeProfileId')
             ->with(1)
@@ -330,11 +324,9 @@ class EloquentUserRepositoryTest extends TestCase
         $loginMock->expects(self::once())
             ->method('value')
             ->willReturn('login');
-
         $userMock->expects(self::once())
             ->method('login')
             ->willReturn($loginMock);
-
         $this->model->expects(self::once())
             ->method('changeLogin')
             ->with('login')
@@ -344,11 +336,9 @@ class EloquentUserRepositoryTest extends TestCase
         $passwordMock->expects(self::once())
             ->method('value')
             ->willReturn('12345');
-
         $userMock->expects(self::once())
             ->method('password')
             ->willReturn($passwordMock);
-
         $this->model->expects(self::once())
             ->method('changePassword')
             ->with('12345')
@@ -358,11 +348,9 @@ class EloquentUserRepositoryTest extends TestCase
         $stateMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
-
         $userMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
-
         $this->model->expects(self::once())
             ->method('changeState')
             ->with(1)
@@ -372,11 +360,9 @@ class EloquentUserRepositoryTest extends TestCase
         $photoMock->expects(self::once())
             ->method('value')
             ->willReturn('image.jpg');
-
         $userMock->expects(self::once())
             ->method('photo')
             ->willReturn($photoMock);
-
         $this->model->expects(self::once())
             ->method('changePhoto')
             ->with('image.jpg')
@@ -386,11 +372,9 @@ class EloquentUserRepositoryTest extends TestCase
         $createdAtMock->expects(self::once())
             ->method('value')
             ->willReturn($dateCreated);
-
         $userMock->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAtMock);
-
         $this->model->expects(self::once())
             ->method('changeCreatedAt')
             ->with($dateCreated)
@@ -400,11 +384,9 @@ class EloquentUserRepositoryTest extends TestCase
         $updatedAtMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn($dateCreated);
-
         $userMock->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($updatedAtMock);
-
         $this->model->expects(self::once())
             ->method('changeUpdatedAt')
             ->with($dateCreated)
@@ -414,11 +396,9 @@ class EloquentUserRepositoryTest extends TestCase
             ->method('setValue')
             ->with(2)
             ->willReturnSelf();
-
         $this->model->expects(self::exactly(2))
             ->method('getTable')
             ->willReturn('users');
-
         $this->model->expects(self::once())
             ->method('toArray')
             ->willReturn($dataInsert);
@@ -635,7 +615,6 @@ class EloquentUserRepositoryTest extends TestCase
 
     /**
      * @throws UserNotFoundException
-     * @throws UserDeleteException
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerDelete')]

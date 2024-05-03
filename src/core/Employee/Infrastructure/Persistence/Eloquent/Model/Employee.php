@@ -104,7 +104,7 @@ class Employee extends Model
         return $this->getAttribute('emp_id');
     }
 
-    public function changeId(int $id): self
+    public function changeId(?int $id): self
     {
         $this->setAttribute('emp_id', $id);
         return $this;

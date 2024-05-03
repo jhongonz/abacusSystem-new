@@ -114,6 +114,23 @@ class EmployeeTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
+    public function test_changeId_with_null_should_change_and_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('emp_id', null)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeId(null);
+
+        $this->assertInstanceOf(Employee::class, $result);
+        $this->assertSame($result, $this->modelMock);
+    }
+
     public function test_identification_should_return_string(): void
     {
         $this->modelMock = $this->getMockBuilder(Employee::class)

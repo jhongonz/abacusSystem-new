@@ -117,9 +117,18 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     public function persistEmployee(Employee $employee): Employee
     {
         $employeeModel = $this->domainToModel($employee);
-        $employeeModel->save();
+        $employeeId = $employeeModel->id();
+        $dataModel = $employeeModel->toArray();
 
-        $employee->id()->setValue($employeeModel->id());
+        $builder = $this->database->table($this->getTable());
+
+        if (is_null($employeeId)) {
+            $employeeId = $builder->insertGetId($dataModel);
+            $employee->id()->setValue($employeeId);
+        } else {
+            $builder->where('emp_id', $employeeId);
+            $builder->update($dataModel);
+        }
 
         return $employee;
     }
@@ -156,11 +165,11 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         return $employees;
     }
 
-    protected function domainToModel(Employee $domain, ?EmployeeModel $model = null): EmployeeModel
+    private function domainToModel(Employee $domain, ?EmployeeModel $model = null): EmployeeModel
     {
         if (is_null($model)) {
             $builder = $this->database->table($this->getTable());
-            $data = $builder->find($domain->id()->value());
+            $data = (array) $builder->find($domain->id()->value());
             $model = $this->updateAttributesModelEmployee($data);
         }
 
