@@ -14,6 +14,7 @@ use Core\Employee\Exceptions\EmployeePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
 class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
 {
@@ -28,15 +29,18 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
 
     private EmployeeFactoryContract $employeeFactory;
     private EmployeeDataTransformerContract $dataTransformer;
+    private LoggerInterface $logger;
 
     public function __construct(
       EmployeeFactoryContract $employeeFactory,
       EmployeeDataTransformerContract $dataTransformer,
+      LoggerInterface $logger,
       string $keyPrefix = 'employee',
       int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->employeeFactory = $employeeFactory;
         $this->dataTransformer = $dataTransformer;
+        $this->logger = $logger;
         $this->keyPrefix = $keyPrefix;
         $this->priority = $priority;
     }
@@ -60,6 +64,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         try {
             $data = Redis::get($this->employeeKey($id));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeeNotFoundException('Employee not found by id '. $id->value());
         }
 
@@ -81,6 +86,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         try {
             $data = Redis::get($this->employeeIdentificationKey($identification));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeeNotFoundException('Employee not found by identification '. $identification->value());
         }
 
@@ -112,6 +118,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
             Redis::set($employeeKey, json_encode($employeeData));
             Redis::set($employeeIdentificationKey, json_encode($employeeData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeePersistException('It could not persist Employee with key '.$employeeKey.' in redis');
         }
 
