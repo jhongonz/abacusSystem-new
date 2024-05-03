@@ -3,6 +3,7 @@
 namespace Tests\Feature\Core\Employee\Infrastructure\Persistence\Repositories;
 
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
 use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
@@ -18,6 +19,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
+use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
@@ -792,5 +794,128 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertSame($result, $employeeMock);
+    }
+
+    /**
+     * @throws EmployeesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_employees_object(): void
+    {
+        $builderMock = $this->mock(Builder::class);
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('emp_state','>', -1)
+            ->andReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('emp_search');
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('emp_search','test')
+            ->andReturnSelf();
+
+        $modelMock = $this->createMock(EmployeeModel::class);
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['emp_id'])
+            ->andReturn([$modelMock]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with((array)$modelMock)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
+
+        $this->translator->expects(self::once())
+            ->method('setCollection')
+            ->with([1])
+            ->willReturnSelf();
+
+
+        $employeesMock = $this->createMock(Employees::class);
+        $employeesMock->expects(self::once())
+            ->method('setFilters')
+            ->with(['q'=>'test'])
+            ->willReturnSelf();
+
+        $this->translator->expects(self::once())
+            ->method('toDomainCollection')
+            ->willReturn($employeesMock);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('employees');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('employees')
+            ->andReturn($builderMock);
+
+        $result = $this->repository->getAll(['q'=>'test']);
+
+        $this->assertInstanceOf(Employees::class, $result);
+        $this->assertSame($result, $employeesMock);
+    }
+
+    /**
+     * @throws EmployeesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_exception(): void
+    {
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('emp_state','>', -1)
+            ->andReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('emp_search');
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('emp_search','test')
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['emp_id'])
+            ->andReturn([]);
+
+        $this->model->expects(self::never())
+            ->method('fill')
+            ->willReturnSelf();
+
+        $this->model->expects(self::never())
+            ->method('id');
+
+        $this->translator->expects(self::never())
+            ->method('setCollection');
+
+        $this->translator->expects(self::never())
+            ->method('toDomainCollection');
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('employees');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('employees')
+            ->andReturn($builderMock);
+
+        $this->expectException(EmployeesNotFoundException::class);
+        $this->expectExceptionMessage('Employees not found');
+
+        $this->repository->getAll(['q'=>'test']);
     }
 }

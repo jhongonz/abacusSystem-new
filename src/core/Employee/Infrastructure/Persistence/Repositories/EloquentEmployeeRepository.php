@@ -138,18 +138,16 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
      */
     public function getAll(array $filters = []): null|Employees
     {
-        try {
-            /**@var  Builder $builder*/
-            $builder = $this->database->table($this->getTable())
-                    ->where('emp_state','>',ValueObjectStatus::STATE_DELETE);
+        /**@var  Builder $builder*/
+        $builder = $this->database->table($this->getTable())
+            ->where('emp_state','>',ValueObjectStatus::STATE_DELETE);
 
-            if (array_key_exists('q', $filters) && isset($filters['q'])) {
-                $builder->where($this->model->getSearchField(),'like','%'.$filters['q'].'%');
-            }
+        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+            $builder->whereFullText($this->model->getSearchField(), $filters['q']);
+        }
+        $employeeCollection = $builder->get(['emp_id']);
 
-            $employeeCollection = $builder->get(['emp_id']);
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        if (empty($employeeCollection)) {
             throw new EmployeesNotFoundException('Employees not found');
         }
 
@@ -165,13 +163,11 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         return $employees;
     }
 
-    private function domainToModel(Employee $domain, ?EmployeeModel $model = null): EmployeeModel
+    private function domainToModel(Employee $domain): EmployeeModel
     {
-        if (is_null($model)) {
-            $builder = $this->database->table($this->getTable());
-            $data = (array) $builder->find($domain->id()->value());
-            $model = $this->updateAttributesModelEmployee($data);
-        }
+        $builder = $this->database->table($this->getTable());
+        $data = (array) $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelEmployee($data);
 
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());

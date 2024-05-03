@@ -126,13 +126,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws Exception
      */
-    protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
+    private function domainToModel(User $domain): UserModel
     {
-        if (is_null($model)) {
-            $builder = $this->database->table($this->getTable());
-            $data = $builder->find($domain->id()->value());
-            $model = $this->updateAttributesModelUser($data);
-        }
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelUser($data);
 
         $model->changeId($domain->id()->value());
         $model->changeEmployeeId($domain->employeeId()->value());
