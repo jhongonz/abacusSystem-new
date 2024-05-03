@@ -7,6 +7,9 @@ use Core\Employee\Exceptions\SourceNotFoundException;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class AbstractChainRepository
 {
     /** @var ChainPriority[] */

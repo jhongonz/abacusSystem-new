@@ -4,6 +4,9 @@ namespace Core\SharedContext\Model;
 
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ValueObjectStatus implements ValueObjectContract
 {
     const STATE_NEW = 1;
