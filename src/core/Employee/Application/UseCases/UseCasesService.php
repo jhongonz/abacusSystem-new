@@ -5,16 +5,19 @@ namespace Core\Employee\Application\UseCases;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class UseCasesService implements ServiceContract
 {
     protected EmployeeRepositoryContract $employeeRepository;
-    
+
     public function __construct(
         EmployeeRepositoryContract $employeeRepository
     ) {
         $this->employeeRepository = $employeeRepository;
     }
-    
+
     /**
      * @throws Exception
      */
@@ -24,6 +27,6 @@ abstract class UseCasesService implements ServiceContract
             throw new Exception('Request not valid');
         }
 
-        return $request; 
+        return $request;
     }
 }

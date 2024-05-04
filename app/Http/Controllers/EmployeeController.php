@@ -98,7 +98,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         if ($employee->state()->isNew() || $employee->state()->isInactived()) {
             $employee->state()->activate();
-        } else if ($employee->state()->isActived()) {
+        } else if ($employee->state()->isActivated()) {
             $employee->state()->inactive();
         }
 

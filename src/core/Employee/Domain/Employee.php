@@ -201,19 +201,22 @@ class Employee
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function refreshSearch(): self
     {
         $data = [
-            $this->identification()->value(),
-            $this->name()->value(),
-            $this->lastname()->value(),
-            $this->phone()->value(),
-            $this->email()->value(),
-            $this->address()->value(),
-            $this->observations()->value(),
+            $this->identification->value(),
+            $this->name->value(),
+            $this->lastname->value(),
+            $this->phone->value(),
+            $this->email->value(),
+            $this->address->value(),
+            $this->observations->value(),
         ];
 
-        $this->search()->setValue(implode(' ', $data));
+        $this->search->setValue(implode(' ', $data));
         return $this;
     }
 

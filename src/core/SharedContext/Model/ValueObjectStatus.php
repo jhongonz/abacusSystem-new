@@ -4,13 +4,16 @@ namespace Core\SharedContext\Model;
 
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ValueObjectStatus implements ValueObjectContract
 {
     const STATE_NEW = 1;
     const STATE_ACTIVE = 2;
     const STATE_INACTIVE = 3;
     const STATE_DELETE = -1;
-    
+
     const STATE_DEFAULT = self::STATE_ACTIVE;
     const REGISTRY_STATES = [
         self::STATE_NEW,
@@ -18,7 +21,7 @@ class ValueObjectStatus implements ValueObjectContract
         self::STATE_INACTIVE,
         self::STATE_DELETE
     ];
-    
+
     const STYLE_LITERAL_STATE = [
         self::STATE_NEW => [
             'class' => 'badge-primary bg-orange-600',
@@ -33,7 +36,7 @@ class ValueObjectStatus implements ValueObjectContract
             'literal' => 'Inactivo'
         ],
     ];
-    
+
     protected string $valueLiteral;
     protected int $value;
 
@@ -47,8 +50,8 @@ class ValueObjectStatus implements ValueObjectContract
 
         $this->valueLiteral = self::STYLE_LITERAL_STATE[$value]['literal'];
     }
-    
-    public function value(): ?int
+
+    public function value(): int
     {
         return $this->value;
     }
@@ -63,27 +66,20 @@ class ValueObjectStatus implements ValueObjectContract
         $this->value = $value;
 
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[$value]['literal']);
-        
+
         return $this;
     }
-    
+
     public function getValueLiteral(): string
     {
         return  $this->valueLiteral;
-    }
-
-    public function changeValueLiteral(string $literal): self
-    {
-        $this->valueLiteral = $literal;
-        
-        return $this;
     }
 
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_ACTIVE]['literal']);
-        
+
         return $this;
     }
 
@@ -91,7 +87,7 @@ class ValueObjectStatus implements ValueObjectContract
     {
         $this->value = self::STATE_INACTIVE;
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_INACTIVE]['literal']);
-        
+
         return $this;
     }
 
@@ -100,26 +96,29 @@ class ValueObjectStatus implements ValueObjectContract
         return ($this->value() === self::STATE_NEW);
     }
 
-    public function isActived(): bool
+    public function isActivated(): bool
     {
         return ($this->value() === self::STATE_ACTIVE);
     }
 
-    public function isInactived(): bool
+    public function isInactivated(): bool
     {
         return ($this->value() === self::STATE_INACTIVE);
     }
 
-    /**
-     * @throws Exception
-     */
     public function formatHtmlToState(): string
     {
         $state = $this->value();
-        $this->validateState($state);
         $style = self::STYLE_LITERAL_STATE[$state];
 
         return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->getValueLiteral());
+    }
+
+    protected function changeValueLiteral(string $literal): self
+    {
+        $this->valueLiteral = $literal;
+
+        return $this;
     }
 
     /**

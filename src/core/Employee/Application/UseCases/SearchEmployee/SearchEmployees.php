@@ -19,7 +19,7 @@ class SearchEmployees extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Employee|Employees
+    public function execute(RequestService $request): null|Employees
     {
         $this->validateRequest($request, SearchEmployeesRequest::class);
 

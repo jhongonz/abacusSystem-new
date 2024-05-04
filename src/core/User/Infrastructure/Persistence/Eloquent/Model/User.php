@@ -8,6 +8,7 @@ use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -81,8 +82,6 @@ class User extends Authenticatable
         'deleted_at' => 'datetime'
     ];
 
-    protected Employee $relationWithEmployee;
-    protected Profile $relationWithProfile;
     protected $touches = ['relationWithEmployee','relationWithProfile'];
 
     /**
@@ -91,14 +90,6 @@ class User extends Authenticatable
      * @var string
      */
     protected string $mainSearchField = 'user_login';
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        $this->relationWithEmployee = new Employee();
-        $this->relationWithProfile = new Profile();
-    }
 
     public function getSearchField(): string
     {
@@ -110,9 +101,9 @@ class User extends Authenticatable
         return $this->belongsTo(Employee::class,'user__emp_id','emp_id');
     }
 
-    public function employee(): Employee
+    public function employee(): Model
     {
-        return $this->relationWithEmployee;
+        return $this->relationWithEmployee()->getModel();
     }
 
     public function relationWithProfile(): BelongsTo
@@ -120,9 +111,9 @@ class User extends Authenticatable
         return $this->belongsTo(Profile::class,'user__pro_id','pro_id');
     }
 
-    public function profile(): Profile
+    public function profile(): Model
     {
-        return $this->relationWithProfile;
+        return $this->relationWithProfile()->getModel();
     }
 
     public function id(): null|int
@@ -180,7 +171,7 @@ class User extends Authenticatable
         return $this;
     }
 
-    public function state(): null|int
+    public function state(): int
     {
         return $this->getAttribute('user_state');
     }

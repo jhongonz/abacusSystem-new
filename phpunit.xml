@@ -33,6 +33,7 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="XDEBUG_MODE" value="coverage"/>
     </php>
     <logging>
         <junit outputFile="./var/coverage/logfile.xml"/>

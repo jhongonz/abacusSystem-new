@@ -11,7 +11,15 @@ use Core\User\Application\UseCases\UpdateUser\UpdateUser;
 use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
+use Core\User\Domain\ValueObjects\UserCreatedAt;
+use Core\User\Domain\ValueObjects\UserEmployeeId;
 use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserLogin;
+use Core\User\Domain\ValueObjects\UserPassword;
+use Core\User\Domain\ValueObjects\UserPhoto;
+use Core\User\Domain\ValueObjects\UserProfileId;
+use Core\User\Domain\ValueObjects\UserState;
+use Core\User\Domain\ValueObjects\UserUpdatedAt;
 use Mockery\Mock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
@@ -60,6 +68,78 @@ class UpdateUserTest extends TestCase
             ->willReturn($dataUpdate);
 
         $userMock = $this->createMock(User::class);
+
+        $employeeIdMock = $this->createMock(UserEmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['employeeId'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('employeeId')
+            ->willReturn($employeeIdMock);
+
+        $profileIdMock = $this->createMock(UserProfileId::class);
+        $profileIdMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['profileId'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileIdMock);
+
+        $loginMock = $this->createMock(UserLogin::class);
+        $loginMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['login'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($loginMock);
+
+        $passwordMock = $this->createMock(UserPassword::class);
+        $passwordMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['password'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('password')
+            ->willReturn($passwordMock);
+
+        $stateMock = $this->createMock(UserState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['state'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $createdAtMock = $this->createMock(UserCreatedAt::class);
+        $createdAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['createdAt'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAtMock);
+
+        $updatedAtMock = $this->createMock(UserUpdatedAt::class);
+        $updatedAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['updatedAt'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAtMock);
+
+        $imageMock = $this->createMock(UserPhoto::class);
+        $imageMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['image'])
+            ->willReturnSelf();
+        $userMock->expects(self::once())
+            ->method('photo')
+            ->willReturn($imageMock);
 
         $this->repository->expects(self::once())
             ->method('find')

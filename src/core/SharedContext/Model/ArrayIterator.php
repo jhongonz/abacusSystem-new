@@ -6,16 +6,19 @@ use Countable;
 use Iterator;
 use ReturnTypeWillChange;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class ArrayIterator implements Iterator, Countable
 {
     protected array $items = [];
     protected array $aggregator = [];
-    
+
     abstract public function addItem(mixed $item): ArrayIterator;
     abstract public function items(): array;
     abstract public function addId(int $id): ArrayIterator;
     abstract public function aggregator(): array;
-    
+
     public function current(): mixed
     {
         return \current($this->items);

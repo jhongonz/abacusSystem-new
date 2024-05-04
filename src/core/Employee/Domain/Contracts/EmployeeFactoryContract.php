@@ -44,7 +44,7 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeLastname(string $lastname): EmployeeLastname;
 
-    public function buildEmployeePhone(string $phone): EmployeePhone;
+    public function buildEmployeePhone(?string $phone = null): EmployeePhone;
 
     public function buildEmployeeEmail(?string $email = null): EmployeeEmail;
 

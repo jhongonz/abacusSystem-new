@@ -13,7 +13,6 @@ use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
-use Core\User\Exceptions\UserDeleteException;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
@@ -85,12 +84,12 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
 
         $builder = $this->database->table($this->getTable());
 
-        $id = $userModel->id();
-        if (is_null($id)) {
-            $id = $builder->insertGetId($dataModel);
-            $user->id()->setValue($id);
+        $userId = $userModel->id();
+        if (is_null($userId)) {
+            $userId = $builder->insertGetId($dataModel);
+            $user->id()->setValue($userId);
         } else {
-            $builder->where('user_id', $id);
+            $builder->where('user_id', $userId);
             $builder->update($dataModel);
         }
 
@@ -127,13 +126,11 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws Exception
      */
-    protected function domainToModel(User $domain, ?UserModel $model = null): UserModel
+    private function domainToModel(User $domain): UserModel
     {
-        if (is_null($model)) {
-            $builder = $this->database->table($this->getTable());
-            $data = $builder->find($domain->id()->value());
-            $model = $this->updateAttributesModelUser($data);
-        }
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelUser($data);
 
         $model->changeId($domain->id()->value());
         $model->changeEmployeeId($domain->employeeId()->value());

@@ -74,7 +74,7 @@ class ProfileController extends Controller implements HasMiddleware
 
         if ($profile->state()->isNew() || $profile->state()->isInactived()) {
             $profile->state()->activate();
-        } else if ($profile->state()->isActived()) {
+        } else if ($profile->state()->isActivated()) {
             $profile->state()->inactive();
         }
 
