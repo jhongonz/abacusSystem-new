@@ -130,6 +130,11 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return $employees;
     }
 
+    public function getAll(array $filters = []): null|Employees
+    {
+        return null;
+    }
+
     private function employeeKey(EmployeeId $id): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $id->value());
@@ -138,10 +143,5 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     private function employeeIdentificationKey(EmployeeIdentification $identification): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $identification->value());
-    }
-
-    public function getAll(array $filters = []): null|Employees
-    {
-        return null;
     }
 }
