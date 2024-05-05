@@ -7,10 +7,9 @@ use Core\SharedContext\Model\ValueObjectContract;
 class ProfileId implements ValueObjectContract
 {
     private null|int $value;
-    
-    public function __construct(
-        null|int $value
-    ) {
+
+    public function __construct(null|int $value = null)
+    {
         $this->value = $value;
     }
 
