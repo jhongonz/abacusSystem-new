@@ -13,7 +13,7 @@ class ModuleIcon implements ValueObjectContract
         $this->value = $value;
     }
 
-    public function value(): string
+    public function value(): null|string
     {
         return $this->value;
     }

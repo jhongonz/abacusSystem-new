@@ -96,7 +96,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $employeeId = $this->employeeFactory->buildEmployeeId($request->input('id'));
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
-        if ($employee->state()->isNew() || $employee->state()->isInactived()) {
+        if ($employee->state()->isNew() || $employee->state()->isInactivated()) {
             $employee->state()->activate();
         } else if ($employee->state()->isActivated()) {
             $employee->state()->inactive();

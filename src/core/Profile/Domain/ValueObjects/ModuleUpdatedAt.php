@@ -8,10 +8,9 @@ use DateTime;
 class ModuleUpdatedAt implements ValueObjectContract
 {
     private null|DateTime $value;
-    
-    public function __construct(
-        null|DateTime $value = null
-    ) {
+
+    public function __construct(null|DateTime $value = null)
+    {
         $this->value = $value;
     }
 

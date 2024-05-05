@@ -30,7 +30,6 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(EloquentEmployeeRepository::class)]
@@ -39,7 +38,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
     private EmployeeModel|MockObject $model;
     private EmployeeTranslator|MockObject $translator;
     private DatabaseManager|MockInterface $databaseManager;
-    private LoggerInterface|MockObject $logger;
     private EloquentEmployeeRepository $repository;
 
     /**
@@ -51,13 +49,11 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->model = $this->createMock(EmployeeModel::class);
         $this->translator = $this->createMock(EmployeeTranslator::class);
         $this->databaseManager = $this->mock(DatabaseManager::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->repository = new EloquentEmployeeRepository(
             $this->databaseManager,
             $this->translator,
             $this->model,
-            $this->logger
         );
     }
 
@@ -67,7 +63,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
             $this->model,
             $this->translator,
             $this->databaseManager,
-            $this->logger,
             $this->repository
         );
         parent::tearDown();

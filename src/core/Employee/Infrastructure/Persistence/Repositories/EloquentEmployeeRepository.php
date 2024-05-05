@@ -8,7 +8,6 @@ use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
-use Core\Employee\Exceptions\EmployeeDeleteException;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
@@ -17,8 +16,6 @@ use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Psr\Log\LoggerInterface;
-use Throwable;
 
 class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
 {
@@ -27,19 +24,16 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     private EmployeeModel $model;
     private EmployeeTranslator $employeeTranslator;
     private DatabaseManager $database;
-    private LoggerInterface $logger;
     private int $priority;
 
     public function __construct(
         DatabaseManager $database,
         EmployeeTranslator $translator,
         EmployeeModel $model,
-        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->database = $database;
         $this->employeeTranslator = $translator;
-        $this->logger = $logger;
         $this->priority = $priority;
 
         $this->model = $model;
