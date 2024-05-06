@@ -46,8 +46,6 @@ class Module
 
         $this->search = new ModuleSearch();
         $this->updatedAt = new ModuleUpdatedAt();
-        //$this->options = [];
-        //$this->expanded = false;
     }
 
     public function id(): ModuleId
@@ -179,13 +177,13 @@ class Module
     public function refreshSearch(): self
     {
         $dataSearch = [
-            $this->menuKey()->value(),
-            $this->name()->value(),
-            $this->route()->value(),
-            $this->icon()->value(),
+            $this->menuKey->value(),
+            $this->name->value(),
+            $this->route->value(),
+            $this->icon->value(),
         ];
 
-        $this->search()->setValue(implode(' ', $dataSearch));
+        $this->search->setValue(implode(' ', $dataSearch));
         return $this;
     }
 }
