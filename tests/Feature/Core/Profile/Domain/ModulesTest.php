@@ -94,6 +94,7 @@ class ModulesTest extends TestCase
         $result = $this->modules->addId(1);
         $this->assertInstanceOf(Modules::class, $result);
         $this->assertSame($result, $this->modules);
+        $this->assertSame([1], $result->aggregator());
     }
 
     public function test_aggregator_should_return_array(): void
