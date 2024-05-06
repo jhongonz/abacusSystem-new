@@ -143,7 +143,7 @@ class HomeController extends Controller implements HasMiddleware
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
-        if ($profile instanceof Profile && $profile->state()->isInactived()) {
+        if ($profile instanceof Profile && $profile->state()->isInactivated()) {
             $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
             throw new ProfileNotActiveException('User is not authorized, contact with administrator');
         }

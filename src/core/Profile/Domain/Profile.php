@@ -21,7 +21,6 @@ class Profile
     private ProfileSearch $search;
     private ProfileDescription $description;
     private Modules $modules;
-
     private array $modulesAggregator = [];
 
     public function __construct(
@@ -34,6 +33,7 @@ class Profile
         $this->name = $name;
         $this->state = $state;
         $this->createdAt = $createdAt;
+
         $this->search = new ProfileSearch();
         $this->updatedAt = new ProfileUpdatedAt();
         $this->modules = new Modules();
@@ -65,6 +65,12 @@ class Profile
     public function state(): ProfileState
     {
         return $this->state;
+    }
+
+    public function setState(ProfileState $state): self
+    {
+        $this->state = $state;
+        return $this;
     }
 
     public function search(): ProfileSearch
@@ -111,12 +117,6 @@ class Profile
         return $this;
     }
 
-    public function setState(ProfileState $state): self
-    {
-        $this->state = $state;
-        return $this;
-    }
-
     public function createdAt(): ProfileCreatedAt
     {
         return $this->createdAt;
@@ -142,11 +142,11 @@ class Profile
     public function refreshSearch(): self
     {
         $dataSearch = [
-            $this->name()->value(),
-            $this->description()->value(),
+            $this->name->value(),
+            $this->description->value(),
         ];
 
-        $this->search()->setValue(implode(' ', $dataSearch));
+        $this->search->setValue(implode(' ', $dataSearch));
         return $this;
     }
 }

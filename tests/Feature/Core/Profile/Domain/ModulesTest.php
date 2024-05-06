@@ -86,6 +86,7 @@ class ModulesTest extends TestCase
         $result = $this->modules->moduleElementsOfKey('test');
 
         $this->assertIsArray($result);
+        $this->assertSame([$this->module], $result);
     }
 
     public function test_addId_should_return_self(): void
