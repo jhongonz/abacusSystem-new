@@ -24,14 +24,12 @@ use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Employee\Application\Factory\DataProvider\DataProviderEmployeeFactory;
 use Tests\TestCase;
 
 #[CoversClass(EmployeeFactory::class)]
 class EmployeeFactoryTest extends TestCase
 {
-    private Employee|MockObject $employee;
     private EmployeeFactory $factory;
 
     /**
@@ -46,10 +44,7 @@ class EmployeeFactoryTest extends TestCase
 
     public function tearDown(): void
     {
-        unset(
-            $this->employee,
-            $this->factory
-        );
+        unset($this->factory);
         parent::tearDown();
     }
 

@@ -33,15 +33,15 @@ class ModuleFactory implements ModuleFactoryContract
             $this->buildModuleIcon($data['icon']),
             $this->buildModuleState($data['state']),
         );
-        
+
         if($data['createdAt']) {
             $module->createdAt()->setValue(new DateTime($data['createdAt']['date']));
         }
-        
+
         if($data['updatedAt']) {
             $module->updatedAt()->setValue(new DateTime($data['updatedAt']['date']));
         }
-        
+
         return $module;
     }
 
@@ -54,7 +54,7 @@ class ModuleFactory implements ModuleFactoryContract
         ModuleState $state = new ModuleState(),
         ModuleCreatedAt $createdAt = new ModuleCreatedAt()
     ): Module {
-        
+
         return new Module(
             $id,
             $key,
@@ -99,7 +99,7 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleState($state);
     }
 
-    public function buildModuleCreatedAt(null|DateTime $datetime): ModuleCreatedAt
+    public function buildModuleCreatedAt(DateTime $datetime = new DateTime()): ModuleCreatedAt
     {
         return new ModuleCreatedAt($datetime);
     }
@@ -120,18 +120,18 @@ class ModuleFactory implements ModuleFactoryContract
     public function buildModulesFromArray(array $data): Modules
     {
         $data = $data[Modules::TYPE];
-        
+
         $modules = new Modules();
         foreach ($data as $item) {
             $modules->addItem(
                 $this->buildModuleFromArray($item)
             );
         }
-        
+
         return $modules;
     }
 
-    public function buildModuleSearch(?string $search = null): ModuleSearch
+    public function buildModuleSearch(null|string $search = null): ModuleSearch
     {
         return new ModuleSearch($search);
     }
