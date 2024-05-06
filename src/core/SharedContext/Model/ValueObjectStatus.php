@@ -108,10 +108,10 @@ class ValueObjectStatus implements ValueObjectContract
 
     public function formatHtmlToState(): string
     {
-        $state = $this->value();
+        $state = $this->value;
         $style = self::STYLE_LITERAL_STATE[$state];
 
-        return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->getValueLiteral());
+        return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->valueLiteral);
     }
 
     protected function changeValueLiteral(string $literal): self
