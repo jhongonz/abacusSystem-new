@@ -5,6 +5,9 @@ namespace Core\Profile\Application\UseCases;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class UseCasesService implements ServiceContract
 {
     protected ProfileRepositoryContract $profileRepository;
