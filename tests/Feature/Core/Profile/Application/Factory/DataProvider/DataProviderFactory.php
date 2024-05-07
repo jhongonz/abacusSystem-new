@@ -53,4 +53,23 @@ final class DataProviderFactory
             ]
         ];
     }
+
+    public static function providerProfile(): array
+    {
+        return [
+            [
+                'dataObject' => [
+                    'profile' => [
+                        'id' => 1,
+                        'name' => 'test',
+                        'state' => 1,
+                        'description' => 'test',
+                        'modulesAggregator' => [1,2,3],
+                        'createdAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
+                        'updatedAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
+                    ]
+                ]
+            ]
+        ];
+    }
 }

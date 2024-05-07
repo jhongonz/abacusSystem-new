@@ -83,7 +83,7 @@ class ProfileFactory implements ProfileFactoryContract
         return new ProfileCreatedAt($datetime);
     }
 
-    public function buildProfileUpdateAt(null|DateTime $datetime): ProfileUpdatedAt
+    public function buildProfileUpdateAt(null|DateTime $datetime = null): ProfileUpdatedAt
     {
         return new ProfileUpdatedAt($datetime);
     }
@@ -93,7 +93,7 @@ class ProfileFactory implements ProfileFactoryContract
         return new Profiles(...$profiles);
     }
 
-    public function buildProfileSearch(?string $search = null): ProfileSearch
+    public function buildProfileSearch(null|string $search = null): ProfileSearch
     {
         return new ProfileSearch($search);
     }
