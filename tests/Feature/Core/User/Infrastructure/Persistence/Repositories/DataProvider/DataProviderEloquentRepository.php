@@ -17,17 +17,17 @@ final class DataProviderEloquentRepository
         return [
             [
                 'dataInsert' => [
-                    "user_state" => 1,
-                    "user_id" => null,
-                    "user__emp_id" => 1,
-                    "user__pro_id" => 1,
-                    "user_login" => "login",
-                    "user_photo" => "image.jpg",
-                    "created_at" => '2024-04-28T09:46:00.000000Z',
-                    "updated_at" => '2024-04-28T09:46:00.000000Z',
+                    'user_state' => 1,
+                    'user_id' => null,
+                    'user__emp_id' => 1,
+                    'user__pro_id' => 1,
+                    'user_login' => 'login',
+                    'user_photo' => 'image.jpg',
+                    'created_at' => '2024-04-28T09:46:00.000000Z',
+                    'updated_at' => '2024-04-28T09:46:00.000000Z',
                 ],
                 'dateCreated' => $datetime,
-            ]
+            ],
         ];
     }
 
@@ -38,27 +38,27 @@ final class DataProviderEloquentRepository
         return [
             [
                 'dataReturn' => [
-                    "user_state" => 1,
-                    "user_id" => 10,
-                    "user__emp_id" => 5,
-                    "user__pro_id" => 1,
-                    "user_login" => "prueba",
-                    "user_photo" => "other-testing.jpg",
-                    "created_at" => '2024-04-28T09:46:00.000000Z',
-                    "updated_at" => '2024-04-28T09:46:00.000000Z',
+                    'user_state' => 1,
+                    'user_id' => 10,
+                    'user__emp_id' => 5,
+                    'user__pro_id' => 1,
+                    'user_login' => 'prueba',
+                    'user_photo' => 'other-testing.jpg',
+                    'created_at' => '2024-04-28T09:46:00.000000Z',
+                    'updated_at' => '2024-04-28T09:46:00.000000Z',
                 ],
                 'dataUpdate' => [
-                    "user_state" => 1,
-                    "user_id" => 10,
-                    "user__emp_id" => 5,
-                    "user__pro_id" => 1,
-                    "user_login" => "login",
-                    "user_photo" => "image.jpg",
-                    "created_at" => '2024-04-28T09:46:00.000000Z',
-                    "updated_at" => '2024-04-28T09:46:00.000000Z',
+                    'user_state' => 1,
+                    'user_id' => 10,
+                    'user__emp_id' => 5,
+                    'user__pro_id' => 1,
+                    'user_login' => 'login',
+                    'user_photo' => 'image.jpg',
+                    'created_at' => '2024-04-28T09:46:00.000000Z',
+                    'updated_at' => '2024-04-28T09:46:00.000000Z',
                 ],
                 'dateUpdated' => $datetime,
-            ]
+            ],
         ];
     }
 
@@ -67,16 +67,16 @@ final class DataProviderEloquentRepository
         return [
             [
                 'dataReturn' => [
-                    "user_state" => 1,
-                    "user_id" => 7,
-                    "user__emp_id" => 1,
-                    "user__pro_id" => 1,
-                    "user_login" => "login",
-                    "user_photo" => "image.jpg",
-                    "created_at" => '2024-04-28T09:46:00.000000Z',
-                    "updated_at" => '2024-04-28T09:46:00.000000Z',
+                    'user_state' => 1,
+                    'user_id' => 7,
+                    'user__emp_id' => 1,
+                    'user__pro_id' => 1,
+                    'user_login' => 'login',
+                    'user_photo' => 'image.jpg',
+                    'created_at' => '2024-04-28T09:46:00.000000Z',
+                    'updated_at' => '2024-04-28T09:46:00.000000Z',
                 ],
-            ]
+            ],
         ];
     }
 }

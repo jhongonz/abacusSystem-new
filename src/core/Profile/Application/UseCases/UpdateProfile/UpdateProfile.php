@@ -33,6 +33,7 @@ class UpdateProfile extends UseCasesService
         }
 
         $profile->refreshSearch();
+
         return $this->profileRepository->persistProfile($profile);
     }
 
@@ -42,24 +43,28 @@ class UpdateProfile extends UseCasesService
     private function changeState(Profile $profile, int $value): Profile
     {
         $profile->state()->setValue($value);
+
         return $profile;
     }
 
     private function changeDescription(Profile $profile, string $value): Profile
     {
         $profile->description()->setValue($value);
+
         return $profile;
     }
 
     private function changeName(Profile $profile, string $value): Profile
     {
         $profile->name()->setValue($value);
+
         return $profile;
     }
 
     private function changeModules(Profile $profile, array $modules): Profile
     {
         $profile->setModulesAggregator($modules);
+
         return $profile;
     }
 }

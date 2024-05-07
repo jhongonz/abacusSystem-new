@@ -25,10 +25,15 @@ use Tests\TestCase;
 class RedisUserRepositoryTest extends TestCase
 {
     private UserFactoryContract|MockObject $userFactory;
+
     private UserDataTransformerContract|MockObject $dataTransformer;
+
     private LoggerInterface|MockObject $logger;
+
     private string $keyPrefix;
+
     private int $priority;
+
     private RedisUserRepository $repository;
 
     /**

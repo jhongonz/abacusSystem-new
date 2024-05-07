@@ -16,6 +16,7 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     private User $model;
+
     private User|MockObject $modelMock;
 
     public function setUp(): void
@@ -47,12 +48,12 @@ class UserTest extends TestCase
         $relationMock = $this->createMock(BelongsTo::class);
 
         $this->modelMock = $this->getMockBuilder(User::class)
-            ->onlyMethods(['belongsTo','newBelongsTo','newRelatedInstance','guessBelongsToRelation'])
+            ->onlyMethods(['belongsTo', 'newBelongsTo', 'newRelatedInstance', 'guessBelongsToRelation'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('belongsTo')
-            ->with(Employee::class,'user__emp_id','emp_id')
+            ->with(Employee::class, 'user__emp_id', 'emp_id')
             ->willReturn($relationMock);
 
         $result = $this->modelMock->relationWithEmployee();
@@ -75,12 +76,12 @@ class UserTest extends TestCase
         $relationMock = $this->createMock(BelongsTo::class);
 
         $this->modelMock = $this->getMockBuilder(User::class)
-            ->onlyMethods(['belongsTo','newBelongsTo','newRelatedInstance','guessBelongsToRelation'])
+            ->onlyMethods(['belongsTo', 'newBelongsTo', 'newRelatedInstance', 'guessBelongsToRelation'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('belongsTo')
-            ->with(Profile::class,'user__pro_id','pro_id')
+            ->with(Profile::class, 'user__pro_id', 'pro_id')
             ->willReturn($relationMock);
 
         $result = $this->modelMock->relationWithProfile();
@@ -145,12 +146,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user_id',2)
+            ->with('user_id', 2)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeId(2);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -204,12 +205,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user__emp_id',2)
+            ->with('user__emp_id', 2)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeEmployeeId(2);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -263,12 +264,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user__pro_id',2)
+            ->with('user__pro_id', 2)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeProfileId(2);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -322,12 +323,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user_login','login-2')
+            ->with('user_login', 'login-2')
             ->willReturnSelf();
 
         $result = $this->modelMock->changeLogin('login-2');
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -381,12 +382,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('password','54321')
+            ->with('password', '54321')
             ->willReturnSelf();
 
         $result = $this->modelMock->changePassword('54321');
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -421,12 +422,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user_state',2)
+            ->with('user_state', 2)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeState(2);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -450,7 +451,7 @@ class UserTest extends TestCase
         $result = $this->modelMock->createdAt();
 
         $this->assertSame($datetimeString, $result->format('Y-m-d h:i:s'));
-        $this->assertInstanceOf(DateTime::class,$result);
+        $this->assertInstanceOf(DateTime::class, $result);
     }
 
     /**
@@ -485,12 +486,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('created_at',$datetime)
+            ->with('created_at', $datetime)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeCreatedAt($datetime);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -513,7 +514,7 @@ class UserTest extends TestCase
         $result = $this->modelMock->updatedAt();
 
         $this->assertSame($datetimeString, $result->format('Y-m-d h:i:s'));
-        $this->assertInstanceOf(DateTime::class,$result);
+        $this->assertInstanceOf(DateTime::class, $result);
     }
 
     /**
@@ -548,12 +549,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('updated_at',$datetime)
+            ->with('updated_at', $datetime)
             ->willReturnSelf();
 
         $result = $this->modelMock->changeUpdatedAt($datetime);
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 
@@ -607,12 +608,12 @@ class UserTest extends TestCase
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('user_photo','photo.jpg')
+            ->with('user_photo', 'photo.jpg')
             ->willReturnSelf();
 
         $result = $this->modelMock->changePhoto('photo.jpg');
 
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
 }

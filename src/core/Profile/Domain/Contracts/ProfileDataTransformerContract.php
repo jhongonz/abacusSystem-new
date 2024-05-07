@@ -9,6 +9,6 @@ interface ProfileDataTransformerContract
     public function write(Profile $profile): ProfileDataTransformerContract;
 
     public function read(): array;
-    
+
     public function readToShare(): array;
 }

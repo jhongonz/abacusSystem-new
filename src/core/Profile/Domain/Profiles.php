@@ -9,6 +9,7 @@ class Profiles extends ArrayIterator
     public const TYPE = 'profiles';
 
     private array $filters;
+
     public function __construct(Profile ...$profiles)
     {
         foreach ($profiles as $profile) {
@@ -19,12 +20,12 @@ class Profiles extends ArrayIterator
     }
 
     /**
-     * @param Profile $item
-     * @return self
+     * @param  Profile  $item
      */
     public function addItem($item): self
     {
         $this->items[] = $item;
+
         return $this;
     }
 
@@ -41,12 +42,14 @@ class Profiles extends ArrayIterator
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 

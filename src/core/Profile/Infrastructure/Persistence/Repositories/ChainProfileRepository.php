@@ -21,9 +21,10 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
     ];
 
     private string $domainToPersist;
+
     private bool $deleteSource = false;
 
-    function functionNamePersist(): string
+    public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
     }
@@ -32,28 +33,28 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      * @throws ProfileNotFoundException
      * @throws Throwable
      */
-    public function find(ProfileId $id): null|Profile
+    public function find(ProfileId $id): ?Profile
     {
         $this->domainToPersist = Profile::class;
 
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by id '. $id->value());
+            throw new ProfileNotFoundException('Profile not found by id '.$id->value());
         }
     }
 
     /**
      * @throws Throwable
      */
-    public function findCriteria(ProfileName $name): null|Profile
+    public function findCriteria(ProfileName $name): ?Profile
     {
         $this->domainToPersist = Profile::class;
 
         try {
             return $this->read(__FUNCTION__, $name);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by name '. $name->value());
+            throw new ProfileNotFoundException('Profile not found by name '.$name->value());
         }
     }
 
@@ -107,7 +108,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         return $this->write(__FUNCTION__, $profiles);
     }
 
-    function functionNameDelete(): bool
+    public function functionNameDelete(): bool
     {
         return $this->deleteSource;
     }

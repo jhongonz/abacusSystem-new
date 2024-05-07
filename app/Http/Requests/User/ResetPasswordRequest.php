@@ -12,7 +12,7 @@ class ResetPasswordRequest extends FormRequest
      * @var bool
      */
     protected $stopOnFirstFailure = true;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,12 +29,12 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'idUser'=>'required',
-			'password'=>'required|min:7|confirmed',
-			'password_confirmation'=>'required|min:7'
+            'idUser' => 'required',
+            'password' => 'required|min:7|confirmed',
+            'password_confirmation' => 'required|min:7',
         ];
     }
-    
+
     /**
      * Get the error messages for the defined validation rules.
      *

@@ -15,8 +15,9 @@ abstract class AbstractChainRepository
     /** @var ChainPriority[] */
     private array $repositories;
 
-    abstract function functionNamePersist(): string;
-    abstract function functionNameDelete(): bool;
+    abstract public function functionNamePersist(): string;
+
+    abstract public function functionNameDelete(): bool;
 
     public function addRepository(ChainPriority $repository): self
     {
@@ -49,7 +50,7 @@ abstract class AbstractChainRepository
     {
         $result = $this->readFromRepositories($functionName, ...$source);
 
-        if (!$this->functionNameDelete()) {
+        if (! $this->functionNameDelete()) {
             $this->persistence($this->functionNamePersist(), $result);
         }
 
@@ -58,7 +59,7 @@ abstract class AbstractChainRepository
 
     /**
      * @throws Throwable
-         */
+     */
     protected function readFromRepositories(string $functionName, ...$source)
     {
         $result = null;
@@ -74,7 +75,7 @@ abstract class AbstractChainRepository
             } catch (Throwable $throwable) {
                 $lastThrowable = $throwable;
             }
-        } while ((null === $result) and (false !== ($repository = next($this->repositories))));
+        } while (($result === null) and (false !== ($repository = next($this->repositories))));
 
         if (is_null($result)) {
             throw $lastThrowable;
@@ -88,7 +89,7 @@ abstract class AbstractChainRepository
         while (false !== ($repository = prev($this->repositories))) {
             try {
                 $callable = [$repository, $functionName];
-                if (is_callable($callable)){
+                if (is_callable($callable)) {
                     call_user_func_array($callable, $sources);
                 }
             } catch (Exception $exception) {

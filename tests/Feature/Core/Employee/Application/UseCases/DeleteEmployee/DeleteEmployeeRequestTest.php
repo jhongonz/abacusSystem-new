@@ -13,6 +13,7 @@ use Tests\TestCase;
 class DeleteEmployeeRequestTest extends TestCase
 {
     private EmployeeId|MockObject $employeeId;
+
     private DeleteEmployeeRequest $request;
 
     /**

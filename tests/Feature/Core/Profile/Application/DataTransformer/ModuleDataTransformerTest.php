@@ -23,6 +23,7 @@ use Tests\TestCase;
 class ModuleDataTransformerTest extends TestCase
 {
     private Module|MockObject $module;
+
     private ModuleDataTransformer $dataTransformer;
 
     /**

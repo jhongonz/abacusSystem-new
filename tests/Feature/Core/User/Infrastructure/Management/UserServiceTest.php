@@ -29,10 +29,15 @@ use Tests\TestCase;
 class UserServiceTest extends TestCase
 {
     private SearchUserByLogin|MockObject $searchUserByLogin;
+
     private SearchUserById|MockObject $searchUserById;
+
     private UpdateUser|MockObject $updateUser;
+
     private CreateUser|MockObject $createUser;
+
     private DeleteUser|MockObject $deleteUser;
+
     private UserService $userService;
 
     /**

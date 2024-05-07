@@ -9,11 +9,11 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 
 interface EmployeeRepositoryContract
 {
-    public function find(EmployeeId $id): null|Employee;
+    public function find(EmployeeId $id): ?Employee;
 
-    public function findCriteria(EmployeeIdentification $identification): null|Employee;
+    public function findCriteria(EmployeeIdentification $identification): ?Employee;
 
-    public function getAll(array $filters = []): null|Employees;
+    public function getAll(array $filters = []): ?Employees;
 
     public function delete(EmployeeId $id): void;
 

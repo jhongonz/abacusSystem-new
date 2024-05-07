@@ -17,6 +17,7 @@ use Tests\TestCase;
 class DeleteUserRequestTest extends TestCase
 {
     private UserId|Mock $userId;
+
     private DeleteUserRequest $request;
 
     /**

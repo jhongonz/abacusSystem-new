@@ -25,7 +25,7 @@ class ModuleNameTest extends TestCase
 
     public function test_value_should_return_string(): void
     {
-        $result = $this->valueObject-> value();
+        $result = $this->valueObject->value();
         $this->assertIsString($result);
     }
 

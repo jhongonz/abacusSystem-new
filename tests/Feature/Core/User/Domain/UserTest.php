@@ -25,14 +25,23 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     private UserId|Mock $userId;
+
     private UserEmployeeId|Mock $userEmployeeId;
+
     private UserProfileId|Mock $userProfileId;
+
     private UserLogin|Mock $userLogin;
+
     private UserPassword|Mock $userPassword;
+
     private UserState|Mock $userState;
+
     private UserCreatedAt|Mock $userCreatedAt;
+
     private UserUpdatedAt|Mock $userUpdatedAt;
+
     private UserPhoto|Mock $userPhoto;
+
     private User $user;
 
     /**

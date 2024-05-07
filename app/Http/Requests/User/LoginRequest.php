@@ -12,7 +12,7 @@ class LoginRequest extends FormRequest
      * @var bool
      */
     protected $stopOnFirstFailure = true;
-        
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -33,7 +33,7 @@ class LoginRequest extends FormRequest
             'password' => ['required'],
         ];
     }
-    
+
     /**
      * Get the error messages for the defined validation rules.
      *

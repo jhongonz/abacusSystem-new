@@ -57,7 +57,7 @@ class Profile extends Model
 
     public function user(): HasMany
     {
-        return $this->hasMany(User::class,'user__pro_id','pro_id');
+        return $this->hasMany(User::class, 'user__pro_id', 'pro_id');
     }
 
     public function pivotModules(): BelongsToMany
@@ -68,13 +68,13 @@ class Profile extends Model
             'pri__pro_id',
             'pri__mod_id',
         )
-        ->withPivot(
-            'pri__pro_id',
-            'pri__mod_id',
-            'created_at',
-            'updated_at',
-            'deleted_at'
-        );
+            ->withPivot(
+                'pri__pro_id',
+                'pri__mod_id',
+                'created_at',
+                'updated_at',
+                'deleted_at'
+            );
     }
 
     public function modules(): Collection
@@ -82,7 +82,7 @@ class Profile extends Model
         return $this->pivotModules()->get();
     }
 
-    public function id(): null|int
+    public function id(): ?int
     {
         return $this->attributes['pro_id'];
     }
@@ -92,7 +92,7 @@ class Profile extends Model
         $this->attributes['pro_id'] = $id;
     }
 
-    public function name(): null|string
+    public function name(): ?string
     {
         return $this->attributes['pro_name'];
     }
@@ -102,7 +102,7 @@ class Profile extends Model
         $this->attributes['pro_name'] = $name;
     }
 
-    public function state(): null|int
+    public function state(): ?int
     {
         return $this->attributes['pro_state'];
     }
@@ -112,7 +112,7 @@ class Profile extends Model
         $this->attributes['pro_state'] = $state;
     }
 
-    public function search(): null|string
+    public function search(): ?string
     {
         return $this->attributes['pro_search'];
     }
@@ -122,7 +122,7 @@ class Profile extends Model
         $this->attributes['pro_search'] = $search;
     }
 
-    public function description(): null|string
+    public function description(): ?string
     {
         return $this->attributes['pro_description'];
     }
@@ -135,7 +135,7 @@ class Profile extends Model
     /**
      * @throws Exception
      */
-    public function createdAt(): null|DateTime
+    public function createdAt(): ?DateTime
     {
         return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
     }
@@ -148,7 +148,7 @@ class Profile extends Model
     /**
      * @throws Exception
      */
-    public function updatedAt(): null|DateTime
+    public function updatedAt(): ?DateTime
     {
         return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
     }

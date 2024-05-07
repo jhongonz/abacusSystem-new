@@ -51,7 +51,7 @@ class EmployeeFactoryTest extends TestCase
     /**
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderEmployeeFactory::class,'provider')]
+    #[DataProviderExternal(DataProviderEmployeeFactory::class, 'provider')]
     public function test_buildEmployeeFromArray_should_return_employee_object(array $dataObject): void
     {
         $result = $this->factory->buildEmployeeFromArray($dataObject);

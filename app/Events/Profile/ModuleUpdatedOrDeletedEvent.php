@@ -3,11 +3,8 @@
 namespace App\Events\Profile;
 
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -16,7 +13,7 @@ class ModuleUpdatedOrDeletedEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private ModuleId $moduleId;
-    
+
     /**
      * Create a new event instance.
      */
@@ -24,7 +21,7 @@ class ModuleUpdatedOrDeletedEvent
     {
         $this->moduleId = $moduleId;
     }
-    
+
     public function moduleId(): ModuleId
     {
         return $this->moduleId;

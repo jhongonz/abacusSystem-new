@@ -16,7 +16,7 @@ class UserEmployeeIdTest extends TestCase
 {
     private UserEmployeeId $valueObject;
 
-    public  function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->valueObject = new UserEmployeeId(1);

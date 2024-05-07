@@ -64,7 +64,7 @@ class UserFactory implements UserFactoryContract
         );
     }
 
-    public function buildId(null|int $id = null): UserId
+    public function buildId(?int $id = null): UserId
     {
         return new UserId($id);
     }

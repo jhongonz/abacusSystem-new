@@ -22,7 +22,7 @@ class UpdateModule extends UseCasesService
     public function execute(RequestService $request): null|Module|Modules
     {
         $this->validateRequest($request, UpdateModuleRequest::class);
-        
+
         $module = $this->moduleRepository->find($request->moduleId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);
@@ -31,32 +31,37 @@ class UpdateModule extends UseCasesService
                 $module = $this->{$methodName}($module, $value);
             }
         }
-        
+
         $module->refreshSearch();
+
         return $this->moduleRepository->persistModule($module);
     }
 
     private function changeName(Module $module, string $value): Module
     {
         $module->name()->setValue($value);
+
         return $module;
     }
 
     private function changeRoute(Module $module, string $value): Module
     {
         $module->route()->setValue($value);
+
         return $module;
     }
 
     private function changeIcon(Module $module, string $value): Module
     {
         $module->icon()->setValue($value);
+
         return $module;
     }
 
     private function changeKey(Module $module, string $value): Module
     {
         $module->menuKey()->setValue($value);
+
         return $module;
     }
 
@@ -66,6 +71,7 @@ class UpdateModule extends UseCasesService
     private function changeState(Module $module, int $value): Module
     {
         $module->state()->setValue($value);
+
         return $module;
     }
 }

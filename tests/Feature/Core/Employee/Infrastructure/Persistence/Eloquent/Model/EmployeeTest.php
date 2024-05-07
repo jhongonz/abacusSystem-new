@@ -14,6 +14,7 @@ use Tests\TestCase;
 class EmployeeTest extends TestCase
 {
     private Employee $model;
+
     private Employee|MockObject $modelMock;
 
     public function setUp(): void
@@ -33,7 +34,7 @@ class EmployeeTest extends TestCase
         $result = $this->model->getSearchField();
 
         $this->assertIsString($result);
-        $this->assertSame($result,'emp_search');
+        $this->assertSame($result, 'emp_search');
     }
 
     /**
@@ -44,12 +45,12 @@ class EmployeeTest extends TestCase
         $relationMock = $this->createMock(HasOne::class);
 
         $this->modelMock = $this->getMockBuilder(Employee::class)
-            ->onlyMethods(['newRelatedInstance','hasOne','newHasOne'])
+            ->onlyMethods(['newRelatedInstance', 'hasOne', 'newHasOne'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('hasOne')
-            ->with(User::class,'user__emp_id','emp_id')
+            ->with(User::class, 'user__emp_id', 'emp_id')
             ->willReturn($relationMock);
 
         $result = $this->modelMock->relationWithUser();
@@ -61,7 +62,7 @@ class EmployeeTest extends TestCase
     public function test_user_should_return_model_user(): void
     {
         $result = $this->model->user();
-        $this->assertInstanceOf(User::class,$result);
+        $this->assertInstanceOf(User::class, $result);
     }
 
     public function test_id_should_return_int(): void

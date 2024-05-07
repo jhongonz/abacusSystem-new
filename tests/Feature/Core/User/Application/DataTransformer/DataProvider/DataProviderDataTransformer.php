@@ -29,8 +29,8 @@ final class DataProviderDataTransformer
                         'updatedAt' => $datetime,
                     ],
                 ],
-                'datetime' => $datetime
-            ]
+                'datetime' => $datetime,
+            ],
         ];
     }
 }

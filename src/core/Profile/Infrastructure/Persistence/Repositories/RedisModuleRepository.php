@@ -14,16 +14,20 @@ use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 
-class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
+class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
-    /**@var int*/
+    /** @var int */
     private const PRIORITY_DEFAULT = 100;
+
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
 
     private ModuleFactoryContract $moduleFactory;
+
     private ModuleDataTransformerContract $moduleDataTransformer;
+
     private int $priority;
+
     private string $keyPrefix;
 
     public function __construct(
@@ -46,21 +50,22 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws ModuleNotFoundException
      */
-    public function find(ModuleId $id): null|Module
+    public function find(ModuleId $id): ?Module
     {
         try {
             $data = Redis::get($this->moduleKey($id));
         } catch (Exception $exception) {
-            throw new ModuleNotFoundException('Module not found by id '. $id->value());
+            throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
             /** @var Module */
@@ -92,7 +97,7 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
         return sprintf(self::MODULE_KEY_FORMAT, $this->keyPrefix, $id->value());
     }
 
-    public function getAll(array $filters = []): null|Modules
+    public function getAll(array $filters = []): ?Modules
     {
         return null;
     }

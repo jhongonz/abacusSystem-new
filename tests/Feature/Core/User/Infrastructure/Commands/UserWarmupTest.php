@@ -24,10 +24,15 @@ use Tests\TestCase;
 class UserWarmupTest extends TestCase
 {
     private LoggerInterface|MockObject $loggerMock;
+
     private UserFactoryContract|MockObject $userFactoryMock;
+
     private array $repositories;
+
     private UserRepositoryContract|MockObject $readRepository;
+
     private UserRepositoryContract $writeRepository;
+
     private UserWarmup $command;
 
     /**

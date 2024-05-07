@@ -72,15 +72,13 @@ class Employee extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'deleted_at' => 'datetime'
+        'deleted_at' => 'datetime',
     ];
 
     protected $touches = ['relationWithUser'];
 
     /**
      * The search field associated with the table.
-     *
-     * @var string
      */
     protected string $mainSearchField = 'emp_search';
 
@@ -91,7 +89,7 @@ class Employee extends Model
 
     public function relationWithUser(): HasOne
     {
-        return $this->hasOne(User::class,'user__emp_id','emp_id');
+        return $this->hasOne(User::class, 'user__emp_id', 'emp_id');
     }
 
     public function user(): Model
@@ -99,7 +97,7 @@ class Employee extends Model
         return $this->relationWithUser()->getModel();
     }
 
-    public function id(): null|int
+    public function id(): ?int
     {
         return $this->getAttribute('emp_id');
     }
@@ -107,10 +105,11 @@ class Employee extends Model
     public function changeId(?int $id): self
     {
         $this->setAttribute('emp_id', $id);
+
         return $this;
     }
 
-    public function identification(): null|string
+    public function identification(): ?string
     {
         return $this->getAttribute('emp_identification');
     }
@@ -118,10 +117,11 @@ class Employee extends Model
     public function changeIdentification(string $identification): self
     {
         $this->setAttribute('emp_identification', $identification);
+
         return $this;
     }
 
-    public function name(): null|string
+    public function name(): ?string
     {
         return $this->getAttribute('emp_name');
     }
@@ -129,10 +129,11 @@ class Employee extends Model
     public function changeName(string $name): self
     {
         $this->setAttribute('emp_name', $name);
+
         return $this;
     }
 
-    public function lastname(): null|string
+    public function lastname(): ?string
     {
         return $this->getAttribute('emp_lastname');
     }
@@ -140,10 +141,11 @@ class Employee extends Model
     public function changeLastname(string $lastname): self
     {
         $this->setAttribute('emp_lastname', $lastname);
+
         return $this;
     }
 
-    public function phone(): null|string
+    public function phone(): ?string
     {
         return $this->getAttribute('emp_phone_number');
     }
@@ -151,10 +153,11 @@ class Employee extends Model
     public function changePhone(string $phone): self
     {
         $this->setAttribute('emp_phone_number', $phone);
+
         return $this;
     }
 
-    public function email(): null|string
+    public function email(): ?string
     {
         return $this->getAttribute('emp_email');
     }
@@ -162,10 +165,11 @@ class Employee extends Model
     public function changeEmail(string $email): self
     {
         $this->setAttribute('emp_email', $email);
+
         return $this;
     }
 
-    public function address(): null|string
+    public function address(): ?string
     {
         return $this->getAttribute('emp_address');
     }
@@ -173,6 +177,7 @@ class Employee extends Model
     public function changeAddress(string $address): self
     {
         $this->setAttribute('emp_address', $address);
+
         return $this;
     }
 
@@ -184,40 +189,45 @@ class Employee extends Model
     public function changeState(int $state): self
     {
         $this->setAttribute('emp_state', $state);
+
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function createdAt(): null|DateTime
+    public function createdAt(): ?DateTime
     {
         $datetime = $this->getAttribute('created_at');
+
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeCreatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function updatedAt(): null|DateTime
+    public function updatedAt(): ?DateTime
     {
         $datetime = $this->getAttribute('updated_at');
+
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
-    public function search(): null|string
+    public function search(): ?string
     {
         return $this->getAttribute('emp_search');
     }
@@ -225,32 +235,36 @@ class Employee extends Model
     public function changeSearch(string $search): self
     {
         $this->setAttribute('emp_search', $search);
+
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function birthdate(): null|DateTime
+    public function birthdate(): ?DateTime
     {
         $datetime = $this->getAttribute('emp_birthdate');
+
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeBirthdate(?DateTime $date): self
     {
         $this->setAttribute('emp_birthdate', $date);
+
         return $this;
     }
 
-    public function observations(): null|string
+    public function observations(): ?string
     {
         return $this->getAttribute('emp_observations');
     }
 
-    public function changeObservations(null|string $observations): self
+    public function changeObservations(?string $observations): self
     {
         $this->setAttribute('emp_observations', $observations);
+
         return $this;
     }
 
@@ -262,10 +276,11 @@ class Employee extends Model
     public function changeIdentificationType(string $type): self
     {
         $this->setAttribute('emp_identification_type', $type);
+
         return $this;
     }
 
-    public function image(): null|string
+    public function image(): ?string
     {
         return $this->getAttribute('emp_image');
     }
@@ -273,6 +288,7 @@ class Employee extends Model
     public function changeImage(?string $image): self
     {
         $this->setAttribute('emp_image', $image);
+
         return $this;
     }
 

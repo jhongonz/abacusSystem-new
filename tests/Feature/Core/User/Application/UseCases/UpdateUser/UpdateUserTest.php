@@ -31,6 +31,7 @@ use Tests\TestCase;
 class UpdateUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;
+
     private UpdateUser $useCase;
 
     /**
@@ -39,7 +40,7 @@ class UpdateUserTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->repository =  $this->createMock(UserRepositoryContract::class);
+        $this->repository = $this->createMock(UserRepositoryContract::class);
         $this->useCase = new UpdateUser($this->repository);
     }
 
@@ -53,7 +54,7 @@ class UpdateUserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderUpdateUser::class,'provider')]
+    #[DataProviderExternal(DataProviderUpdateUser::class, 'provider')]
     public function test_execute_should_return_user_object(array $dataUpdate): void
     {
         $userIdMock = $this->createMock(UserId::class);

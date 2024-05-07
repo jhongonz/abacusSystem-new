@@ -22,7 +22,7 @@ final class DataProviderUpdateUser
                     'state' => 2,
                     'createdAt' => $datetime,
                     'updatedAt' => $datetime,
-                    'image' => 'photo.jpg'
+                    'image' => 'photo.jpg',
                 ],
             ],
         ];

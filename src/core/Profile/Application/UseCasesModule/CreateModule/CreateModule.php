@@ -21,11 +21,11 @@ class CreateModule extends UseCasesService
     public function execute(RequestService $request): Module
     {
         $this->validateRequest($request, CreateModuleRequest::class);
-        
-        /**@var Module $module*/
+
+        /** @var Module $module */
         $module = $request->module();
         $module->refreshSearch();
-        
+
         return $this->moduleRepository->persistModule($module);
     }
 }

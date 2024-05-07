@@ -60,7 +60,7 @@ class UserStateTest extends TestCase
 
         $this->assertInstanceOf(UserState::class, $result);
         $this->assertSame($this->valueObject, $result);
-        $this->assertSame(2,$this->valueObject->value());
+        $this->assertSame(2, $this->valueObject->value());
     }
 
     public function test_set_value_should_return_exception(): void

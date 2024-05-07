@@ -20,9 +20,13 @@ use Tests\TestCase;
 class EmployeeWarmupTest extends TestCase
 {
     private LoggerInterface|MockObject $logger;
+
     private EmployeeFactoryContract|MockObject $factory;
+
     private EmployeeRepositoryContract|MockObject $readRepository;
+
     private EmployeeRepositoryContract|MockObject $writeRepository;
+
     private EmployeeWarmup $command;
 
     /**

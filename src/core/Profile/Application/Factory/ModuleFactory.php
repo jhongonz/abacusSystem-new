@@ -34,11 +34,11 @@ class ModuleFactory implements ModuleFactoryContract
             $this->buildModuleState($data['state']),
         );
 
-        if($data['createdAt']) {
+        if ($data['createdAt']) {
             $module->createdAt()->setValue(new DateTime($data['createdAt']['date']));
         }
 
-        if($data['updatedAt']) {
+        if ($data['updatedAt']) {
             $module->updatedAt()->setValue(new DateTime($data['updatedAt']['date']));
         }
 
@@ -66,12 +66,12 @@ class ModuleFactory implements ModuleFactoryContract
         );
     }
 
-    public function buildModuleId(null|int $id = null): ModuleId
+    public function buildModuleId(?int $id = null): ModuleId
     {
         return new ModuleId($id);
     }
 
-    public function buildModuleMenuKey(null|string $key = null): ModuleMenuKey
+    public function buildModuleMenuKey(?string $key = null): ModuleMenuKey
     {
         return new ModuleMenuKey($key);
     }
@@ -81,12 +81,12 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleName($name);
     }
 
-    public function buildModuleRoute(null|string $route = null): ModuleRoute
+    public function buildModuleRoute(?string $route = null): ModuleRoute
     {
         return new ModuleRoute($route);
     }
 
-    public function buildModuleIcon(null|string $icon = null): ModuleIcon
+    public function buildModuleIcon(?string $icon = null): ModuleIcon
     {
         return new ModuleIcon($icon);
     }
@@ -94,7 +94,7 @@ class ModuleFactory implements ModuleFactoryContract
     /**
      * @throws Exception
      */
-    public function buildModuleState(null|int $state = null): ModuleState
+    public function buildModuleState(?int $state = null): ModuleState
     {
         return new ModuleState($state);
     }
@@ -104,7 +104,7 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleCreatedAt($datetime);
     }
 
-    public function buildModuleUpdatedAt(null|DateTime $datetime = null): ModuleUpdatedAt
+    public function buildModuleUpdatedAt(?DateTime $datetime = null): ModuleUpdatedAt
     {
         return new ModuleUpdatedAt($datetime);
     }
@@ -131,7 +131,7 @@ class ModuleFactory implements ModuleFactoryContract
         return $modules;
     }
 
-    public function buildModuleSearch(null|string $search = null): ModuleSearch
+    public function buildModuleSearch(?string $search = null): ModuleSearch
     {
         return new ModuleSearch($search);
     }

@@ -6,25 +6,26 @@ use Core\SharedContext\Model\ValueObjectContract;
 
 class ModuleId implements ValueObjectContract
 {
-    private null|int $value;
-    
-    public function __construct(null|int $value = null)
+    private ?int $value;
+
+    public function __construct(?int $value = null)
     {
         $this->value = $value;
     }
 
-    public function value(): null|int
+    public function value(): ?int
     {
         return $this->value;
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

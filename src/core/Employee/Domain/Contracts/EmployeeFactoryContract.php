@@ -34,9 +34,9 @@ interface EmployeeFactoryContract
         EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
     ): Employee;
 
-    public function buildEmployeeId(null|int $id = null): EmployeeId;
+    public function buildEmployeeId(?int $id = null): EmployeeId;
 
-    public function buildEmployeeUserId(null|int $id = null): EmployeeUserId;
+    public function buildEmployeeUserId(?int $id = null): EmployeeUserId;
 
     public function buildEmployeeIdentification(string $identification): EmployeeIdentification;
 
@@ -48,21 +48,21 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeEmail(?string $email = null): EmployeeEmail;
 
-    public function buildEmployeeAddress(null|string $address): EmployeeAddress;
+    public function buildEmployeeAddress(?string $address): EmployeeAddress;
 
-    public function buildEmployeeState(null|int $state = null): EmployeeState;
+    public function buildEmployeeState(?int $state = null): EmployeeState;
 
-    public function buildEmployeeSearch(null|string $search = null): EmployeeSearch;
+    public function buildEmployeeSearch(?string $search = null): EmployeeSearch;
 
-    public function buildEmployeeCreatedAt(null|DateTime $datetime = null): EmployeeCreatedAt;
+    public function buildEmployeeCreatedAt(?DateTime $datetime = null): EmployeeCreatedAt;
 
-    public function buildEmployeeUpdatedAt(null|DateTime $datetime = null): EmployeeUpdateAt;
+    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdateAt;
 
-    public function buildEmployeeBirthdate(null|DateTime $date = null): EmployeeBirthdate;
+    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate;
 
-    public function buildEmployeeObservations(null|string $observations = null): EmployeeObservations;
+    public function buildEmployeeObservations(?string $observations = null): EmployeeObservations;
 
-    public function buildEmployeeIdentificationType(null|string $type = null): EmployeeIdentificationType;
+    public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType;
 
-    public function buildEmployeeImage(null|string $image = null): EmployeeImage;
+    public function buildEmployeeImage(?string $image = null): EmployeeImage;
 }

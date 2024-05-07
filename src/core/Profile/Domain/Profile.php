@@ -13,21 +13,30 @@ use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 class Profile
 {
     public const TYPE = 'profile';
+
     private ProfileId $id;
+
     private ProfileName $name;
+
     private ProfileState $state;
+
     private ProfileCreatedAt $createdAt;
+
     private ProfileUpdatedAt $updatedAt;
+
     private ProfileSearch $search;
+
     private ProfileDescription $description;
+
     private Modules $modules;
+
     private array $modulesAggregator = [];
 
     public function __construct(
-      ProfileId $id,
-      ProfileName $name,
-      ProfileState $state = new ProfileState(),
-      ProfileCreatedAt $createdAt = new ProfileCreatedAt()
+        ProfileId $id,
+        ProfileName $name,
+        ProfileState $state = new ProfileState(),
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt()
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -48,6 +57,7 @@ class Profile
     public function setId(ProfileId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -59,6 +69,7 @@ class Profile
     public function setName(ProfileName $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -70,6 +81,7 @@ class Profile
     public function setState(ProfileState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -81,6 +93,7 @@ class Profile
     public function setSearch(ProfileSearch $search): self
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -92,6 +105,7 @@ class Profile
     public function setDescription(ProfileDescription $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -103,6 +117,7 @@ class Profile
     public function setModules(Modules $modules): self
     {
         $this->modules = $modules;
+
         return $this;
     }
 
@@ -114,6 +129,7 @@ class Profile
     public function setModulesAggregator(array $ids): self
     {
         $this->modulesAggregator = $ids;
+
         return $this;
     }
 
@@ -125,6 +141,7 @@ class Profile
     public function setCreatedAt(ProfileCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -136,6 +153,7 @@ class Profile
     public function setUpdatedAt(ProfileUpdatedAt $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
@@ -147,6 +165,7 @@ class Profile
         ];
 
         $this->search->setValue(implode(' ', $dataSearch));
+
         return $this;
     }
 }

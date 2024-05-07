@@ -13,6 +13,7 @@ use Tests\TestCase;
 class ProfilesTest extends TestCase
 {
     private Profile|MockObject $profile;
+
     private Profiles $profiles;
 
     /**

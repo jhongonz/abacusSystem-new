@@ -13,7 +13,9 @@ class ProfileWarmup extends Command
 
     /** @var ProfileRepositoryContract[] */
     private array $repositories;
+
     private LoggerInterface $logger;
+
     private ProfileFactoryContract $profileFactory;
 
     public function __construct(
@@ -57,7 +59,7 @@ class ProfileWarmup extends Command
             $profiles = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
-                foreach($profiles->aggregator() as $item) {
+                foreach ($profiles->aggregator() as $item) {
                     $profile = $this->readRepository->find($this->profileFactory->buildProfileId($item));
                     $repository->persistProfile($profile);
                 }

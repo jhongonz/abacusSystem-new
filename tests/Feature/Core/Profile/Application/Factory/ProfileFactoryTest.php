@@ -38,7 +38,7 @@ class ProfileFactoryTest extends TestCase
     /**
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderFactory::class,'providerProfile')]
+    #[DataProviderExternal(DataProviderFactory::class, 'providerProfile')]
     public function test_buildProfileFromArray_should_return_profile_object(array $dataObject): void
     {
         $result = $this->factory->buildProfileFromArray($dataObject);
@@ -63,7 +63,7 @@ class ProfileFactoryTest extends TestCase
 
         $this->assertInstanceOf(ProfileUpdatedAt::class, $result->updatedAt());
 
-        $this->assertInstanceOf(Profile::class,$result);
+        $this->assertInstanceOf(Profile::class, $result);
     }
 
     public function test_buildProfileUpdateAt_should_return_value_object_with_null(): void
@@ -80,7 +80,7 @@ class ProfileFactoryTest extends TestCase
         $result = $this->factory->buildProfileUpdateAt($datetime);
 
         $this->assertInstanceOf(ProfileUpdatedAt::class, $result);
-        $this->assertSame($datetime,$result->value());
+        $this->assertSame($datetime, $result->value());
     }
 
     public function test_buildProfileSearch_should_return_value_object_with_null(): void
@@ -97,7 +97,7 @@ class ProfileFactoryTest extends TestCase
         $result = $this->factory->buildProfileSearch($search);
 
         $this->assertInstanceOf(ProfileSearch::class, $result);
-        $this->assertSame($search,$result->value());
+        $this->assertSame($search, $result->value());
     }
 
     /**

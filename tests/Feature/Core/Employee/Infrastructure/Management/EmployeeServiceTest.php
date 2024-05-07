@@ -29,12 +29,19 @@ use Tests\TestCase;
 class EmployeeServiceTest extends TestCase
 {
     private EmployeeFactoryContract|MockObject $factory;
+
     private SearchEmployeeById|MockObject $searchEmployeeById;
+
     private SearchEmployeeByIdentification|MockObject $searchEmployeeByIdentification;
+
     private SearchEmployees|MockObject $searchEmployees;
+
     private UpdateEmployee|MockObject $updateEmployee;
+
     private CreateEmployee|MockObject $createEmployee;
+
     private DeleteEmployee|MockObject $deleteEmployee;
+
     private EmployeeService $service;
 
     /**
@@ -166,7 +173,7 @@ class EmployeeServiceTest extends TestCase
     public function test_updateEmployee_should_return_void(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
-        $request = new UpdateEmployeeRequest($employeeId,  []);
+        $request = new UpdateEmployeeRequest($employeeId, []);
 
         $employeeMock = $this->createMock(Employee::class);
         $this->updateEmployee->expects(self::once())

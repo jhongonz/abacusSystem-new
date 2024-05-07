@@ -21,13 +21,14 @@ use Throwable;
 class ChainUserRepository extends AbstractChainRepository implements UserRepositoryContract
 {
     private const FUNCTION_NAMES = [
-        User::class => 'persistUser'
+        User::class => 'persistUser',
     ];
 
     private string $domainToPersist;
+
     private bool $deleteSource = false;
 
-    function functionNamePersist(): string
+    public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
     }
@@ -35,28 +36,28 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     /**
      * @throws Throwable
      */
-    public function find(UserId $id): null|User
+    public function find(UserId $id): ?User
     {
         $this->domainToPersist = User::class;
 
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new UserNotFoundException('User not found by id '. $id->value());
+            throw new UserNotFoundException('User not found by id '.$id->value());
         }
     }
 
     /**
      * @throws Throwable
      */
-    public function findCriteria(UserLogin $login): null|User
+    public function findCriteria(UserLogin $login): ?User
     {
         $this->domainToPersist = User::class;
 
         try {
             return $this->read(__FUNCTION__, $login);
         } catch (Exception $exception) {
-            throw new UserNotFoundException('User not found by login '. $login->value());
+            throw new UserNotFoundException('User not found by login '.$login->value());
         }
     }
 
@@ -82,7 +83,7 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
         return $this->write(__FUNCTION__, $user);
     }
 
-    function functionNameDelete(): bool
+    public function functionNameDelete(): bool
     {
         return $this->deleteSource;
     }

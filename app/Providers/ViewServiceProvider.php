@@ -24,16 +24,16 @@ class ViewServiceProvider extends ServiceProvider
     {
         View::composer('layouts.home', HomeComposer::class);
 
-        View::composer('*', function($view) {
+        View::composer('*', function ($view) {
             $isAjax = request()->ajax();
 
-            if (!is_null(session()->get('user'))) {
-                if (!$isAjax) {
+            if (! is_null(session()->get('user'))) {
+                if (! $isAjax) {
                     View::composer('layouts.menu', MenuComposer::class);
                 }
             }
 
-            $baseHome = (!$isAjax) ? 'layouts.home' : 'layouts.home-ajax';
+            $baseHome = (! $isAjax) ? 'layouts.home' : 'layouts.home-ajax';
             $view->with('layout', $baseHome);
         });
     }

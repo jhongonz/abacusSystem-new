@@ -6,15 +6,16 @@
 
 namespace Core\User\Infrastructure\Persistence\Translators;
 
-use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Exception;
 
 class UserTranslator implements TranslatorDomainContract
 {
     private UserFactoryContract $factory;
+
     private UserModel $model;
 
     public function __construct(
@@ -24,12 +25,13 @@ class UserTranslator implements TranslatorDomainContract
     }
 
     /**
-     * @param UserModel $model
+     * @param  UserModel  $model
      * @return $this
      */
     public function setModel($model): self
     {
         $this->model = $model;
+
         return $this;
     }
 

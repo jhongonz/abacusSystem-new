@@ -2,17 +2,19 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Translators;
 
-use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Exception;
 
 class ModuleTranslator implements TranslatorDomainContract
 {
     private ModuleModel $model;
+
     private ModuleFactoryContract $moduleFactory;
+
     private array $collection;
 
     public function __construct(
@@ -22,12 +24,12 @@ class ModuleTranslator implements TranslatorDomainContract
     }
 
     /**
-     * @param ModuleModel $model
-     * @return self
+     * @param  ModuleModel  $model
      */
     public function setModel($model): self
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -58,13 +60,14 @@ class ModuleTranslator implements TranslatorDomainContract
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
+
         return $this;
     }
 
     public function toDomainCollection(): Modules
     {
         $modules = new Modules();
-        foreach($this->collection as $id) {
+        foreach ($this->collection as $id) {
             $modules->addId($id);
         }
 

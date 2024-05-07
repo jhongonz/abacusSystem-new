@@ -14,6 +14,7 @@ use Tests\TestCase;
 class ModulesTest extends TestCase
 {
     private Module|MockObject $module;
+
     private Modules $modules;
 
     /**

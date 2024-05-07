@@ -13,13 +13,14 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
     public function write(Profile $profile): self
     {
         $this->profile = $profile;
+
         return $this;
     }
 
     public function read(): array
     {
         return [
-            Profile::TYPE => $this->retrieveData()
+            Profile::TYPE => $this->retrieveData(),
         ];
     }
 
@@ -43,7 +44,7 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
             'state' => $this->profile->state()->value(),
             'createdAt' => $this->profile->createdAt()->value(),
             'updatedAt' => $this->profile->updatedAt()->value(),
-            'modulesAggregator' => $this->profile->modulesAggregator()
+            'modulesAggregator' => $this->profile->modulesAggregator(),
         ];
     }
 }

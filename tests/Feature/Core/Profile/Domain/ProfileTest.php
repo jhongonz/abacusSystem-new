@@ -20,7 +20,9 @@ use Tests\TestCase;
 class ProfileTest extends TestCase
 {
     private ProfileId|MockObject $profileId;
+
     private ProfileName|MockObject $profileName;
+
     private Profile $profile;
 
     /**

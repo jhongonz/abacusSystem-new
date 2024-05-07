@@ -20,12 +20,13 @@ class ProfileCreatedAt implements ValueObjectContract
     }
 
     /**
-     * @param DateTime $value
+     * @param  DateTime  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

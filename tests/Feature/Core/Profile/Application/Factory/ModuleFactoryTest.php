@@ -71,7 +71,7 @@ class ModuleFactoryTest extends TestCase
     {
         $result = $this->factory->buildModuleCreatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
-        $this->assertInstanceOf(\DateTime::class,$result->value());
+        $this->assertInstanceOf(\DateTime::class, $result->value());
     }
 
     public function test_buildModuleUpdatedAt_should_return_value_object_with_null(): void
@@ -85,7 +85,7 @@ class ModuleFactoryTest extends TestCase
     {
         $result = $this->factory->buildModuleUpdatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
-        $this->assertInstanceOf(\DateTime::class,$result->value());
+        $this->assertInstanceOf(\DateTime::class, $result->value());
     }
 
     /**

@@ -10,7 +10,9 @@ use Psr\Log\LoggerInterface;
 class ModuleWarmup extends Command
 {
     private LoggerInterface $logger;
+
     private ModuleFactoryContract $moduleFactory;
+
     private ModuleRepositoryContract $readRepository;
 
     /** @var ModuleRepositoryContract[] */
@@ -21,7 +23,7 @@ class ModuleWarmup extends Command
         ModuleFactoryContract $moduleFactory,
         ModuleRepositoryContract $readRepository,
         ModuleRepositoryContract ...$repositories,
-    ){
+    ) {
         parent::__construct();
         $this->logger = $logger;
         $this->moduleFactory = $moduleFactory;
@@ -55,7 +57,7 @@ class ModuleWarmup extends Command
         if ($this->option('id') == 0) {
             $modules = $this->readRepository->getAll();
 
-            foreach($this->repositories as $repository) {
+            foreach ($this->repositories as $repository) {
                 foreach ($modules->aggregator() as $item) {
                     $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
                     $repository->persistModule($module);

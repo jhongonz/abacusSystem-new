@@ -19,12 +19,13 @@ class ProfileName implements ValueObjectContract
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

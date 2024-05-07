@@ -17,6 +17,7 @@ use Tests\TestCase;
 class SearchUserByIdRequestTest extends TestCase
 {
     private UserId|Mock $userId;
+
     private SearchUserByIdRequest $request;
 
     /**

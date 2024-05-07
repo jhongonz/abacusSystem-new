@@ -13,6 +13,7 @@ use Tests\TestCase;
 class SearchEmployeeByIdRequestTest extends TestCase
 {
     private EmployeeId|MockObject $employeeId;
+
     private SearchEmployeeByIdRequest $request;
 
     /**

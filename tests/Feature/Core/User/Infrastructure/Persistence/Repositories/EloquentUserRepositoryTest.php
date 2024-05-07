@@ -34,9 +34,13 @@ use Tests\TestCase;
 class EloquentUserRepositoryTest extends TestCase
 {
     private DatabaseManager|MockInterface $database;
+
     private UserTranslator|MockObject $translator;
+
     private User|MockObject $model;
+
     private EloquentUserRepository $repository;
+
     private int $priority;
 
     /**
@@ -84,12 +88,12 @@ class EloquentUserRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_id',100)
+            ->with('user_id', 100)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_state','>',-1)
+            ->with('user_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -135,12 +139,12 @@ class EloquentUserRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_id',1)
+            ->with('user_id', 1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_state','>',-1)
+            ->with('user_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -176,12 +180,12 @@ class EloquentUserRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_login','login')
+            ->with('user_login', 'login')
             ->andReturnSelf();
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_state','>',-1)
+            ->with('user_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -227,12 +231,12 @@ class EloquentUserRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_login','login')
+            ->with('user_login', 'login')
             ->andReturnSelf();
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_state','>',-1)
+            ->with('user_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -639,7 +643,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('user_id',7)
+            ->with('user_id', 7)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('delete')

@@ -8,9 +8,9 @@ use Exception;
 abstract class UseCasesService implements ServiceContract
 {
     protected ProfileRepositoryContract $profileRepository;
-    
+
     public function __construct(
-      ProfileRepositoryContract $profileRepository,  
+        ProfileRepositoryContract $profileRepository,
     ) {
         $this->profileRepository = $profileRepository;
     }
@@ -20,10 +20,10 @@ abstract class UseCasesService implements ServiceContract
      */
     protected function validateRequest(RequestService $request, string $requestClass): RequestService
     {
-        if (!$request instanceof $requestClass) {
+        if (! $request instanceof $requestClass) {
             throw new Exception('Request not valid');
         }
 
-        return $request; 
+        return $request;
     }
 }

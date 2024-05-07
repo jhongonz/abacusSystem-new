@@ -14,6 +14,7 @@ use Tests\TestCase;
 class EmployeesTest extends TestCase
 {
     private Employee|MockObject $employee;
+
     private EmployeeDataTransformer $dataTransformer;
 
     /**
@@ -99,7 +100,7 @@ class EmployeesTest extends TestCase
         $result = $this->dataTransformer->read();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey(Employee::TYPE,$result);
+        $this->assertArrayHasKey(Employee::TYPE, $result);
     }
 
     /**
@@ -168,6 +169,6 @@ class EmployeesTest extends TestCase
         $result = $this->dataTransformer->readToShare();
 
         $this->assertIsArray($result);
-        $this->assertArrayNotHasKey(Employee::TYPE,$result);
+        $this->assertArrayNotHasKey(Employee::TYPE, $result);
     }
 }

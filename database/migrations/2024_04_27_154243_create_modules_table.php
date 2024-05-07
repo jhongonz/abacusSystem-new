@@ -24,8 +24,8 @@ return new class extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->id('mod_id');
             $table->string('mod_menu_key', 100);
-            $table->string('mod_route',100);
-            $table->string('mod_icon',20)->nullable();
+            $table->string('mod_route', 100);
+            $table->string('mod_icon', 20)->nullable();
             $table->string('mod_search', 255)->nullable();
             $table->tinyInteger('mod_state')->default(1);
             $table->timestamps();

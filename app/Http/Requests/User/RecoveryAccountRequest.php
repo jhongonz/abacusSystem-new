@@ -12,7 +12,7 @@ class RecoveryAccountRequest extends FormRequest
      * @var bool
      */
     protected $stopOnFirstFailure = true;
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,11 +29,11 @@ class RecoveryAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'identification' => ['required','string'],
-            'email' => ['required','email:rfc'],
+            'identification' => ['required', 'string'],
+            'email' => ['required', 'email:rfc'],
         ];
     }
-    
+
     /**
      * Get the error messages for the defined validation rules.
      *

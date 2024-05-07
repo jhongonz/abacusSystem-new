@@ -22,7 +22,7 @@ class SearchUserById extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|User
+    public function execute(RequestService $request): ?User
     {
         $this->validateRequest($request, SearchUserByIdRequest::class);
 

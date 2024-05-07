@@ -10,5 +10,5 @@ use Core\User\Domain\User;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|User;
+    public function execute(RequestService $request): ?User;
 }

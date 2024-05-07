@@ -23,10 +23,10 @@ final class DataProviderDataTransformer
                     'state' => 1,
                     'createdAt' => $datetime,
                     'updatedAt' => $datetime,
-                    'state_literal' => 'test'
+                    'state_literal' => 'test',
                 ],
-                'datetime' => $datetime
-            ]
+                'datetime' => $datetime,
+            ],
         ];
     }
 
@@ -46,10 +46,10 @@ final class DataProviderDataTransformer
                         'state' => 1,
                         'createdAt' => $datetime,
                         'updatedAt' => $datetime,
-                    ]
+                    ],
                 ],
-                'datetime' => $datetime
-            ]
+                'datetime' => $datetime,
+            ],
         ];
     }
 
@@ -68,10 +68,10 @@ final class DataProviderDataTransformer
                         'createdAt' => $datetime,
                         'updatedAt' => $datetime,
                         'modulesAggregator' => [],
-                    ]
+                    ],
                 ],
-                'datetime' => $datetime
-            ]
+                'datetime' => $datetime,
+            ],
         ];
     }
 
@@ -91,8 +91,8 @@ final class DataProviderDataTransformer
                     'modulesAggregator' => [],
                     'state_literal' => 'test',
                 ],
-                'datetime' => $datetime
-            ]
+                'datetime' => $datetime,
+            ],
         ];
     }
 }

@@ -13,6 +13,7 @@ use Tests\TestCase;
 class UpdateEmployeeRequestTest extends TestCase
 {
     private EmployeeId|MockObject $employeeId;
+
     private UpdateEmployeeRequest $request;
 
     /**

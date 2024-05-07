@@ -21,10 +21,15 @@ use Tests\TestCase;
 class ModuleTest extends TestCase
 {
     private ModuleId|MockObject $moduleId;
+
     private ModuleMenuKey|MockObject $moduleMenuKey;
+
     private ModuleName|MockObject $moduleName;
+
     private ModuleRoute|MockObject $moduleRoute;
+
     private ModuleIcon|MockObject $moduleIcon;
+
     private Module $module;
 
     /**
@@ -243,7 +248,7 @@ class ModuleTest extends TestCase
 
     public function test_setOptions_should_change_and_return_self(): void
     {
-        $options = [1,2,3];
+        $options = [1, 2, 3];
         $result = $this->module->setOptions($options);
 
         $this->assertInstanceOf(Module::class, $result);

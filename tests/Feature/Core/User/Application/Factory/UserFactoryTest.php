@@ -44,7 +44,7 @@ class UserFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    #[DataProviderExternal(DataProviderUserFactory::class,'provider')]
+    #[DataProviderExternal(DataProviderUserFactory::class, 'provider')]
     public function test_buildUserFromArray_should_return_user(array $dataUser): void
     {
         $result = $this->factory->buildUserFromArray($dataUser);
@@ -70,7 +70,7 @@ class UserFactoryTest extends TestCase
         $this->assertSame($result->state()->value(), $data['state']);
         $this->assertInstanceOf(UserState::class, $result->state());
 
-        $this->assertSame(json_decode(json_encode($result->createdAt()->value()),true), $data['createdAt']);
+        $this->assertSame(json_decode(json_encode($result->createdAt()->value()), true), $data['createdAt']);
         $this->assertInstanceOf(UserCreatedAt::class, $result->createdAt());
 
         $this->assertNull($result->updatedAt()->value());

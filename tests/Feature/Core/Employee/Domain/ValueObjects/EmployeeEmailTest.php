@@ -35,7 +35,7 @@ class EmployeeEmailTest extends TestCase
         $result = $this->valueObject->value();
 
         $this->assertIsString($result);
-        $this->assertSame('test@test.com',$result);
+        $this->assertSame('test@test.com', $result);
     }
 
     public function test_setValue_should_change_and_return_self(): void

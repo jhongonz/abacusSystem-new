@@ -14,6 +14,7 @@ use Tests\TestCase;
 class UserProfileIdTest extends TestCase
 {
     private UserProfileId $valueObject;
+
     public function setUp(): void
     {
         parent::setUp();

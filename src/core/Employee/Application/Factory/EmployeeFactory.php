@@ -48,13 +48,13 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
 
-        if (!is_null($data['updatedAt'])) {
+        if (! is_null($data['updatedAt'])) {
             $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
                 $this->getDateTime($data['updatedAt']['date'])
             ));
         }
 
-        if (!is_null($data['birthdate'])) {
+        if (! is_null($data['birthdate'])) {
             $employee->setBirthdate($this->buildEmployeeBirthdate(
                 $this->getDateTime($data['birthdate']['date'])
             ));
@@ -83,16 +83,22 @@ class EmployeeFactory implements EmployeeFactoryContract
             $id,
             $identification,
             $name
-         );
+        );
 
-        if (!is_null($lastname)) $employee->setLastname($lastname);
-        if (!is_null($createdAt)) $employee->setCreatedAt($createdAt);
-        if (!is_null($state)) $employee->setState($state);
+        if (! is_null($lastname)) {
+            $employee->setLastname($lastname);
+        }
+        if (! is_null($createdAt)) {
+            $employee->setCreatedAt($createdAt);
+        }
+        if (! is_null($state)) {
+            $employee->setState($state);
+        }
 
         return $employee;
     }
 
-    public function buildEmployeeId(null|int $id = null): EmployeeId
+    public function buildEmployeeId(?int $id = null): EmployeeId
     {
         return new EmployeeId($id);
     }

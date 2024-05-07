@@ -18,10 +18,10 @@ class SearchModules extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Modules
+    public function execute(RequestService $request): ?Modules
     {
         $this->validateRequest($request, SearchModulesRequest::class);
-     
+
         return $this->moduleRepository->getAll($request->filters());
     }
 }

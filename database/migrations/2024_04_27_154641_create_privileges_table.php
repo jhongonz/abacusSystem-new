@@ -23,8 +23,8 @@ return new class extends Migration
     {
         Schema::create('privileges', function (Blueprint $table) {
             $table->id('pri_id');
-            $table->foreignId('pri__pro_id')->constrained('profiles','pro_id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('pri__mod_id')->constrained('modules','mod_id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('pri__pro_id')->constrained('profiles', 'pro_id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('pri__mod_id')->constrained('modules', 'mod_id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

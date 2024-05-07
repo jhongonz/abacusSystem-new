@@ -21,6 +21,7 @@ use Tests\TestCase;
 class ProfileDataTransformerTest extends TestCase
 {
     private Profile|MockObject $profile;
+
     private ProfileDataTransformer $dataTransformer;
 
     /**

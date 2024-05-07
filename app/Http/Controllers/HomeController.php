@@ -11,6 +11,7 @@ use Core\Employee\Domain\Employee;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
+use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Exception;
@@ -18,7 +19,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Core\User\Domain\Contracts\UserFactoryContract;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -28,11 +28,17 @@ use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
 class HomeController extends Controller implements HasMiddleware
 {
     use UserTrait;
+
     private UserFactoryContract $userFactory;
+
     private UserManagementContract $userService;
+
     private EmployeeManagementContract $employeeService;
+
     private EmployeeFactoryContract $employeeFactory;
+
     private ProfileFactoryContract $profileFactory;
+
     private ProfileManagementContract $profileService;
 
     public function __construct(
@@ -73,7 +79,7 @@ class HomeController extends Controller implements HasMiddleware
         $credentials = [
             'user_login' => $user->login()->value(),
             'password' => $request->input('password'),
-            'user_id' => $user->id()->value()
+            'user_id' => $user->id()->value(),
         ];
 
         try {
@@ -82,27 +88,28 @@ class HomeController extends Controller implements HasMiddleware
                 session()->put([
                     'user' => $user,
                     'profile' => $profile,
-                    'employee' => $employee
+                    'employee' => $employee,
                 ]);
 
                 if ($request->ajax()) {
                     return response()->json();
                 }
 
-                 return redirect()->intended('/home');
+                return redirect()->intended('/home');
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
-        return !$request->ajax() ?
+        return ! $request->ajax() ?
             back()->withInput() :
-            response()->json(['message'=>'Bad credentials'],status:ResponseSymfony::HTTP_BAD_REQUEST);
+            response()->json(['message' => 'Bad credentials'], status: ResponseSymfony::HTTP_BAD_REQUEST);
     }
 
     public function home(): JsonResponse|string
     {
         $view = view('home.index')->render();
+
         return $this->renderView($view);
     }
 
@@ -128,8 +135,6 @@ class HomeController extends Controller implements HasMiddleware
     }
 
     /**
-     * @param User $user
-     * @return Profile
      * @throws ProfileNotActiveException
      */
     private function getProfile(User $user): Profile
@@ -139,7 +144,7 @@ class HomeController extends Controller implements HasMiddleware
 
         try {
             $profile = $this->profileService->searchProfileById($profileId);
-        }  catch (Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
@@ -153,8 +158,6 @@ class HomeController extends Controller implements HasMiddleware
 
     /**
      * Get the middleware that should be assigned to the controller.
-     *
-     * @return Middleware|array
      */
     public static function middleware(): Middleware|array
     {

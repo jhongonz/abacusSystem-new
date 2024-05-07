@@ -2,11 +2,11 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Translators;
 
-use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
-use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
@@ -14,7 +14,9 @@ use Exception;
 class ProfileTranslator implements TranslatorDomainContract
 {
     private ProfileFactoryContract $profileFactory;
+
     private ProfileModel $model;
+
     private array $collection;
 
     public function __construct(
@@ -24,12 +26,13 @@ class ProfileTranslator implements TranslatorDomainContract
     }
 
     /**
-     * @param ProfileModel $model
+     * @param  ProfileModel  $model
      * @return $this
      */
     public function setModel($model): self
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -58,9 +61,9 @@ class ProfileTranslator implements TranslatorDomainContract
         );
 
         $modulesModel = $this->model->modules();
-        $modules = array();
+        $modules = [];
         /** @var Module $item */
-        foreach($modulesModel as $item) {
+        foreach ($modulesModel as $item) {
             if ($item->state() === ValueObjectStatus::STATE_ACTIVE) {
                 $modules[] = $item->id();
             }
@@ -73,6 +76,7 @@ class ProfileTranslator implements TranslatorDomainContract
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
+
         return $this;
     }
 

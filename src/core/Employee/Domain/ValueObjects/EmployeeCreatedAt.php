@@ -8,7 +8,7 @@ use DateTime;
 class EmployeeCreatedAt implements ValueObjectContract
 {
     private DateTime $value;
-    
+
     public function __construct(
         DateTime $value = new DateTime()
     ) {
@@ -21,12 +21,13 @@ class EmployeeCreatedAt implements ValueObjectContract
     }
 
     /**
-     * @param DateTime $value
+     * @param  DateTime  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

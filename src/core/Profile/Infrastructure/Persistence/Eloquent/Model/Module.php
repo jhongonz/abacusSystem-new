@@ -61,16 +61,16 @@ class Module extends Model
             'pri__mod_id',
             'pri__pro_id'
         )
-        ->withPivot(
-            'pri__pro_id',
-            'pri__mod_id',
-            'created_at',
-            'updated_at',
-            'deleted_at'
-        );
+            ->withPivot(
+                'pri__pro_id',
+                'pri__mod_id',
+                'created_at',
+                'updated_at',
+                'deleted_at'
+            );
     }
 
-    public function id(): null|int
+    public function id(): ?int
     {
         return $this->attributes['mod_id'];
     }
@@ -80,7 +80,7 @@ class Module extends Model
         $this->attributes['mod_id'] = $id;
     }
 
-    public function menuKey(): null|string
+    public function menuKey(): ?string
     {
         return $this->attributes['mod_menu_key'];
     }
@@ -100,22 +100,22 @@ class Module extends Model
         $this->attributes['mod_name'] = $name;
     }
 
-    public function route(): null|string
+    public function route(): ?string
     {
         return $this->attributes['mod_route'];
     }
 
-    public function changeRoute(null|string $route): void
+    public function changeRoute(?string $route): void
     {
         $this->attributes['mod_route'] = $route;
     }
 
-    public function icon(): null|string
+    public function icon(): ?string
     {
         return $this->attributes['mod_icon'];
     }
 
-    public function changeIcon(null|string $icon): void
+    public function changeIcon(?string $icon): void
     {
         $this->attributes['mod_icon'] = $icon;
     }
@@ -156,7 +156,7 @@ class Module extends Model
     /**
      * @throws Exception
      */
-    public function updatedAt(): null|DateTime
+    public function updatedAt(): ?DateTime
     {
         return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
     }

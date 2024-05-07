@@ -17,7 +17,9 @@ use Tests\TestCase;
 class SearchEmployeeByIdTest extends TestCase
 {
     private SearchEmployeeByIdRequest|MockObject $request;
+
     private EmployeeRepositoryContract|MockObject $repository;
+
     private SearchEmployeeById $useCase;
 
     /**

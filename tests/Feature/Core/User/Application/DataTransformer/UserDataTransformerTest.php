@@ -29,6 +29,7 @@ use Tests\TestCase;
 class UserDataTransformerTest extends TestCase
 {
     private User|Mock $user;
+
     private UserDataTransformer $dataTransformer;
 
     /**
@@ -57,7 +58,7 @@ class UserDataTransformerTest extends TestCase
     /**
      * @throws Exception
      */
-    #[DataProviderExternal(DataProviderDataTransformer::class,'provider')]
+    #[DataProviderExternal(DataProviderDataTransformer::class, 'provider')]
     public function test_read_should_return_array(array $expected, DateTime $datetime): void
     {
         $userIdMock = $this->createMock(UserId::class);

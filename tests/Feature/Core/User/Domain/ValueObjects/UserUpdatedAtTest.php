@@ -15,6 +15,7 @@ use Tests\TestCase;
 class UserUpdatedAtTest extends TestCase
 {
     private UserUpdatedAt $valueObject;
+
     private DateTime $dateTime;
 
     public function setUp(): void
