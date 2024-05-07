@@ -134,7 +134,8 @@ class EmployeeController extends Controller implements HasMiddleware
                 $this->userService->updateUser($user->id(), $dataUpdate);
                 UserUpdateOrDeleteEvent::dispatch($user->id());
             } catch (Exception $exception) {
-                $message = sprintf('User with ID:%d by employee with ID: %d can not be updated',
+                $message = sprintf(
+                    'User with ID:%d by employee with ID: %d can not be updated',
                     $user->id()->value(),
                     $employeeId->value()
                 );
@@ -187,8 +188,10 @@ class EmployeeController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(
+                ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         return response()->json(['userId' => $userId->value(), 'employeeId' => $employeeId->value()], Response::HTTP_CREATED);

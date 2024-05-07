@@ -10,7 +10,9 @@ use Illuminate\Queue\SerializesModels;
 
 class EmployeeUpdateOrDeletedEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     private EmployeeId $employeeId;
 

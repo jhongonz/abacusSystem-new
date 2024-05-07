@@ -9,24 +9,24 @@ use Exception;
  */
 class ValueObjectStatus implements ValueObjectContract
 {
-    const STATE_NEW = 1;
+    public const STATE_NEW = 1;
 
-    const STATE_ACTIVE = 2;
+    public const STATE_ACTIVE = 2;
 
-    const STATE_INACTIVE = 3;
+    public const STATE_INACTIVE = 3;
 
-    const STATE_DELETE = -1;
+    public const STATE_DELETE = -1;
 
-    const STATE_DEFAULT = self::STATE_ACTIVE;
+    public const STATE_DEFAULT = self::STATE_ACTIVE;
 
-    const REGISTRY_STATES = [
+    public const REGISTRY_STATES = [
         self::STATE_NEW,
         self::STATE_ACTIVE,
         self::STATE_INACTIVE,
         self::STATE_DELETE,
     ];
 
-    const STYLE_LITERAL_STATE = [
+    public const STYLE_LITERAL_STATE = [
         self::STATE_NEW => [
             'class' => 'badge-primary bg-orange-600',
             'literal' => 'Nuevo',

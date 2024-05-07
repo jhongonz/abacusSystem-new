@@ -10,7 +10,9 @@ use Illuminate\Queue\SerializesModels;
 
 class ModuleUpdatedOrDeletedEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     private ModuleId $moduleId;
 

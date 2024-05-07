@@ -10,7 +10,9 @@ use Illuminate\Queue\SerializesModels;
 
 class ProfileUpdatedOrDeletedEvent
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     private ProfileId $profileId;
 

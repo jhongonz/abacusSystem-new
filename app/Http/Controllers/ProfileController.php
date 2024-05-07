@@ -147,8 +147,10 @@ class ProfileController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(
+                ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         return response()->json(status: Response::HTTP_CREATED);

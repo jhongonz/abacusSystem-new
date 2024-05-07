@@ -75,7 +75,7 @@ abstract class AbstractChainRepository
             } catch (Throwable $throwable) {
                 $lastThrowable = $throwable;
             }
-        } while (($result === null) and (false !== ($repository = next($this->repositories))));
+        } while ((null === $result) and (false !== ($repository = next($this->repositories))));
 
         if (is_null($result)) {
             throw $lastThrowable;

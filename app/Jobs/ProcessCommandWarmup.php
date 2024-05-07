@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Artisan;
 
 class ProcessCommandWarmup implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private string $command;
 
