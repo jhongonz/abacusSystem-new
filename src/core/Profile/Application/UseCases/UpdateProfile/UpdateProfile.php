@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
 use Exception;
 
 class UpdateProfile extends UseCasesService
@@ -19,7 +18,7 @@ class UpdateProfile extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Profile|Profiles
+    public function execute(RequestService $request): Profile
     {
         $this->validateRequest($request, UpdateProfileRequest::class);
 
