@@ -1,22 +1,22 @@
 <?php
 
-namespace Tests\Feature\Core\Profile\Application\UseCases\CreateProfile;
+namespace Tests\Feature\Core\Profile\Application\UseCases\DeleteProfile;
 
-use Core\Profile\Application\UseCases\CreateProfile\CreateProfile;
 use Core\Profile\Application\UseCases\CreateProfile\CreateProfileRequest;
-use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfileRequest;
+use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfile;
+use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfileRequest;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
-use Core\Profile\Domain\Profile;
+use Core\Profile\Domain\ValueObjects\ProfileId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
-#[CoversClass(CreateProfile::class)]
-class CreateProfileTest extends TestCase
+#[CoversClass(DeleteProfile::class)]
+class DeleteProfileTest extends TestCase
 {
     private ProfileRepositoryContract|MockObject $repository;
-    private CreateProfile $useCase;
+    private DeleteProfile $useCase;
 
     /**
      * @throws Exception
@@ -25,7 +25,7 @@ class CreateProfileTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->createMock(ProfileRepositoryContract::class);
-        $this->useCase = new CreateProfile($this->repository);
+        $this->useCase = new DeleteProfile($this->repository);
     }
 
     public function tearDown(): void
@@ -41,26 +41,21 @@ class CreateProfileTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function test_execute_should_return_null(): void
     {
-        $profileMock = $this->createMock(Profile::class);
-        $profileMock->expects(self::once())
-            ->method('refreshSearch')
-            ->willReturnSelf();
+        $profileIdMock = $this->createMock(ProfileId::class);
 
-        $requestMock = $this->createMock(CreateProfileRequest::class);
+        $requestMock = $this->createMock(DeleteProfileRequest::class);
         $requestMock->expects(self::once())
-            ->method('profile')
-            ->willReturn($profileMock);
+            ->method('id')
+            ->willReturn($profileIdMock);
 
         $this->repository->expects(self::once())
-            ->method('persistProfile')
-            ->with($profileMock)
-            ->willReturn($profileMock);
+            ->method('deleteProfile')
+            ->with($profileIdMock);
 
         $result = $this->useCase->execute($requestMock);
-
-        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertNull($result);
     }
 
     /**
@@ -68,11 +63,11 @@ class CreateProfileTest extends TestCase
      */
     public function test_execute_should_return_exception(): void
     {
-        $requestMock = $this->createMock(UpdateProfileRequest::class);
+        $request = $this->createMock(CreateProfileRequest::class);
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');
 
-        $this->useCase->execute($requestMock);
+        $this->useCase->execute($request);
     }
 }
