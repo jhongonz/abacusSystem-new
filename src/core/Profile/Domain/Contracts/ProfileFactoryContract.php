@@ -20,8 +20,8 @@ interface ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState(),
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
+        ProfileState $state = new ProfileState,
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt,
     ): Profile;
 
     public function buildProfileId(?int $id = null): ProfileId;

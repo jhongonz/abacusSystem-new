@@ -59,12 +59,12 @@ class Employee
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname(),
-        EmployeeState $state = new EmployeeState(),
-        EmployeePhone $phone = new EmployeePhone(),
-        EmployeeEmail $email = new EmployeeEmail(),
-        EmployeeAddress $address = new EmployeeAddress(),
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
+        EmployeeLastname $lastname = new EmployeeLastname,
+        EmployeeState $state = new EmployeeState,
+        EmployeePhone $phone = new EmployeePhone,
+        EmployeeEmail $email = new EmployeeEmail,
+        EmployeeAddress $address = new EmployeeAddress,
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ) {
         $this->id = $id;
         $this->identification = $identification;
@@ -76,13 +76,13 @@ class Employee
         $this->address = $address;
         $this->createdAt = $createdAt;
 
-        $this->search = new EmployeeSearch();
-        $this->updateAt = new EmployeeUpdateAt();
-        $this->userId = new EmployeeUserId();
-        $this->birthdate = new EmployeeBirthdate();
-        $this->observations = new EmployeeObservations();
-        $this->identificationType = new EmployeeIdentificationType();
-        $this->image = new EmployeeImage();
+        $this->search = new EmployeeSearch;
+        $this->updateAt = new EmployeeUpdateAt;
+        $this->userId = new EmployeeUserId;
+        $this->birthdate = new EmployeeBirthdate;
+        $this->observations = new EmployeeObservations;
+        $this->identificationType = new EmployeeIdentificationType;
+        $this->image = new EmployeeImage;
     }
 
     public function id(): EmployeeId

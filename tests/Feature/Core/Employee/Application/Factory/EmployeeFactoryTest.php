@@ -39,7 +39,7 @@ class EmployeeFactoryTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employees::class);
-        $this->factory = new EmployeeFactory();
+        $this->factory = new EmployeeFactory;
     }
 
     public function tearDown(): void

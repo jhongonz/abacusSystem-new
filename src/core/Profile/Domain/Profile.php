@@ -35,18 +35,18 @@ class Profile
     public function __construct(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState(),
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt()
+        ProfileState $state = new ProfileState,
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->state = $state;
         $this->createdAt = $createdAt;
 
-        $this->search = new ProfileSearch();
-        $this->updatedAt = new ProfileUpdatedAt();
-        $this->modules = new Modules();
-        $this->description = new ProfileDescription();
+        $this->search = new ProfileSearch;
+        $this->updatedAt = new ProfileUpdatedAt;
+        $this->modules = new Modules;
+        $this->description = new ProfileDescription;
     }
 
     public function id(): ProfileId

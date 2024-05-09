@@ -14,7 +14,7 @@ class EmployeeEmailTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeEmail();
+        $this->valueObject = new EmployeeEmail;
     }
 
     public function tearDown(): void

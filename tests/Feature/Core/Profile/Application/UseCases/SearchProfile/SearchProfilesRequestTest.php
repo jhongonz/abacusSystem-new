@@ -14,7 +14,7 @@ class SearchProfilesRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new SearchProfilesRequest();
+        $this->request = new SearchProfilesRequest;
     }
 
     public function tearDown(): void

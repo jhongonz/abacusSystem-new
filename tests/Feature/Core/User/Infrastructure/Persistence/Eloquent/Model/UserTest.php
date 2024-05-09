@@ -22,7 +22,7 @@ class UserTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new User();
+        $this->model = new User;
     }
 
     public function tearDown(): void

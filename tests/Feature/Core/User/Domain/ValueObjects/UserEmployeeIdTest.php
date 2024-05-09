@@ -39,7 +39,7 @@ class UserEmployeeIdTest extends TestCase
 
     public function test_value_should_return_null(): void
     {
-        $this->valueObject = new UserEmployeeId();
+        $this->valueObject = new UserEmployeeId;
         $result = $this->valueObject->value();
 
         $this->assertSame(null, $result);

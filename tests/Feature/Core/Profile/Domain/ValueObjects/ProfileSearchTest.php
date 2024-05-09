@@ -14,7 +14,7 @@ class ProfileSearchTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileSearch();
+        $this->valueObject = new ProfileSearch;
     }
 
     public function tearDown(): void

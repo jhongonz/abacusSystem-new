@@ -15,7 +15,7 @@ class ModuleCreatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleCreatedAt();
+        $this->valueObject = new ModuleCreatedAt;
     }
 
     public function tearDown(): void

@@ -82,7 +82,7 @@ class ProfileTranslator implements TranslatorDomainContract
 
     public function toDomainCollection(): Profiles
     {
-        $profiles = new Profiles();
+        $profiles = new Profiles;
         foreach ($this->collection as $id) {
             $profiles->addId($id);
         }

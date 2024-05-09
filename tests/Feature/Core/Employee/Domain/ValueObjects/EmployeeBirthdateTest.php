@@ -15,7 +15,7 @@ class EmployeeBirthdateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeBirthdate();
+        $this->valueObject = new EmployeeBirthdate;
     }
 
     public function tearDown(): void

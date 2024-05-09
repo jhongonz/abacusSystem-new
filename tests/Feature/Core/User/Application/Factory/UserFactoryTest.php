@@ -32,7 +32,7 @@ class UserFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new UserFactory();
+        $this->factory = new UserFactory;
     }
 
     public function tearDown(): void
@@ -82,7 +82,7 @@ class UserFactoryTest extends TestCase
 
     public function test_buildUpdatedAt_should_return_value_object(): void
     {
-        $datetime = new DateTime();
+        $datetime = new DateTime;
 
         $result = $this->factory->buildUpdatedAt($datetime);
 

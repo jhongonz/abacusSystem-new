@@ -66,7 +66,7 @@ class ModuleTranslator implements TranslatorDomainContract
 
     public function toDomainCollection(): Modules
     {
-        $modules = new Modules();
+        $modules = new Modules;
         foreach ($this->collection as $id) {
             $modules->addId($id);
         }

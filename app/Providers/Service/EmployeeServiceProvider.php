@@ -35,7 +35,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
     public function register(): void
     {
         $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainEmployeeRepository();
+            $chainRepository = new ChainEmployeeRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisEmployeeRepository::class)

@@ -50,9 +50,9 @@ class ModuleFactory implements ModuleFactoryContract
         ModuleMenuKey $key,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon(),
-        ModuleState $state = new ModuleState(),
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt()
+        ModuleIcon $icon = new ModuleIcon,
+        ModuleState $state = new ModuleState,
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt
     ): Module {
 
         return new Module(
@@ -99,7 +99,7 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleState($state);
     }
 
-    public function buildModuleCreatedAt(DateTime $datetime = new DateTime()): ModuleCreatedAt
+    public function buildModuleCreatedAt(DateTime $datetime = new DateTime): ModuleCreatedAt
     {
         return new ModuleCreatedAt($datetime);
     }
@@ -121,7 +121,7 @@ class ModuleFactory implements ModuleFactoryContract
     {
         $data = $data[Modules::TYPE];
 
-        $modules = new Modules();
+        $modules = new Modules;
         foreach ($data as $item) {
             $modules->addItem(
                 $this->buildModuleFromArray($item)

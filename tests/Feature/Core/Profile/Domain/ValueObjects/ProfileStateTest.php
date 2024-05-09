@@ -14,7 +14,7 @@ class ProfileStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileState();
+        $this->valueObject = new ProfileState;
     }
 
     public function tearDown(): void

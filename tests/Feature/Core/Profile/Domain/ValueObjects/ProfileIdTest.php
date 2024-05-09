@@ -14,7 +14,7 @@ class ProfileIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileId();
+        $this->valueObject = new ProfileId;
     }
 
     public function tearDown(): void

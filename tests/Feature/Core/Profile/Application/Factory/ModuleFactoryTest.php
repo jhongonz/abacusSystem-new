@@ -28,7 +28,7 @@ class ModuleFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new ModuleFactory();
+        $this->factory = new ModuleFactory;
     }
 
     public function tearDown(): void
@@ -69,7 +69,7 @@ class ModuleFactoryTest extends TestCase
 
     public function test_buildModuleCreatedAt_should_return_value_object_with_datetime(): void
     {
-        $result = $this->factory->buildModuleCreatedAt(new \DateTime());
+        $result = $this->factory->buildModuleCreatedAt(new \DateTime);
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }
@@ -83,7 +83,7 @@ class ModuleFactoryTest extends TestCase
 
     public function test_buildModuleUpdatedAt_should_return_value_object_with_datetime(): void
     {
-        $result = $this->factory->buildModuleUpdatedAt(new \DateTime());
+        $result = $this->factory->buildModuleUpdatedAt(new \DateTime);
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }

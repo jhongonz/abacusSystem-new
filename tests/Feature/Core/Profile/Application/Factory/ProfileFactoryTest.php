@@ -26,7 +26,7 @@ class ProfileFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new ProfileFactory();
+        $this->factory = new ProfileFactory;
     }
 
     public function tearDown(): void
@@ -76,7 +76,7 @@ class ProfileFactoryTest extends TestCase
 
     public function test_buildProfileUpdateAt_should_return_value_object(): void
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $result = $this->factory->buildProfileUpdateAt($datetime);
 
         $this->assertInstanceOf(ProfileUpdatedAt::class, $result);

@@ -39,7 +39,7 @@ class UserDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->user = $this->createMock(User::class);
-        $this->dataTransformer = new UserDataTransformer();
+        $this->dataTransformer = new UserDataTransformer;
     }
 
     public function tearDown(): void

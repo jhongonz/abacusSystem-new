@@ -10,7 +10,7 @@ class EmployeeCreatedAt implements ValueObjectContract
     private DateTime $value;
 
     public function __construct(
-        DateTime $value = new DateTime()
+        DateTime $value = new DateTime
     ) {
         $this->value = $value;
     }

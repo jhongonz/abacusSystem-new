@@ -9,7 +9,7 @@ class ProfileCreatedAt implements ValueObjectContract
 {
     private DateTime $value;
 
-    public function __construct(DateTime $value = new DateTime())
+    public function __construct(DateTime $value = new DateTime)
     {
         $this->value = $value;
     }

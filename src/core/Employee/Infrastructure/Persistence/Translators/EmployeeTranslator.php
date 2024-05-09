@@ -73,7 +73,7 @@ class EmployeeTranslator implements TranslatorDomainContract
 
     public function toDomainCollection(): Employees
     {
-        $employees = new Employees();
+        $employees = new Employees;
         foreach ($this->collection as $id) {
             $employees->addId($id);
         }

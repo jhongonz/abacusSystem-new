@@ -12,7 +12,7 @@ class ModuleSearchTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleSearch();
+        $this->valueObject = new ModuleSearch;
     }
 
     public function tearDown(): void

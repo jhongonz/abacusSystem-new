@@ -14,7 +14,7 @@ class ModuleIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleId();
+        $this->valueObject = new ModuleId;
     }
 
     public function tearDown(): void

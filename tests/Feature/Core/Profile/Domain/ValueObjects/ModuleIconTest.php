@@ -14,7 +14,7 @@ class ModuleIconTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleIcon();
+        $this->valueObject = new ModuleIcon;
     }
 
     public function tearDown(): void

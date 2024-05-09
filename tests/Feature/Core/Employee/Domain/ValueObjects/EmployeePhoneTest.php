@@ -14,7 +14,7 @@ class EmployeePhoneTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeePhone();
+        $this->valueObject = new EmployeePhone;
     }
 
     public function tearDown(): void

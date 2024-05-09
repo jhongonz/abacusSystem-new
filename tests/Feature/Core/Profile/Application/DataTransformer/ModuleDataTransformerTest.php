@@ -33,7 +33,7 @@ class ModuleDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->module = $this->createMock(Module::class);
-        $this->dataTransformer = new ModuleDataTransformer();
+        $this->dataTransformer = new ModuleDataTransformer;
     }
 
     public function tearDown(): void

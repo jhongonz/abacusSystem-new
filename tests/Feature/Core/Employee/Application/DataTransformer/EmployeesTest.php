@@ -24,7 +24,7 @@ class EmployeesTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employee::class);
-        $this->dataTransformer = new EmployeeDataTransformer();
+        $this->dataTransformer = new EmployeeDataTransformer;
     }
 
     public function tearDown(): void

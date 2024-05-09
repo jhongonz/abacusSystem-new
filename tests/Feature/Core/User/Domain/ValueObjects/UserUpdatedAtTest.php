@@ -41,7 +41,7 @@ class UserUpdatedAtTest extends TestCase
 
     public function test_value_should_return_null(): void
     {
-        $this->valueObject = new UserUpdatedAt();
+        $this->valueObject = new UserUpdatedAt;
         $result = $this->valueObject->value();
 
         $this->assertSame(null, $result);

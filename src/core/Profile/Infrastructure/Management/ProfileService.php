@@ -72,7 +72,7 @@ class ProfileService implements ProfileManagementContract
         $request = new SearchProfileByIdRequest($id);
         $profile = $this->searchProfileById->execute($request);
 
-        $modules = new Modules();
+        $modules = new Modules;
         foreach ($profile->modulesAggregator() as $item) {
             try {
                 $moduleId = $this->moduleFactory->buildModuleId($item);

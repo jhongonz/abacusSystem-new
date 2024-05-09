@@ -14,7 +14,7 @@ class ProfileDescriptionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileDescription();
+        $this->valueObject = new ProfileDescription;
     }
 
     public function tearDown(): void

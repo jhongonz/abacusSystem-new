@@ -10,7 +10,7 @@ final class DataProviderUpdateUser
 {
     public static function provider(): array
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
 
         return [
             [

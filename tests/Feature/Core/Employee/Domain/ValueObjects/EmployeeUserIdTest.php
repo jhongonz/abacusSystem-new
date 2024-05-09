@@ -14,7 +14,7 @@ class EmployeeUserIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeUserId();
+        $this->valueObject = new EmployeeUserId;
     }
 
     public function tearDown(): void

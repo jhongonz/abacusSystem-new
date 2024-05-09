@@ -432,7 +432,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')
@@ -643,7 +643,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')

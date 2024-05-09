@@ -14,7 +14,7 @@ class ModuleUpdatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleUpdatedAt();
+        $this->valueObject = new ModuleUpdatedAt;
     }
 
     public function tearDown(): void

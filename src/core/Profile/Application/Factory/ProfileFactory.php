@@ -48,8 +48,8 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState(),
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt()
+        ProfileState $state = new ProfileState,
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt
     ): Profile {
 
         return new Profile(

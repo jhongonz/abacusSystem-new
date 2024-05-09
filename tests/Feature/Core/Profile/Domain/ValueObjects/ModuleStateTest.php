@@ -14,7 +14,7 @@ class ModuleStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleState();
+        $this->valueObject = new ModuleState;
     }
 
     public function tearDown(): void

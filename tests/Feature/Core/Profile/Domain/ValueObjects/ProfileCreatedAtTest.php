@@ -14,7 +14,7 @@ class ProfileCreatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileCreatedAt();
+        $this->valueObject = new ProfileCreatedAt;
     }
 
     public function tearDown(): void

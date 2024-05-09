@@ -15,7 +15,7 @@ class EmployeeUpdateAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeUpdateAt();
+        $this->valueObject = new EmployeeUpdateAt;
     }
 
     public function tearDown(): void
@@ -32,7 +32,7 @@ class EmployeeUpdateAtTest extends TestCase
 
     public function test_value_should_return_DateTime(): void
     {
-        $datetime = new DateTime();
+        $datetime = new DateTime;
         $this->valueObject->setValue($datetime);
         $result = $this->valueObject->value();
 
@@ -42,7 +42,7 @@ class EmployeeUpdateAtTest extends TestCase
 
     public function test_setValue_should_change_and_return_self(): void
     {
-        $datetime = new DateTime();
+        $datetime = new DateTime;
         $result = $this->valueObject->setValue($datetime);
 
         $this->assertInstanceOf(EmployeeUpdateAt::class, $result);

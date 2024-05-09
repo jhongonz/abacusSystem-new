@@ -31,7 +31,7 @@ class ProfileDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->profile = $this->createMock(Profile::class);
-        $this->dataTransformer = new ProfileDataTransformer();
+        $this->dataTransformer = new ProfileDataTransformer;
     }
 
     public function tearDown(): void

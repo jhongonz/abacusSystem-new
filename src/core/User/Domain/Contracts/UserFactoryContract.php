@@ -28,8 +28,8 @@ interface UserFactoryContract
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        UserState $state = new UserState(),
-        UserCreatedAt $createdAt = new UserCreatedAt()
+        UserState $state = new UserState,
+        UserCreatedAt $createdAt = new UserCreatedAt
     ): User;
 
     public function buildId(?int $id = null): UserId;

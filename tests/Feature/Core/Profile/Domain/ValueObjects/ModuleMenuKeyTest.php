@@ -14,7 +14,7 @@ class ModuleMenuKeyTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleMenuKey();
+        $this->valueObject = new ModuleMenuKey;
     }
 
     public function tearDown(): void

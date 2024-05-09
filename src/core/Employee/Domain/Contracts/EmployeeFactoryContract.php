@@ -29,9 +29,9 @@ interface EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname(),
-        EmployeeState $state = new EmployeeState(),
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
+        EmployeeLastname $lastname = new EmployeeLastname,
+        EmployeeState $state = new EmployeeState,
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ): Employee;
 
     public function buildEmployeeId(?int $id = null): EmployeeId;

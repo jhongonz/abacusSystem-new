@@ -23,7 +23,7 @@ class UserStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new UserState();
+        $this->valueObject = new UserState;
     }
 
     public function tearDown(): void

@@ -44,8 +44,8 @@ class User
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        UserState $state = new UserState(),
-        UserCreatedAt $createdAt = new UserCreatedAt(),
+        UserState $state = new UserState,
+        UserCreatedAt $createdAt = new UserCreatedAt,
     ) {
         $this->id = $id;
         $this->employeeId = $employeeId;
@@ -56,8 +56,8 @@ class User
         $this->state = $state;
         $this->createdAt = $createdAt;
 
-        $this->updatedAt = new UserUpdatedAt();
-        $this->photo = new UserPhoto();
+        $this->updatedAt = new UserUpdatedAt;
+        $this->photo = new UserPhoto;
     }
 
     public function id(): UserId

@@ -98,7 +98,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn(new \stdClass());
+            ->andReturn(new \stdClass);
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -190,7 +190,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn(new \stdClass());
+            ->andReturn(new \stdClass);
 
         $this->model->expects(self::once())
             ->method('getTable')

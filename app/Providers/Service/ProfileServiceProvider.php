@@ -51,7 +51,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     public function register(): void
     {
         $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainProfileRepository();
+            $chainRepository = new ChainProfileRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisProfileRepository::class)
@@ -64,7 +64,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
         });
 
         $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainModuleRepository();
+            $chainRepository = new ChainModuleRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisModuleRepository::class)

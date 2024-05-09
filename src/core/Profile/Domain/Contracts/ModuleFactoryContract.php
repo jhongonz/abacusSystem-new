@@ -24,9 +24,9 @@ interface ModuleFactoryContract
         ModuleMenuKey $key,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon(),
-        ModuleState $state = new ModuleState(),
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt()
+        ModuleIcon $icon = new ModuleIcon,
+        ModuleState $state = new ModuleState,
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt
     ): Module;
 
     public function buildModuleId(?int $id = null): ModuleId;

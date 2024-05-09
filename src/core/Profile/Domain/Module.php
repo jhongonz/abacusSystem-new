@@ -43,9 +43,9 @@ class Module
         ModuleMenuKey $menuKey,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon(),
-        ModuleState $state = new ModuleState(),
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
+        ModuleIcon $icon = new ModuleIcon,
+        ModuleState $state = new ModuleState,
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt,
     ) {
         $this->id = $id;
         $this->menuKey = $menuKey;
@@ -55,8 +55,8 @@ class Module
         $this->state = $state;
         $this->createdAt = $createdAt;
 
-        $this->search = new ModuleSearch();
-        $this->updatedAt = new ModuleUpdatedAt();
+        $this->search = new ModuleSearch;
+        $this->updatedAt = new ModuleUpdatedAt;
     }
 
     public function id(): ModuleId

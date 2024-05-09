@@ -20,7 +20,7 @@ class EmployeeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Employee();
+        $this->model = new Employee;
     }
 
     public function tearDown(): void
@@ -507,7 +507,7 @@ class EmployeeTest extends TestCase
 
     public function test_changeCreatedAt_should_change_and_return_self(): void
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $this->modelMock = $this->getMockBuilder(Employee::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -564,7 +564,7 @@ class EmployeeTest extends TestCase
 
     public function test_changeUpdatedAt_should_change_and_return_self(): void
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $this->modelMock = $this->getMockBuilder(Employee::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -671,7 +671,7 @@ class EmployeeTest extends TestCase
 
     public function test_changeBirthdate_should_change_and_return_self(): void
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $this->modelMock = $this->getMockBuilder(Employee::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();

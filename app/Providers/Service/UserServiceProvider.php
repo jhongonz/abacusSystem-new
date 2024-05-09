@@ -35,7 +35,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register(): void
     {
         $this->app->singletonIf(UserRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainUserRepository();
+            $chainRepository = new ChainUserRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisUserRepository::class)
