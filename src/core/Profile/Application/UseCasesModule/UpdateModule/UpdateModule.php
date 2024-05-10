@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCasesModule\RequestService;
 use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
-use Core\Profile\Domain\Modules;
 use Exception;
 
 class UpdateModule extends UseCasesService
@@ -19,7 +18,7 @@ class UpdateModule extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Module|Modules
+    public function execute(RequestService $request): Module
     {
         $this->validateRequest($request, UpdateModuleRequest::class);
 
