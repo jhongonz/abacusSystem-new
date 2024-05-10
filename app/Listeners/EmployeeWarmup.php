@@ -12,7 +12,7 @@ class EmployeeWarmup
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

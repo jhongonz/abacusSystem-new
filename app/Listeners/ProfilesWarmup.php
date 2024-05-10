@@ -13,7 +13,7 @@ class ProfilesWarmup
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

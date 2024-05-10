@@ -77,6 +77,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function boot(): void
     {
-        //
+
     }
 }

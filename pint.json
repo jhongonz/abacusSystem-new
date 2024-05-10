@@ -3,6 +3,8 @@
     "rules": {
         "simplified_null_return": true,
         "braces": false,
+        "no_empty_comment": true,
+        "clean_namespace": true,
         "new_with_parentheses": {
             "anonymous_class": false,
             "named_class": false

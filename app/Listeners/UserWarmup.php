@@ -12,7 +12,7 @@ class UserWarmup
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

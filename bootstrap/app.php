@@ -24,7 +24,7 @@ $application->withMiddleware(function (Middleware $middleware) {
 });
 
 $application->withExceptions(function (Exceptions $exceptions) {
-    //
+
 });
 
 $application->withCommands([

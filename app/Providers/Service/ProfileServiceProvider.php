@@ -119,6 +119,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function boot(): void
     {
-        //
+
     }
 }
