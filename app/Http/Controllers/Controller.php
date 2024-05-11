@@ -39,7 +39,7 @@ abstract class Controller
         ]);
     }
 
-    public function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
+    protected function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
     {
         $tool = '<div class="btn-group">
         <button type="button" class="btn btn-sm btn-icon rounded-round text-grey-800" data-toggle="dropdown">
