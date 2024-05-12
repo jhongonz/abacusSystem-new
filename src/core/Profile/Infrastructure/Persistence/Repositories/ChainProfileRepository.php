@@ -13,6 +13,9 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainProfileRepository extends AbstractChainRepository implements ProfileRepositoryContract
 {
     private const FUNCTION_NAMES = [

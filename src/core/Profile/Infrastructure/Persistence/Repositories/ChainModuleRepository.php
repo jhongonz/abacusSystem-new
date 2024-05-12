@@ -12,6 +12,9 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainModuleRepository extends AbstractChainRepository implements ModuleRepositoryContract
 {
     private const FUNCTION_NAMES = [
