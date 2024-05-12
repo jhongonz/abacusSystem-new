@@ -8,7 +8,7 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 
 interface ModuleManagementContract
 {
-    public function searchModuleById(ModuleId $id): Module;
+    public function searchModuleById(ModuleId $id): ?Module;
 
     public function searchModules(array $filters = []): Modules;
 

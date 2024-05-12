@@ -52,7 +52,7 @@ class ModuleService implements ModuleManagementContract
     /**
      * @throws Exception
      */
-    public function searchModuleById(ModuleId $id): Module
+    public function searchModuleById(ModuleId $id): ?Module
     {
         $request = new SearchModuleByIdRequest($id);
 
