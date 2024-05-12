@@ -5,7 +5,6 @@ namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -56,6 +55,29 @@ class Profile extends Model
         'deleted_at',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    protected $touches = ['user','pivotModules','modules'];
+
+    /**
+     * The search field associated with the table.
+     */
+    protected string $mainSearchField = 'pro_search';
+
+    public function getSearchField(): string
+    {
+        return $this->mainSearchField;
+    }
+
     public function user(): HasMany
     {
         return $this->hasMany(User::class, 'user__pro_id', 'pro_id');
@@ -78,9 +100,9 @@ class Profile extends Model
             );
     }
 
-    public function modules(): Collection
+    public function modules(): Model
     {
-        return $this->pivotModules()->get();
+        return $this->pivotModules()->getModel();
     }
 
     public function id(): ?int
