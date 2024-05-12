@@ -4,22 +4,24 @@ namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
-#[CoversClass(Module::class)]
-class ModuleTest extends TestCase
+#[CoversClass(Profile::class)]
+class ProfileTest extends TestCase
 {
-    private Module $model;
-    private Module|MockObject $modelMock;
+    private Profile $model;
+    private Profile|MockObject $modelMock;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Module;
+        $this->model = new Profile;
     }
 
     public function tearDown(): void
@@ -33,16 +35,37 @@ class ModuleTest extends TestCase
         $result = $this->model->getSearchField();
 
         $this->assertIsString($result);
-        $this->assertSame('mod_search', $result);
+        $this->assertSame('pro_search', $result);
     }
 
     /**
      * @throws Exception
      */
-    public function test_profiles_should_return_relation(): void
+    public function test_user_should_return_relation(): void
     {
-        $relationBelongsToManyMock = $this->createMock(BelongsToMany::class);
-        $relationBelongsToManyMock->expects(self::once())
+        $relationHasMany = $this->createMock(HasMany::class);
+        $this->modelMock = $this->getMockBuilder(Profile::class)
+            ->onlyMethods(['newRelatedInstance','hasMany','newHasMany'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('hasMany')
+            ->with(User::class, 'user__pro_id', 'pro_id')
+            ->willReturn($relationHasMany);
+
+        $result = $this->modelMock->user();
+
+        $this->assertInstanceOf(HasMany::class, $result);
+        $this->assertSame($relationHasMany, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_pivotModules_should_return_relation(): void
+    {
+        $relationMock = $this->createMock(BelongsToMany::class);
+        $relationMock->expects(self::once())
             ->method('withPivot')
             ->with(
                 'pri__pro_id',
@@ -53,35 +76,41 @@ class ModuleTest extends TestCase
             )
             ->willReturnSelf();
 
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['newRelatedInstance','belongsToMany','newBelongsToMany'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('belongsToMany')
             ->with(
-                Profile::class,
+                Module::class,
                 'privileges',
+                'pri__pro_id',
                 'pri__mod_id',
-                'pri__pro_id'
             )
-            ->willReturn($relationBelongsToManyMock);
+            ->willReturn($relationMock);
 
-        $result = $this->modelMock->profiles();
+        $result = $this->modelMock->pivotModules();
 
         $this->assertInstanceOf(BelongsToMany::class, $result);
-        $this->assertSame($relationBelongsToManyMock, $result);
+        $this->assertSame($relationMock, $result);
+    }
+
+    public function test_modules_should_return_model(): void
+    {
+        $result = $this->model->modules();
+        $this->assertInstanceOf(Module::class, $result);
     }
 
     public function test_id_should_return_int(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_id')
+            ->with('pro_id')
             ->willReturn(1);
 
         $result = $this->modelMock->id();
@@ -92,13 +121,13 @@ class ModuleTest extends TestCase
 
     public function test_id_should_return_null(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_id')
+            ->with('pro_id')
             ->willReturn(null);
 
         $result = $this->modelMock->id();
@@ -108,80 +137,30 @@ class ModuleTest extends TestCase
 
     public function test_changeId_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('mod_id', 1)
+            ->with('pro_id', 2)
             ->willReturnSelf();
 
-        $result = $this->modelMock->changeId(1);
+        $result = $this->modelMock->changeId(2);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($this->modelMock, $result);
-    }
-
-    public function test_menuKey_should_return_string(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('mod_menu_key')
-            ->willReturn('test');
-
-        $result = $this->modelMock->menuKey();
-
-        $this->assertIsString($result);
-        $this->assertSame('test', $result);
-    }
-
-    public function test_menuKey_should_return_null(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('mod_menu_key')
-            ->willReturn(null);
-
-        $result = $this->modelMock->menuKey();
-
-        $this->assertNull($result);
-    }
-
-    public function test_changeMenuKey_should_return_self(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['setAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('setAttribute')
-            ->with('mod_menu_key', 'testing')
-            ->willReturnSelf();
-
-        $result = $this->modelMock->changeMenuKey('testing');
-
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 
     public function test_name_should_return_string(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_name')
+            ->with('pro_name')
             ->willReturn('test');
 
         $result = $this->modelMock->name();
@@ -190,132 +169,82 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
+    public function test_name_should_return_null(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Profile::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('pro_name')
+            ->willReturn(null);
+
+        $result = $this->modelMock->name();
+
+        $this->assertNull($result);
+    }
+
     public function test_changeName_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('mod_name', 'testing')
+            ->with('pro_name', 'testing')
             ->willReturnSelf();
 
         $result = $this->modelMock->changeName('testing');
 
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_route_should_return_string(): void
+    public function test_state_should_return_int(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_route')
-            ->willReturn('test');
+            ->with('pro_state')
+            ->willReturn(1);
 
-        $result = $this->modelMock->route();
+        $result = $this->modelMock->state();
 
-        $this->assertIsString($result);
-        $this->assertSame('test', $result);
+        $this->assertIsInt($result);
+        $this->assertSame(1, $result);
     }
 
-    public function test_route_should_return_null(): void
+    public function test_changeState_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('mod_route')
-            ->willReturn(null);
-
-        $result = $this->modelMock->route();
-
-        $this->assertNull($result);
-    }
-
-    public function test_changeRoute_should_return_self(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('mod_route', 'testing')
+            ->with('pro_state', 2)
             ->willReturnSelf();
 
-        $result = $this->modelMock->changeRoute('testing');
+        $result = $this->modelMock->changeState(2);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($this->modelMock, $result);
-    }
-
-    public function test_icon_should_return_string(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('mod_icon')
-            ->willReturn('test');
-
-        $result = $this->modelMock->icon();
-
-        $this->assertIsString($result);
-        $this->assertSame('test', $result);
-    }
-
-    public function test_icon_should_return_null(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('mod_icon')
-            ->willReturn(null);
-
-        $result = $this->modelMock->icon();
-
-        $this->assertNull($result);
-    }
-
-    public function test_changeIcon_should_return_self(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['setAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('setAttribute')
-            ->with('mod_icon', 'testing')
-            ->willReturnSelf();
-
-        $result = $this->modelMock->changeIcon('testing');
-
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 
     public function test_search_should_return_string(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_search')
+            ->with('pro_search')
             ->willReturn('test');
 
         $result = $this->modelMock->search();
@@ -326,13 +255,13 @@ class ModuleTest extends TestCase
 
     public function test_search_should_return_null(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_search')
+            ->with('pro_search')
             ->willReturn(null);
 
         $result = $this->modelMock->search();
@@ -342,52 +271,69 @@ class ModuleTest extends TestCase
 
     public function test_changeSearch_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('mod_search', 'testing')
+            ->with('pro_search', 'testing')
             ->willReturnSelf();
 
         $result = $this->modelMock->changeSearch('testing');
 
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_state_should_return_int(): void
+    public function test_description_should_return_string(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
-            ->with('mod_state')
-            ->willReturn(2);
+            ->with('pro_description')
+            ->willReturn('test');
 
-        $result = $this->modelMock->state();
+        $result = $this->modelMock->description();
 
-        $this->assertIsInt($result);
-        $this->assertSame(2, $result);
+        $this->assertIsString($result);
+        $this->assertSame('test', $result);
     }
 
-    public function test_changeState_should_return_self(): void
+    public function test_description_should_return_null(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('pro_description')
+            ->willReturn(null);
+
+        $result = $this->modelMock->description();
+
+        $this->assertNull($result);
+    }
+
+    public function test_changeDescription_should_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
-            ->with('mod_state', 1)
+            ->with('pro_description', 'testing')
             ->willReturnSelf();
 
-        $result = $this->modelMock->changeState(1);
+        $result = $this->modelMock->changeDescription('testing');
 
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($this->modelMock, $result);
     }
 
     /**
@@ -395,14 +341,14 @@ class ModuleTest extends TestCase
      */
     public function test_createdAt_should_return_datetime(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
             ->with('created_at')
-            ->willReturn('2024-05-12 15:58:00');
+            ->willReturn('2024-05-12 22:07:00');
 
         $result = $this->modelMock->createdAt();
 
@@ -411,11 +357,11 @@ class ModuleTest extends TestCase
 
     public function test_changeCreatedAt_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime('2024-05-12 22:07:00');
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
             ->with('created_at', $datetime)
@@ -423,7 +369,7 @@ class ModuleTest extends TestCase
 
         $result = $this->modelMock->changeCreatedAt($datetime);
 
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 
@@ -432,46 +378,27 @@ class ModuleTest extends TestCase
      */
     public function test_updatedAt_should_return_datetime(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
             ->method('getAttribute')
             ->with('updated_at')
-            ->willReturn('2024-05-12 15:58:00');
+            ->willReturn('2024-05-12 22:07:00');
 
         $result = $this->modelMock->updatedAt();
 
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function test_updatedAt_should_return_null(): void
-    {
-        $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['getAttribute'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('getAttribute')
-            ->with('updated_at')
-            ->willReturn(null);
-
-        $result = $this->modelMock->updatedAt();
-
-        $this->assertNull($result);
-    }
-
     public function test_changeUpdatedAt_should_return_self(): void
     {
-        $this->modelMock = $this->getMockBuilder(Module::class)
+        $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime('2024-05-12 22:07:00');
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
             ->with('updated_at', $datetime)
@@ -479,7 +406,7 @@ class ModuleTest extends TestCase
 
         $result = $this->modelMock->changeUpdatedAt($datetime);
 
-        $this->assertInstanceOf(Module::class, $result);
+        $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
 }

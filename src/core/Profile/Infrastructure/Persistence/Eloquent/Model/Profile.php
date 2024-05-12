@@ -85,19 +85,22 @@ class Profile extends Model
 
     public function pivotModules(): BelongsToMany
     {
-        return $this->belongsToMany(
+        $relation = $this->belongsToMany(
             Module::class,
             'privileges',
             'pri__pro_id',
             'pri__mod_id',
-        )
-            ->withPivot(
-                'pri__pro_id',
-                'pri__mod_id',
-                'created_at',
-                'updated_at',
-                'deleted_at'
-            );
+        );
+
+        $relation->withPivot(
+            'pri__pro_id',
+            'pri__mod_id',
+            'created_at',
+            'updated_at',
+            'deleted_at'
+        );
+
+        return $relation;
     }
 
     public function modules(): Model
@@ -107,52 +110,57 @@ class Profile extends Model
 
     public function id(): ?int
     {
-        return $this->attributes['pro_id'];
+        return $this->getAttribute('pro_id');
     }
 
-    public function changeId(?int $id): void
+    public function changeId(?int $id): self
     {
-        $this->attributes['pro_id'] = $id;
+        $this->setAttribute('pro_id', $id);
+        return $this;
     }
 
     public function name(): ?string
     {
-        return $this->attributes['pro_name'];
+        return $this->getAttribute('pro_name');
     }
 
-    public function changeName(string $name): void
+    public function changeName(string $name): self
     {
-        $this->attributes['pro_name'] = $name;
+        $this->setAttribute('pro_name', $name);
+        return $this;
     }
 
-    public function state(): ?int
+    public function state(): int
     {
-        return $this->attributes['pro_state'];
+        return $this->getAttribute('pro_state');
     }
 
-    public function changeState(int $state): void
+    public function changeState(int $state): self
     {
-        $this->attributes['pro_state'] = $state;
+        $this->setAttribute('pro_state', $state);
+        return $this;
     }
 
     public function search(): ?string
     {
-        return $this->attributes['pro_search'];
+        return $this->getAttribute('pro_search');
     }
 
-    public function changeSearch(string $search): void
+    public function changeSearch(string $search): self
     {
-        $this->attributes['pro_search'] = $search;
+        $this->setAttribute('pro_search', $search);
+        return $this;
     }
 
     public function description(): ?string
     {
-        return $this->attributes['pro_description'];
+        return $this->getAttribute('pro_description');
     }
 
-    public function changeDescription(string $description): void
+    public function changeDescription(string $description): self
     {
-        $this->attributes['pro_description'] = $description;
+        $this->setAttribute('pro_description', $description);
+        return $this;
     }
 
     /**
@@ -160,12 +168,14 @@ class Profile extends Model
      */
     public function createdAt(): ?DateTime
     {
-        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+        $datetime = $this->getAttribute('created_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeCreatedAt(DateTime $datetime): void
+    public function changeCreatedAt(DateTime $datetime): self
     {
-        $this->attributes['created_at'] = $datetime;
+        $this->setAttribute('created_at', $datetime);
+        return $this;
     }
 
     /**
@@ -173,12 +183,14 @@ class Profile extends Model
      */
     public function updatedAt(): ?DateTime
     {
-        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
+        $datetime = $this->getAttribute('updated_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeUpdatedAt(DateTime $datetime): void
+    public function changeUpdatedAt(DateTime $datetime): self
     {
-        $this->attributes['updated_at'] = $datetime;
+        $this->setAttribute('updated_at', $datetime);
+        return $this;
     }
 
     /**

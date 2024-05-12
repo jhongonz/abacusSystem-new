@@ -180,7 +180,8 @@ class Module extends Model
      */
     public function createdAt(): DateTime
     {
-        return ($this->getAttribute('created_at')) ? $this->getDateTime($this->getAttribute('created_at')) : $this->getAttribute('created_at');
+        $datetime = $this->getAttribute('created_at');
+        return $this->getDateTime($datetime);
     }
 
     public function changeCreatedAt(DateTime $datetime): self
@@ -194,7 +195,8 @@ class Module extends Model
      */
     public function updatedAt(): ?DateTime
     {
-        return ($this->getAttribute('updated_at')) ? $this->getDateTime($this->getAttribute('updated_at')) : $this->getAttribute('updated_at');
+        $datetime = $this->getAttribute('updated_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeUpdatedAt(DateTime $datetime): self
