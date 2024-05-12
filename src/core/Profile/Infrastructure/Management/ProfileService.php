@@ -82,7 +82,7 @@ class ProfileService implements ProfileManagementContract
                     $modules->addItem($module);
                 }
             } catch (Exception $exception) {
-                $this->logger->warning($exception->getMessage());
+                $this->logger->warning($exception->getMessage(), $exception->getTrace());
             }
         }
         $profile->setModules($modules);
