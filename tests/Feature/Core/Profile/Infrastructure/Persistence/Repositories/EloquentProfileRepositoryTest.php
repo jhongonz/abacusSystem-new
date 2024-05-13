@@ -12,6 +12,7 @@ use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileMod
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Translators\ProfileTranslator;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -419,21 +420,41 @@ class EloquentProfileRepositoryTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws ProfileNotFoundException
      */
     public function test_deleteProfile_should_return_void(): void
     {
         $profileId = $this->createMock(ProfileId::class);
-        $profileId->expects(self::once())
+        $profileId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
 
         $builder = $this->mock(Builder::class);
 
-        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock = $this->mock(ProfileModel::class);
+
+        $relationMock = $this->mock(BelongsToMany::class);
+        $relationMock->shouldReceive('detach')
+            ->once()
+            ->andReturn(1);
+
+        $modelMock->shouldReceive('pivotModules')
+            ->once()
+            ->andReturn($relationMock);
+
         $builder->shouldReceive('find')
             ->once()
             ->with(1)
             ->andReturn($modelMock);
+
+        $builder->shouldReceive('where')
+            ->once()
+            ->with('pro_id', 1)
+            ->andReturnSelf();
+
+        $builder->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -446,5 +467,45 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $this->repository->deleteProfile($profileId);
         $this->assertTrue(true);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ProfileNotFoundException
+     */
+    public function test_deleteProfile_should_return_exception(): void
+    {
+        $profileId = $this->createMock(ProfileId::class);
+        $profileId->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+
+        $builder = $this->mock(Builder::class);
+
+        $builder->shouldReceive('find')
+            ->once()
+            ->with(1)
+            ->andReturn(null);
+
+        $builder->shouldReceive('where')
+            ->never()
+            ->with('pro_id', 1);
+
+        $builder->shouldReceive('delete')
+            ->never();
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builder);
+
+        $this->expectException(ProfileNotFoundException::class);
+        $this->expectExceptionMessage('Profile not found with id: 1');
+
+        $this->repository->deleteProfile($profileId);
     }
 }
