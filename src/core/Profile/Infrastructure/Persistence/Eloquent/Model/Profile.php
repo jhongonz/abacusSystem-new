@@ -146,7 +146,7 @@ class Profile extends Model
         return $this->getAttribute('pro_search');
     }
 
-    public function changeSearch(string $search): self
+    public function changeSearch(?string $search): self
     {
         $this->setAttribute('pro_search', $search);
         return $this;

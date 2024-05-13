@@ -137,8 +137,18 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     public function persistProfile(Profile $profile): Profile
     {
         $profileModel = $this->domainToModel($profile);
-        $profileModel->save();
-        $profile->id()->setValue($profileModel->id());
+        $profileId = $profileModel->id();
+        $dataModel = $profileModel->toArray();
+
+        $builder = $this->database->table($this->getTable());
+
+        if (is_null($profileId)) {
+            $profileId = $builder->insertGetId($dataModel);
+            $profile->id()->setValue($profileId);
+        } else {
+            $builder->where('pro_id', $profileId);
+            $builder->update($dataModel);
+        }
 
         $profileModel->pivotModules()->sync($profile->modulesAggregator());
 
@@ -166,7 +176,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     {
         $builder = $this->database->table($this->getTable());
         $data = $builder->find($domain->id()->value());
-        $model = $this->updateAttributesModelProfile($data);
+        $model = $this->updateAttributesModelProfile((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeName($domain->name()->value());

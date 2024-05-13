@@ -56,7 +56,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
      * @throws ModuleNotFoundException
      * @throws Exception
      */
-    public function find(ModuleId $id): ?Module
+    public function find(ModuleId $id): Module
     {
         $builder = $this->database->table($this->getTable())
             ->where('mod_id', $id->value())

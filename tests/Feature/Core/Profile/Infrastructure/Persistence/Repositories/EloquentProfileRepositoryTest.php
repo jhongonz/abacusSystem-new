@@ -4,8 +4,13 @@ namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories;
 
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
+use Core\Profile\Domain\ValueObjects\ProfileCreatedAt;
+use Core\Profile\Domain\ValueObjects\ProfileDescription;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
+use Core\Profile\Domain\ValueObjects\ProfileSearch;
+use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
@@ -507,5 +512,309 @@ class EloquentProfileRepositoryTest extends TestCase
         $this->expectExceptionMessage('Profile not found with id: 1');
 
         $this->repository->deleteProfile($profileId);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_persistProfile_should_return_object(): void
+    {
+        $profileMock = $this->createMock(Profile::class);
+
+        $profileIdMock = $this->createMock(ProfileId::class);
+        $profileIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(null);
+        $profileIdMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+        $profileMock->expects(self::exactly(3))
+            ->method('id')
+            ->willReturn($profileIdMock);
+        $this->model->expects(self::once())
+            ->method('changeId')
+            ->with(null)
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(ProfileName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->model->expects(self::once())
+            ->method('changeName')
+            ->with('test')
+            ->willReturnSelf();
+
+        $stateMock = $this->createMock(ProfileState::class);
+        $stateMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $profileMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(1)
+            ->willReturnSelf();
+
+        $searchMock = $this->createMock(ProfileSearch::class);
+        $searchMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
+        $this->model->expects(self::once())
+            ->method('changeSearch')
+            ->with('test')
+            ->willReturnSelf();
+
+        $descriptionMock = $this->createMock(ProfileDescription::class);
+        $descriptionMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('description')
+            ->willReturn($descriptionMock);
+        $this->model->expects(self::once())
+            ->method('changeDescription')
+            ->with('test')
+            ->willReturnSelf();
+
+        $datetime = new \DateTime;
+        $createdAt = $this->createMock(ProfileCreatedAt::class);
+        $createdAt->expects(self::once())
+            ->method('value')
+            ->willReturn($datetime);
+        $profileMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAt);
+        $this->model->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($datetime)
+            ->willReturnSelf();
+
+        $updatedAt = $this->createMock(ProfileUpdatedAt::class);
+        $updatedAt->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn($datetime);
+        $profileMock->expects(self::exactly(2))
+            ->method('updatedAt')
+            ->willReturn($updatedAt);
+        $this->model->expects(self::once())
+            ->method('changeUpdatedAt')
+            ->with($datetime)
+            ->willReturnSelf();
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(null)
+            ->andReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
+            ->willReturnSelf();
+
+        $this->model->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(null);
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builderMock->shouldReceive('insertGetId')
+            ->once()
+            ->with([])
+            ->andReturn(1);
+
+        $profileMock->expects(self::once())
+            ->method('modulesAggregator')
+            ->willReturn([]);
+
+        $relationMock = $this->mock(BelongsToMany::class);
+        $relationMock->shouldReceive('sync')
+            ->once()
+            ->with([])
+            ->andReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('pivotModules')
+            ->willReturn($relationMock);
+
+        $this->databaseManager->shouldReceive('table')
+            ->times(2)
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $result = $this->repository->persistProfile($profileMock);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_persistProfile_should_update_and_return_object(): void
+    {
+        $profileMock = $this->createMock(Profile::class);
+
+        $profileIdMock = $this->createMock(ProfileId::class);
+        $profileIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+        $profileIdMock->expects(self::never())
+            ->method('setValue');
+        $profileMock->expects(self::exactly(2))
+            ->method('id')
+            ->willReturn($profileIdMock);
+        $this->model->expects(self::once())
+            ->method('changeId')
+            ->with(1)
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(ProfileName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->model->expects(self::once())
+            ->method('changeName')
+            ->with('test')
+            ->willReturnSelf();
+
+        $stateMock = $this->createMock(ProfileState::class);
+        $stateMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $profileMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(1)
+            ->willReturnSelf();
+
+        $searchMock = $this->createMock(ProfileSearch::class);
+        $searchMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
+        $this->model->expects(self::once())
+            ->method('changeSearch')
+            ->with('test')
+            ->willReturnSelf();
+
+        $descriptionMock = $this->createMock(ProfileDescription::class);
+        $descriptionMock->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+        $profileMock->expects(self::once())
+            ->method('description')
+            ->willReturn($descriptionMock);
+        $this->model->expects(self::once())
+            ->method('changeDescription')
+            ->with('test')
+            ->willReturnSelf();
+
+        $datetime = new \DateTime;
+        $createdAt = $this->createMock(ProfileCreatedAt::class);
+        $createdAt->expects(self::once())
+            ->method('value')
+            ->willReturn($datetime);
+        $profileMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAt);
+        $this->model->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($datetime)
+            ->willReturnSelf();
+
+        $updatedAt = $this->createMock(ProfileUpdatedAt::class);
+        $updatedAt->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn($datetime);
+        $profileMock->expects(self::exactly(2))
+            ->method('updatedAt')
+            ->willReturn($updatedAt);
+        $this->model->expects(self::once())
+            ->method('changeUpdatedAt')
+            ->with($datetime)
+            ->willReturnSelf();
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(1)
+            ->andReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
+            ->willReturnSelf();
+
+        $this->model->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builderMock->shouldReceive('insertGetId')
+            ->never();
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('update')
+            ->once()
+            ->with([])
+            ->andReturn(1);
+
+        $profileMock->expects(self::once())
+            ->method('modulesAggregator')
+            ->willReturn([]);
+
+        $relationMock = $this->mock(BelongsToMany::class);
+        $relationMock->shouldReceive('sync')
+            ->once()
+            ->with([])
+            ->andReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('pivotModules')
+            ->willReturn($relationMock);
+
+        $this->databaseManager->shouldReceive('table')
+            ->times(2)
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $result = $this->repository->persistProfile($profileMock);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
     }
 }
