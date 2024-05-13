@@ -47,7 +47,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function find(ProfileId $id): ?Profile
+    public function find(ProfileId $id): Profile
     {
         $builder = $this->database->table($this->getTable());
 
@@ -106,8 +106,8 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         }
 
         $collection = [];
-        foreach ($profileCollection as $item) {
-            $profileModel = $this->updateAttributesModelProfile((array) $item);
+        /** @var ProfileModel $profileModel*/
+        foreach ($profileCollection as $profileModel) {
             $collection[] = $profileModel->id();
         }
 
@@ -165,13 +165,11 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         return $this;
     }
 
-    protected function domainToModel(Profile $domain, ?ProfileModel $model = null): ProfileModel
+    private function domainToModel(Profile $domain): ProfileModel
     {
-        if (is_null($model)) {
-            $builder = $this->database->table($this->getTable());
-            $data = $builder->find($domain->id()->value());
-            $model = $this->updateAttributesModelProfile($data);
-        }
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelProfile($data);
 
         $model->changeId($domain->id()->value());
         $model->changeName($domain->name()->value());

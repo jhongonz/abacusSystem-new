@@ -2,11 +2,17 @@
 
 namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories;
 
+use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
+use Core\Profile\Domain\ValueObjects\ProfileId;
+use Core\Profile\Domain\ValueObjects\ProfileName;
+use Core\Profile\Exceptions\ProfileNotFoundException;
+use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Translators\ProfileTranslator;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -75,5 +81,339 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $this->assertInstanceOf(Profiles::class, $result);
         $this->assertSame($profiles, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ProfileNotFoundException
+     */
+    public function test_find_should_return_object(): void
+    {
+        $profileId = $this->createMock(ProfileId::class);
+        $profileId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $modelMock = $this->createMock(ProfileModel::class);
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn($modelMock);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $modelMock->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
+            ->willReturnSelf();
+
+        $this->translator->expects(self::once())
+            ->method('setModel')
+            ->with($this->model)
+            ->willReturnSelf();
+
+        $profileMock = $this->createMock(Profile::class);
+        $this->translator->expects(self::once())
+            ->method('toDomain')
+            ->willReturn($profileMock);
+
+        $result = $this->repository->find($profileId);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ProfileNotFoundException
+     */
+    public function test_find_should_return_exception(): void
+    {
+        $profileId = $this->createMock(ProfileId::class);
+        $profileId->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn(null);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $this->model->expects(self::never())
+            ->method('fill');
+
+        $this->translator->expects(self::never())
+            ->method('setModel');
+
+        $this->translator->expects(self::never())
+            ->method('toDomain');
+
+        $this->expectException(ProfileNotFoundException::class);
+        $this->expectExceptionMessage('Profile not found with id: 1');
+
+        $this->repository->find($profileId);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ProfileNotFoundException
+     */
+    public function test_findCriteria_should_return_object(): void
+    {
+        $profileName = $this->createMock(ProfileName::class);
+        $profileName->expects(self::once())
+            ->method('value')
+            ->willReturn('test');
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_name', 'test')
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $modelMock = $this->createMock(ProfileModel::class);
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn($modelMock);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $modelMock->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
+            ->willReturnSelf();
+
+        $this->translator->expects(self::once())
+            ->method('setModel')
+            ->with($this->model)
+            ->willReturnSelf();
+
+        $profileMock = $this->createMock(Profile::class);
+        $this->translator->expects(self::once())
+            ->method('toDomain')
+            ->willReturn($profileMock);
+
+        $result = $this->repository->findCriteria($profileName);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ProfileNotFoundException
+     */
+    public function test_findCriteria_should_return_exception(): void
+    {
+        $profileName = $this->createMock(ProfileName::class);
+        $profileName->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn('test');
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_name', 'test')
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn(null);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $this->model->expects(self::never())
+            ->method('fill');
+
+        $this->translator->expects(self::never())
+            ->method('setModel');
+
+        $this->translator->expects(self::never())
+            ->method('toDomain');
+
+        $this->expectException(ProfileNotFoundException::class);
+        $this->expectExceptionMessage('Profile not found with name: test');
+
+        $this->repository->findCriteria($profileName);
+    }
+
+    /**
+     * @throws ProfilesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_object(): void
+    {
+        $filters = ['q' => 'test'];
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('pro_search');
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('pro_search', 'test')
+            ->andReturnSelf();
+
+        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['pro_id'])
+            ->andReturn([$modelMock]);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $this->translator->expects(self::once())
+            ->method('setCollection')
+            ->with([1])
+            ->willReturnSelf();
+
+        $profilesMock = $this->createMock(Profiles::class);
+        $profilesMock->expects(self::once())
+            ->method('setFilters')
+            ->with($filters)
+            ->willReturnSelf();
+
+        $this->translator->expects(self::once())
+            ->method('toDomainCollection')
+            ->willReturn($profilesMock);
+
+        $result = $this->repository->getAll($filters);
+
+        $this->assertInstanceOf(Profiles::class, $result);
+        $this->assertSame($profilesMock, $result);
+    }
+
+    /**
+     * @throws ProfilesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_exception(): void
+    {
+        $filters = ['q' => 'test'];
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('pro_search');
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('pro_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('pro_search', 'test')
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['pro_id'])
+            ->andReturn(null);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builderMock);
+
+        $this->translator->expects(self::never())
+            ->method('setCollection');
+
+        $this->translator->expects(self::never())
+            ->method('toDomainCollection');
+
+        $this->expectException(ProfilesNotFoundException::class);
+        $this->expectExceptionMessage('Profiles not found');
+
+        $this->repository->getAll($filters);
     }
 }
