@@ -14,6 +14,7 @@ use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
 use Core\Profile\Exceptions\ModuleNotFoundException;
+use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentModuleRepository;
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
@@ -526,5 +527,194 @@ class EloquentModuleRepositoryTest extends TestCase
 
         $this->assertInstanceOf(Modules::class, $result);
         $this->assertSame($modulesMock, $result);
+    }
+
+    /**
+     * @throws ModulesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_collection(): void
+    {
+        $filters = ['q' => 'test'];
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('mod_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('mod_search', 'test')
+            ->andReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('modules');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('modules')
+            ->andReturn($builderMock);
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('mod_search');
+
+        $modelMock = $this->createMock(ModuleModel::class);
+        $modelMock->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['mod_id'])
+            ->andReturn([$modelMock]);
+
+        $this->translator->expects(self::once())
+            ->method('setCollection')
+            ->with([1])
+            ->willReturnSelf();
+
+        $modulesMock = $this->createMock(Modules::class);
+        $modulesMock->expects(self::once())
+            ->method('setFilters')
+            ->with($filters)
+            ->willReturnSelf();
+
+        $this->translator->expects(self::once())
+            ->method('toDomainCollection')
+            ->willReturn($modulesMock);
+
+        $result = $this->repository->getAll($filters);
+
+        $this->assertInstanceOf(Modules::class, $result);
+        $this->assertSame($modulesMock, $result);
+    }
+
+    /**
+     * @throws ModulesNotFoundException
+     * @throws Exception
+     */
+    public function test_getAll_should_return_exception(): void
+    {
+        $filters = ['q' => 'test'];
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('mod_state', '>', -1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('whereFullText')
+            ->once()
+            ->with('mod_search', 'test')
+            ->andReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('modules');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('modules')
+            ->andReturn($builderMock);
+
+        $this->model->expects(self::once())
+            ->method('getSearchField')
+            ->willReturn('mod_search');
+
+        $builderMock->shouldReceive('get')
+            ->once()
+            ->with(['mod_id'])
+            ->andReturn([]);
+
+        $this->translator->expects(self::never())
+            ->method('setCollection');
+
+        $this->translator->expects(self::never())
+            ->method('toDomainCollection');
+
+        $this->expectException(ModulesNotFoundException::class);
+        $this->expectExceptionMessage('Modules not found');
+
+        $this->repository->getAll($filters);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ModuleNotFoundException
+     */
+    public function test_deleteModule_should_return_void(): void
+    {
+        $moduleIdMock = $this->createMock(ModuleId::class);
+        $moduleIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(1)
+            ->andReturn([]);
+
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('mod_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('modules');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('modules')
+            ->andReturn($builderMock);
+
+        $this->repository->deleteModule($moduleIdMock);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ModuleNotFoundException
+     */
+    public function test_deleteModule_should_return_exception(): void
+    {
+        $moduleIdMock = $this->createMock(ModuleId::class);
+        $moduleIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('find')
+            ->once()
+            ->with(1)
+            ->andReturn(null);
+
+        $builderMock->shouldReceive('where')
+            ->never();
+
+        $builderMock->shouldReceive('delete')
+            ->never();
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('modules');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('modules')
+            ->andReturn($builderMock);
+
+        $this->expectException(ModuleNotFoundException::class);
+        $this->expectExceptionMessage('Module not found with id: 1');
+
+        $this->repository->deleteModule($moduleIdMock);
     }
 }

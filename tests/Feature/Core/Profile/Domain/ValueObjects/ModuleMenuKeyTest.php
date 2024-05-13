@@ -14,7 +14,7 @@ class ModuleMenuKeyTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleMenuKey;
+        $this->valueObject = new ModuleMenuKey('test');
     }
 
     public function tearDown(): void
@@ -23,10 +23,11 @@ class ModuleMenuKeyTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function test_value_should_return_string(): void
     {
         $result = $this->valueObject->value();
-        $this->assertNull($result);
+        $this->assertIsString($result);
+        $this->assertSame('test', $result);
     }
 
     public function test_setValue_should_return_self(): void

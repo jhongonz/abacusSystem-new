@@ -6,7 +6,6 @@ use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Core\Profile\Exceptions\ModuleDeleteException;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
@@ -16,7 +15,6 @@ use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Throwable;
 
 class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
@@ -130,25 +128,21 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         return $modules;
     }
 
+
     /**
-     * @throws Throwable
      * @throws ModuleNotFoundException
      */
     public function deleteModule(ModuleId $id): void
     {
-        $data = $this->database->table($this->getTable())
-            ->find($id->value());
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($id->value());
 
         if (is_null($data)) {
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $moduleModel = $this->updateAttributesModelModule($data);
-        try {
-            $moduleModel->deleteOrFail();
-        } catch (Exception $exception) {
-            throw new ModuleDeleteException('Module can not be deleted with id: '.$id->value(), $exception->getTrace());
-        }
+        $builder->where('mod_id', $id->value());
+        $builder->delete();
     }
 
     private function domainToModel(Module $domain): ModuleModel
