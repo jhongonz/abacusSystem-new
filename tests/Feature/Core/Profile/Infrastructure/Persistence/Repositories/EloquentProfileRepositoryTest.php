@@ -416,4 +416,35 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $this->repository->getAll($filters);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function test_deleteProfile_should_return_void(): void
+    {
+        $profileId = $this->createMock(ProfileId::class);
+        $profileId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $builder = $this->mock(Builder::class);
+
+        $modelMock = $this->createMock(ProfileModel::class);
+        $builder->shouldReceive('find')
+            ->once()
+            ->with(1)
+            ->andReturn($modelMock);
+
+        $this->model->expects(self::once())
+            ->method('getTable')
+            ->willReturn('profiles');
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('profiles')
+            ->andReturn($builder);
+
+        $this->repository->deleteProfile($profileId);
+        $this->assertTrue(true);
+    }
 }

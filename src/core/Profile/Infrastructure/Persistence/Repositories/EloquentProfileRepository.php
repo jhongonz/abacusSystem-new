@@ -7,7 +7,6 @@ use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
-use Core\Profile\Exceptions\ProfileDeleteException;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
@@ -17,7 +16,6 @@ use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Throwable;
 
 class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContract
 {
@@ -118,23 +116,22 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     }
 
     /**
-     * @throws ProfileDeleteException
      * @throws ProfileNotFoundException
      */
     public function deleteProfile(ProfileId $id): void
     {
-        $profileModel = $this->database->table($this->model->getTable())->find($id->value());
+        $builder = $this->database->table($this->getTable());
+
+        /** @var ProfileModel|null $profileModel */
+        $profileModel = $builder->find($id->value());
 
         if (is_null($profileModel)) {
             throw new ProfileNotFoundException('Profile not found with id: '.$id->value());
         }
 
-        try {
-            $profileModel->pivotModules()->detach();
-            $profileModel->deleteOrFail();
-        } catch (Throwable $exception) {
-            throw new ProfileDeleteException('Profile can not be deleted with id: '.$id->value(), $exception->getTrace());
-        }
+        $profileModel->pivotModules()->detach();
+        $builder->where('pro_id', $id->value());
+        $builder->delete();
     }
 
     public function persistProfile(Profile $profile): Profile
