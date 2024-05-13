@@ -166,8 +166,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     private function domainToModel(Employee $domain): EmployeeModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = (array) $builder->find($domain->id()->value());
-        $model = $this->updateAttributesModelEmployee($data);
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelEmployee((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());

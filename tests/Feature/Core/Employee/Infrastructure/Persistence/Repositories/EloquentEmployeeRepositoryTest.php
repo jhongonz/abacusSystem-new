@@ -24,7 +24,6 @@ use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as Employee
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -110,7 +109,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(Model::class);
+        $modelMock = mock(EmployeeModel::class);
         $modelMock->shouldReceive('toArray')
             ->once()
             ->andReturn([]);
@@ -212,7 +211,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(Model::class);
+        $modelMock = mock(EmployeeModel::class);
         $modelMock->shouldReceive('toArray')
             ->once()
             ->andReturn([]);

@@ -158,7 +158,7 @@ class Module extends Model
         return $this->getAttribute('mod_search');
     }
 
-    public function changeSearch(string $search): self
+    public function changeSearch(?string $search): self
     {
         $this->setAttribute('mod_search', $search);
         return $this;

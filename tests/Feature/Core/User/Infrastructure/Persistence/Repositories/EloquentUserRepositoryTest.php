@@ -96,9 +96,14 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
+        $modelMock = $this->mock(User::class);
+        $modelMock->shouldReceive('toArray')
+            ->once()
+            ->andReturn([]);
+
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn(new \stdClass);
+            ->andReturn($modelMock);
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -188,9 +193,14 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
+        $modelMock = $this->mock(User::class);
+        $modelMock->shouldReceive('toArray')
+            ->once()
+            ->andReturn([]);
+
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn(new \stdClass);
+            ->andReturn($modelMock);
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -206,7 +216,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->with($this->model)
             ->willReturnSelf();
 
-        $userMock = $this->createMock(UserDomain::class);
+        $userMock = $this->mock(UserDomain::class);
         $this->translator->expects(self::once())
             ->method('toDomain')
             ->willReturn($userMock);

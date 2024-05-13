@@ -56,7 +56,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
             throw new UserNotFoundException('User not found with id: '.$id->value());
         }
 
-        $userModel = $this->updateAttributesModelUser((array) $data);
+        $userModel = $this->updateAttributesModelUser($data->toArray());
 
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
@@ -75,7 +75,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
             throw new UserNotFoundException('User not found with login: '.$login->value());
         }
 
-        $userModel = $this->updateAttributesModelUser((array) $data);
+        $userModel = $this->updateAttributesModelUser($data->toArray());
 
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
