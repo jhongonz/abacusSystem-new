@@ -8,6 +8,7 @@ use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
+use Core\Profile\Exceptions\ModulePersistException;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisModuleRepository;
 use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -184,5 +185,83 @@ class RedisModuleRepositoryTest extends TestCase
 
         $this->repository->deleteModule($moduleId);
         $this->assertTrue(true);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ModulePersistException
+     */
+    public function test_persistModule_should_return_object(): void
+    {
+        $moduleMock = $this->createMock(Module::class);
+
+        $moduleIdMock = $this->createMock(ModuleId::class);
+        $moduleIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $moduleMock->expects(self::once())
+            ->method('id')
+            ->willReturn($moduleIdMock);
+
+        $this->dataTransformer->expects(self::once())
+            ->method('write')
+            ->with($moduleMock)
+            ->willReturnSelf();
+
+        $this->dataTransformer->expects(self::once())
+            ->method('read')
+            ->willReturn([]);
+
+        Redis::shouldReceive('set')
+            ->once()
+            ->with('module::1', '[]')
+            ->andReturnUndefined();
+
+        $result = $this->repository->persistModule($moduleMock);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($moduleMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws ModulePersistException
+     */
+    public function test_persistModule_should_return_exception(): void
+    {
+        $moduleMock = $this->createMock(Module::class);
+
+        $moduleIdMock = $this->createMock(ModuleId::class);
+        $moduleIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
+        $moduleMock->expects(self::once())
+            ->method('id')
+            ->willReturn($moduleIdMock);
+
+        $this->dataTransformer->expects(self::once())
+            ->method('write')
+            ->with($moduleMock)
+            ->willReturnSelf();
+
+        $this->dataTransformer->expects(self::once())
+            ->method('read')
+            ->willReturn([]);
+
+        Redis::shouldReceive('set')
+            ->once()
+            ->with('module::1', '[]')
+            ->andThrow(\Exception::class, 'testing');
+
+        $this->logger->expects(self::once())
+            ->method('error')
+            ->with('testing');
+
+        $this->expectException(ModulePersistException::class);
+        $this->expectExceptionMessage('It could not persist Module with key module::1 in redis');
+
+        $this->repository->persistModule($moduleMock);
     }
 }
