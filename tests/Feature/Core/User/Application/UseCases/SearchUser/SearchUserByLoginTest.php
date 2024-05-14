@@ -21,6 +21,7 @@ use Tests\TestCase;
 class SearchUserByLoginTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;
+
     private SearchUserByLogin $useCase;
 
     /**

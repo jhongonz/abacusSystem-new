@@ -25,12 +25,19 @@ use Psr\Log\LoggerInterface;
 class ProfileService implements ProfileManagementContract
 {
     private ProfileFactoryContract $profileFactory;
+
     private ModuleService $moduleService;
+
     private ModuleFactoryContract $moduleFactory;
+
     private SearchProfileById $searchProfileById;
+
     private SearchProfiles $searchProfiles;
+
     private UpdateProfile $updateProfile;
+
     private DeleteProfile $deleteProfile;
+
     private CreateProfile $createProfile;
 
     private LoggerInterface $logger;
@@ -60,12 +67,12 @@ class ProfileService implements ProfileManagementContract
     /**
      * @throws Exception
      */
-    public function searchProfileById(ProfileId $id): null|Profile
+    public function searchProfileById(ProfileId $id): ?Profile
     {
         $request = new SearchProfileByIdRequest($id);
         $profile = $this->searchProfileById->execute($request);
 
-        $modules = new Modules();
+        $modules = new Modules;
         foreach ($profile->modulesAggregator() as $item) {
             try {
                 $moduleId = $this->moduleFactory->buildModuleId($item);
@@ -75,7 +82,7 @@ class ProfileService implements ProfileManagementContract
                     $modules->addItem($module);
                 }
             } catch (Exception $exception) {
-                $this->logger->warning($exception->getMessage());
+                $this->logger->warning($exception->getMessage(), $exception->getTrace());
             }
         }
         $profile->setModules($modules);

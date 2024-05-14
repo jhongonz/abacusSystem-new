@@ -14,7 +14,7 @@ class EmployeeImageTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeImage();
+        $this->valueObject = new EmployeeImage;
     }
 
     public function tearDown(): void

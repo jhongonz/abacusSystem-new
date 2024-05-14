@@ -13,6 +13,7 @@ use Tests\TestCase;
 class EmployeesTest extends TestCase
 {
     private Employee|MockObject $employee;
+
     private Employees $employees;
 
     /**

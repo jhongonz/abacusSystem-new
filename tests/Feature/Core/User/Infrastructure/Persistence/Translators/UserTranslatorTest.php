@@ -28,7 +28,9 @@ use Tests\TestCase;
 class UserTranslatorTest extends TestCase
 {
     private UserFactoryContract|MockObject $userFactory;
+
     private UserModel|MockObject $userModel;
+
     private UserTranslator $translator;
 
     /**

@@ -2,44 +2,41 @@
 
 namespace Core\Employee\Infrastructure\Persistence\Repositories;
 
-use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
-use Core\Employee\Exceptions\EmployeeDeleteException;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
+use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Psr\Log\LoggerInterface;
-use Throwable;
 
-class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
+class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryContract
 {
     private const PRIORITY_DEFAULT = 50;
 
     private EmployeeModel $model;
+
     private EmployeeTranslator $employeeTranslator;
+
     private DatabaseManager $database;
-    private LoggerInterface $logger;
+
     private int $priority;
 
     public function __construct(
         DatabaseManager $database,
         EmployeeTranslator $translator,
         EmployeeModel $model,
-        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->database = $database;
         $this->employeeTranslator = $translator;
-        $this->logger = $logger;
         $this->priority = $priority;
 
         $this->model = $model;
@@ -53,6 +50,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
@@ -60,19 +58,20 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
      * @throws EmployeeNotFoundException
      * @throws Exception
      */
-    public function find(EmployeeId $id): null|Employee
+    public function find(EmployeeId $id): ?Employee
     {
         $builder = $this->database->table($this->getTable())
             ->where('emp_id', $id->value())
-            ->where('emp_state','>', ValueObjectStatus::STATE_DELETE);
+            ->where('emp_state', '>', ValueObjectStatus::STATE_DELETE);
 
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new EmployeeNotFoundException('Employee not found with id: '. $id->value());
+            throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
-        $employeeModel =$this->updateAttributesModelEmployee($data->toArray());
+        $employeeModel = $this->updateAttributesModelEmployee($data->toArray());
+
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
@@ -80,18 +79,19 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
      * @throws EmployeeNotFoundException
      * @throws Exception
      */
-    public function findCriteria(EmployeeIdentification $identification): null|Employee
+    public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         $builder = $this->database->table($this->getTable())
-            ->where('emp_identification',$identification->value())
-            ->where('emp_state','>',ValueObjectStatus::STATE_DELETE);
+            ->where('emp_identification', $identification->value())
+            ->where('emp_state', '>', ValueObjectStatus::STATE_DELETE);
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new EmployeeNotFoundException('Employee not found with id: '. $identification->value());
+            throw new EmployeeNotFoundException('Employee not found with id: '.$identification->value());
         }
 
         $employeeModel = $this->updateAttributesModelEmployee($data->toArray());
+
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
@@ -104,7 +104,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         $data = $builder->find($id->value());
 
         if (is_null($data)) {
-            throw new EmployeeNotFoundException('Employee not found with id: '. $id->value());
+            throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
         $builder->where('emp_id', $id->value());
@@ -136,11 +136,11 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     /**
      * @throws EmployeesNotFoundException
      */
-    public function getAll(array $filters = []): null|Employees
+    public function getAll(array $filters = []): ?Employees
     {
-        /**@var  Builder $builder*/
+        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable())
-            ->where('emp_state','>',ValueObjectStatus::STATE_DELETE);
+            ->where('emp_state', '>', ValueObjectStatus::STATE_DELETE);
 
         if (array_key_exists('q', $filters) && isset($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
@@ -166,8 +166,8 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     private function domainToModel(Employee $domain): EmployeeModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = (array) $builder->find($domain->id()->value());
-        $model = $this->updateAttributesModelEmployee($data);
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelEmployee((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value());
@@ -184,7 +184,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
         $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (!is_null($domain->updatedAt()->value())) {
+        if (! is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
@@ -194,6 +194,7 @@ class EloquentEmployeeRepository implements EmployeeRepositoryContract, ChainPri
     private function updateAttributesModelEmployee(array $data = []): EmployeeModel
     {
         $this->model->fill($data);
+
         return $this->model;
     }
 

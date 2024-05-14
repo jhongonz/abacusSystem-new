@@ -20,6 +20,7 @@ use Tests\TestCase;
 class CreateUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repositoryMock;
+
     private CreateUser $useCase;
 
     /**

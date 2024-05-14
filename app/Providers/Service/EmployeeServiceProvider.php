@@ -22,8 +22,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
 {
     /**
      * All the container bindings that should be registered
-     *
-     * @var array
      */
     public array $singletons = [
         EmployeeFactoryContract::class => EmployeeFactory::class,
@@ -36,21 +34,21 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function register(): void
     {
-        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainEmployeeRepository();
+        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainEmployeeRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisEmployeeRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentEmployeeRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentEmployeeRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        #Commands
-        $this->app->singletonIf(EmployeeWarmup::class, function (Application $app){
+        //Commands
+        $this->app->singletonIf(EmployeeWarmup::class, function (Application $app) {
             return new EmployeeWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(EmployeeFactoryContract::class),
@@ -79,6 +77,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function boot(): void
     {
-        //
+
     }
 }

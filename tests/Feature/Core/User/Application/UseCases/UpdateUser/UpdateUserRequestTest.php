@@ -17,7 +17,9 @@ use Tests\TestCase;
 class UpdateUserRequestTest extends TestCase
 {
     private UserId|Mock $userId;
+
     private array $data;
+
     private UpdateUserRequest $request;
 
     /**
@@ -50,6 +52,6 @@ class UpdateUserRequestTest extends TestCase
         $result = $this->request->data();
 
         $this->assertIsArray($result);
-        $this->assertSame($result,[]);
+        $this->assertSame($result, []);
     }
 }

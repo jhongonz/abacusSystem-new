@@ -33,6 +33,7 @@ use Tests\TestCase;
 class EmployeeTranslatorTest extends TestCase
 {
     private EmployeeFactoryContract|MockObject $factory;
+
     private EmployeeTranslator $translator;
 
     /**
@@ -91,7 +92,7 @@ class EmployeeTranslatorTest extends TestCase
             ->method('identification')
             ->willReturn('12345');
 
-        $identificationMock =  $this->createMock(EmployeeIdentification::class);
+        $identificationMock = $this->createMock(EmployeeIdentification::class);
         $this->factory->expects(self::once())
             ->method('buildEmployeeIdentification')
             ->with('12345')

@@ -7,7 +7,7 @@ use Core\SharedContext\Model\ValueObjectContract;
 class EmployeeName implements ValueObjectContract
 {
     private string $value;
-    
+
     public function __construct(string $value)
     {
         $this->value = $value;
@@ -19,12 +19,13 @@ class EmployeeName implements ValueObjectContract
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

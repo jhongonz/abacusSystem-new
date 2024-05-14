@@ -17,6 +17,7 @@ use Tests\TestCase;
 class SearchUserByLoginRequestTest extends TestCase
 {
     private UserLogin|Mock $userLogin;
+
     private SearchUserByLoginRequest $request;
 
     /**

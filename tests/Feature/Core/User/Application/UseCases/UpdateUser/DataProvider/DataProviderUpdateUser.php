@@ -10,7 +10,7 @@ final class DataProviderUpdateUser
 {
     public static function provider(): array
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
 
         return [
             [
@@ -22,7 +22,7 @@ final class DataProviderUpdateUser
                     'state' => 2,
                     'createdAt' => $datetime,
                     'updatedAt' => $datetime,
-                    'image' => 'photo.jpg'
+                    'image' => 'photo.jpg',
                 ],
             ],
         ];

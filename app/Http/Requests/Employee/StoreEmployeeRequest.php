@@ -36,7 +36,7 @@ class StoreEmployeeRequest extends FormRequest
             'typeDocument' => ['required'],
             'name' => ['required'],
             'lastname' => ['required'],
-            'email' => ['required','email:rfc'],
+            'email' => ['required', 'email:rfc'],
             'profile' => ['required'],
             'login' => ['required'],
         ];
@@ -45,7 +45,7 @@ class StoreEmployeeRequest extends FormRequest
         $password = $this->request->get('password');
 
         if (is_null($userId) || ($userId > 0 && isset($password))) {
-            $rules['password'] = ['required','confirmed','min:7'];
+            $rules['password'] = ['required', 'confirmed', 'min:7'];
         }
 
         return $rules;

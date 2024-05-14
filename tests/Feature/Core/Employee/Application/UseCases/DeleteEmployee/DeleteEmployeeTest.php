@@ -16,7 +16,9 @@ use Tests\TestCase;
 class DeleteEmployeeTest extends TestCase
 {
     private EmployeeRepositoryContract|MockObject $repository;
+
     private DeleteEmployeeRequest|MockObject $request;
+
     private DeleteEmployee $useCase;
 
     /**

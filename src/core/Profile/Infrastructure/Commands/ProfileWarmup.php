@@ -4,8 +4,10 @@ namespace Core\Profile\Infrastructure\Commands;
 
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
+use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class ProfileWarmup extends Command
 {
@@ -13,7 +15,9 @@ class ProfileWarmup extends Command
 
     /** @var ProfileRepositoryContract[] */
     private array $repositories;
+
     private LoggerInterface $logger;
+
     private ProfileFactoryContract $profileFactory;
 
     public function __construct(
@@ -51,25 +55,38 @@ class ProfileWarmup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         if ($this->option('id') == 0) {
             $profiles = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
-                foreach($profiles->aggregator() as $item) {
-                    $profile = $this->readRepository->find($this->profileFactory->buildProfileId($item));
-                    $repository->persistProfile($profile);
+                foreach ($profiles->aggregator() as $item) {
+                    try {
+                        $profile = $this->readRepository->find($this->profileFactory->buildProfileId($item));
+                        $repository->persistProfile($profile);
+                    } catch (Exception $exception) {
+                        $this->logger->error($exception->getMessage(), $exception->getTrace());
+                        return CommandSymfony::FAILURE;
+                    }
                 }
             }
         } else {
             $profileId = $this->profileFactory->buildProfileId($this->option('id'));
-            $profile = $this->readRepository->find($profileId);
+
             foreach ($this->repositories as $repository) {
-                $repository->persistProfile($profile);
+                try {
+                    $profile = $this->readRepository->find($profileId);
+
+                    $repository->persistProfile($profile);
+                } catch (Exception $exception) {
+                    $this->logger->error($exception->getMessage(), $exception->getTrace());
+                    return CommandSymfony::FAILURE;
+                }
             }
         }
 
         $this->logger->info('Command executed');
+        return CommandSymfony::SUCCESS;
     }
 }

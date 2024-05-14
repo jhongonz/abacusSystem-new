@@ -14,7 +14,7 @@ class SearchEmployeesRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new SearchEmployeesRequest();
+        $this->request = new SearchEmployeesRequest;
     }
 
     public function tearDown(): void

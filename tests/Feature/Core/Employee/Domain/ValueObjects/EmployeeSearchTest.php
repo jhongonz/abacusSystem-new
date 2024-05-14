@@ -14,7 +14,7 @@ class EmployeeSearchTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeSearch();
+        $this->valueObject = new EmployeeSearch;
     }
 
     public function tearDown(): void

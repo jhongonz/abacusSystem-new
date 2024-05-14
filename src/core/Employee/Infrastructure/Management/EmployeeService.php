@@ -7,9 +7,9 @@ use Core\Employee\Application\UseCases\CreateEmployee\CreateEmployeeRequest;
 use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployee;
 use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployeeRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeById;
-use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentification;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdentificationRequest;
+use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeeByIdRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployees;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeesRequest;
 use Core\Employee\Application\UseCases\UpdateEmployee\UpdateEmployee;
@@ -25,11 +25,17 @@ use Exception;
 class EmployeeService implements EmployeeManagementContract
 {
     private EmployeeFactoryContract $employeeFactory;
+
     private SearchEmployeeById $searchEmployeeById;
+
     private SearchEmployeeByIdentification $searchEmployeeByIdentification;
+
     private SearchEmployees $searchEmployees;
+
     private UpdateEmployee $updateEmployee;
+
     private CreateEmployee $createEmployee;
+
     private DeleteEmployee $deleteEmployee;
 
     public function __construct(
@@ -53,7 +59,7 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeById(EmployeeId $id): null|Employee
+    public function searchEmployeeById(EmployeeId $id): ?Employee
     {
         $request = new SearchEmployeeByIdRequest($id);
 
@@ -63,7 +69,7 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeByIdentification(EmployeeIdentification $identification): null|Employee
+    public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee
     {
         $request = new SearchEmployeeByIdentificationRequest($identification);
 

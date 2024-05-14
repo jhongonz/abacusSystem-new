@@ -16,7 +16,7 @@ class UserEmployeeIdTest extends TestCase
 {
     private UserEmployeeId $valueObject;
 
-    public  function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         $this->valueObject = new UserEmployeeId(1);
@@ -39,7 +39,7 @@ class UserEmployeeIdTest extends TestCase
 
     public function test_value_should_return_null(): void
     {
-        $this->valueObject = new UserEmployeeId();
+        $this->valueObject = new UserEmployeeId;
         $result = $this->valueObject->value();
 
         $this->assertSame(null, $result);

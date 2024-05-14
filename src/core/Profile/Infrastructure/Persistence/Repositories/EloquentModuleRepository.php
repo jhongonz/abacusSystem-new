@@ -2,41 +2,42 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Repositories;
 
-use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Core\Profile\Exceptions\ModuleDeleteException;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Throwable;
 
-class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriority
+class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
     private const PRIORITY_DEFAULT = 50;
+
     private ModuleModel $model;
+
     private ModuleTranslator $moduleTranslator;
+
     private DatabaseManager $database;
+
     private int $priority;
 
     public function __construct(
         DatabaseManager $database,
         ModuleTranslator $moduleTranslator,
+        ModuleModel $model,
         int $priority = self::PRIORITY_DEFAULT,
     ) {
         $this->database = $database;
         $this->moduleTranslator = $moduleTranslator;
+        $this->model = $model;
         $this->priority = $priority;
-
-        $this->model = $this->createModel();
     }
 
     public function priority(): int
@@ -47,6 +48,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
@@ -54,26 +56,38 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      * @throws ModuleNotFoundException
      * @throws Exception
      */
-    public function find(ModuleId $id): null|Module
+    public function find(ModuleId $id): Module
     {
-        $data = $this->database->table($this->model->getTable())
+        $builder = $this->database->table($this->getTable())
             ->where('mod_id', $id->value())
-            ->where('mod_state','>',ValueObjectStatus::STATE_DELETE)
-            ->first();
+            ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
+
+        $data = $builder->first();
 
         if (is_null($data)) {
-            throw new ModuleNotFoundException('Module not found with id: '. $id->value());
+            throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $moduleModel = $this->createModel((array) $data);
+        $moduleModel = $this->updateAttributesModelModule($data->toArray());
+
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 
     public function persistModule(Module $module): Module
     {
         $moduleModel = $this->domainToModel($module);
-        $moduleModel->save();
-        $module->id()->setValue($moduleModel->id());
+        $moduleId = $moduleModel->id();
+        $dataModel = $moduleModel->toArray();
+
+        $builder = $this->database->table($this->getTable());
+
+        if (is_null($moduleId)) {
+            $moduleId = $builder->insertGetId($dataModel);
+            $module->id()->setValue($moduleId);
+        } else {
+            $builder->where('mod_id', $moduleId);
+            $builder->update($dataModel);
+        }
 
         return $module;
     }
@@ -82,20 +96,18 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      * @throws ModulesNotFoundException
      * @throws Exception
      */
-    public function getAll(array $filters = []): null|Modules
+    public function getAll(array $filters = []): ?Modules
     {
-        try {
-            /** @var Builder $queryBuilder*/
-            $queryBuilder = $this->database->table($this->model->getTable())
-                ->where('mod_state','>',ValueObjectStatus::STATE_DELETE);
+        /** @var Builder $builder */
+        $builder = $this->database->table($this->getTable())
+            ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
 
-            if (array_key_exists('q', $filters) && isset($filters['q'])) {
-                $queryBuilder->where('mod_search','like','%'.$filters['q'].'%');
-            }
+        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+            $builder->whereFullText($this->model->getSearchField(), $filters['q']);
+        }
+        $moduleCollection = $builder->get(['mod_id']);
 
-            /** @var Collection $moduleCollection*/
-            $moduleCollection = $queryBuilder->get(['mod_id']);
-        } catch (Exception $exception) {
+        if (empty($moduleCollection)) {
             throw new ModulesNotFoundException('Modules not found');
         }
 
@@ -116,33 +128,28 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         return $modules;
     }
 
+
     /**
-     * @throws Throwable
      * @throws ModuleNotFoundException
      */
     public function deleteModule(ModuleId $id): void
     {
-        $data = $this->database->table($this->model->getTable())
-            ->find($id->value());
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($id->value());
 
-        if (is_null($data)){
-            throw new ModuleNotFoundException('Module not found with id: '. $id->value());
+        if (is_null($data)) {
+            throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $moduleModel = $this->createModel($data);
-        try {
-            $moduleModel->deleteOrFail();
-        } catch (Exception $exception) {
-            throw new ModuleDeleteException('Module can not be deleted with id: '. $id->value(), $exception->getTrace());
-        }
+        $builder->where('mod_id', $id->value());
+        $builder->delete();
     }
 
-    protected function domainToModel(Module $domain, ?ModuleModel $model = null): ModuleModel
+    private function domainToModel(Module $domain): ModuleModel
     {
-        if (is_null($model)) {
-            $data = $this->database->table($this->model->getTable())->find($domain->id()->value());
-            $model = $this->createModel($data);
-        }
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelModule((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeName($domain->name()->value());
@@ -153,15 +160,22 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (!is_null($domain->updatedAt()->value())) {
+        if (! is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
         return $model;
     }
 
-    protected function createModel(array $data = []): ModuleModel
+    private function updateAttributesModelModule(array $data = []): ModuleModel
     {
-        return new ModuleModel($data);
+        $this->model->fill($data);
+
+        return $this->model;
+    }
+
+    private function getTable(): string
+    {
+        return $this->model->getTable();
     }
 }

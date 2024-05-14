@@ -14,7 +14,7 @@ class EmployeeIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeId();
+        $this->valueObject = new EmployeeId;
     }
 
     public function tearDown(): void
@@ -44,7 +44,7 @@ class EmployeeIdTest extends TestCase
 
         $this->assertInstanceOf(EmployeeId::class, $result);
         $this->assertSame($result, $this->valueObject);
-        $this->assertSame(2,$this->valueObject->value());
+        $this->assertSame(2, $this->valueObject->value());
     }
 
     public function test_setValue_should_return_exception(): void

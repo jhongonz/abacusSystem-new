@@ -9,7 +9,6 @@ namespace Core\User\Application\UseCases\DeleteUser;
 use Core\User\Application\UseCases\RequestService;
 use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
-use Core\User\Domain\User;
 use Exception;
 
 class DeleteUser extends UseCasesService

@@ -6,11 +6,13 @@ use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -53,91 +55,124 @@ class Module extends Model
         'deleted_at',
     ];
 
-    public function profiles()
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
+    protected $touches = ['profiles'];
+
+    /**
+     * The search field associated with the table.
+     */
+    protected string $mainSearchField = 'mod_search';
+
+    public function getSearchField(): string
     {
-        return $this->belongsToMany(
+        return $this->mainSearchField;
+    }
+
+    public function profiles(): BelongsToMany
+    {
+        $relation = $this->belongsToMany(
             Profile::class,
             'privileges',
             'pri__mod_id',
             'pri__pro_id'
-        )
-        ->withPivot(
+        );
+
+        $relation->withPivot(
             'pri__pro_id',
             'pri__mod_id',
             'created_at',
             'updated_at',
             'deleted_at'
         );
+
+        return $relation;
     }
 
-    public function id(): null|int
+    public function id(): ?int
     {
-        return $this->attributes['mod_id'];
+        return $this->getAttribute('mod_id');
     }
 
-    public function changeId(?int $id): void
+    public function changeId(?int $id): self
     {
-        $this->attributes['mod_id'] = $id;
+        $this->setAttribute('mod_id', $id);
+        return $this;
     }
 
-    public function menuKey(): null|string
+    public function menuKey(): ?string
     {
-        return $this->attributes['mod_menu_key'];
+        return $this->getAttribute('mod_menu_key');
     }
 
-    public function changeMenuKey(string $key): void
+    public function changeMenuKey(string $key): self
     {
-        $this->attributes['mod_menu_key'] = $key;
+        $this->setAttribute('mod_menu_key', $key);
+        return $this;
     }
 
     public function name(): string
     {
-        return $this->attributes['mod_name'];
+        return $this->getAttribute('mod_name');
     }
 
-    public function changeName(string $name): void
+    public function changeName(string $name): self
     {
-        $this->attributes['mod_name'] = $name;
+        $this->setAttribute('mod_name', $name);
+        return $this;
     }
 
-    public function route(): null|string
+    public function route(): ?string
     {
-        return $this->attributes['mod_route'];
+        return $this->getAttribute('mod_route');
     }
 
-    public function changeRoute(null|string $route): void
+    public function changeRoute(?string $route): self
     {
-        $this->attributes['mod_route'] = $route;
+        $this->setAttribute('mod_route', $route);
+        return $this;
     }
 
-    public function icon(): null|string
+    public function icon(): ?string
     {
-        return $this->attributes['mod_icon'];
+        return $this->getAttribute('mod_icon');
     }
 
-    public function changeIcon(null|string $icon): void
+    public function changeIcon(?string $icon): self
     {
-        $this->attributes['mod_icon'] = $icon;
+        $this->setAttribute('mod_icon', $icon);
+        return $this;
     }
 
     public function search(): ?string
     {
-        return $this->attributes['mod_search'];
+        return $this->getAttribute('mod_search');
     }
 
-    public function changeSearch(string $search): void
+    public function changeSearch(?string $search): self
     {
-        $this->attributes['mod_search'] = $search;
+        $this->setAttribute('mod_search', $search);
+        return $this;
     }
 
     public function state(): int
     {
-        return $this->attributes['mod_state'];
+        return $this->getAttribute('mod_state');
     }
 
-    public function changeState(int $state): void
+    public function changeState(int $state): self
     {
-        $this->attributes['mod_state'] = $state;
+        $this->setAttribute('mod_state', $state);
+        return $this;
     }
 
     /**
@@ -145,25 +180,29 @@ class Module extends Model
      */
     public function createdAt(): DateTime
     {
-        return ($this->attributes['created_at']) ? $this->getDateTime($this->attributes['created_at']) : $this->attributes['created_at'];
+        $datetime = $this->getAttribute('created_at');
+        return $this->getDateTime($datetime);
     }
 
-    public function changeCreatedAt(DateTime $datetime): void
+    public function changeCreatedAt(DateTime $datetime): self
     {
-        $this->attributes['created_at'] = $datetime;
+        $this->setAttribute('created_at', $datetime);
+        return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function updatedAt(): null|DateTime
+    public function updatedAt(): ?DateTime
     {
-        return ($this->attributes['updated_at']) ? $this->getDateTime($this->attributes['updated_at']) : $this->attributes['updated_at'];
+        $datetime = $this->getAttribute('updated_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
-    public function changeUpdatedAt(DateTime $datetime): void
+    public function changeUpdatedAt(DateTime $datetime): self
     {
-        $this->attributes['updated_at'] = $datetime;
+        $this->setAttribute('updated_at', $datetime);
+        return $this;
     }
 
     /**

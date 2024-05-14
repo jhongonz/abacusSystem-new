@@ -17,6 +17,7 @@ use Tests\TestCase;
 class CreateUserRequestTest extends TestCase
 {
     private User|Mock $user;
+
     private CreateUserRequest $request;
 
     /**

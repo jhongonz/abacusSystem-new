@@ -15,7 +15,7 @@ class EmployeeCreatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeCreatedAt();
+        $this->valueObject = new EmployeeCreatedAt;
     }
 
     public function tearDown(): void

@@ -25,9 +25,13 @@ use Exception;
 class UserService implements UserManagementContract
 {
     private SearchUserByLogin $searchUserByLogin;
+
     private SearchUserById $searchUserById;
+
     private UpdateUser $updateUser;
+
     private CreateUser $createUser;
+
     private DeleteUser $deleteUser;
 
     public function __construct(
@@ -47,7 +51,7 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function searchUserByLogin(UserLogin $login): null|User
+    public function searchUserByLogin(UserLogin $login): ?User
     {
         $request = new SearchUserByLoginRequest($login);
 
@@ -57,7 +61,7 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function searchUserById(UserId $id): null|User
+    public function searchUserById(UserId $id): ?User
     {
         $request = new SearchUserByIdRequest($id);
 

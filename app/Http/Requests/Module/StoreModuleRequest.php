@@ -32,7 +32,7 @@ class StoreModuleRequest extends FormRequest
             'name' => ['required'],
             'route' => ['required'],
             'icon' => ['required'],
-            'key' => ['required']
+            'key' => ['required'],
         ];
     }
 

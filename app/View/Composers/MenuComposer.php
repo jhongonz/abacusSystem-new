@@ -17,12 +17,14 @@ use Psr\Container\NotFoundExceptionInterface;
 class MenuComposer
 {
     private ModuleFactoryContract $moduleFactory;
+
     private array $menuOptions;
+
     private string $imagePathFull;
 
     public function __construct(
         ModuleFactoryContract $moduleFactory,
-    ){
+    ) {
         $this->moduleFactory = $moduleFactory;
         $this->menuOptions = config('menu.options');
         $this->imagePathFull = '/images/full/';
@@ -34,12 +36,12 @@ class MenuComposer
      */
     public function compose(View $view): void
     {
-        /**@var User $user*/
+        /** @var User $user */
         $user = session()->get('user');
 
-        /**@var Profile $profile*/
+        /** @var Profile $profile */
         $profile = session()->get('profile');
-        /**@var Employee $employee*/
+        /** @var Employee $employee */
         $employee = session()->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
@@ -91,9 +93,7 @@ class MenuComposer
     }
 
     /**
-     * @param array<Module> $modules
-     * @param Module $mainModule
-     * @return Module
+     * @param  array<Module>  $modules
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {
@@ -106,6 +106,7 @@ class MenuComposer
             }
         }
         $mainModule->setOptions($modules);
+
         return $mainModule;
     }
 }

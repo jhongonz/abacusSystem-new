@@ -25,14 +25,23 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     private UserId|Mock $userId;
+
     private UserEmployeeId|Mock $userEmployeeId;
+
     private UserProfileId|Mock $userProfileId;
+
     private UserLogin|Mock $userLogin;
+
     private UserPassword|Mock $userPassword;
+
     private UserState|Mock $userState;
+
     private UserCreatedAt|Mock $userCreatedAt;
+
     private UserUpdatedAt|Mock $userUpdatedAt;
+
     private UserPhoto|Mock $userPhoto;
+
     private User $user;
 
     /**
@@ -186,7 +195,7 @@ class UserTest extends TestCase
 
     public function test_set_state_should_change_id_and_return_object(): void
     {
-        $valueObject = new UserState();
+        $valueObject = new UserState;
         $object = $this->user->setState($valueObject);
 
         $return = $this->user->state();
@@ -205,7 +214,7 @@ class UserTest extends TestCase
 
     public function test_set_created_at_should_change_id_and_return_object(): void
     {
-        $valueObject = new UserCreatedAt();
+        $valueObject = new UserCreatedAt;
         $object = $this->user->setCreatedAt($valueObject);
 
         $return = $this->user->createdAt();
@@ -225,7 +234,7 @@ class UserTest extends TestCase
 
     public function test_set_updated_at_should_change_id_and_return_object(): void
     {
-        $valueObject = new UserUpdatedAt();
+        $valueObject = new UserUpdatedAt;
         $object = $this->user->setUpdatedAt($valueObject);
 
         $return = $this->user->updatedAt();
@@ -245,7 +254,7 @@ class UserTest extends TestCase
 
     public function test_set_photo_should_change_id_and_return_object(): void
     {
-        $valueObject = new UserPhoto();
+        $valueObject = new UserPhoto;
         $object = $this->user->setPhoto($valueObject);
 
         $return = $this->user->photo();

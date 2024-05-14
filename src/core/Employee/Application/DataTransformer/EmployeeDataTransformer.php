@@ -13,13 +13,14 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     public function write(Employee $employee): self
     {
         $this->employee = $employee;
+
         return $this;
     }
 
     public function read(): array
     {
         return [
-            Employee::TYPE => $this->retrieveData()
+            Employee::TYPE => $this->retrieveData(),
         ];
     }
 

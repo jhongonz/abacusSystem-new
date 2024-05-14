@@ -21,13 +21,21 @@ class User
     public const TYPE = 'user';
 
     private UserId $id;
+
     private UserEmployeeId $employeeId;
+
     private UserProfileId $profileId;
+
     private UserLogin $login;
+
     private UserPassword $password;
+
     private UserState $state;
+
     private UserCreatedAt $createdAt;
+
     private UserUpdatedAt $updatedAt;
+
     private UserPhoto $photo;
 
     public function __construct(
@@ -36,8 +44,8 @@ class User
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        UserState $state = new UserState(),
-        UserCreatedAt $createdAt = new UserCreatedAt(),
+        UserState $state = new UserState,
+        UserCreatedAt $createdAt = new UserCreatedAt,
     ) {
         $this->id = $id;
         $this->employeeId = $employeeId;
@@ -48,8 +56,8 @@ class User
         $this->state = $state;
         $this->createdAt = $createdAt;
 
-        $this->updatedAt = new UserUpdatedAt();
-        $this->photo = new UserPhoto();
+        $this->updatedAt = new UserUpdatedAt;
+        $this->photo = new UserPhoto;
     }
 
     public function id(): UserId
@@ -60,6 +68,7 @@ class User
     public function setId(UserId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -71,6 +80,7 @@ class User
     public function setEmployeeId(UserEmployeeId $employeeId): self
     {
         $this->employeeId = $employeeId;
+
         return $this;
     }
 
@@ -82,6 +92,7 @@ class User
     public function setProfileId(UserProfileId $profileId): self
     {
         $this->profileId = $profileId;
+
         return $this;
     }
 
@@ -93,6 +104,7 @@ class User
     public function setLogin(UserLogin $login): self
     {
         $this->login = $login;
+
         return $this;
     }
 
@@ -104,6 +116,7 @@ class User
     public function setPassword(UserPassword $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -115,6 +128,7 @@ class User
     public function setState(UserState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -126,6 +140,7 @@ class User
     public function setCreatedAt(UserCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -137,6 +152,7 @@ class User
     public function setUpdatedAt(UserUpdatedAt $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
@@ -148,6 +164,7 @@ class User
     public function setPhoto(UserPhoto $photo): self
     {
         $this->photo = $photo;
+
         return $this;
     }
 }

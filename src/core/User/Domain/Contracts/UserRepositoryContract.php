@@ -12,9 +12,9 @@ use Core\User\Domain\ValueObjects\UserLogin;
 
 interface UserRepositoryContract
 {
-    public function find(UserId $id): null|User;
+    public function find(UserId $id): ?User;
 
-    public function findCriteria(UserLogin $login): null|User;
+    public function findCriteria(UserLogin $login): ?User;
 
     public function delete(UserId $id): void;
 

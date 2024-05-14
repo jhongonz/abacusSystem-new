@@ -18,10 +18,10 @@ class SearchEmployeeByIdentification extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Employee
+    public function execute(RequestService $request): ?Employee
     {
         $this->validateRequest($request, SearchEmployeeByIdentificationRequest::class);
-        
+
         return $this->employeeRepository->findCriteria($request->employeeIdentification());
     }
 }

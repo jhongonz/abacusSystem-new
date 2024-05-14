@@ -24,14 +24,12 @@ use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Employee\Application\Factory\DataProvider\DataProviderEmployeeFactory;
 use Tests\TestCase;
 
 #[CoversClass(EmployeeFactory::class)]
 class EmployeeFactoryTest extends TestCase
 {
-    private Employee|MockObject $employee;
     private EmployeeFactory $factory;
 
     /**
@@ -41,22 +39,19 @@ class EmployeeFactoryTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employees::class);
-        $this->factory = new EmployeeFactory();
+        $this->factory = new EmployeeFactory;
     }
 
     public function tearDown(): void
     {
-        unset(
-            $this->employee,
-            $this->factory
-        );
+        unset($this->factory);
         parent::tearDown();
     }
 
     /**
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderEmployeeFactory::class,'provider')]
+    #[DataProviderExternal(DataProviderEmployeeFactory::class, 'provider')]
     public function test_buildEmployeeFromArray_should_return_employee_object(array $dataObject): void
     {
         $result = $this->factory->buildEmployeeFromArray($dataObject);

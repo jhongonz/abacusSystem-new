@@ -20,13 +20,14 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
 {
     private const FUNCTION_NAMES = [
         Employee::class => 'persistEmployee',
-        Employees::class => 'persistEmployees'
+        Employees::class => 'persistEmployees',
     ];
 
     private string $domainToPersist;
+
     private bool $deleteSource = false;
 
-    function functionNamePersist(): string
+    public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
     }
@@ -35,14 +36,14 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      * @throws Throwable
      * @throws EmployeeNotFoundException
      */
-    public function find(EmployeeId $id): null|Employee
+    public function find(EmployeeId $id): ?Employee
     {
         $this->domainToPersist = Employee::class;
 
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by id '. $id->value());
+            throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
     }
 
@@ -50,14 +51,14 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      * @throws Throwable
      * @throws EmployeeNotFoundException
      */
-    public function findCriteria(EmployeeIdentification $identification): null|Employee
+    public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         $this->domainToPersist = Employee::class;
 
         try {
             return $this->read(__FUNCTION__, $identification);
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by identification '. $identification->value());
+            throw new EmployeeNotFoundException('Employee not found by identification '.$identification->value());
         }
     }
 
@@ -90,7 +91,7 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      * @throws Throwable
      * @throws EmployeeNotFoundException
      */
-    public function getAll(array $filters = []): null|Employees
+    public function getAll(array $filters = []): ?Employees
     {
         $this->domainToPersist = Employees::class;
 
@@ -101,7 +102,7 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         }
     }
 
-    function functionNameDelete(): bool
+    public function functionNameDelete(): bool
     {
         return $this->deleteSource;
     }

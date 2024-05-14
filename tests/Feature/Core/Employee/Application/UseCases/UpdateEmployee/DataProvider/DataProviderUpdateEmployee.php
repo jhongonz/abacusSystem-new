@@ -24,8 +24,8 @@ final class DataProviderUpdateEmployee
                     'observations' => 'Data for testing',
                     'state' => 2,
                     'image' => 'image.jpg',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

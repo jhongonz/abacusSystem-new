@@ -14,29 +14,35 @@ use Core\Profile\Exceptions\ProfilePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
-class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
+class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
 {
-    /**@var int*/
+    /** @var int */
     private const PRIORITY_DEFAULT = 100;
 
     /** @var string */
     private const PROFILE_KEY_FORMAT = '%s::%s';
 
     private int $priority;
+
     private string $keyPrefix;
 
     private ProfileFactoryContract $profileFactory;
+
     private ProfileDataTransformerContract $dataTransformer;
+    private LoggerInterface $logger;
 
     public function __construct(
-      ProfileFactoryContract $profileFactory,
-      ProfileDataTransformerContract $dataTransformer,
-      string $keyPrefix = 'profile',
-      int $priority = self::PRIORITY_DEFAULT,
+        ProfileFactoryContract $profileFactory,
+        ProfileDataTransformerContract $dataTransformer,
+        LoggerInterface $logger,
+        string $keyPrefix = 'profile',
+        int $priority = self::PRIORITY_DEFAULT,
     ) {
         $this->profileFactory = $profileFactory;
         $this->dataTransformer = $dataTransformer;
+        $this->logger = $logger;
         $this->keyPrefix = $keyPrefix;
         $this->priority = $priority;
     }
@@ -49,22 +55,25 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws ProfileNotFoundException
      */
-    public function find(ProfileId $id): null|Profile
+    public function find(ProfileId $id): ?Profile
     {
         try {
             $data = Redis::get($this->profileKey($id));
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by id '. $id->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            throw new ProfileNotFoundException('Profile not found by id '.$id->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
+
             return $this->profileFactory->buildProfileFromArray($dataArray);
         }
 
@@ -74,23 +83,25 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
     /**
      * @throws ProfileNotFoundException
      */
-    public function findCriteria(ProfileName $name): null|Profile
+    public function findCriteria(ProfileName $name): ?Profile
     {
         try {
             $data = Redis::get($this->profileKeyWithName($name));
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by name '. $name->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            throw new ProfileNotFoundException('Profile not found by name '.$name->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
+
             return $this->profileFactory->buildProfileFromArray($dataArray);
         }
 
         return null;
     }
 
-    public function getAll(array $filters = []): null|Profiles
+    public function getAll(array $filters = []): ?Profiles
     {
         return null;
     }
@@ -113,6 +124,7 @@ class RedisProfileRepository implements ProfileRepositoryContract, ChainPriority
             Redis::set($profileKey, json_encode($profileData));
             Redis::set($profileKeyName, json_encode($profileData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfilePersistException('It could not persist Profile with key '.$profileKey.' in redis');
         }
 

@@ -18,10 +18,10 @@ class SearchProfiles extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Profiles
+    public function execute(RequestService $request): ?Profiles
     {
         $this->validateRequest($request, SearchProfilesRequest::class);
-        
+
         return $this->profileRepository->getAll($request->filters());
     }
 }

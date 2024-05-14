@@ -24,22 +24,22 @@ use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as Employee
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(EloquentEmployeeRepository::class)]
 class EloquentEmployeeRepositoryTest extends TestCase
 {
     private EmployeeModel|MockObject $model;
+
     private EmployeeTranslator|MockObject $translator;
+
     private DatabaseManager|MockInterface $databaseManager;
-    private LoggerInterface|MockObject $logger;
+
     private EloquentEmployeeRepository $repository;
 
     /**
@@ -51,13 +51,11 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->model = $this->createMock(EmployeeModel::class);
         $this->translator = $this->createMock(EmployeeTranslator::class);
         $this->databaseManager = $this->mock(DatabaseManager::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->repository = new EloquentEmployeeRepository(
             $this->databaseManager,
             $this->translator,
             $this->model,
-            $this->logger
         );
     }
 
@@ -67,7 +65,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
             $this->model,
             $this->translator,
             $this->databaseManager,
-            $this->logger,
             $this->repository
         );
         parent::tearDown();
@@ -109,10 +106,10 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(Model::class);
+        $modelMock = mock(EmployeeModel::class);
         $modelMock->shouldReceive('toArray')
             ->once()
             ->andReturn([]);
@@ -174,7 +171,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -211,10 +208,10 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(Model::class);
+        $modelMock = mock(EmployeeModel::class);
         $modelMock->shouldReceive('toArray')
             ->once()
             ->andReturn([]);
@@ -276,7 +273,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
         $builderMock->shouldReceive('first')
@@ -434,7 +431,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')
@@ -645,7 +642,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')
@@ -806,7 +803,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
         $this->model->expects(self::once())
@@ -815,7 +812,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('whereFullText')
             ->once()
-            ->with('emp_search','test')
+            ->with('emp_search', 'test')
             ->andReturnSelf();
 
         $modelMock = $this->createMock(EmployeeModel::class);
@@ -827,7 +824,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('fill')
-            ->with((array)$modelMock)
+            ->with((array) $modelMock)
             ->willReturnSelf();
 
         $this->model->expects(self::once())
@@ -839,11 +836,10 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with([1])
             ->willReturnSelf();
 
-
         $employeesMock = $this->createMock(Employees::class);
         $employeesMock->expects(self::once())
             ->method('setFilters')
-            ->with(['q'=>'test'])
+            ->with(['q' => 'test'])
             ->willReturnSelf();
 
         $this->translator->expects(self::once())
@@ -859,7 +855,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('employees')
             ->andReturn($builderMock);
 
-        $result = $this->repository->getAll(['q'=>'test']);
+        $result = $this->repository->getAll(['q' => 'test']);
 
         $this->assertInstanceOf(Employees::class, $result);
         $this->assertSame($result, $employeesMock);
@@ -874,7 +870,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')
             ->once()
-            ->with('emp_state','>', -1)
+            ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
         $this->model->expects(self::once())
@@ -883,7 +879,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('whereFullText')
             ->once()
-            ->with('emp_search','test')
+            ->with('emp_search', 'test')
             ->andReturnSelf();
 
         $builderMock->shouldReceive('get')
@@ -916,6 +912,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->expectException(EmployeesNotFoundException::class);
         $this->expectExceptionMessage('Employees not found');
 
-        $this->repository->getAll(['q'=>'test']);
+        $this->repository->getAll(['q' => 'test']);
     }
 }

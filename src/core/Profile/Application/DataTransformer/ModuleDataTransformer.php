@@ -9,17 +9,18 @@ use Exception;
 class ModuleDataTransformer implements ModuleDataTransformerContract
 {
     private Module $module;
-    
+
     public function write(Module $module): self
     {
         $this->module = $module;
+
         return $this;
     }
 
     public function read(): array
     {
         return [
-            Module::TYPE => $this->retrieveData()
+            Module::TYPE => $this->retrieveData(),
         ];
     }
 

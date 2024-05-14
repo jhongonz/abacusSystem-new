@@ -22,33 +22,49 @@ use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 class Employee
 {
     public const TYPE = 'employee';
+
     private EmployeeId $id;
+
     private EmployeeUserId $userId;
+
     private EmployeeIdentification $identification;
+
     private EmployeeIdentificationType $identificationType;
+
     private EmployeeName $name;
+
     private EmployeeLastname $lastname;
+
     private EmployeePhone $phone;
+
     private EmployeeEmail $email;
+
     private EmployeeAddress $address;
+
     private EmployeeState $state;
+
     private EmployeeSearch $search;
+
     private EmployeeCreatedAt $createdAt;
+
     private EmployeeUpdateAt $updateAt;
+
     private EmployeeBirthdate $birthdate;
+
     private EmployeeObservations $observations;
+
     private EmployeeImage $image;
 
     public function __construct(
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname(),
-        EmployeeState $state = new EmployeeState(),
-        EmployeePhone $phone = new EmployeePhone(),
-        EmployeeEmail $email = new EmployeeEmail(),
-        EmployeeAddress $address = new EmployeeAddress(),
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
+        EmployeeLastname $lastname = new EmployeeLastname,
+        EmployeeState $state = new EmployeeState,
+        EmployeePhone $phone = new EmployeePhone,
+        EmployeeEmail $email = new EmployeeEmail,
+        EmployeeAddress $address = new EmployeeAddress,
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ) {
         $this->id = $id;
         $this->identification = $identification;
@@ -60,13 +76,13 @@ class Employee
         $this->address = $address;
         $this->createdAt = $createdAt;
 
-        $this->search = new EmployeeSearch();
-        $this->updateAt = new EmployeeUpdateAt();
-        $this->userId = new EmployeeUserId();
-        $this->birthdate = new EmployeeBirthdate();
-        $this->observations = new EmployeeObservations();
-        $this->identificationType = new EmployeeIdentificationType();
-        $this->image = new EmployeeImage();
+        $this->search = new EmployeeSearch;
+        $this->updateAt = new EmployeeUpdateAt;
+        $this->userId = new EmployeeUserId;
+        $this->birthdate = new EmployeeBirthdate;
+        $this->observations = new EmployeeObservations;
+        $this->identificationType = new EmployeeIdentificationType;
+        $this->image = new EmployeeImage;
     }
 
     public function id(): EmployeeId
@@ -77,6 +93,7 @@ class Employee
     public function setId(EmployeeId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -88,6 +105,7 @@ class Employee
     public function setIdentification(EmployeeIdentification $identification): self
     {
         $this->identification = $identification;
+
         return $this;
     }
 
@@ -99,6 +117,7 @@ class Employee
     public function setName(EmployeeName $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -110,6 +129,7 @@ class Employee
     public function setLastname(EmployeeLastname $lastname): self
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -121,6 +141,7 @@ class Employee
     public function setPhone(EmployeePhone $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -132,6 +153,7 @@ class Employee
     public function setEmail(EmployeeEmail $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -143,6 +165,7 @@ class Employee
     public function setAddress(EmployeeAddress $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -154,6 +177,7 @@ class Employee
     public function setState(EmployeeState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -165,10 +189,11 @@ class Employee
     public function setCreatedAt(EmployeeCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
-    public function updatedAt():EmployeeUpdateAt
+    public function updatedAt(): EmployeeUpdateAt
     {
         return $this->updateAt;
     }
@@ -176,6 +201,7 @@ class Employee
     public function setUpdatedAt(EmployeeUpdateAt $updateAt): self
     {
         $this->updateAt = $updateAt;
+
         return $this;
     }
 
@@ -187,6 +213,7 @@ class Employee
     public function setUserId(EmployeeUserId $id): self
     {
         $this->userId = $id;
+
         return $this;
     }
 
@@ -198,6 +225,7 @@ class Employee
     public function setSearch(EmployeeSearch $search): self
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -217,6 +245,7 @@ class Employee
         ];
 
         $this->search->setValue(implode(' ', $data));
+
         return $this;
     }
 
@@ -228,6 +257,7 @@ class Employee
     public function setBirthdate(EmployeeBirthdate $date): self
     {
         $this->birthdate = $date;
+
         return $this;
     }
 
@@ -239,6 +269,7 @@ class Employee
     public function setObservations(EmployeeObservations $observations): self
     {
         $this->observations = $observations;
+
         return $this;
     }
 
@@ -250,6 +281,7 @@ class Employee
     public function setIdentificationType(EmployeeIdentificationType $type): self
     {
         $this->identificationType = $type;
+
         return $this;
     }
 
@@ -261,6 +293,7 @@ class Employee
     public function setImage(EmployeeImage $image): self
     {
         $this->image = $image;
+
         return $this;
     }
 }

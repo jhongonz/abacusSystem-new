@@ -19,6 +19,7 @@ use Tests\TestCase;
 class DeleteUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;
+
     private DeleteUser $useCase;
 
     /**

@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * @codeCoverageIgnore
  */
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * The database connection that should be used by the migration.
      *
@@ -23,11 +22,11 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id('emp_id');
-            $table->string('emp_identification',50);
-            $table->string('emp_identification_type',10);
-            $table->string('emp_name',100);
-            $table->string('emp_lastname',100)->nullable();
-            $table->string('emp_phone_number',15)->nullable();
+            $table->string('emp_identification', 50);
+            $table->string('emp_identification_type', 10);
+            $table->string('emp_name', 100);
+            $table->string('emp_lastname', 100)->nullable();
+            $table->string('emp_phone_number', 15)->nullable();
             $table->date('emp_birthdate')->nullable();
             $table->string('emp_email', 150)->nullable();
             $table->string('emp_address', 150)->nullable();

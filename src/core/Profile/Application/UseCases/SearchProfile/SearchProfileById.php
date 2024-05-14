@@ -18,9 +18,10 @@ class SearchProfileById extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Profile
+    public function execute(RequestService $request): ?Profile
     {
         $this->validateRequest($request, SearchProfileByIdRequest::class);
+
         return $this->profileRepository->find($request->profileId());
     }
 }

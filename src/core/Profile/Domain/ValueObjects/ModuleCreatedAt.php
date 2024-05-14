@@ -8,9 +8,9 @@ use DateTime;
 class ModuleCreatedAt implements ValueObjectContract
 {
     private DateTime $value;
-    
+
     public function __construct(
-        DateTime $value = new DateTime()
+        DateTime $value = new DateTime
     ) {
         $this->value = $value;
     }
@@ -21,12 +21,13 @@ class ModuleCreatedAt implements ValueObjectContract
     }
 
     /**
-     * @param DateTime $value
+     * @param  DateTime  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

@@ -33,8 +33,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
 {
     /**
      * All the container bindings that should be registered
-     *
-     * @var array
      */
     public array $singletons = [
         ProfileFactoryContract::class => ProfileFactory::class,
@@ -52,34 +50,34 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register(): void
     {
-        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainProfileRepository();
+        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainProfileRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisProfileRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentProfileRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentProfileRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainModuleRepository();
+        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainModuleRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisModuleRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentModuleRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentModuleRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        #Commands
-        $this->app->singletonIf(ProfileWarmup::class, function(Application $app){
+        //Commands
+        $this->app->singletonIf(ProfileWarmup::class, function (Application $app) {
             return new ProfileWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(ProfileFactoryContract::class),
@@ -88,7 +86,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
             );
         });
 
-        $this->app->singletonIf(ModuleWarmup::class, function(Application $app){
+        $this->app->singletonIf(ModuleWarmup::class, function (Application $app) {
             return new ModuleWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(ModuleFactoryContract::class),
@@ -121,6 +119,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function boot(): void
     {
-        //
+
     }
 }

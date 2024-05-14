@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class EmployeeWarmup
 {
@@ -14,12 +12,11 @@ class EmployeeWarmup
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
      * Handle the event.
-     * @param EmployeeUpdateOrDeletedEvent $event
      */
     public function handle(EmployeeUpdateOrDeletedEvent $event): void
     {

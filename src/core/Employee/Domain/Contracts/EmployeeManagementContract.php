@@ -9,9 +9,9 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 
 interface EmployeeManagementContract
 {
-    public function searchEmployeeById(EmployeeId $id): null|Employee;
+    public function searchEmployeeById(EmployeeId $id): ?Employee;
 
-    public function searchEmployeeByIdentification(EmployeeIdentification $identification): null|Employee;
+    public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee;
 
     public function searchEmployees(array $filters = []): Employees;
 

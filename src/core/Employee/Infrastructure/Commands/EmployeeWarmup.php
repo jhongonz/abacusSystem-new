@@ -12,10 +12,12 @@ use Symfony\Component\Console\Command\Command as CommandSymfony;
 class EmployeeWarmup extends Command
 {
     private EmployeeFactoryContract $employeeFactory;
+
     private LoggerInterface $logger;
 
-    /**@var EmployeeRepositoryContract[]  */
+    /** @var EmployeeRepositoryContract[] */
     private array $repositories;
+
     private EmployeeRepositoryContract $readRepository;
 
     public function __construct(
@@ -64,10 +66,12 @@ class EmployeeWarmup extends Command
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+
             return CommandSymfony::FAILURE;
         }
 
         $this->logger->info('Employee command executed');
+
         return CommandSymfony::SUCCESS;
     }
 }

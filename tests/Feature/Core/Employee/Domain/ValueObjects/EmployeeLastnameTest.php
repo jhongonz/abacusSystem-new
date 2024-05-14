@@ -14,7 +14,7 @@ class EmployeeLastnameTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeLastname();
+        $this->valueObject = new EmployeeLastname;
     }
 
     public function tearDown(): void

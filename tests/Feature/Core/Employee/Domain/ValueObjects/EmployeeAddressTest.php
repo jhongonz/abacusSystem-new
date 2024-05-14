@@ -14,7 +14,7 @@ class EmployeeAddressTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeAddress();
+        $this->valueObject = new EmployeeAddress;
     }
 
     public function tearDown(): void

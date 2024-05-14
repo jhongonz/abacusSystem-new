@@ -19,19 +19,22 @@ use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
-class RedisUserRepository implements UserRepositoryContract, ChainPriority
+class RedisUserRepository implements ChainPriority, UserRepositoryContract
 {
-    /**@var int*/
+    /** @var int */
     private const PRIORITY_DEFAULT = 100;
 
     /** @var string */
     private const USER_KEY_FORMAT = '%s::%s';
 
     private int $priority;
+
     private string $keyPrefix;
 
     private UserFactoryContract $userFactory;
+
     private UserDataTransformerContract $dataTransformer;
+
     private LoggerInterface $logger;
 
     public function __construct(
@@ -51,16 +54,16 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws UserNotFoundException
      */
-    public function findCriteria(UserLogin $login): null|User
+    public function findCriteria(UserLogin $login): ?User
     {
         try {
             $data = Redis::get($this->userLoginKey($login));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new UserNotFoundException('User not found by login '. $login->value());
+            throw new UserNotFoundException('User not found by login '.$login->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
             /** @var User */
@@ -73,19 +76,19 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws UserNotFoundException
      */
-    public function find(UserId $id): null|User
+    public function find(UserId $id): ?User
     {
         try {
             $data = Redis::get($this->userKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new UserNotFoundException('User not found by id '. $id->value());
+            throw new UserNotFoundException('User not found by id '.$id->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
-            /**@var User*/
+            /** @var User */
             return $this->userFactory->buildUserFromArray($dataArray);
         }
 
@@ -120,6 +123,7 @@ class RedisUserRepository implements UserRepositoryContract, ChainPriority
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 

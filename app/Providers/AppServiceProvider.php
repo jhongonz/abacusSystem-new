@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singletonIf(ImageManager::class, function (Application $app){
+        $this->app->singletonIf(ImageManager::class, function (Application $app) {
             return new ImageManager($app->make(Driver::class));
         });
     }

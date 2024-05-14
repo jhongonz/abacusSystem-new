@@ -14,7 +14,7 @@ class EmployeeIdentificationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeIdentification();
+        $this->valueObject = new EmployeeIdentification;
     }
 
     public function tearDown(): void
@@ -35,7 +35,7 @@ class EmployeeIdentificationTest extends TestCase
         $result = $this->valueObject->value();
 
         $this->assertIsString($result);
-        $this->assertSame('12345',$result);
+        $this->assertSame('12345', $result);
     }
 
     public function test_setValue_should_change_and_return_self(): void

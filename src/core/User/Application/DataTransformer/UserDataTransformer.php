@@ -16,13 +16,14 @@ class UserDataTransformer implements UserDataTransformerContract
     public function write(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
     public function read(): array
     {
         return [
-        User::TYPE => [
+            User::TYPE => [
                 'id' => $this->user->id()->value(),
                 'employeeId' => $this->user->employeeId()->value(),
                 'profileId' => $this->user->profileId()->value(),
@@ -32,7 +33,7 @@ class UserDataTransformer implements UserDataTransformerContract
                 'photo' => $this->user->photo()->value(),
                 'createdAt' => $this->user->createdAt()->value(),
                 'updatedAt' => $this->user->updatedAt()->value(),
-            ]
+            ],
         ];
     }
 }

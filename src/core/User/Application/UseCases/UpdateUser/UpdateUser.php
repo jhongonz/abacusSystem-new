@@ -44,24 +44,28 @@ class UpdateUser extends UseCasesService
     private function changeEmployeeId(User $user, int $value): User
     {
         $user->employeeId()->setValue($value);
+
         return $user;
     }
 
     private function changeProfileId(User $user, int $value): User
     {
         $user->profileId()->setValue($value);
+
         return $user;
     }
 
     private function changeLogin(User $user, string $value): User
     {
         $user->login()->setValue($value);
+
         return $user;
     }
 
     private function changePassword(User $user, string $value): User
     {
         $user->password()->setValue($value);
+
         return $user;
     }
 
@@ -71,24 +75,28 @@ class UpdateUser extends UseCasesService
     private function changeState(User $user, int $value): User
     {
         $user->state()->setValue($value);
+
         return $user;
     }
 
     private function changeCreatedAt(User $user, DateTime $value): User
     {
         $user->createdAt()->setValue($value);
+
         return $user;
     }
 
     private function changeUpdatedAt(User $user, DateTime $value): User
     {
         $user->updatedAt()->setValue($value);
+
         return $user;
     }
 
     private function changeImage(User $user, string $image): User
     {
         $user->photo()->setValue($image);
+
         return $user;
     }
 }

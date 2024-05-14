@@ -28,8 +28,11 @@ use Tests\TestCase;
 class EmployeeTest extends TestCase
 {
     private EmployeeId|MockObject $employeeId;
+
     private EmployeeIdentification|MockObject $identification;
+
     private EmployeeName|MockObject $employeeName;
+
     private Employee $employee;
 
     /**

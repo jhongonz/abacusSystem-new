@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
 use Exception;
 
 class UpdateProfile extends UseCasesService
@@ -19,7 +18,7 @@ class UpdateProfile extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Profile|Profiles
+    public function execute(RequestService $request): Profile
     {
         $this->validateRequest($request, UpdateProfileRequest::class);
 
@@ -33,6 +32,7 @@ class UpdateProfile extends UseCasesService
         }
 
         $profile->refreshSearch();
+
         return $this->profileRepository->persistProfile($profile);
     }
 
@@ -42,24 +42,28 @@ class UpdateProfile extends UseCasesService
     private function changeState(Profile $profile, int $value): Profile
     {
         $profile->state()->setValue($value);
+
         return $profile;
     }
 
     private function changeDescription(Profile $profile, string $value): Profile
     {
         $profile->description()->setValue($value);
+
         return $profile;
     }
 
     private function changeName(Profile $profile, string $value): Profile
     {
         $profile->name()->setValue($value);
+
         return $profile;
     }
 
     private function changeModules(Profile $profile, array $modules): Profile
     {
         $profile->setModulesAggregator($modules);
+
         return $profile;
     }
 }

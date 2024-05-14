@@ -12,18 +12,22 @@ use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
-use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Exceptions\UserNotFoundException;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 
-class EloquentUserRepository implements UserRepositoryContract, ChainPriority
+class EloquentUserRepository implements ChainPriority, UserRepositoryContract
 {
     private const PRIORITY_DEFAULT = 50;
+
     private DatabaseManager $database;
+
     private UserTranslator $userTranslator;
+
     private UserModel $model;
+
     private int $priority;
 
     public function __construct(
@@ -41,36 +45,38 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     /**
      * @throws Exception
      */
-    public function find(UserId $id): null|User
+    public function find(UserId $id): ?User
     {
         $builder = $this->database->table($this->getTable())
-            ->where('user_id',$id->value())
-            ->where('user_state','>', ValueObjectStatus::STATE_DELETE);
+            ->where('user_id', $id->value())
+            ->where('user_state', '>', ValueObjectStatus::STATE_DELETE);
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new UserNotFoundException('User not found with id: '. $id->value());
+            throw new UserNotFoundException('User not found with id: '.$id->value());
         }
 
-        $userModel = $this->updateAttributesModelUser((array) $data);
+        $userModel = $this->updateAttributesModelUser($data->toArray());
+
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
     /**
      * @throws Exception
      */
-    public function findCriteria(UserLogin $login): null|User
+    public function findCriteria(UserLogin $login): ?User
     {
         $data = $this->database->table($this->getTable())
             ->where('user_login', $login->value())
-            ->where('user_state','>', ValueObjectStatus::STATE_DELETE)
+            ->where('user_state', '>', ValueObjectStatus::STATE_DELETE)
             ->first();
 
         if (is_null($data)) {
-            throw new UserNotFoundException('User not found with login: '. $login->value());
+            throw new UserNotFoundException('User not found with login: '.$login->value());
         }
 
-        $userModel = $this->updateAttributesModelUser((array) $data);
+        $userModel = $this->updateAttributesModelUser($data->toArray());
+
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
 
@@ -104,6 +110,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
@@ -116,7 +123,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         $dataUser = $builder->find($id->value());
 
         if (is_null($dataUser)) {
-            throw new UserNotFoundException('User not found with id: '. $id->value());
+            throw new UserNotFoundException('User not found with id: '.$id->value());
         }
 
         $builder->where('user_id', $id->value());
@@ -141,7 +148,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
         $model->changePhoto($domain->photo()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (!is_null($domain->updatedAt()->value())) {
+        if (! is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
@@ -151,6 +158,7 @@ class EloquentUserRepository implements UserRepositoryContract, ChainPriority
     private function updateAttributesModelUser(array $data = []): UserModel
     {
         $this->model->fill($data);
+
         return $this->model;
     }
 

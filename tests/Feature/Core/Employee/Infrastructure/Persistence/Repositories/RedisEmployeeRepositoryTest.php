@@ -22,8 +22,11 @@ use Tests\TestCase;
 class RedisEmployeeRepositoryTest extends TestCase
 {
     private EmployeeFactoryContract|MockObject $factory;
+
     private EmployeeDataTransformerContract|MockObject $dataTransformer;
+
     private LoggerInterface|MockObject $logger;
+
     private RedisEmployeeRepository $repository;
 
     /**
@@ -136,7 +139,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('employee::1')
-            ->andThrow(EmployeeNotFoundException::class,'not found');
+            ->andThrow(EmployeeNotFoundException::class, 'not found');
 
         $this->logger->expects(self::once())
             ->method('error')
@@ -217,7 +220,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('employee::test')
-            ->andThrow(EmployeeNotFoundException::class,'not found');
+            ->andThrow(EmployeeNotFoundException::class, 'not found');
 
         $this->logger->expects(self::once())
             ->method('error')
@@ -305,12 +308,12 @@ class RedisEmployeeRepositoryTest extends TestCase
 
         Redis::shouldReceive('set')
             ->once()
-            ->with('employee::1','[]')
+            ->with('employee::1', '[]')
             ->andReturnUndefined();
 
         Redis::shouldReceive('set')
             ->once()
-            ->with('employee::test','[]')
+            ->with('employee::test', '[]')
             ->andReturnUndefined();
 
         $result = $this->repository->persistEmployee($employeeMock);
@@ -355,12 +358,12 @@ class RedisEmployeeRepositoryTest extends TestCase
 
         Redis::shouldReceive('set')
             ->once()
-            ->with('employee::1','[]')
+            ->with('employee::1', '[]')
             ->andThrow(\Exception::class, 'testing');
 
         Redis::shouldReceive('set')
             ->never()
-            ->with('employee::test','[]');
+            ->with('employee::test', '[]');
 
         $this->logger->expects(self::once())
             ->method('error')

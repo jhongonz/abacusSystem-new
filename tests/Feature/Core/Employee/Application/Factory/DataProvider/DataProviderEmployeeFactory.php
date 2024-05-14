@@ -32,9 +32,9 @@ final class DataProviderEmployeeFactory
                         'birthdate' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
                         'createdAt' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
                         'updatedAt' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 }

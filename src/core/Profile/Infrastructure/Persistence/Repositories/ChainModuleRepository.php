@@ -12,6 +12,9 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainModuleRepository extends AbstractChainRepository implements ModuleRepositoryContract
 {
     private const FUNCTION_NAMES = [
@@ -20,20 +23,21 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     ];
 
     private string $domainToPersist;
+
     private bool $deleteSource = false;
 
     /**
      * @throws Throwable
      * @throws ModuleNotFoundException
      */
-    public function find(ModuleId $id): null|Module
+    public function find(ModuleId $id): ?Module
     {
         $this->domainToPersist = Module::class;
 
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new ModuleNotFoundException('Module not found by id '. $id->value());
+            throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
     }
 
@@ -42,7 +46,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         return $this->write(__FUNCTION__, $module);
     }
 
-    function functionNamePersist(): string
+    public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
     }
@@ -51,7 +55,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      * @throws ModulesNotFoundException
      * @throws Throwable
      */
-    public function getAll(array $filters = []): null|Modules
+    public function getAll(array $filters = []): ?Modules
     {
         $this->domainToPersist = Modules::class;
 
@@ -77,7 +81,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         }
     }
 
-    function functionNameDelete(): bool
+    public function functionNameDelete(): bool
     {
         return $this->deleteSource;
     }

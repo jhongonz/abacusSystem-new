@@ -20,9 +20,13 @@ use Tests\TestCase;
 class EmployeeWarmupTest extends TestCase
 {
     private LoggerInterface|MockObject $logger;
+
     private EmployeeFactoryContract|MockObject $factory;
+
     private EmployeeRepositoryContract|MockObject $readRepository;
+
     private EmployeeRepositoryContract|MockObject $writeRepository;
+
     private EmployeeWarmup $command;
 
     /**
@@ -123,6 +127,9 @@ class EmployeeWarmupTest extends TestCase
             ->method('find')
             ->with($employeeIdMock)
             ->willThrowException(new EmployeeNotFoundException('Employee not found with id: 2'));
+
+        $this->writeRepository->expects(self::never())
+            ->method('persistEmployee');
 
         $this->logger->expects(self::once())
             ->method('error')

@@ -4,13 +4,17 @@ namespace Core\Profile\Infrastructure\Commands;
 
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
+use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class ModuleWarmup extends Command
 {
     private LoggerInterface $logger;
+
     private ModuleFactoryContract $moduleFactory;
+
     private ModuleRepositoryContract $readRepository;
 
     /** @var ModuleRepositoryContract[] */
@@ -21,7 +25,7 @@ class ModuleWarmup extends Command
         ModuleFactoryContract $moduleFactory,
         ModuleRepositoryContract $readRepository,
         ModuleRepositoryContract ...$repositories,
-    ){
+    ) {
         parent::__construct();
         $this->logger = $logger;
         $this->moduleFactory = $moduleFactory;
@@ -50,25 +54,42 @@ class ModuleWarmup extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         if ($this->option('id') == 0) {
             $modules = $this->readRepository->getAll();
 
-            foreach($this->repositories as $repository) {
+            foreach ($this->repositories as $repository) {
                 foreach ($modules->aggregator() as $item) {
-                    $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
-                    $repository->persistModule($module);
+
+                    try {
+                        $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
+
+                        $repository->persistModule($module);
+                    } catch (Exception $exception) {
+                        $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+                        return CommandSymfony::FAILURE;
+                    }
                 }
             }
         } else {
             $moduleId = $this->moduleFactory->buildModuleId($this->option('id'));
-            $module = $this->readRepository->find($moduleId);
+
             foreach ($this->repositories as $repository) {
-                $repository->persistModule($module);
+                try {
+                    $module = $this->readRepository->find($moduleId);
+
+                    $repository->persistModule($module);
+                } catch (Exception $exception) {
+                    $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+                    return CommandSymfony::FAILURE;
+                }
             }
         }
 
         $this->logger->info('Command executed');
+        return CommandSymfony::SUCCESS;
     }
 }

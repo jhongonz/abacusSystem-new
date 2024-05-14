@@ -16,7 +16,7 @@ class EmployeeStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeState();
+        $this->valueObject = new EmployeeState;
     }
 
     public function tearDown(): void

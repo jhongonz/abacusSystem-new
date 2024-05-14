@@ -14,7 +14,7 @@ class EmployeeObservationsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeObservations();
+        $this->valueObject = new EmployeeObservations;
     }
 
     public function tearDown(): void

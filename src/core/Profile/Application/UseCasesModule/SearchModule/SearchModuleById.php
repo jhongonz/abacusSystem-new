@@ -18,10 +18,10 @@ class SearchModuleById extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Module
+    public function execute(RequestService $request): ?Module
     {
         $this->validateRequest($request, SearchModuleByIdRequest::class);
-        
+
         return $this->moduleRepository->find($request->moduleId());
     }
 }
