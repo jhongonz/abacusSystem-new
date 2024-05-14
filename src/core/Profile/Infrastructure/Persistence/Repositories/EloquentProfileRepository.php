@@ -104,8 +104,8 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         }
 
         $collection = [];
-        /** @var ProfileModel $profileModel*/
-        foreach ($profileCollection as $profileModel) {
+        foreach ($profileCollection as $item) {
+            $profileModel = $this->updateAttributesModelProfile((array) $item);
             $collection[] = $profileModel->id();
         }
 

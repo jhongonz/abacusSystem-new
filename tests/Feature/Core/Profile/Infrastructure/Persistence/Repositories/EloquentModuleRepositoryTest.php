@@ -562,14 +562,20 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturn('mod_search');
 
         $modelMock = $this->createMock(ModuleModel::class);
-        $modelMock->expects(self::once())
-            ->method('id')
-            ->willReturn(1);
 
         $builderMock->shouldReceive('get')
             ->once()
             ->with(['mod_id'])
             ->andReturn([$modelMock]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with((array) $modelMock)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
 
         $this->translator->expects(self::once())
             ->method('setCollection')

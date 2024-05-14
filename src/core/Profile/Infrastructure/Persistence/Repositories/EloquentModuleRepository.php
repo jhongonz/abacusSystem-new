@@ -112,8 +112,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         }
 
         $collection = [];
-        /** @var ModuleModel $moduleModel */
-        foreach ($moduleCollection as $moduleModel) {
+        foreach ($moduleCollection as $item) {
+            $moduleModel = $this->updateAttributesModelModule((array) $item);
             $collection[] = $moduleModel->id();
         }
 

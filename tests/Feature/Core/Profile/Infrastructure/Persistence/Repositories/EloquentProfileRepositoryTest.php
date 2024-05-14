@@ -335,14 +335,20 @@ class EloquentProfileRepositoryTest extends TestCase
             ->andReturnSelf();
 
         $modelMock = $this->createMock(ProfileModel::class);
-        $modelMock->expects(self::once())
-            ->method('id')
-            ->willReturn(1);
 
         $builderMock->shouldReceive('get')
             ->once()
             ->with(['pro_id'])
             ->andReturn([$modelMock]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with((array) $modelMock)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
 
         $this->model->expects(self::once())
             ->method('getTable')
