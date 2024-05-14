@@ -21,6 +21,7 @@ class ModuleTranslator implements TranslatorDomainContract
         ModuleFactoryContract $factoryContract,
     ) {
         $this->moduleFactory = $factoryContract;
+        $this->collection = [];
     }
 
     /**
