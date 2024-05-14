@@ -68,7 +68,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $moduleModel = $this->updateAttributesModelModule($data->toArray());
+        $moduleModel = $this->updateAttributesModelModule((array) $data);
 
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }

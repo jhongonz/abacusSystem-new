@@ -109,11 +109,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(EmployeeModel::class);
-        $modelMock->shouldReceive('toArray')
-            ->once()
-            ->andReturn([]);
-
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -211,11 +207,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = mock(EmployeeModel::class);
-        $modelMock->shouldReceive('toArray')
-            ->once()
-            ->andReturn([]);
-
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);

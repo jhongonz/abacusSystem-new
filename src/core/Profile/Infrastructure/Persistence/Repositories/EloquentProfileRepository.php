@@ -57,7 +57,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
             throw new ProfileNotFoundException('Profile not found with id: '.$id->value());
         }
 
-        $profileModel = $this->updateAttributesModelProfile($data->toArray());
+        $profileModel = $this->updateAttributesModelProfile((array) $data);
 
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }
@@ -78,7 +78,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
             throw new ProfileNotFoundException('Profile not found with name: '.$name->value());
         }
 
-        $profileModel = $this->updateAttributesModelProfile($data->toArray());
+        $profileModel = $this->updateAttributesModelProfile((array) $data);
 
         return $this->profileTranslator->setModel($profileModel)->toDomain();
     }

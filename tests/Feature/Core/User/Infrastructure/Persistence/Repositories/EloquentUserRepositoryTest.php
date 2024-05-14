@@ -96,10 +96,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->mock(User::class);
-        $modelMock->shouldReceive('toArray')
-            ->once()
-            ->andReturn([]);
+        $modelMock = new \stdClass;
 
         $builderMock->shouldReceive('first')
             ->once()
@@ -193,11 +190,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->mock(User::class);
-        $modelMock->shouldReceive('toArray')
-            ->once()
-            ->andReturn([]);
-
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);

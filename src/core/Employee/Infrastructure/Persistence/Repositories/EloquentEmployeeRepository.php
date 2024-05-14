@@ -70,7 +70,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
-        $employeeModel = $this->updateAttributesModelEmployee($data->toArray());
+        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
 
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
@@ -90,7 +90,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$identification->value());
         }
 
-        $employeeModel = $this->updateAttributesModelEmployee($data->toArray());
+        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
 
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }

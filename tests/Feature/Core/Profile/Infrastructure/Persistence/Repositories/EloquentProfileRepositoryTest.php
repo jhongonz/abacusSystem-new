@@ -111,7 +111,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -124,10 +124,6 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builderMock);
-
-        $modelMock->expects(self::once())
-            ->method('toArray')
-            ->willReturn([]);
 
         $this->model->expects(self::once())
             ->method('fill')
@@ -222,7 +218,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -235,10 +231,6 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builderMock);
-
-        $modelMock->expects(self::once())
-            ->method('toArray')
-            ->willReturn([]);
 
         $this->model->expects(self::once())
             ->method('fill')

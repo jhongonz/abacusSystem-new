@@ -89,10 +89,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->method('value')
             ->willReturn(1);
 
-        $modelMock = $this->mock(ModuleModel::class);
-        $modelMock->shouldReceive('toArray')
-            ->once()
-            ->andReturn([]);
+        $modelMock = new \stdClass;
 
         $this->model->expects(self::once())
             ->method('getTable')
