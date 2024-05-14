@@ -22,6 +22,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
 
@@ -40,6 +41,7 @@ class HomeController extends Controller implements HasMiddleware
     private ProfileFactoryContract $profileFactory;
 
     private ProfileManagementContract $profileService;
+    private ViewFactory $viewFactory;
 
     public function __construct(
         UserFactoryContract $userFactory,
@@ -48,6 +50,7 @@ class HomeController extends Controller implements HasMiddleware
         EmployeeFactoryContract $employeeFactory,
         ProfileFactoryContract $profileFactory,
         ProfileManagementContract $profileService,
+        ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
@@ -58,11 +61,13 @@ class HomeController extends Controller implements HasMiddleware
         $this->employeeService = $employeeService;
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
+        $this->viewFactory = $viewFactory;
     }
 
     public function index(): Response
     {
-        return response()->view('home.login');
+        $html = $this->viewFactory->make('home.login')->render();
+        return new Response($html);
     }
 
     /**
@@ -92,24 +97,23 @@ class HomeController extends Controller implements HasMiddleware
                 ]);
 
                 if ($request->ajax()) {
-                    return response()->json();
+                    return new JsonResponse;
                 }
 
-                return redirect()->intended('/home');
+                return new RedirectResponse('/home');
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
         return ! $request->ajax() ?
-            back()->withInput() :
-            response()->json(['message' => 'Bad credentials'], status: ResponseSymfony::HTTP_BAD_REQUEST);
+            new RedirectResponse('/login') :
+            new JsonResponse(['message' => 'Bad credentials'], ResponseSymfony::HTTP_BAD_REQUEST);
     }
 
     public function home(): JsonResponse|string
     {
-        $view = view('home.index')->render();
-
+        $view = $this->viewFactory->make('home.index')->render();
         return $this->renderView($view);
     }
 
@@ -120,10 +124,10 @@ class HomeController extends Controller implements HasMiddleware
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('panel.login');
+        return new RedirectResponse(route('panel.login'));
     }
 
-    private function getEmployee(User $user): Employee
+    private function getEmployee(User $user): ?Employee
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
 
@@ -132,12 +136,14 @@ class HomeController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
+
+        return null;
     }
 
     /**
      * @throws ProfileNotActiveException
      */
-    private function getProfile(User $user): Profile
+    private function getProfile(User $user): ?Profile
     {
         $profile = null;
         $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());

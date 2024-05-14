@@ -14,14 +14,14 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Core\Profile\Domain\ValueObjects\ModuleState;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Route;
-use JetBrains\PhpStorm\NoReturn;
+use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -35,12 +35,14 @@ class ModuleController extends Controller implements HasMiddleware
     private ModuleDataTransformerContract $moduleDataTransformer;
 
     private DataTables $dataTable;
+    private ViewFactory $viewFactory;
 
     public function __construct(
         ModuleFactoryContract $moduleFactory,
         ModuleManagementContract $moduleService,
         ModuleDataTransformerContract $moduleDataTransformer,
         DataTables $dataTable,
+        ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
@@ -49,11 +51,12 @@ class ModuleController extends Controller implements HasMiddleware
         $this->moduleService = $moduleService;
         $this->moduleDataTransformer = $moduleDataTransformer;
         $this->dataTable = $dataTable;
+        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string
     {
-        $view = view('module.index')
+        $view = $this->viewFactory->make('module.index')
             ->with('pagination', $this->getPagination())
             ->render();
 
@@ -75,7 +78,7 @@ class ModuleController extends Controller implements HasMiddleware
         $moduleId = $this->moduleFactory->buildModuleId($request->input('id'));
         $module = $this->moduleService->searchModuleById($moduleId);
 
-        if ($module->state()->isNew() || $module->state()->isInactived()) {
+        if ($module->state()->isNew() || $module->state()->isInactivated()) {
             $module->state()->activate();
         } elseif ($module->state()->isActivated()) {
             $module->state()->inactive();
@@ -90,10 +93,10 @@ class ModuleController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error('Module can not be updated with id: '.$moduleId->value(), $exception->getTrace());
 
-            return response()->json(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function getModule(?int $id = null): JsonResponse
@@ -104,7 +107,7 @@ class ModuleController extends Controller implements HasMiddleware
             $module = $this->moduleService->searchModuleById($moduleId);
         }
 
-        $view = view('module.module-form')
+        $view = $this->viewFactory->make('module.module-form')
             ->with('id', $id)
             ->with('module', $module)
             ->with('menuKeys', config('menu.options'));
@@ -123,13 +126,13 @@ class ModuleController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(
+            return new JsonResponse(
                 ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
-        return response()->json(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function deleteModule(int $id): JsonResponse
@@ -137,7 +140,7 @@ class ModuleController extends Controller implements HasMiddleware
         $moduleId = $this->moduleFactory->buildModuleId($id);
 
         try {
-            $this->moduleService->updateModule($moduleId, ['state' => ModuleState::STATE_DELETE]);
+            $this->moduleService->updateModule($moduleId, ['state' => ValueObjectStatus::STATE_DELETE]);
             $this->moduleService->deleteModule($moduleId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -145,7 +148,7 @@ class ModuleController extends Controller implements HasMiddleware
 
         ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 
-        return response()->json(status: Response::HTTP_OK);
+        return new JsonResponse(status: Response::HTTP_OK);
     }
 
     /**
@@ -172,7 +175,6 @@ class ModuleController extends Controller implements HasMiddleware
     /**
      * @throws RouteNotFoundException
      */
-    #[NoReturn]
     private function createModule(StoreModuleRequest $request, ModuleId $id): void
     {
         $this->validateRoute($request->input('route'));
@@ -191,7 +193,6 @@ class ModuleController extends Controller implements HasMiddleware
     /**
      * @throws RouteNotFoundException
      */
-    #[NoReturn]
     public function updateModule(StoreModuleRequest $request, ModuleId $id): void
     {
         $this->validateRoute($request->input('route'));
