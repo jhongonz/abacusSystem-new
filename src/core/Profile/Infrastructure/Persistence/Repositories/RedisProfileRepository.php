@@ -14,6 +14,7 @@ use Core\Profile\Exceptions\ProfilePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
 class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
 {
@@ -30,15 +31,18 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
     private ProfileFactoryContract $profileFactory;
 
     private ProfileDataTransformerContract $dataTransformer;
+    private LoggerInterface $logger;
 
     public function __construct(
         ProfileFactoryContract $profileFactory,
         ProfileDataTransformerContract $dataTransformer,
+        LoggerInterface $logger,
         string $keyPrefix = 'profile',
         int $priority = self::PRIORITY_DEFAULT,
     ) {
         $this->profileFactory = $profileFactory;
         $this->dataTransformer = $dataTransformer;
+        $this->logger = $logger;
         $this->keyPrefix = $keyPrefix;
         $this->priority = $priority;
     }
@@ -63,6 +67,7 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
         try {
             $data = Redis::get($this->profileKey($id));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfileNotFoundException('Profile not found by id '.$id->value());
         }
 
@@ -83,6 +88,7 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
         try {
             $data = Redis::get($this->profileKeyWithName($name));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfileNotFoundException('Profile not found by name '.$name->value());
         }
 
@@ -118,6 +124,7 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
             Redis::set($profileKey, json_encode($profileData));
             Redis::set($profileKeyName, json_encode($profileData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfilePersistException('It could not persist Profile with key '.$profileKey.' in redis');
         }
 
