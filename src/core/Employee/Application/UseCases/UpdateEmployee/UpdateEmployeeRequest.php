@@ -8,6 +8,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 class UpdateEmployeeRequest implements RequestService
 {
     private EmployeeId $id;
+
     private array $data;
 
     public function __construct(

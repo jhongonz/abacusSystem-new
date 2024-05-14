@@ -5,8 +5,6 @@ namespace Core\Profile\Application\UseCases\DeleteProfile;
 use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
-use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
 use Exception;
 
 class DeleteProfile extends UseCasesService
@@ -19,10 +17,11 @@ class DeleteProfile extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Profile|Profiles
+    public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteProfileRequest::class);
         $this->profileRepository->deleteProfile($request->id());
+
         return null;
     }
 }

@@ -20,23 +20,23 @@ interface ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState(),
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
+        ProfileState $state = new ProfileState,
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt,
     ): Profile;
 
-    public function buildProfileId(null|int $id = null): ProfileId;
+    public function buildProfileId(?int $id = null): ProfileId;
 
     public function buildProfileName(string $name): ProfileName;
 
-    public function buildProfileState(null|int $state): ProfileState;
+    public function buildProfileState(?int $state): ProfileState;
 
-    public function buildProfileSearch(null|string $search = null): ProfileSearch;
+    public function buildProfileSearch(?string $search = null): ProfileSearch;
 
-    public function buildProfileDescription(null|string $description = null): ProfileDescription;
+    public function buildProfileDescription(?string $description = null): ProfileDescription;
 
-    public function buildProfileCreatedAt(null|DateTime $datetime): ProfileCreatedAt;
+    public function buildProfileCreatedAt(?DateTime $datetime): ProfileCreatedAt;
 
-    public function buildProfileUpdateAt(null|DateTime $datetime): ProfileUpdatedAt;
+    public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt;
 
     public function buildProfiles(Profile ...$profiles): Profiles;
 }

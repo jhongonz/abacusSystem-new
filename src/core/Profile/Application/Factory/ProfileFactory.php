@@ -48,8 +48,8 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState(),
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt()
+        ProfileState $state = new ProfileState,
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt
     ): Profile {
 
         return new Profile(
@@ -60,7 +60,7 @@ class ProfileFactory implements ProfileFactoryContract
         );
     }
 
-    public function buildProfileId(null|int $id = null): ProfileId
+    public function buildProfileId(?int $id = null): ProfileId
     {
         return new ProfileId($id);
     }
@@ -73,17 +73,17 @@ class ProfileFactory implements ProfileFactoryContract
     /**
      * @throws Exception
      */
-    public function buildProfileState(null|int $state): ProfileState
+    public function buildProfileState(?int $state): ProfileState
     {
         return new ProfileState($state);
     }
 
-    public function buildProfileCreatedAt(null|DateTime $datetime): ProfileCreatedAt
+    public function buildProfileCreatedAt(?DateTime $datetime): ProfileCreatedAt
     {
         return new ProfileCreatedAt($datetime);
     }
 
-    public function buildProfileUpdateAt(null|DateTime $datetime): ProfileUpdatedAt
+    public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt
     {
         return new ProfileUpdatedAt($datetime);
     }

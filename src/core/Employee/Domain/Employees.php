@@ -7,6 +7,7 @@ use Core\SharedContext\Model\ArrayIterator;
 class Employees extends ArrayIterator
 {
     public const TYPE = 'employees';
+
     private array $filters;
 
     public function __construct(Employee ...$employees)
@@ -19,12 +20,13 @@ class Employees extends ArrayIterator
     }
 
     /**
-     * @param Employee $item
-     * @return self
+     * @param  Employee  $item
+     * @return $this
      */
     public function addItem($item): self
     {
         $this->items[] = $item;
+
         return $this;
     }
 
@@ -36,6 +38,7 @@ class Employees extends ArrayIterator
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 
@@ -52,6 +55,7 @@ class Employees extends ArrayIterator
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 }

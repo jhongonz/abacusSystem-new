@@ -2,37 +2,35 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Translators;
 
-use App\Models\Module as ModuleModel;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
-use DateTime;
 use Exception;
 
 class ModuleTranslator implements TranslatorDomainContract
 {
     private ModuleModel $model;
+
     private ModuleFactoryContract $moduleFactory;
+
     private array $collection;
 
     public function __construct(
-        ModuleModel $model,
         ModuleFactoryContract $factoryContract,
-        array $collection = [],
     ) {
-        $this->model = $model;
         $this->moduleFactory = $factoryContract;
-        $this->collection = $collection;
+        $this->collection = [];
     }
 
     /**
-     * @param ModuleModel $model
-     * @return self
+     * @param  ModuleModel  $model
      */
     public function setModel($model): self
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -48,17 +46,14 @@ class ModuleTranslator implements TranslatorDomainContract
             $this->moduleFactory->buildModuleRoute($this->model->route()),
             $this->moduleFactory->buildModuleIcon($this->model->icon()),
             $this->moduleFactory->buildModuleState($this->model->state()),
-            $this->moduleFactory->buildModuleCreatedAt(
-                new DateTime($this->model->createdAt())
-            ));
+            $this->moduleFactory->buildModuleCreatedAt($this->model->createdAt())
+        );
 
         $module->setSearch(
             $this->moduleFactory->buildModuleSearch($this->model->search())
         );
 
-        $module->setUpdatedAt($this->moduleFactory->buildModuleUpdatedAt(
-            new DateTime($this->model->updatedAt())
-        ));
+        $module->setUpdatedAt($this->moduleFactory->buildModuleUpdatedAt($this->model->updatedAt()));
 
         return $module;
     }
@@ -66,21 +61,17 @@ class ModuleTranslator implements TranslatorDomainContract
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
+
         return $this;
     }
 
     public function toDomainCollection(): Modules
     {
-        $modules = new Modules();
-        foreach($this->collection as $id) {
+        $modules = new Modules;
+        foreach ($this->collection as $id) {
             $modules->addId($id);
         }
 
         return $modules;
-    }
-
-    public function canTranslate(): string
-    {
-        return ModuleModel::class;
     }
 }

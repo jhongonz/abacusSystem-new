@@ -38,7 +38,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
             $this->buildEmployeeCreatedAt(
-                new DateTime($data['createdAt']['date'])
+                $this->getDateTime($data['createdAt']['date'])
             ),
         );
 
@@ -48,22 +48,22 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
 
-        if (!is_null($data['updatedAt'])) {
+        if (! is_null($data['updatedAt'])) {
             $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-                new DateTime($data['updatedAt']['date'])
+                $this->getDateTime($data['updatedAt']['date'])
             ));
         }
 
-        if (!is_null($data['birthdate'])) {
+        if (! is_null($data['birthdate'])) {
             $employee->setBirthdate($this->buildEmployeeBirthdate(
-                new DateTime($data['birthdate']['date'])
+                $this->getDateTime($data['birthdate']['date'])
             ));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
         $employee->setImage($this->buildEmployeeImage($data['image']));
 
-        if (in_array('search', $data)) {
+        if (array_key_exists('search', $data)) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
         }
 
@@ -74,25 +74,31 @@ class EmployeeFactory implements EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname(),
-        EmployeeState $state = new EmployeeState(),
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt()
+        EmployeeLastname $lastname = new EmployeeLastname,
+        EmployeeState $state = new EmployeeState,
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ): Employee {
 
         $employee = new Employee(
             $id,
             $identification,
             $name
-         );
+        );
 
-        if (!is_null($lastname)) $employee->setLastname($lastname);
-        if (!is_null($createdAt)) $employee->setCreatedAt($createdAt);
-        if (!is_null($state)) $employee->setState($state);
+        if (! is_null($lastname)) {
+            $employee->setLastname($lastname);
+        }
+        if (! is_null($createdAt)) {
+            $employee->setCreatedAt($createdAt);
+        }
+        if (! is_null($state)) {
+            $employee->setState($state);
+        }
 
         return $employee;
     }
 
-    public function buildEmployeeId(null|int $id = null): EmployeeId
+    public function buildEmployeeId(?int $id = null): EmployeeId
     {
         return new EmployeeId($id);
     }
@@ -112,17 +118,17 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeeLastname($lastname);
     }
 
-    public function buildEmployeePhone(string $phone): EmployeePhone
+    public function buildEmployeePhone(?string $phone = null): EmployeePhone
     {
         return new EmployeePhone($phone);
     }
 
-    public function buildEmployeeEmail(string $email): EmployeeEmail
+    public function buildEmployeeEmail(?string $email = null): EmployeeEmail
     {
         return new EmployeeEmail($email);
     }
 
-    public function buildEmployeeAddress(string $address): EmployeeAddress
+    public function buildEmployeeAddress(?string $address = null): EmployeeAddress
     {
         return new EmployeeAddress($address);
     }
@@ -173,5 +179,13 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeImage(?string $image = null): EmployeeImage
     {
         return new EmployeeImage($image);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }

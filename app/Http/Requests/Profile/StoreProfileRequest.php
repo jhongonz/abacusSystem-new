@@ -29,10 +29,10 @@ class StoreProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['nullable','numeric'],
+            'id' => ['nullable', 'numeric'],
             'name' => ['required'],
-            'modules' => ['required','array'],
-            'description' => ['nullable','string']
+            'modules' => ['required', 'array'],
+            'description' => ['nullable', 'string'],
         ];
     }
 

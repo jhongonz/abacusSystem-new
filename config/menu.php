@@ -4,12 +4,12 @@ return [
     'options' => [
         'settings' => [
             'name' => 'Configuraciones',
-            'icon'=>'fas fa-tools',
+            'icon' => 'fas fa-tools',
             'route' => null,
         ],
         'managers' => [
             'name' => 'Gestión Administrativa',
-            'icon'=>'fas fa-tools',
+            'icon' => 'fas fa-tools',
             'route' => null,
         ],
         /*'employee' => [
@@ -17,5 +17,5 @@ return [
             'icon' => 'fas fa-tools',
             'route' => 'localhost',
         ],*/
-    ]
+    ],
 ];

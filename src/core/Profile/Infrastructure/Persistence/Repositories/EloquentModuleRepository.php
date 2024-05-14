@@ -2,40 +2,41 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Repositories;
 
-use App\Models\Module as ModuleModel;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Core\Profile\Domain\ValueObjects\ModuleState;
-use Core\Profile\Exceptions\ModuleDeleteException;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
+use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
-use Core\Profile\Infrastructure\Persistence\Translators\TranslatorContract;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Throwable;
 
-class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriority
+class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
     private const PRIORITY_DEFAULT = 50;
-    private ModuleModel $moduleModel;
+
+    private ModuleModel $model;
+
     private ModuleTranslator $moduleTranslator;
-    private TranslatorContract $modelModuleTranslator;
+
+    private DatabaseManager $database;
+
     private int $priority;
-    
+
     public function __construct(
-        ModuleModel $model,
+        DatabaseManager $database,
         ModuleTranslator $moduleTranslator,
-        TranslatorContract $modelModuleTranslator,
+        ModuleModel $model,
         int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->moduleModel = $model;
+        $this->database = $database;
         $this->moduleTranslator = $moduleTranslator;
-        $this->modelModuleTranslator =$modelModuleTranslator;
+        $this->model = $model;
         $this->priority = $priority;
     }
 
@@ -47,6 +48,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
@@ -54,26 +56,38 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      * @throws ModuleNotFoundException
      * @throws Exception
      */
-    public function find(ModuleId $id): null|Module
+    public function find(ModuleId $id): Module
     {
-        try {
-            /** @var ModuleModel $moduleModel */
-            $moduleModel = $this->moduleModel
-                ->where('mod_id', $id->value())
-                ->where('mod_state','>',ModuleState::STATE_DELETE)
-                ->firstOrFail();
-        } catch (Exception $exception) {
-            throw new ModuleNotFoundException('Module not found with id: '. $id->value());
+        $builder = $this->database->table($this->getTable())
+            ->where('mod_id', $id->value())
+            ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
+
+        $data = $builder->first();
+
+        if (is_null($data)) {
+            throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
-        
+
+        $moduleModel = $this->updateAttributesModelModule($data->toArray());
+
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 
     public function persistModule(Module $module): Module
     {
-        /** @var ModuleModel $moduleModel */
-        $moduleModel = $this->modelModuleTranslator->executeTranslate($module);
-        $moduleModel->save();
+        $moduleModel = $this->domainToModel($module);
+        $moduleId = $moduleModel->id();
+        $dataModel = $moduleModel->toArray();
+
+        $builder = $this->database->table($this->getTable());
+
+        if (is_null($moduleId)) {
+            $moduleId = $builder->insertGetId($dataModel);
+            $module->id()->setValue($moduleId);
+        } else {
+            $builder->where('mod_id', $moduleId);
+            $builder->update($dataModel);
+        }
 
         return $module;
     }
@@ -82,22 +96,21 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
      * @throws ModulesNotFoundException
      * @throws Exception
      */
-    public function getAll(array $filters = []): null|Modules
+    public function getAll(array $filters = []): ?Modules
     {
-        try {
-            /** @var Builder $queryBuilder*/
-            $queryBuilder = $this->moduleModel->where('mod_state','>',ModuleState::STATE_DELETE);
-                
-            if (array_key_exists('q', $filters) && isset($filters['q'])) {
-                $queryBuilder->where('mod_search','like','%'.$filters['q'].'%');
-            }
-            
-            /** @var Collection $moduleCollection*/
-            $moduleCollection = $queryBuilder->get(['mod_id']);
-        } catch (Exception $exception) {
+        /** @var Builder $builder */
+        $builder = $this->database->table($this->getTable())
+            ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
+
+        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+            $builder->whereFullText($this->model->getSearchField(), $filters['q']);
+        }
+        $moduleCollection = $builder->get(['mod_id']);
+
+        if (empty($moduleCollection)) {
             throw new ModulesNotFoundException('Modules not found');
         }
-        
+
         $collection = [];
         /** @var ModuleModel $moduleModel */
         foreach ($moduleCollection as $moduleModel) {
@@ -106,7 +119,7 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
 
         $modules = $this->moduleTranslator->setCollection($collection)->toDomainCollection();
         $modules->setFilters($filters);
-        
+
         return $modules;
     }
 
@@ -115,26 +128,54 @@ class EloquentModuleRepository implements ModuleRepositoryContract, ChainPriorit
         return $modules;
     }
 
+
     /**
-     * @throws Throwable
      * @throws ModuleNotFoundException
      */
     public function deleteModule(ModuleId $id): void
     {
-        /** @var ModuleModel $moduleModel */
-        $moduleModel = $this->moduleModel
-            ->where('mod_id', $id->value())
-            ->where('mod_state','>',ModuleState::STATE_DELETE)
-            ->first();
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($id->value());
 
-        if (is_null($moduleModel)){
-            throw new ModuleNotFoundException('Module not found with id: '. $id->value());
+        if (is_null($data)) {
+            throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        try {
-            $moduleModel->deleteOrFail();
-        } catch (Exception $exception) {
-            throw new ModuleDeleteException('Module can not be deleted with id: '. $id->value());
+        $builder->where('mod_id', $id->value());
+        $builder->delete();
+    }
+
+    private function domainToModel(Module $domain): ModuleModel
+    {
+        $builder = $this->database->table($this->getTable());
+        $data = $builder->find($domain->id()->value());
+        $model = $this->updateAttributesModelModule((array) $data);
+
+        $model->changeId($domain->id()->value());
+        $model->changeName($domain->name()->value());
+        $model->changeMenuKey($domain->menuKey()->value());
+        $model->changeRoute($domain->route()->value());
+        $model->changeIcon($domain->icon()->value());
+        $model->changeState($domain->state()->value());
+        $model->changeSearch($domain->search()->value());
+        $model->changeCreatedAt($domain->createdAt()->value());
+
+        if (! is_null($domain->updatedAt()->value())) {
+            $model->changeUpdatedAt($domain->updatedAt()->value());
         }
+
+        return $model;
+    }
+
+    private function updateAttributesModelModule(array $data = []): ModuleModel
+    {
+        $this->model->fill($data);
+
+        return $this->model;
+    }
+
+    private function getTable(): string
+    {
+        return $this->model->getTable();
     }
 }

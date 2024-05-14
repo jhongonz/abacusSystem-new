@@ -1,7 +1,12 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Infrastructure\Persistence\Repositories;
 
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
@@ -10,15 +15,20 @@ use Core\User\Exceptions\UserNotFoundException;
 use Exception;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainUserRepository extends AbstractChainRepository implements UserRepositoryContract
 {
     private const FUNCTION_NAMES = [
-        User::class => 'persistUser'
+        User::class => 'persistUser',
     ];
-    
+
     private string $domainToPersist;
-    
-    function functionNamePersist(): string
+
+    private bool $deleteSource = false;
+
+    public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
     }
@@ -26,50 +36,55 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     /**
      * @throws Throwable
      */
-    public function find(UserId $id): null|User
+    public function find(UserId $id): ?User
     {
         $this->domainToPersist = User::class;
-        
+
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new UserNotFoundException('User not found by id '. $id->value());
+            throw new UserNotFoundException('User not found by id '.$id->value());
         }
     }
 
     /**
      * @throws Throwable
      */
-    public function findCriteria(UserLogin $login): null|User
+    public function findCriteria(UserLogin $login): ?User
     {
         $this->domainToPersist = User::class;
 
         try {
             return $this->read(__FUNCTION__, $login);
         } catch (Exception $exception) {
-            throw new UserNotFoundException('User not found by login '. $login->value());
+            throw new UserNotFoundException('User not found by login '.$login->value());
         }
     }
 
-    public function save(User $user): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(UserId $id, User $user): void
-    {
-        // TODO: Implement update() method.
-    }
-
+    /**
+     * @throws UserNotFoundException
+     * @throws Throwable
+     */
     public function delete(UserId $id): void
     {
-        // TODO: Implement delete() method.
+        $this->deleteSource = true;
+
+        try {
+            $this->read(__FUNCTION__, $id);
+        } catch (Exception $exception) {
+            throw new UserNotFoundException($exception->getMessage());
+        }
     }
 
     public function persistUser(User $user): User
     {
         $this->domainToPersist = User::class;
-        
-        return $this->writeChain(__FUNCTION__, $user);
+
+        return $this->write(__FUNCTION__, $user);
+    }
+
+    public function functionNameDelete(): bool
+    {
+        return $this->deleteSource;
     }
 }

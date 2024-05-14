@@ -6,37 +6,47 @@ use Countable;
 use Iterator;
 use ReturnTypeWillChange;
 
-abstract class ArrayIterator implements Iterator, Countable
+/**
+ * @codeCoverageIgnore
+ */
+abstract class ArrayIterator implements Countable, Iterator
 {
     protected array $items = [];
+
     protected array $aggregator = [];
-    
+
     abstract public function addItem(mixed $item): ArrayIterator;
+
     abstract public function items(): array;
+
     abstract public function addId(int $id): ArrayIterator;
+
     abstract public function aggregator(): array;
-    
+
     public function current(): mixed
     {
         return \current($this->items);
     }
 
-    #[ReturnTypeWillChange] public function next()
+    #[ReturnTypeWillChange]
+    public function next()
     {
         return \next($this->items);
     }
 
-    #[ReturnTypeWillChange] public function key()
+    #[ReturnTypeWillChange]
+    public function key()
     {
         return \key($this->items);
     }
 
     public function valid(): bool
     {
-        return false !== \current($this->items);
+        return \current($this->items) !== false;
     }
 
-    #[ReturnTypeWillChange] public function rewind()
+    #[ReturnTypeWillChange]
+    public function rewind()
     {
         return \reset($this->items);
     }

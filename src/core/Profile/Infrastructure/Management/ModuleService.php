@@ -22,10 +22,15 @@ use Exception;
 class ModuleService implements ModuleManagementContract
 {
     private ModuleFactoryContract $moduleFactory;
+
     private SearchModuleById $searchModuleById;
+
     private SearchModules $searchModules;
+
     private UpdateModule $updateModule;
+
     private DeleteModule $deleteModule;
+
     private CreateModule $createModule;
 
     public function __construct(
@@ -47,7 +52,7 @@ class ModuleService implements ModuleManagementContract
     /**
      * @throws Exception
      */
-    public function searchModuleById(ModuleId $id): Module
+    public function searchModuleById(ModuleId $id): ?Module
     {
         $request = new SearchModuleByIdRequest($id);
 

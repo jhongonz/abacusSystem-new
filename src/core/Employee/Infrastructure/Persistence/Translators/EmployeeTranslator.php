@@ -2,37 +2,36 @@
 
 namespace Core\Employee\Infrastructure\Persistence\Translators;
 
-use App\Models\Employee as EmployeeModel;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
+use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
-use DateTime;
 use Exception;
 
 class EmployeeTranslator implements TranslatorDomainContract
 {
     private EmployeeFactoryContract $employeeFactory;
+
     private EmployeeModel $employee;
+
     private array $collection;
 
     public function __construct(
         EmployeeFactoryContract $employeeFactory,
-        EmployeeModel $employee,
-        array $collection = [],
     ) {
         $this->employeeFactory = $employeeFactory;
-        $this->employee = $employee;
-        $this->collection = $collection;
+        $this->collection = [];
     }
 
     /**
-     * @param EmployeeModel $model
+     * @param  EmployeeModel  $model
      * @return $this
      */
     public function setModel($model): self
     {
         $this->employee = $model;
+
         return $this;
     }
 
@@ -68,21 +67,17 @@ class EmployeeTranslator implements TranslatorDomainContract
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
+
         return $this;
     }
 
     public function toDomainCollection(): Employees
     {
-        $employees = new Employees();
+        $employees = new Employees;
         foreach ($this->collection as $id) {
             $employees->addId($id);
         }
 
         return $employees;
-    }
-
-    public function canTranslate(): string
-    {
-        return EmployeeModel::class;
     }
 }

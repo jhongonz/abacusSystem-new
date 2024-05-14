@@ -5,12 +5,15 @@ namespace Core\Profile\Application\UseCasesModule;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class UseCasesService implements ServiceContract
 {
     protected ModuleRepositoryContract $moduleRepository;
-    
+
     public function __construct(
-        ModuleRepositoryContract $moduleRepository,  
+        ModuleRepositoryContract $moduleRepository,
     ) {
         $this->moduleRepository = $moduleRepository;
     }
@@ -20,10 +23,10 @@ abstract class UseCasesService implements ServiceContract
      */
     protected function validateRequest(RequestService $request, string $requestClass): RequestService
     {
-        if (!$request instanceof $requestClass) {
+        if (! $request instanceof $requestClass) {
             throw new Exception('Request not valid');
         }
 
-        return $request; 
+        return $request;
     }
 }

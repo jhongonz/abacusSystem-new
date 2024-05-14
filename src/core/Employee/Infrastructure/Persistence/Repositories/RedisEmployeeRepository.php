@@ -14,29 +14,36 @@ use Core\Employee\Exceptions\EmployeePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
-class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriority
+class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContract
 {
-    /**@var int*/
+    /** @var int */
     private const PRIORITY_DEFAULT = 100;
 
     /** @var string */
     private const EMPLOYEE_KEY_FORMAT = '%s::%s';
 
     private int $priority;
+
     private string $keyPrefix;
 
     private EmployeeFactoryContract $employeeFactory;
+
     private EmployeeDataTransformerContract $dataTransformer;
 
+    private LoggerInterface $logger;
+
     public function __construct(
-      EmployeeFactoryContract $employeeFactory,
-      EmployeeDataTransformerContract $dataTransformer,
-      string $keyPrefix = 'employee',
-      int $priority = self::PRIORITY_DEFAULT
+        EmployeeFactoryContract $employeeFactory,
+        EmployeeDataTransformerContract $dataTransformer,
+        LoggerInterface $logger,
+        string $keyPrefix = 'employee',
+        int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->employeeFactory = $employeeFactory;
         $this->dataTransformer = $dataTransformer;
+        $this->logger = $logger;
         $this->keyPrefix = $keyPrefix;
         $this->priority = $priority;
     }
@@ -49,21 +56,23 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws EmployeeNotFoundException
      */
-    public function find(EmployeeId $id): null|Employee
+    public function find(EmployeeId $id): ?Employee
     {
         try {
             $data = Redis::get($this->employeeKey($id));
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by id '. $id->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
             /** @var Employee */
@@ -76,15 +85,16 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     /**
      * @throws EmployeeNotFoundException
      */
-    public function findCriteria(EmployeeIdentification $identification): null|Employee
+    public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         try {
             $data = Redis::get($this->employeeIdentificationKey($identification));
         } catch (Exception $exception) {
-            throw new EmployeeNotFoundException('Employee not found by identification '. $identification->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            throw new EmployeeNotFoundException('Employee not found by identification '.$identification->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
             /** @var Employee */
@@ -94,19 +104,9 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return null;
     }
 
-    public function save(Employee $employee): void
-    {
-        // TODO: Implement save() method.
-    }
-
-    public function update(EmployeeId $id, Employee $employee): void
-    {
-        // TODO: Implement update() method.
-    }
-
     public function delete(EmployeeId $id): void
     {
-        // TODO: Implement delete() method.
+        Redis::delete($this->employeeKey($id));
     }
 
     /**
@@ -122,6 +122,7 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
             Redis::set($employeeKey, json_encode($employeeData));
             Redis::set($employeeIdentificationKey, json_encode($employeeData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeePersistException('It could not persist Employee with key '.$employeeKey.' in redis');
         }
 
@@ -133,6 +134,11 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
         return $employees;
     }
 
+    public function getAll(array $filters = []): ?Employees
+    {
+        return null;
+    }
+
     private function employeeKey(EmployeeId $id): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $id->value());
@@ -141,10 +147,5 @@ class RedisEmployeeRepository implements EmployeeRepositoryContract, ChainPriori
     private function employeeIdentificationKey(EmployeeIdentification $identification): string
     {
         return sprintf(self::EMPLOYEE_KEY_FORMAT, $this->keyPrefix, $identification->value());
-    }
-
-    public function getAll(array $filters = []): null|Employees
-    {
-        return null;
     }
 }

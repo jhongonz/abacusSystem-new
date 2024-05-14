@@ -24,9 +24,6 @@ use Core\Profile\Infrastructure\Persistence\Repositories\EloquentModuleRepositor
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisModuleRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisProfileRepository;
-use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelModuleTranslator;
-use Core\Profile\Infrastructure\Persistence\Translators\DomainToModelProfileTranslator;
-use Core\Profile\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -36,8 +33,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
 {
     /**
      * All the container bindings that should be registered
-     *
-     * @var array
      */
     public array $singletons = [
         ProfileFactoryContract::class => ProfileFactory::class,
@@ -55,42 +50,34 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register(): void
     {
-        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainProfileRepository();
+        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainProfileRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisProfileRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentProfileRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentProfileRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainModuleRepository();
+        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainModuleRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisModuleRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentModuleRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentModuleRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        $this->app->when(EloquentProfileRepository::class)
-            ->needs(TranslatorContract::class)
-            ->give(DomainToModelProfileTranslator::class);
-
-        $this->app->when(EloquentModuleRepository::class)
-            ->needs(TranslatorContract::class)
-            ->give(DomainToModelModuleTranslator::class);
-
-        #Commands
-        $this->app->singletonIf(ProfileWarmup::class, function(Application $app){
+        //Commands
+        $this->app->singletonIf(ProfileWarmup::class, function (Application $app) {
             return new ProfileWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(ProfileFactoryContract::class),
@@ -99,7 +86,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
             );
         });
 
-        $this->app->singletonIf(ModuleWarmup::class, function(Application $app){
+        $this->app->singletonIf(ModuleWarmup::class, function (Application $app) {
             return new ModuleWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(ModuleFactoryContract::class),
@@ -132,6 +119,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function boot(): void
     {
-        //
+
     }
 }

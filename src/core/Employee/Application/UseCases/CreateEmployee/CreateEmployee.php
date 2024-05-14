@@ -6,7 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use Core\Employee\Domain\Employees;
 use Exception;
 
 class CreateEmployee extends UseCasesService
@@ -21,9 +20,9 @@ class CreateEmployee extends UseCasesService
      */
     public function execute(RequestService $request): Employee
     {
-        $this->validateRequest($request,CreateEmployeeRequest::class);
+        $this->validateRequest($request, CreateEmployeeRequest::class);
 
-        /**@var Employee $employee*/
+        /** @var Employee $employee */
         $employee = $request->employee();
         $employee->refreshSearch();
 

@@ -8,10 +8,9 @@ use DateTime;
 class ProfileCreatedAt implements ValueObjectContract
 {
     private DateTime $value;
-    
-    public function __construct(
-        DateTime $value = new DateTime()
-    ) {
+
+    public function __construct(DateTime $value = new DateTime)
+    {
         $this->value = $value;
     }
 
@@ -21,12 +20,13 @@ class ProfileCreatedAt implements ValueObjectContract
     }
 
     /**
-     * @param DateTime $value
+     * @param  DateTime  $value
      * @return $this
      */
     public function setValue($value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

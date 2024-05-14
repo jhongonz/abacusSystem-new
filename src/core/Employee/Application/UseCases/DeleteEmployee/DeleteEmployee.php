@@ -1,0 +1,27 @@
+<?php
+
+namespace Core\Employee\Application\UseCases\DeleteEmployee;
+
+use Core\Employee\Application\UseCases\RequestService;
+use Core\Employee\Application\UseCases\UseCasesService;
+use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
+use Exception;
+
+class DeleteEmployee extends UseCasesService
+{
+    public function __construct(EmployeeRepositoryContract $employeeRepository)
+    {
+        parent::__construct($employeeRepository);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function execute(RequestService $request): null
+    {
+        $this->validateRequest($request, DeleteEmployeeRequest::class);
+        $this->employeeRepository->delete($request->employeeId());
+
+        return null;
+    }
+}

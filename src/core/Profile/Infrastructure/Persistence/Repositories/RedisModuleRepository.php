@@ -13,27 +13,35 @@ use Core\Profile\Exceptions\ModulePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
-class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
+class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
-    /**@var int*/
+    /** @var int */
     private const PRIORITY_DEFAULT = 100;
+
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
 
     private ModuleFactoryContract $moduleFactory;
+
     private ModuleDataTransformerContract $moduleDataTransformer;
+    private LoggerInterface $logger;
+
     private int $priority;
+
     private string $keyPrefix;
 
     public function __construct(
         ModuleFactoryContract $moduleFactory,
         ModuleDataTransformerContract $moduleDataTransformer,
+        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT,
         string $keyPrefix = 'module',
     ) {
         $this->moduleFactory = $moduleFactory;
         $this->moduleDataTransformer = $moduleDataTransformer;
+        $this->logger = $logger;
         $this->priority = $priority;
         $this->keyPrefix = $keyPrefix;
     }
@@ -46,21 +54,23 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws ModuleNotFoundException
      */
-    public function find(ModuleId $id): null|Module
+    public function find(ModuleId $id): ?Module
     {
         try {
             $data = Redis::get($this->moduleKey($id));
         } catch (Exception $exception) {
-            throw new ModuleNotFoundException('Module not found by id '. $id->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+            throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $dataArray = json_decode($data, true);
 
             /** @var Module */
@@ -81,6 +91,7 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
         try {
             Redis::set($moduleKey, json_encode($moduleData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModulePersistException('It could not persist Module with key '.$moduleKey.' in redis');
         }
 
@@ -92,7 +103,7 @@ class RedisModuleRepository implements ModuleRepositoryContract, ChainPriority
         return sprintf(self::MODULE_KEY_FORMAT, $this->keyPrefix, $id->value());
     }
 
-    public function getAll(array $filters = []): null|Modules
+    public function getAll(array $filters = []): ?Modules
     {
         return null;
     }

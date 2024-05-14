@@ -8,9 +8,9 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 
 interface ModuleRepositoryContract
 {
-    public function find(ModuleId $id): null|Module;
+    public function find(ModuleId $id): ?Module;
 
-    public function getAll(array $filters = []): null|Modules;
+    public function getAll(array $filters = []): ?Modules;
 
     public function persistModule(Module $module): Module;
 

@@ -8,12 +8,12 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 class SearchEmployeeByIdentificationRequest implements RequestService
 {
     private EmployeeIdentification $identification;
-    
+
     public function __construct(EmployeeIdentification $identification)
     {
         $this->identification = $identification;
     }
-    
+
     public function employeeIdentification(): EmployeeIdentification
     {
         return $this->identification;

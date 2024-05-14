@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\UserTrait;
@@ -11,10 +12,12 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
+use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\ValueObjects\UserId;
+use Core\User\Domain\ValueObjects\UserState;
 use DateTime;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -33,15 +36,25 @@ class EmployeeController extends Controller implements HasMiddleware
     use UserTrait;
 
     private EmployeeManagementContract $employeeService;
+
     private EmployeeFactory $employeeFactory;
+
     private EmployeeDataTransformerContract $employeeDataTransformer;
+
     private UserFactoryContract $userFactory;
+
     private UserManagementContract $userService;
+
     private ProfileManagementContract $profileService;
+
     private ImageManager $imageManager;
+
     private DataTables $dataTable;
+
     private string $imagePathTmp;
+
     private string $imagePathFull;
+
     private string $imagePathSmall;
 
     public function __construct(
@@ -84,18 +97,19 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     public function getEmployees(Request $request): JsonResponse
     {
-        $employees = $this->employeeService->searchEmployees($request->filters);
+        $employees = $this->employeeService->searchEmployees($request->input('filters'));
+
         return $this->prepareListEmployees($employees);
     }
 
-    public function changeStateEmployee(Request $request):JsonResponse
+    public function changeStateEmployee(Request $request): JsonResponse
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($request->input('id'));
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
-        if ($employee->state()->isNew() || $employee->state()->isInactived()) {
+        if ($employee->state()->isNew() || $employee->state()->isInactivated()) {
             $employee->state()->activate();
-        } else if ($employee->state()->isActived()) {
+        } elseif ($employee->state()->isActivated()) {
             $employee->state()->inactive();
         }
 
@@ -104,12 +118,12 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $this->employeeService->updateEmployee($employeeId, $dataUpdate);
         } catch (Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$employeeId->value());
+            $this->logger->error('Employee can not be updated with id: '.$employeeId->value(), $exception->getTrace());
 
-            return response()->json(status:Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        if (!is_null($employee->userId()->value())) {
+        if (! is_null($employee->userId()->value())) {
             $user = $this->userService->searchUserById(
                 $this->userFactory->buildId($employee->userId()->value())
             );
@@ -120,25 +134,26 @@ class EmployeeController extends Controller implements HasMiddleware
                 $this->userService->updateUser($user->id(), $dataUpdate);
                 UserUpdateOrDeleteEvent::dispatch($user->id());
             } catch (Exception $exception) {
-                $message = sprintf('User with ID:%d by employee with ID: %d can not be updated',
+                $message = sprintf(
+                    'User with ID:%d by employee with ID: %d can not be updated',
                     $user->id()->value(),
                     $employeeId->value()
                 );
-                $this->logger->error($message);
+                $this->logger->error($message, $exception->getTrace());
             }
         }
 
-        return response()->json(status:Response::HTTP_CREATED);
+        return response()->json(status: Response::HTTP_CREATED);
     }
 
-    public function getEmployee(null|int $id = null): JsonResponse|string
+    public function getEmployee(?int $id = null): JsonResponse|string
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $employee = null;
         $user = null;
         $urlFile = null;
 
-        if (!is_null($employeeId->value())) {
+        if (! is_null($employeeId->value())) {
             $employee = $this->employeeService->searchEmployeeById($employeeId);
             $user = $this->userService->searchUserById($this->userFactory->buildId($employee->userId()->value()));
 
@@ -146,7 +161,7 @@ class EmployeeController extends Controller implements HasMiddleware
         }
 
         $profiles = $this->profileService->searchProfiles();
-        $userId = (!is_null($employee)) ? $employee->userId()->value() : null;
+        $userId = (! is_null($employee)) ? $employee->userId()->value() : null;
 
         $view = view('employee.employee-form')
             ->with('userId', $userId)
@@ -154,7 +169,7 @@ class EmployeeController extends Controller implements HasMiddleware
             ->with('employee', $employee)
             ->with('user', $user)
             ->with('profiles', $profiles)
-            ->with('image',$urlFile)
+            ->with('image', $urlFile)
             ->render();
 
         return $this->renderView($view);
@@ -168,13 +183,18 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             $method = (is_null($employeeId->value())) ? 'createEmployee' : 'updateEmployee';
             $this->{$method}($request, $employeeId, $userId);
+            EmployeeUpdateOrDeletedEvent::dispatch($employeeId);
+            UserUpdateOrDeleteEvent::dispatch($userId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            return response()->json(['msg'=>'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            return response()->json(
+                ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return response()->json(['userId'=>$userId->value(),'employeeId'=>$employeeId->value()],Response::HTTP_CREATED);
+        return response()->json(['userId' => $userId->value(), 'employeeId' => $employeeId->value()], Response::HTTP_CREATED);
     }
 
     /**
@@ -184,14 +204,14 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $dataEmployees = [];
         if ($employees->count()) {
-            /**@var Employee $item*/
+            /** @var Employee $item */
             foreach ($employees as $item) {
                 $dataEmployees[] = $this->employeeDataTransformer->write($item)->readToShare();
             }
         }
 
         $datatable = $this->dataTable->collection(collect($dataEmployees));
-        $datatable->addColumn('tools', function(array $item) {
+        $datatable->addColumn('tools', function (array $item) {
             return $this->retrieveMenuOptionHtml($item);
         });
 
@@ -208,13 +228,42 @@ class EmployeeController extends Controller implements HasMiddleware
         $image->save(public_path($this->imagePathTmp).$filename, quality: 70);
         $imageUrl = url($this->imagePathTmp.$filename);
 
-        return response()->json(['token'=>$random,'url'=>$imageUrl], Response::HTTP_CREATED);
+        return response()->json(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
+    }
+
+    public function deleteEmployee(int $id): JsonResponse
+    {
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
+        $employee = $this->employeeService->searchEmployeeById($employeeId);
+
+        try {
+            $this->employeeService->updateEmployee($employeeId, ['state' => EmployeeState::STATE_DELETE]);
+            $this->employeeService->deleteEmployee($employeeId);
+            $this->deleteImage($employee->phone()->value());
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+        }
+
+        if (! is_null($employee->userId()->value())) {
+
+            $userId = $this->userFactory->buildId($employee->userId()->value());
+
+            try {
+                $this->userService->updateUser($userId, ['state' => UserState::STATE_DELETE]);
+                $this->userService->deleteUser($userId);
+            } catch (Exception $exception) {
+                $this->logger->error($exception->getMessage(), $exception->getTrace());
+            }
+        }
+
+        return response()->json(status: Response::HTTP_OK);
     }
 
     /**
      * @throws Exception
      */
-    #[NoReturn] private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
+    #[NoReturn]
+    private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
         $dataUpdateUser = [];
         $dataUpdate = [
@@ -226,10 +275,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'birthdate' => DateTime::createFromFormat('d/m/Y',$request->input('birthdate'))
+            'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
         ];
 
-        if (!is_null($request->input('token'))) {
+        if (! is_null($request->input('token'))) {
             $filename = $this->saveImage($request->input('token'));
             $dataUpdate['image'] = $filename;
             $dataUpdateUser['image'] = $filename;
@@ -237,16 +286,17 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $this->employeeService->updateEmployee($employeeId, $dataUpdate);
 
-        if (!is_null($request->input('password'))) {
+        if (! is_null($request->input('password'))) {
             $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
         }
 
-        if (!is_null($userId->value()) && $dataUpdateUser) {
+        if (! is_null($userId->value()) && $dataUpdateUser) {
             $this->userService->updateUser($userId, $dataUpdateUser);
         }
     }
 
-    #[NoReturn] private function createEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
+    #[NoReturn]
+    private function createEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
         $employee = $this->employeeFactory->buildEmployee(
             $employeeId,
@@ -257,33 +307,33 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $employee->identificationType()->setValue($request->input('typeDocument'));
         $employee->observations()->setValue($request->input('observations'));
-        $employee->phone()->setValue($request->input('phone'));
         $employee->email()->setValue($request->input('email'));
         $employee->address()->setValue($request->input('address'));
         $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
 
-        $this->employeeService->createEmployee($employee);
-
-        if (!is_null($employee->id()->value())) {
-
-            if (!is_null($request->input('token'))) {
-                $filename = $this->saveImage($request->input('token'));
-                $dataUpdate['image'] = $filename;
-
-                $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
-            }
-
-            $user = $this->userFactory->buildUser(
-                $userId,
-                $this->userFactory->buildEmployeeId($employee->id()->value()),
-                $this->userFactory->buildProfileId((int) $request->input('profile')),
-                $this->userFactory->buildLogin($request->input('login')),
-                $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
-            );
-            $user->photo()->setValue($filename ?? '');
-
-            $this->userService->createUser($user);
+        try {
+            $this->employeeService->createEmployee($employee);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
+
+        if (! is_null($request->input('token'))) {
+            $filename = $this->saveImage($request->input('token'));
+            $dataUpdate['image'] = $filename;
+
+            $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
+        }
+
+        $user = $this->userFactory->buildUser(
+            $userId,
+            $this->userFactory->buildEmployeeId($employee->id()->value()),
+            $this->userFactory->buildProfileId((int) $request->input('profile')),
+            $this->userFactory->buildLogin($request->input('login')),
+            $this->userFactory->buildPassword($this->makeHashPassword($request->input('password')))
+        );
+        $user->photo()->setValue($filename ?? '');
+
+        $this->userService->createUser($user);
     }
 
     private function saveImage(string $token): string
@@ -293,24 +343,28 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $image = $this->imageManager->read($imageTmp);
         $image->save(public_path($this->imagePathFull.$filename));
-        $image->resize(150,150);
+        $image->resize(150, 150);
         $image->save(public_path($this->imagePathSmall.$filename));
-        unlink($imageTmp);
+        @unlink($imageTmp);
 
         return $filename;
     }
 
+    private function deleteImage(string $photo): void
+    {
+        @unlink(public_path($this->imagePathFull.$photo));
+        @unlink(public_path($this->imagePathSmall.$photo));
+    }
+
     /**
      * Get the middleware that should be assigned to the controller.
-     *
-     * @return Middleware|array
      */
     public static function middleware(): Middleware|array
     {
         return [
-            new Middleware(['auth','verify-session']),
-            new Middleware('only.ajax-request', only:[
-                'getEmployees','setImageEmployee'
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getEmployees', 'setImageEmployee', 'deleteEmployee', 'changeStateEmployee', 'storeEmployee',
             ]),
         ];
     }

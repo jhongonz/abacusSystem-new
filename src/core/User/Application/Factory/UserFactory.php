@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ */
+
 namespace Core\User\Application\Factory;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
@@ -24,7 +28,7 @@ class UserFactory implements UserFactoryContract
     public function buildUserFromArray(array $data): User
     {
         $data = $data[User::TYPE];
-        return $this->buildUser(
+        $user = $this->buildUser(
             $this->buildId($data['id']),
             $this->buildEmployeeId($data['employeeId']),
             $this->buildProfileId($data['profileId']),
@@ -35,6 +39,9 @@ class UserFactory implements UserFactoryContract
                 new DateTime($data['createdAt']['date'])
             )
         );
+        $user->photo()->setValue($data['photo']);
+
+        return $user;
     }
 
     public function buildUser(
@@ -43,8 +50,8 @@ class UserFactory implements UserFactoryContract
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        UserState $state = new UserState(),
-        UserCreatedAt $createdAt = new UserCreatedAt()
+        UserState $state = new UserState,
+        UserCreatedAt $createdAt = new UserCreatedAt
     ): User {
         return new User(
             $id,
@@ -57,7 +64,7 @@ class UserFactory implements UserFactoryContract
         );
     }
 
-    public function buildId(null|int $id = null): UserId
+    public function buildId(?int $id = null): UserId
     {
         return new UserId($id);
     }
@@ -100,7 +107,7 @@ class UserFactory implements UserFactoryContract
         return new UserProfileId($profileId);
     }
 
-    public function buildUserPhoto(string $photo = ''): UserPhoto
+    public function buildUserPhoto(?string $photo = null): UserPhoto
     {
         return new UserPhoto($photo);
     }

@@ -13,8 +13,6 @@ use Core\Employee\Infrastructure\Management\EmployeeService;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\RedisEmployeeRepository;
-use Core\Employee\Infrastructure\Persistence\Translators\DomainToModelEmployeeTranslator;
-use Core\Employee\Infrastructure\Persistence\Translators\TranslatorContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -24,14 +22,11 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
 {
     /**
      * All the container bindings that should be registered
-     *
-     * @var array
      */
     public array $singletons = [
         EmployeeFactoryContract::class => EmployeeFactory::class,
         EmployeeManagementContract::class => EmployeeService::class,
         EmployeeDataTransformerContract::class => EmployeeDataTransformer::class,
-        TranslatorContract::class => DomainToModelEmployeeTranslator::class,
     ];
 
     /**
@@ -39,21 +34,21 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function register(): void
     {
-        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app){
-            $chainRepository = new ChainEmployeeRepository();
+        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
+            $chainRepository = new ChainEmployeeRepository;
 
             $chainRepository->addRepository(
                 $app->make(RedisEmployeeRepository::class)
             )
-            ->addRepository(
-                $app->make(EloquentEmployeeRepository::class)
-            );
+                ->addRepository(
+                    $app->make(EloquentEmployeeRepository::class)
+                );
 
             return $chainRepository;
         });
 
-        #Commands
-        $this->app->singletonIf(EmployeeWarmup::class, function (Application $app){
+        //Commands
+        $this->app->singletonIf(EmployeeWarmup::class, function (Application $app) {
             return new EmployeeWarmup(
                 $app->make(LoggerInterface::class),
                 $app->make(EmployeeFactoryContract::class),
@@ -74,7 +69,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             EmployeeFactoryContract::class,
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
-            TranslatorContract::class,
         ];
     }
 
@@ -83,6 +77,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function boot(): void
     {
-        //
+
     }
 }

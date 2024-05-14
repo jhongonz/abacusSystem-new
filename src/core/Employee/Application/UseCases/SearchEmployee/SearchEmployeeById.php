@@ -2,7 +2,6 @@
 
 namespace Core\Employee\Application\UseCases\SearchEmployee;
 
-
 use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
@@ -19,10 +18,10 @@ class SearchEmployeeById extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Employee
+    public function execute(RequestService $request): ?Employee
     {
         $this->validateRequest($request, SearchEmployeeByIdRequest::class);
-        
+
         return $this->employeeRepository->find($request->employeeId());
     }
 }

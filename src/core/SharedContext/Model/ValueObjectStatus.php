@@ -4,37 +4,45 @@ namespace Core\SharedContext\Model;
 
 use Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ValueObjectStatus implements ValueObjectContract
 {
-    const STATE_NEW = 1;
-    const STATE_ACTIVE = 2;
-    const STATE_INACTIVE = 3;
-    const STATE_DELETE = -1;
-    
-    const STATE_DEFAULT = self::STATE_ACTIVE;
-    const REGISTRY_STATES = [
+    public const STATE_NEW = 1;
+
+    public const STATE_ACTIVE = 2;
+
+    public const STATE_INACTIVE = 3;
+
+    public const STATE_DELETE = -1;
+
+    public const STATE_DEFAULT = self::STATE_ACTIVE;
+
+    public const REGISTRY_STATES = [
         self::STATE_NEW,
         self::STATE_ACTIVE,
         self::STATE_INACTIVE,
-        self::STATE_DELETE
+        self::STATE_DELETE,
     ];
-    
-    const STYLE_LITERAL_STATE = [
+
+    public const STYLE_LITERAL_STATE = [
         self::STATE_NEW => [
             'class' => 'badge-primary bg-orange-600',
-            'literal' => 'Nuevo'
+            'literal' => 'Nuevo',
         ],
         self::STATE_ACTIVE => [
             'class' => 'badge-success',
-            'literal' => 'Activo'
+            'literal' => 'Activo',
         ],
         self::STATE_INACTIVE => [
             'class' => 'badge-danger',
-            'literal' => 'Inactivo'
+            'literal' => 'Inactivo',
         ],
     ];
-    
+
     protected string $valueLiteral;
+
     protected int $value;
 
     /**
@@ -47,14 +55,15 @@ class ValueObjectStatus implements ValueObjectContract
 
         $this->valueLiteral = self::STYLE_LITERAL_STATE[$value]['literal'];
     }
-    
-    public function value(): ?int
+
+    public function value(): int
     {
         return $this->value;
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
+     *
      * @throws Exception
      */
     public function setValue($value): self
@@ -63,27 +72,20 @@ class ValueObjectStatus implements ValueObjectContract
         $this->value = $value;
 
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[$value]['literal']);
-        
+
         return $this;
-    }
-    
-    public function getValueLiteral(): string
-    {
-        return  $this->valueLiteral;
     }
 
-    public function changeValueLiteral(string $literal): self
+    public function getValueLiteral(): string
     {
-        $this->valueLiteral = $literal;
-        
-        return $this;
+        return $this->valueLiteral;
     }
 
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_ACTIVE]['literal']);
-        
+
         return $this;
     }
 
@@ -91,35 +93,38 @@ class ValueObjectStatus implements ValueObjectContract
     {
         $this->value = self::STATE_INACTIVE;
         $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_INACTIVE]['literal']);
-        
+
         return $this;
     }
 
     public function isNew(): bool
     {
-        return ($this->value() === self::STATE_NEW);
+        return $this->value() === self::STATE_NEW;
     }
 
-    public function isActived(): bool
+    public function isActivated(): bool
     {
-        return ($this->value() === self::STATE_ACTIVE);
+        return $this->value() === self::STATE_ACTIVE;
     }
 
-    public function isInactived(): bool
+    public function isInactivated(): bool
     {
-        return ($this->value() === self::STATE_INACTIVE);
+        return $this->value() === self::STATE_INACTIVE;
     }
 
-    /**
-     * @throws Exception
-     */
     public function formatHtmlToState(): string
     {
-        $state = $this->value();
-        $this->validateState($state);
+        $state = $this->value;
         $style = self::STYLE_LITERAL_STATE[$state];
 
-        return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->getValueLiteral());
+        return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->valueLiteral);
+    }
+
+    protected function changeValueLiteral(string $literal): self
+    {
+        $this->valueLiteral = $literal;
+
+        return $this;
     }
 
     /**
@@ -127,7 +132,7 @@ class ValueObjectStatus implements ValueObjectContract
      */
     protected function validateState(int $value): void
     {
-        if (!in_array($value, self::REGISTRY_STATES)) {
+        if (! in_array($value, self::REGISTRY_STATES)) {
             throw new Exception(
                 sprintf('<%s> does not allow the invalid state: <%s>.', static::class, $value)
             );

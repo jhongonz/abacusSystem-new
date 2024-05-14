@@ -15,15 +15,14 @@ class VerifySession
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!session()->exists(['user','profile','employee'])) {
+        if (! session()->exists(['user', 'profile', 'employee'])) {
 
-            if ($request->ajax())
-            {
+            if ($request->ajax()) {
                 return response()->json([
-                    'error'=>'unauthorized',
-                    'error_description'=>'Failed authentication',
-                    'reason'=>401
-                ],401);
+                    'error' => 'unauthorized',
+                    'error_description' => 'Failed authentication',
+                    'reason' => 401,
+                ], 401);
             }
 
             return redirect('/');

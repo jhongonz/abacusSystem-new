@@ -8,7 +8,7 @@ use Core\Profile\Domain\ValueObjects\ProfileId;
 
 interface ProfileManagementContract
 {
-    public function searchProfileById(ProfileId $id): null|Profile;
+    public function searchProfileById(ProfileId $id): ?Profile;
 
     public function searchProfiles(array $filters = []): Profiles;
 
