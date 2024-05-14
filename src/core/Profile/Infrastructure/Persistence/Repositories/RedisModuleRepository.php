@@ -13,6 +13,7 @@ use Core\Profile\Exceptions\ModulePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
+use Psr\Log\LoggerInterface;
 
 class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
@@ -25,6 +26,7 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     private ModuleFactoryContract $moduleFactory;
 
     private ModuleDataTransformerContract $moduleDataTransformer;
+    private LoggerInterface $logger;
 
     private int $priority;
 
@@ -33,11 +35,13 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     public function __construct(
         ModuleFactoryContract $moduleFactory,
         ModuleDataTransformerContract $moduleDataTransformer,
+        LoggerInterface $logger,
         int $priority = self::PRIORITY_DEFAULT,
         string $keyPrefix = 'module',
     ) {
         $this->moduleFactory = $moduleFactory;
         $this->moduleDataTransformer = $moduleDataTransformer;
+        $this->logger = $logger;
         $this->priority = $priority;
         $this->keyPrefix = $keyPrefix;
     }
@@ -62,6 +66,7 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
         try {
             $data = Redis::get($this->moduleKey($id));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
@@ -86,6 +91,7 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
         try {
             Redis::set($moduleKey, json_encode($moduleData));
         } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModulePersistException('It could not persist Module with key '.$moduleKey.' in redis');
         }
 
