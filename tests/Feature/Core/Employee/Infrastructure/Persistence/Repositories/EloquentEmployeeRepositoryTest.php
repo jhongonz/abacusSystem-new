@@ -307,15 +307,15 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturn('employees');
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
-            ->once()
-            ->with(1)
-            ->andReturn([]);
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('emp_id', 1)
             ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn([]);
 
         $builderMock->shouldReceive('delete')
             ->once()
@@ -347,9 +347,12 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturn('employees');
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(1)
+            ->with('emp_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
             ->andReturn(null);
 
         $this->databaseManager->shouldReceive('table')
@@ -549,9 +552,13 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturn([]);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(null)
+            ->with('emp_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn([]);
 
         $builderMock->shouldReceive('insertGetId')
@@ -760,16 +767,15 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturn([]);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn([]);
 
         $builderMock->shouldReceive('insertGetId')
             ->never();
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('emp_id', 1)
             ->andReturnSelf();
 

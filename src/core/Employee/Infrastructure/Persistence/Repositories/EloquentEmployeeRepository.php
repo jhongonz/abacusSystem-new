@@ -101,7 +101,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     public function delete(EmployeeId $id): void
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($id->value());
+        $builder->where('emp_id', $id->value());
+        $data = $builder->first();
 
         if (is_null($data)) {
             throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
@@ -166,7 +167,9 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     private function domainToModel(Employee $domain): EmployeeModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
+        $builder->where('emp_id', $domain->id()->value());
+        $data = $builder->first();
+
         $model = $this->updateAttributesModelEmployee((array) $data);
 
         $model->changeId($domain->id()->value());

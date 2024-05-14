@@ -65,6 +65,13 @@ class Employee extends Model
         'deleted_at',
     ];
 
+    protected $touches = ['relationWithUser'];
+
+    /**
+     * The search field associated with the table.
+     */
+    protected string $mainSearchField = 'emp_search';
+
     /**
      * The attributes that should be cast.
      *
@@ -76,12 +83,14 @@ class Employee extends Model
         'deleted_at' => 'datetime',
     ];
 
-    protected $touches = ['relationWithUser'];
-
-    /**
-     * The search field associated with the table.
-     */
-    protected string $mainSearchField = 'emp_search';
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+    }
 
     public function getSearchField(): string
     {
@@ -175,7 +184,7 @@ class Employee extends Model
         return $this->getAttribute('emp_address');
     }
 
-    public function changeAddress(string $address): self
+    public function changeAddress(?string $address): self
     {
         $this->setAttribute('emp_address', $address);
 

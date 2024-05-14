@@ -276,7 +276,7 @@ class EmployeeController extends Controller implements HasMiddleware
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
+            'birthdate' => ($request->input('birthdate')) ? DateTime::createFromFormat('d/m/Y', $request->input('birthdate')) : $request->input('birthdate'),
         ];
 
         if (! is_null($request->input('token'))) {

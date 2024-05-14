@@ -25,7 +25,7 @@ class EmployeeBirthdate implements ValueObjectContract
     }
 
     /**
-     * @param  DateTime  $value
+     * @param  null|DateTime  $value
      * @return $this
      */
     public function setValue($value): self
