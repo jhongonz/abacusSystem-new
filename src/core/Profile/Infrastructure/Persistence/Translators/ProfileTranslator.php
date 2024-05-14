@@ -23,6 +23,7 @@ class ProfileTranslator implements TranslatorDomainContract
         ProfileFactoryContract $profileFactory,
     ) {
         $this->profileFactory = $profileFactory;
+        $this->collection = [];
     }
 
     /**
@@ -60,10 +61,10 @@ class ProfileTranslator implements TranslatorDomainContract
             $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
         );
 
-        $modulesModel = $this->model->modules();
+        $modulesModel = $this->model->pivotModules();
         $modules = [];
         /** @var Module $item */
-        foreach ($modulesModel as $item) {
+        foreach ($modulesModel->get() as $item) {
             if ($item->state() === ValueObjectStatus::STATE_ACTIVE) {
                 $modules[] = $item->id();
             }
