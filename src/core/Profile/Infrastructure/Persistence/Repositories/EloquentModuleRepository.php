@@ -135,7 +135,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     public function deleteModule(ModuleId $id): void
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($id->value());
+        $builder->where('mod_id', $id->value());
+        $data = $builder->first();
 
         if (is_null($data)) {
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
@@ -148,7 +149,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     private function domainToModel(Module $domain): ModuleModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
+        $builder->where('mod_id', $domain->id()->value());
+        $data = $builder->first();
         $model = $this->updateAttributesModelModule((array) $data);
 
         $model->changeId($domain->id()->value());

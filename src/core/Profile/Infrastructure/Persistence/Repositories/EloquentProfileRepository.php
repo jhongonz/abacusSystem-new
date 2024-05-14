@@ -121,9 +121,10 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     public function deleteProfile(ProfileId $id): void
     {
         $builder = $this->database->table($this->getTable());
+        $builder->where('pro_id', $id->value());
 
         /** @var ProfileModel|null $profileModel */
-        $profileModel = $builder->find($id->value());
+        $profileModel = $builder->first();
 
         if (is_null($profileModel)) {
             throw new ProfileNotFoundException('Profile not found with id: '.$id->value());
@@ -175,7 +176,8 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     private function domainToModel(Profile $domain): ProfileModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
+        $builder->where('pro_id', $domain->id()->value());
+        $data = $builder->first();
         $model = $this->updateAttributesModelProfile((array) $data);
 
         $model->changeId($domain->id()->value());

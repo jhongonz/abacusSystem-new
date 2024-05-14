@@ -453,13 +453,12 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->andReturn($relationMock);
 
-        $builder->shouldReceive('find')
+        $builder->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn($modelMock);
 
         $builder->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('pro_id', 1)
             ->andReturnSelf();
 
@@ -493,13 +492,12 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builder = $this->mock(Builder::class);
 
-        $builder->shouldReceive('find')
+        $builder->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn(null);
 
         $builder->shouldReceive('where')
-            ->never()
+            ->once()
             ->with('pro_id', 1);
 
         $builder->shouldReceive('delete')
@@ -617,9 +615,13 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(null)
+            ->with('pro_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn([]);
 
         $this->model->expects(self::once())
@@ -764,9 +766,8 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn([]);
 
         $this->model->expects(self::once())
@@ -790,7 +791,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->never();
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('pro_id', 1)
             ->andReturnSelf();
 

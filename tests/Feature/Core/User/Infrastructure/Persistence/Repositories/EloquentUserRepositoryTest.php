@@ -420,9 +420,13 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(null)
+            ->with('user_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn([]);
 
         $this->database->shouldReceive('table')
@@ -594,9 +598,8 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(10)
             ->andReturn($dataReturn);
 
         $this->database->shouldReceive('table')
@@ -609,7 +612,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturn(10);
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('user_id', 10)
             ->andReturnSelf();
 
@@ -637,9 +640,8 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturn(7);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(7)
             ->andReturn($dataReturn);
 
         $this->model->expects(self::once())
@@ -652,7 +654,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->andReturn($builderMock);
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('user_id', 7)
             ->andReturnSelf();
 
@@ -675,9 +677,13 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturn(7);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(7)
+            ->with('user_id', 7)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn(null);
 
         $this->model->expects(self::once())

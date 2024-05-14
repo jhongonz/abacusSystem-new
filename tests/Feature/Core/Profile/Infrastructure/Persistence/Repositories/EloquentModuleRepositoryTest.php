@@ -330,9 +330,13 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturn([]);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(null)
+            ->with('mod_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn([]);
 
         $builderMock->shouldReceive('insertGetId')
@@ -361,7 +365,7 @@ class EloquentModuleRepositoryTest extends TestCase
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))
             ->method('value')
-            ->willReturn(1);
+            ->willReturn(2);
         $moduleIdMock->expects(self::never())
             ->method('setValue');
         $moduleMock->expects(self::exactly(2))
@@ -370,7 +374,7 @@ class EloquentModuleRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('changeId')
-            ->with(1)
+            ->with(2)
             ->willReturnSelf();
 
         $nameMock = $this->createMock(ModuleName::class);
@@ -488,16 +492,15 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturn([]);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn([]);
 
         $builderMock->shouldReceive('insertGetId')
             ->never();
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('mod_id', 2)
             ->andReturnSelf();
 
@@ -659,13 +662,12 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturn(1);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn([]);
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('mod_id', 1)
             ->andReturnSelf();
 
@@ -698,13 +700,14 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturn(1);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
-            ->once()
-            ->with(1)
-            ->andReturn(null);
-
         $builderMock->shouldReceive('where')
-            ->never();
+            ->once()
+            ->with('mod_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn(null);
 
         $builderMock->shouldReceive('delete')
             ->never();

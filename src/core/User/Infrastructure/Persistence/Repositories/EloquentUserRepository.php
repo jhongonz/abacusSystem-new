@@ -120,7 +120,8 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     public function delete(UserId $id): void
     {
         $builder = $this->database->table($this->getTable());
-        $dataUser = $builder->find($id->value());
+        $builder->where('user_id', $id->value());
+        $dataUser = $builder->first();
 
         if (is_null($dataUser)) {
             throw new UserNotFoundException('User not found with id: '.$id->value());
@@ -136,8 +137,9 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     private function domainToModel(User $domain): UserModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
-        $model = $this->updateAttributesModelUser($data);
+        $builder->where('user_id', $domain->id()->value());
+        $data = $builder->first();
+        $model = $this->updateAttributesModelUser((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeEmployeeId($domain->employeeId()->value());
