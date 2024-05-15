@@ -146,12 +146,13 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         if (is_null($profileId)) {
             $profileId = $builder->insertGetId($dataModel);
             $profile->id()->setValue($profileId);
+            $profileModel->changeId($profileId);
         } else {
             $builder->where('pro_id', $profileId);
             $builder->update($dataModel);
         }
 
-        $profileModel->pivotModules()->sync($profile->modulesAggregator());
+        $this->syncPrivileges($profile, $profileModel);
 
         return $profile;
     }
@@ -203,5 +204,22 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    private function syncPrivileges(Profile $profile, ProfileModel $model): void
+    {
+        $profileId = $profile->id()->value();
+        $pivotTable = $model->pivotModules()->getTable();
+
+        $builderPivot = $this->database->table($pivotTable);
+        $builderPivot->where('pri__pro_id', $profileId);
+        $builderPivot->delete();
+
+        foreach ($profile->modulesAggregator() as $item) {
+            $builderPivot->insert([
+                'pri__pro_id' => $profileId,
+                'pri__mod_id' => $item
+            ]);
+        }
     }
 }

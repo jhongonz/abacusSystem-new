@@ -215,7 +215,12 @@ class ProfileController extends Controller implements HasMiddleware
 
         foreach ($parents as $index => $item) {
             $modulesParent = $modules->moduleElementsOfKey($index);
-            $privileges[$index]['menu'] = $item;
+
+            if (count($modulesParent) > 0) {
+                $privileges[$index]['menu'] = $item;
+                $privileges[$index]['children'] = [];
+            }
+
             /** @var Module $module */
             foreach ($modulesParent as $module) {
                 if (! $module->state()->isInactivated()) {

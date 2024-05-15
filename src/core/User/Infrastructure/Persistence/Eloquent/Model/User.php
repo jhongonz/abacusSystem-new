@@ -91,6 +91,16 @@ class User extends Authenticatable
      */
     protected string $mainSearchField = 'user_login';
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+            'email_verified_at' => 'datetime:Y-m-d H:i:s',
+        ];
+    }
+
     public function getSearchField(): string
     {
         return $this->mainSearchField;
