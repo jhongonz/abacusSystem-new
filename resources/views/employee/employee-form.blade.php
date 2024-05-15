@@ -125,7 +125,7 @@
                             <div class="col-sm-3">
                                 <div class="form-group profile">
                                     <label>Perfil</label>
-                                    <select name="profileUser" id="profileUser" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" @isset($user) @if($user->profileId()->value() == 1) disabled @endif @endisset data-fouc>
+                                    <select name="profileUser" id="profileUser" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                         <option></option>
                                         @foreach($profiles as $profile)
                                             <option value="{{$profile->id()->value()}}" @isset($user) @if($user->profileId()->value() == $profile->id()->value()) selected @endif @endisset>{{$profile->name()->value()}}</option>

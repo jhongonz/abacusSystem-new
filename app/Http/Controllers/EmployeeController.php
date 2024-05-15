@@ -266,7 +266,6 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
-        $dataUpdateUser = [];
         $dataUpdate = [
             'identifier' => $request->input('identifier'),
             'typeDocument' => $request->input('typeDocument'),
@@ -277,6 +276,10 @@ class EmployeeController extends Controller implements HasMiddleware
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
             'birthdate' => ($request->input('birthdate')) ? DateTime::createFromFormat('d/m/Y', $request->input('birthdate')) : $request->input('birthdate'),
+        ];
+
+        $dataUpdateUser = [
+            'profileId' => $request->input('profile'),
         ];
 
         if (! is_null($request->input('token'))) {
