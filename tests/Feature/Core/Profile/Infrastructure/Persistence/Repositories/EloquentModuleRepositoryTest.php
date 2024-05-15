@@ -654,22 +654,32 @@ class EloquentModuleRepositoryTest extends TestCase
     public function test_deleteModule_should_return_void(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
-        $moduleIdMock->expects(self::exactly(2))
+        $moduleIdMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('first')
-            ->once()
-            ->andReturn([]);
-
         $builderMock->shouldReceive('where')
-            ->times(2)
+            ->once()
             ->with('mod_id', 1)
             ->andReturnSelf();
 
-        $builderMock->shouldReceive('delete')
+        $modelMock = $this->createMock(\stdClass::class);
+        $builderMock->shouldReceive('first')
             ->once()
+            ->andReturn($modelMock);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builderMock->shouldReceive('update')
+            ->once()
+            ->with([])
             ->andReturn(1);
 
         $this->model->expects(self::once())

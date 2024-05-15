@@ -14,7 +14,6 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
-use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -140,7 +139,6 @@ class ModuleController extends Controller implements HasMiddleware
         $moduleId = $this->moduleFactory->buildModuleId($id);
 
         try {
-            $this->moduleService->updateModule($moduleId, ['state' => ValueObjectStatus::STATE_DELETE]);
             $this->moduleService->deleteModule($moduleId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());

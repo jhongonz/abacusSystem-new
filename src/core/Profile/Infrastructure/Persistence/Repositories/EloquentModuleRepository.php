@@ -142,8 +142,12 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $builder->where('mod_id', $id->value());
-        $builder->delete();
+        $moduleModel = $this->updateAttributesModelModule((array) $data);
+        $moduleModel->changeState(ValueObjectStatus::STATE_DELETE);
+        $moduleModel->changeDeletedAt(new \DateTime);
+        $dataModel = $moduleModel->toArray();
+
+        $builder->update($dataModel);
     }
 
     private function domainToModel(Module $domain): ModuleModel

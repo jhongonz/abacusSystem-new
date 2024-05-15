@@ -72,10 +72,8 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function deleteModule(ModuleId $id): void
     {
-        $this->deleteSource = true;
-
         try {
-            $this->read(__FUNCTION__, $id);
+            $this->write(__FUNCTION__, $id);
         } catch (Exception $exception) {
             throw new ModuleNotFoundException($exception->getMessage());
         }
