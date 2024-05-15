@@ -7,6 +7,7 @@ use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
+use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use Exception;
 
 class EmployeeTranslator implements TranslatorDomainContract
@@ -55,11 +56,14 @@ class EmployeeTranslator implements TranslatorDomainContract
         $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
         $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
         $employee->setEmail($this->employeeFactory->buildEmployeeEmail($this->employee->email()));
-        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($this->employee->user()->id()));
         $employee->setSearch($this->employeeFactory->buildEmployeeSearch($this->employee->search()));
         $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
         $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
         $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
+
+        /** @var User $user */
+        $user = $this->employee->relationWithUser()->first(['user_id']);
+        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($user->id()));
 
         return $employee;
     }
