@@ -53,7 +53,7 @@ class ValueObjectStatus implements ValueObjectContract
         $this->validateState($value);
         $this->value = $value;
 
-        $this->valueLiteral = self::STYLE_LITERAL_STATE[$value]['literal'];
+        $this->changeValueLiteral($value);
     }
 
     public function value(): int
@@ -71,7 +71,6 @@ class ValueObjectStatus implements ValueObjectContract
         $this->validateState($value);
         $this->value = $value;
 
-        $this->changeValueLiteral(self::STYLE_LITERAL_STATE[$value]['literal']);
 
         return $this;
     }
@@ -84,7 +83,7 @@ class ValueObjectStatus implements ValueObjectContract
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;
-        $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_ACTIVE]['literal']);
+        $this->changeValueLiteral(self::STATE_INACTIVE);
 
         return $this;
     }
@@ -92,7 +91,7 @@ class ValueObjectStatus implements ValueObjectContract
     public function inactive(): self
     {
         $this->value = self::STATE_INACTIVE;
-        $this->changeValueLiteral(self::STYLE_LITERAL_STATE[self::STATE_INACTIVE]['literal']);
+        $this->changeValueLiteral(self::STATE_INACTIVE);
 
         return $this;
     }
@@ -120,9 +119,12 @@ class ValueObjectStatus implements ValueObjectContract
         return sprintf('<span class="badge %s">%s</span>', $style['class'], $this->valueLiteral);
     }
 
-    protected function changeValueLiteral(string $literal): self
+    protected function changeValueLiteral(int $state): self
     {
-        $this->valueLiteral = $literal;
+        if ($state !== self::STATE_DELETE) {
+            $literal = self::STYLE_LITERAL_STATE[$state]['literal'];
+            $this->valueLiteral = $literal;
+        }
 
         return $this;
     }

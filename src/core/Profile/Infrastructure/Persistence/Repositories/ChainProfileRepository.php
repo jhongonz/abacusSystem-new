@@ -43,7 +43,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by id '.$id->value());
+            throw new ProfileNotFoundException($exception->getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         try {
             return $this->read(__FUNCTION__, $name);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by name '.$name->value());
+            throw new ProfileNotFoundException($exception->getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
-            throw new ProfilesNotFoundException('Profiles no found');
+            throw new ProfilesNotFoundException($exception->getMessage());
         }
     }
 
@@ -92,10 +92,8 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      */
     public function deleteProfile(ProfileId $id): void
     {
-        $this->deleteSource = true;
-
         try {
-            $this->read(__FUNCTION__, $id);
+            $this->write(__FUNCTION__, $id);
         } catch (Exception $exception) {
             throw new ProfileNotFoundException($exception->getMessage());
         }

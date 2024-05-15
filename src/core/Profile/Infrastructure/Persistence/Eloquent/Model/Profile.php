@@ -205,6 +205,21 @@ class Profile extends Model
     /**
      * @throws Exception
      */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
     private function getDateTime(?string $datetime = null): DateTime
     {
         return new DateTime($datetime);

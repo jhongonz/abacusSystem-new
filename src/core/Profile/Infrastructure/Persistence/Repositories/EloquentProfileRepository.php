@@ -117,22 +117,28 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     /**
      * @throws ProfileNotFoundException
+     * @throws Exception
      */
     public function deleteProfile(ProfileId $id): void
     {
         $builder = $this->database->table($this->getTable());
         $builder->where('pro_id', $id->value());
+        $data = $builder->first();
 
-        /** @var ProfileModel|null $profileModel */
-        $profileModel = $builder->first();
-
-        if (is_null($profileModel)) {
+        if (is_null($data)) {
             throw new ProfileNotFoundException('Profile not found with id: '.$id->value());
         }
 
-        $profileModel->pivotModules()->detach();
-        $builder->where('pro_id', $id->value());
-        $builder->delete();
+        $profileModel = $this->updateAttributesModelProfile((array) $data);
+        $profileModel->changeState(ValueObjectStatus::STATE_DELETE);
+        $profileModel->changeDeletedAt(new \DateTime);
+
+        $dataModel = $profileModel->toArray();
+        $builder->update($dataModel);
+
+        $profileDomain = $this->profileTranslator->setModel($profileModel)->toDomain();
+        $profileDomain->setModulesAggregator([]);
+        $this->syncPrivileges($profileDomain, $profileModel);
     }
 
     public function persistProfile(Profile $profile): Profile
@@ -198,6 +204,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     private function updateAttributesModelProfile(array $data = []): ProfileModel
     {
         $this->model->fill($data);
+        $this->model->exists = true;
         return $this->model;
     }
 
@@ -211,12 +218,12 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $profileId = $profile->id()->value();
         $pivotTable = $model->pivotModules()->getTable();
 
-        $builderPivot = $this->database->table($pivotTable);
-        $builderPivot->where('pri__pro_id', $profileId);
-        $builderPivot->delete();
+        $builder = $this->database->table($pivotTable);
+        $builder->where('pri__pro_id', $profileId);
+        $builder->delete();
 
         foreach ($profile->modulesAggregator() as $item) {
-            $builderPivot->insert([
+            $builder->insert([
                 'pri__pro_id' => $profileId,
                 'pri__mod_id' => $item
             ]);

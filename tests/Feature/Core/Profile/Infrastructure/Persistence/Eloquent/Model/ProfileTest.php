@@ -409,4 +409,41 @@ class ProfileTest extends TestCase
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function test_deletedAt_should_return_datetime(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Profile::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('deleted_at')
+            ->willReturn('2024-05-12 22:07:00');
+
+        $result = $this->modelMock->deletedAt();
+
+        $this->assertInstanceOf(\DateTime::class, $result);
+    }
+
+    public function test_changeDeletedAt_should_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Profile::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $datetime = new \DateTime('2024-05-12 22:07:00');
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('deleted_at', $datetime)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeDeletedAt($datetime);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($this->modelMock, $result);
+    }
 }

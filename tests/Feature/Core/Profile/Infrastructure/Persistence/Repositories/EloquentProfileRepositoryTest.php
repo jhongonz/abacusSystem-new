@@ -433,29 +433,36 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturn(1);
 
         $builder = $this->mock(Builder::class);
-
-        $modelMock = $this->mock(ProfileModel::class);
-
-        $relationMock = $this->mock(BelongsToMany::class);
-        $relationMock->shouldReceive('detach')
+        $builder->shouldReceive('where')
             ->once()
-            ->andReturn(1);
+            ->with('pro_id', 1)
+            ->andReturnSelf();
 
-        $modelMock->shouldReceive('pivotModules')
-            ->once()
-            ->andReturn($relationMock);
-
+        $modelMock = $this->mock(\stdClass::class);
         $builder->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
 
-        $builder->shouldReceive('where')
-            ->times(2)
-            ->with('pro_id', 1)
-            ->andReturnSelf();
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->willReturnSelf();
 
-        $builder->shouldReceive('delete')
+        $this->model->expects(self::once())
+            ->method('changeDeletedAt')
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builder->shouldReceive('update')
             ->once()
+            ->with([])
             ->andReturn(1);
 
         $this->model->expects(self::once())
@@ -466,6 +473,61 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builder);
+
+        $this->translator->expects(self::once())
+            ->method('setModel')
+            ->with($this->model)
+            ->willReturnSelf();
+
+        $profileMock = $this->createMock(Profile::class);
+        $profileMock->expects(self::once())
+            ->method('setModulesAggregator')
+            ->with([])
+            ->willReturnSelf();
+
+        $profileMock->expects(self::once())
+            ->method('id')
+            ->willReturn($profileId);
+
+        $this->translator->expects(self::once())
+            ->method('toDomain')
+            ->willReturn($profileMock);
+
+        $relationMock = $this->mock(BelongsToMany::class);
+        $relationMock->shouldReceive('getTable')
+            ->once()
+            ->andReturn('privileges');
+
+        $builderSyncMock = $this->mock(Builder::class);
+        $builderSyncMock->shouldReceive('where')
+            ->once()
+            ->with('pri__pro_id', 1)
+            ->andReturnSelf();
+
+        $builderSyncMock->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
+
+        $profileMock->expects(self::once())
+            ->method('modulesAggregator')
+            ->willReturn([2]);
+
+        $builderSyncMock->shouldReceive('insert')
+            ->once()
+            ->with([
+                'pri__pro_id' => 1,
+                'pri__mod_id' => 2,
+            ])
+            ->andReturn(1);
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('privileges')
+            ->andReturn($builderSyncMock);
+
+        $this->model->expects(self::once())
+            ->method('pivotModules')
+            ->willReturn($relationMock);
 
         $this->repository->deleteProfile($profileId);
         $this->assertTrue(true);
