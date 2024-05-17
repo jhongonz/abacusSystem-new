@@ -24,6 +24,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -213,9 +214,15 @@ class EmployeeTranslatorTest extends TestCase
             ->method('id')
             ->willReturn(1);
 
+        $relationMock = $this->mock(HasOne::class);
+        $relationMock->shouldReceive('first')
+            ->once()
+            ->with(['user_id'])
+            ->andReturn($userMock);
+
         $modelMock->expects(self::once())
-            ->method('user')
-            ->willReturn($userMock);
+            ->method('relationWithUser')
+            ->willReturn($relationMock);
 
         $userIdMock = $this->createMock(EmployeeUserId::class);
         $this->factory->expects(self::once())

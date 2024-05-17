@@ -68,7 +68,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $moduleModel = $this->updateAttributesModelModule($data->toArray());
+        $moduleModel = $this->updateAttributesModelModule((array) $data);
 
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
@@ -112,8 +112,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         }
 
         $collection = [];
-        /** @var ModuleModel $moduleModel */
-        foreach ($moduleCollection as $moduleModel) {
+        foreach ($moduleCollection as $item) {
+            $moduleModel = $this->updateAttributesModelModule((array) $item);
             $collection[] = $moduleModel->id();
         }
 
@@ -135,20 +135,26 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     public function deleteModule(ModuleId $id): void
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($id->value());
+        $builder->where('mod_id', $id->value());
+        $data = $builder->first();
 
         if (is_null($data)) {
             throw new ModuleNotFoundException('Module not found with id: '.$id->value());
         }
 
-        $builder->where('mod_id', $id->value());
-        $builder->delete();
+        $moduleModel = $this->updateAttributesModelModule((array) $data);
+        $moduleModel->changeState(ValueObjectStatus::STATE_DELETE);
+        $moduleModel->changeDeletedAt(new \DateTime);
+        $dataModel = $moduleModel->toArray();
+
+        $builder->update($dataModel);
     }
 
     private function domainToModel(Module $domain): ModuleModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
+        $builder->where('mod_id', $domain->id()->value());
+        $data = $builder->first();
         $model = $this->updateAttributesModelModule((array) $data);
 
         $model->changeId($domain->id()->value());

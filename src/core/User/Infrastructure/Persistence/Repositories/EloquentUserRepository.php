@@ -56,7 +56,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
             throw new UserNotFoundException('User not found with id: '.$id->value());
         }
 
-        $userModel = $this->updateAttributesModelUser($data->toArray());
+        $userModel = $this->updateAttributesModelUser((array) $data);
 
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
@@ -66,16 +66,16 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
      */
     public function findCriteria(UserLogin $login): ?User
     {
-        $data = $this->database->table($this->getTable())
+        $builder = $this->database->table($this->getTable())
             ->where('user_login', $login->value())
-            ->where('user_state', '>', ValueObjectStatus::STATE_DELETE)
-            ->first();
+            ->where('user_state', '>', ValueObjectStatus::STATE_DELETE);
+        $data = $builder->first();
 
         if (is_null($data)) {
             throw new UserNotFoundException('User not found with login: '.$login->value());
         }
 
-        $userModel = $this->updateAttributesModelUser($data->toArray());
+        $userModel = $this->updateAttributesModelUser((array) $data);
 
         return $this->userTranslator->setModel($userModel)->toDomain();
     }
@@ -120,7 +120,8 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     public function delete(UserId $id): void
     {
         $builder = $this->database->table($this->getTable());
-        $dataUser = $builder->find($id->value());
+        $builder->where('user_id', $id->value());
+        $dataUser = $builder->first();
 
         if (is_null($dataUser)) {
             throw new UserNotFoundException('User not found with id: '.$id->value());
@@ -136,8 +137,9 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     private function domainToModel(User $domain): UserModel
     {
         $builder = $this->database->table($this->getTable());
-        $data = $builder->find($domain->id()->value());
-        $model = $this->updateAttributesModelUser($data);
+        $builder->where('user_id', $domain->id()->value());
+        $data = $builder->first();
+        $model = $this->updateAttributesModelUser((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeEmployeeId($domain->employeeId()->value());

@@ -482,4 +482,41 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function test_deletedAt_should_return_null(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Module::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('deleted_at')
+            ->willReturn(null);
+
+        $result = $this->modelMock->deletedAt();
+
+        $this->assertNull($result);
+    }
+
+    public function test_changeDeletedAt_should_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Module::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $datetime = new \DateTime;
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('deleted_at', $datetime)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeDeletedAt($datetime);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($this->modelMock, $result);
+    }
 }

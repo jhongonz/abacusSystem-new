@@ -12,12 +12,11 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
-use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\ValueObjects\UserId;
-use Core\User\Domain\ValueObjects\UserState;
 use DateTime;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -25,8 +24,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
+use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\ImageManager;
-use JetBrains\PhpStorm\NoReturn;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -50,6 +49,7 @@ class EmployeeController extends Controller implements HasMiddleware
     private ImageManager $imageManager;
 
     private DataTables $dataTable;
+    private ViewFactory $viewFactory;
 
     private string $imagePathTmp;
 
@@ -66,6 +66,7 @@ class EmployeeController extends Controller implements HasMiddleware
         ProfileManagementContract $profileService,
         DataTables $dataTable,
         ImageManager $imageManager,
+        ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
@@ -78,6 +79,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $this->profileService = $profileService;
         $this->dataTable = $dataTable;
         $this->imageManager = $imageManager;
+        $this->viewFactory = $viewFactory;
         $this->imagePathTmp = '/images/tmp/';
         $this->imagePathFull = '/images/full/';
         $this->imagePathSmall = '/images/small/';
@@ -85,7 +87,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function index(): JsonResponse|string
     {
-        $view = view('employee.index')
+        $view = $this->viewFactory->make('employee.index')
             ->with('pagination', $this->getPagination())
             ->render();
 
@@ -120,7 +122,7 @@ class EmployeeController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$employeeId->value(), $exception->getTrace());
 
-            return response()->json(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if (! is_null($employee->userId()->value())) {
@@ -143,7 +145,7 @@ class EmployeeController extends Controller implements HasMiddleware
             }
         }
 
-        return response()->json(status: Response::HTTP_CREATED);
+        return new JsonResponse(status:Response::HTTP_CREATED);
     }
 
     public function getEmployee(?int $id = null): JsonResponse|string
@@ -163,7 +165,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $profiles = $this->profileService->searchProfiles();
         $userId = (! is_null($employee)) ? $employee->userId()->value() : null;
 
-        $view = view('employee.employee-form')
+        $view = $this->viewFactory->make('employee.employee-form')
             ->with('userId', $userId)
             ->with('employeeId', $employeeId->value())
             ->with('employee', $employee)
@@ -188,13 +190,13 @@ class EmployeeController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(
+            return new JsonResponse(
                 ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
-        return response()->json(['userId' => $userId->value(), 'employeeId' => $employeeId->value()], Response::HTTP_CREATED);
+        return new JsonResponse(['userId' => $userId->value(), 'employeeId' => $employeeId->value()], Response::HTTP_CREATED);
     }
 
     /**
@@ -228,7 +230,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $image->save(public_path($this->imagePathTmp).$filename, quality: 70);
         $imageUrl = url($this->imagePathTmp.$filename);
 
-        return response()->json(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
+        return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
     }
 
     public function deleteEmployee(int $id): JsonResponse
@@ -237,7 +239,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
         try {
-            $this->employeeService->updateEmployee($employeeId, ['state' => EmployeeState::STATE_DELETE]);
+            $this->employeeService->updateEmployee($employeeId, ['state' => ValueObjectStatus::STATE_DELETE]);
             $this->employeeService->deleteEmployee($employeeId);
             $this->deleteImage($employee->phone()->value());
         } catch (Exception $exception) {
@@ -249,23 +251,21 @@ class EmployeeController extends Controller implements HasMiddleware
             $userId = $this->userFactory->buildId($employee->userId()->value());
 
             try {
-                $this->userService->updateUser($userId, ['state' => UserState::STATE_DELETE]);
+                $this->userService->updateUser($userId, ['state' => ValueObjectStatus::STATE_DELETE]);
                 $this->userService->deleteUser($userId);
             } catch (Exception $exception) {
                 $this->logger->error($exception->getMessage(), $exception->getTrace());
             }
         }
 
-        return response()->json(status: Response::HTTP_OK);
+        return new JsonResponse(status: Response::HTTP_OK);
     }
 
     /**
      * @throws Exception
      */
-    #[NoReturn]
     private function updateEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
-        $dataUpdateUser = [];
         $dataUpdate = [
             'identifier' => $request->input('identifier'),
             'typeDocument' => $request->input('typeDocument'),
@@ -275,7 +275,11 @@ class EmployeeController extends Controller implements HasMiddleware
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
+            'birthdate' => ($request->input('birthdate')) ? DateTime::createFromFormat('d/m/Y', $request->input('birthdate')) : $request->input('birthdate'),
+        ];
+
+        $dataUpdateUser = [
+            'profileId' => $request->input('profile'),
         ];
 
         if (! is_null($request->input('token'))) {
@@ -295,7 +299,6 @@ class EmployeeController extends Controller implements HasMiddleware
         }
     }
 
-    #[NoReturn]
     private function createEmployee(StoreEmployeeRequest $request, EmployeeId $employeeId, UserId $userId): void
     {
         $employee = $this->employeeFactory->buildEmployee(

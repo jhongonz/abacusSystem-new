@@ -19,7 +19,7 @@ class EmployeeAddress implements ValueObjectContract
     }
 
     /**
-     * @param  string  $value
+     * @param  null|string  $value
      * @return $this
      */
     public function setValue($value): self

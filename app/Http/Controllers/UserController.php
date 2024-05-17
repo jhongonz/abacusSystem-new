@@ -9,14 +9,15 @@ use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
-use Core\User\Domain\ValueObjects\UserState;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseFoundation;
 
@@ -31,12 +32,14 @@ class UserController extends Controller implements HasMiddleware
     private EmployeeFactoryContract $employeeFactory;
 
     private EmployeeManagementContract $employeeService;
+    private ViewFactory $viewFactory;
 
     public function __construct(
         UserFactoryContract $userFactory,
         UserManagementContract $userService,
         EmployeeFactoryContract $employeeFactory,
         EmployeeManagementContract $employeeService,
+        ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
@@ -45,11 +48,12 @@ class UserController extends Controller implements HasMiddleware
         $this->userService = $userService;
         $this->employeeFactory = $employeeFactory;
         $this->employeeService = $employeeService;
+        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string
     {
-        $view = view('user.index')
+        $view = $this->viewFactory->make('user.index')
             ->with('pagination', $this->getPagination())
             ->render();
 
@@ -58,12 +62,12 @@ class UserController extends Controller implements HasMiddleware
 
     public function recoveryAccount(): JsonResponse|string
     {
-        $view = view('user.recovery-account')->render();
+        $view = $this->viewFactory->make('user.recovery-account')->render();
 
         return $this->renderView($view);
     }
 
-    public function validateAccount(RecoveryAccountRequest $request)
+    public function validateAccount(RecoveryAccountRequest $request): void
     {
         $identification = $this->employeeFactory->buildEmployeeIdentification(
             $request->input('identification')
@@ -81,13 +85,16 @@ class UserController extends Controller implements HasMiddleware
         } catch (AssertionFailedException $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return redirect()->route('index');
+            return new RedirectResponse(route('index'));
         }
 
-        return response()->view('user.restart-password', [
-            'idUser' => $id,
-            'activeLink' => true,
-        ]);
+        $view = $this->viewFactory->make('user.restart-password', [
+                'idUser' => $id,
+                'activeLink' => true,
+            ])
+            ->render();
+
+        return new Response($view);
     }
 
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
@@ -97,13 +104,13 @@ class UserController extends Controller implements HasMiddleware
         );
 
         $dataUpdate = [
-            'state' => UserState::STATE_ACTIVE,
+            'state' => ValueObjectStatus::STATE_ACTIVE,
             'password' => $this->makeHashPassword($request->input('password')),
         ];
 
         $this->userService->updateUser($idUser, $dataUpdate);
 
-        return response()->json(status: ResponseFoundation::HTTP_CREATED);
+        return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }
 
     /**

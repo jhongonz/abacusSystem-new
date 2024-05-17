@@ -21,7 +21,7 @@ abstract class Controller
     public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
     {
         if (request()->ajax()) {
-            return response()->json(['html' => $html], $code);
+            return new JsonResponse(['html' => $html], $code);
         }
 
         return $html;

@@ -14,13 +14,12 @@ use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
-use Core\Profile\Domain\ValueObjects\ProfileState;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use JetBrains\PhpStorm\NoReturn;
+use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -36,6 +35,7 @@ class ProfileController extends Controller implements HasMiddleware
     private ModuleManagementContract $moduleService;
 
     private DataTables $dataTable;
+    private ViewFactory $viewFactory;
 
     public function __construct(
         ProfileFactoryContract $profileFactory,
@@ -43,6 +43,7 @@ class ProfileController extends Controller implements HasMiddleware
         ProfileDataTransformerContract $profileDataTransformer,
         ModuleManagementContract $moduleService,
         DataTables $dataTable,
+        ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
         parent::__construct($logger);
@@ -51,11 +52,12 @@ class ProfileController extends Controller implements HasMiddleware
         $this->profileDataTransformer = $profileDataTransformer;
         $this->moduleService = $moduleService;
         $this->dataTable = $dataTable;
+        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string
     {
-        $view = view('profile.index')
+        $view = $this->viewFactory->make('profile.index')
             ->with('pagination', $this->getPagination())
             ->render();
 
@@ -77,7 +79,7 @@ class ProfileController extends Controller implements HasMiddleware
         $profileId = $this->profileFactory->buildProfileId($request->input('id'));
         $profile = $this->profileService->searchProfileById($profileId);
 
-        if ($profile->state()->isNew() || $profile->state()->isInactived()) {
+        if ($profile->state()->isNew() || $profile->state()->isInactivated()) {
             $profile->state()->activate();
         } elseif ($profile->state()->isActivated()) {
             $profile->state()->inactive();
@@ -90,12 +92,12 @@ class ProfileController extends Controller implements HasMiddleware
             ProfileUpdatedOrDeletedEvent::dispatch($profileId);
             RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
-            $this->logger->error('Profile can not be updated with id: '.$profileId->value());
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function deleteProfile(int $id): JsonResponse
@@ -103,7 +105,6 @@ class ProfileController extends Controller implements HasMiddleware
         $profileId = $this->profileFactory->buildProfileId($id);
 
         try {
-            $this->profileService->updateProfile($profileId, ['state' => ProfileState::STATE_DELETE]);
             $this->profileService->deleteProfile($profileId);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -111,7 +112,7 @@ class ProfileController extends Controller implements HasMiddleware
 
         ProfileUpdatedOrDeletedEvent::dispatch($profileId);
 
-        return response()->json(status: Response::HTTP_OK);
+        return new JsonResponse(status: Response::HTTP_OK);
     }
 
     public function getProfile(?int $id = null): JsonResponse
@@ -126,7 +127,7 @@ class ProfileController extends Controller implements HasMiddleware
         $modules = $this->moduleService->searchModules();
         $privileges = $this->retrievePrivilegesProfile($profile, $modules);
 
-        $view = view('profile.profile-form')
+        $view = $this->viewFactory->make('profile.profile-form')
             ->with('id', $id)
             ->with('profile', $profile)
             ->with('modules', $modules)
@@ -147,16 +148,15 @@ class ProfileController extends Controller implements HasMiddleware
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return response()->json(
+            return new JsonResponse(
                 ['msg' => 'Ha ocurrido un error al guardar el registro, consulte con su administrador de sistemas'],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
 
-        return response()->json(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
-    #[NoReturn]
     private function createProfile(StoreProfileRequest $request, ProfileId $profileId): void
     {
         $profile = $this->profileFactory->buildProfile(
@@ -213,10 +213,15 @@ class ProfileController extends Controller implements HasMiddleware
 
         foreach ($parents as $index => $item) {
             $modulesParent = $modules->moduleElementsOfKey($index);
-            $privileges[$index]['menu'] = $item;
+
+            if (count($modulesParent) > 0) {
+                $privileges[$index]['menu'] = $item;
+                $privileges[$index]['children'] = [];
+            }
+
             /** @var Module $module */
             foreach ($modulesParent as $module) {
-                if (! $module->state()->isInactived()) {
+                if (! $module->state()->isInactivated()) {
                     $privileges[$index]['children'][] = [
                         'module' => $module,
                         'selected' => in_array($module->id()->value(), $modulesToProfile),

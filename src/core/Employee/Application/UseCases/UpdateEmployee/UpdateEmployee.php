@@ -79,21 +79,21 @@ class UpdateEmployee extends UseCasesService
         return $employee;
     }
 
-    private function changeAddress(Employee $employee, string $address): Employee
+    private function changeAddress(Employee $employee, ?string $address): Employee
     {
         $employee->address()->setValue($address);
 
         return $employee;
     }
 
-    private function changeObservations(Employee $employee, string $observations): Employee
+    private function changeObservations(Employee $employee, ?string $observations): Employee
     {
         $employee->observations()->setValue($observations);
 
         return $employee;
     }
 
-    private function changeBirthdate(Employee $employee, DateTime $birthdate): Employee
+    private function changeBirthdate(Employee $employee, ?DateTime $birthdate): Employee
     {
         $employee->birthdate()->setValue($birthdate);
 

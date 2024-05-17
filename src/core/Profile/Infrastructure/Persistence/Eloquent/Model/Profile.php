@@ -73,6 +73,15 @@ class Profile extends Model
      */
     protected string $mainSearchField = 'pro_search';
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+    }
+
     public function getSearchField(): string
     {
         return $this->mainSearchField;
@@ -190,6 +199,21 @@ class Profile extends Model
     public function changeUpdatedAt(DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
         return $this;
     }
 

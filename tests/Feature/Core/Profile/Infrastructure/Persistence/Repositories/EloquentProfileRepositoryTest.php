@@ -111,7 +111,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -124,10 +124,6 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builderMock);
-
-        $modelMock->expects(self::once())
-            ->method('toArray')
-            ->willReturn([]);
 
         $this->model->expects(self::once())
             ->method('fill')
@@ -222,7 +218,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = $this->createMock(ProfileModel::class);
+        $modelMock = new \stdClass;
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -235,10 +231,6 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builderMock);
-
-        $modelMock->expects(self::once())
-            ->method('toArray')
-            ->willReturn([]);
 
         $this->model->expects(self::once())
             ->method('fill')
@@ -335,14 +327,20 @@ class EloquentProfileRepositoryTest extends TestCase
             ->andReturnSelf();
 
         $modelMock = $this->createMock(ProfileModel::class);
-        $modelMock->expects(self::once())
-            ->method('id')
-            ->willReturn(1);
 
         $builderMock->shouldReceive('get')
             ->once()
             ->with(['pro_id'])
             ->andReturn([$modelMock]);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with((array) $modelMock)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -435,30 +433,36 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturn(1);
 
         $builder = $this->mock(Builder::class);
-
-        $modelMock = $this->mock(ProfileModel::class);
-
-        $relationMock = $this->mock(BelongsToMany::class);
-        $relationMock->shouldReceive('detach')
-            ->once()
-            ->andReturn(1);
-
-        $modelMock->shouldReceive('pivotModules')
-            ->once()
-            ->andReturn($relationMock);
-
-        $builder->shouldReceive('find')
-            ->once()
-            ->with(1)
-            ->andReturn($modelMock);
-
         $builder->shouldReceive('where')
             ->once()
             ->with('pro_id', 1)
             ->andReturnSelf();
 
-        $builder->shouldReceive('delete')
+        $modelMock = $this->mock(\stdClass::class);
+        $builder->shouldReceive('first')
             ->once()
+            ->andReturn($modelMock);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeDeletedAt')
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builder->shouldReceive('update')
+            ->once()
+            ->with([])
             ->andReturn(1);
 
         $this->model->expects(self::once())
@@ -469,6 +473,61 @@ class EloquentProfileRepositoryTest extends TestCase
             ->once()
             ->with('profiles')
             ->andReturn($builder);
+
+        $this->translator->expects(self::once())
+            ->method('setModel')
+            ->with($this->model)
+            ->willReturnSelf();
+
+        $profileMock = $this->createMock(Profile::class);
+        $profileMock->expects(self::once())
+            ->method('setModulesAggregator')
+            ->with([])
+            ->willReturnSelf();
+
+        $profileMock->expects(self::once())
+            ->method('id')
+            ->willReturn($profileId);
+
+        $this->translator->expects(self::once())
+            ->method('toDomain')
+            ->willReturn($profileMock);
+
+        $relationMock = $this->mock(BelongsToMany::class);
+        $relationMock->shouldReceive('getTable')
+            ->once()
+            ->andReturn('privileges');
+
+        $builderSyncMock = $this->mock(Builder::class);
+        $builderSyncMock->shouldReceive('where')
+            ->once()
+            ->with('pri__pro_id', 1)
+            ->andReturnSelf();
+
+        $builderSyncMock->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
+
+        $profileMock->expects(self::once())
+            ->method('modulesAggregator')
+            ->willReturn([2]);
+
+        $builderSyncMock->shouldReceive('insert')
+            ->once()
+            ->with([
+                'pri__pro_id' => 1,
+                'pri__mod_id' => 2,
+            ])
+            ->andReturn(1);
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('privileges')
+            ->andReturn($builderSyncMock);
+
+        $this->model->expects(self::once())
+            ->method('pivotModules')
+            ->willReturn($relationMock);
 
         $this->repository->deleteProfile($profileId);
         $this->assertTrue(true);
@@ -487,13 +546,12 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builder = $this->mock(Builder::class);
 
-        $builder->shouldReceive('find')
+        $builder->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn(null);
 
         $builder->shouldReceive('where')
-            ->never()
+            ->once()
             ->with('pro_id', 1);
 
         $builder->shouldReceive('delete')
@@ -522,19 +580,18 @@ class EloquentProfileRepositoryTest extends TestCase
         $profileMock = $this->createMock(Profile::class);
 
         $profileIdMock = $this->createMock(ProfileId::class);
-        $profileIdMock->expects(self::exactly(2))
+        $profileIdMock->expects(self::exactly(3))
             ->method('value')
-            ->willReturn(null);
+            ->willReturnOnConsecutiveCalls(null, null, 1);
         $profileIdMock->expects(self::once())
             ->method('setValue')
             ->with(1)
             ->willReturnSelf();
-        $profileMock->expects(self::exactly(3))
+        $profileMock->expects(self::exactly(4))
             ->method('id')
             ->willReturn($profileIdMock);
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('changeId')
-            ->with(null)
             ->willReturnSelf();
 
         $nameMock = $this->createMock(ProfileName::class);
@@ -611,9 +668,13 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('where')
             ->once()
-            ->with(null)
+            ->with('pro_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
             ->andReturn([]);
 
         $this->model->expects(self::once())
@@ -640,22 +701,44 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $profileMock->expects(self::once())
             ->method('modulesAggregator')
-            ->willReturn([]);
+            ->willReturn([2]);
 
         $relationMock = $this->mock(BelongsToMany::class);
-        $relationMock->shouldReceive('sync')
+        $relationMock->shouldReceive('getTable')
             ->once()
-            ->with([])
-            ->andReturn([]);
+            ->andReturn('privileges');
 
         $this->model->expects(self::once())
             ->method('pivotModules')
             ->willReturn($relationMock);
 
+        $builderSyncMock = $this->mock(Builder::class);
+        $builderSyncMock->shouldReceive('where')
+            ->once()
+            ->with('pri__pro_id', 1)
+            ->andReturnSelf();
+
+        $builderSyncMock->shouldReceive('insert')
+            ->once()
+            ->with([
+                'pri__pro_id' => 1,
+                'pri__mod_id' => 2,
+            ])
+            ->andReturn(true);
+
+        $builderSyncMock->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
+
         $this->databaseManager->shouldReceive('table')
             ->times(2)
             ->with('profiles')
             ->andReturn($builderMock);
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('privileges')
+            ->andReturn($builderSyncMock);
 
         $result = $this->repository->persistProfile($profileMock);
 
@@ -671,12 +754,12 @@ class EloquentProfileRepositoryTest extends TestCase
         $profileMock = $this->createMock(Profile::class);
 
         $profileIdMock = $this->createMock(ProfileId::class);
-        $profileIdMock->expects(self::exactly(2))
+        $profileIdMock->expects(self::exactly(3))
             ->method('value')
             ->willReturn(1);
         $profileIdMock->expects(self::never())
             ->method('setValue');
-        $profileMock->expects(self::exactly(2))
+        $profileMock->expects(self::exactly(3))
             ->method('id')
             ->willReturn($profileIdMock);
         $this->model->expects(self::once())
@@ -758,9 +841,8 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('find')
+        $builderMock->shouldReceive('first')
             ->once()
-            ->with(1)
             ->andReturn([]);
 
         $this->model->expects(self::once())
@@ -784,7 +866,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->never();
 
         $builderMock->shouldReceive('where')
-            ->once()
+            ->times(2)
             ->with('pro_id', 1)
             ->andReturnSelf();
 
@@ -795,22 +877,44 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $profileMock->expects(self::once())
             ->method('modulesAggregator')
-            ->willReturn([]);
+            ->willReturn([2]);
 
         $relationMock = $this->mock(BelongsToMany::class);
-        $relationMock->shouldReceive('sync')
+        $relationMock->shouldReceive('getTable')
             ->once()
-            ->with([])
-            ->andReturn([]);
+            ->andReturn('privileges');
 
         $this->model->expects(self::once())
             ->method('pivotModules')
             ->willReturn($relationMock);
 
+        $builderSyncMock = $this->mock(Builder::class);
+        $builderSyncMock->shouldReceive('where')
+            ->once()
+            ->with('pri__pro_id', 1)
+            ->andReturnSelf();
+
+        $builderSyncMock->shouldReceive('delete')
+            ->once()
+            ->andReturn(1);
+
+        $builderSyncMock->shouldReceive('insert')
+            ->once()
+            ->with([
+                'pri__pro_id' => 1,
+                'pri__mod_id' => 2,
+            ])
+            ->andReturn(true);
+
         $this->databaseManager->shouldReceive('table')
             ->times(2)
             ->with('profiles')
             ->andReturn($builderMock);
+
+        $this->databaseManager->shouldReceive('table')
+            ->once()
+            ->with('privileges')
+            ->andReturn($builderSyncMock);
 
         $result = $this->repository->persistProfile($profileMock);
 
