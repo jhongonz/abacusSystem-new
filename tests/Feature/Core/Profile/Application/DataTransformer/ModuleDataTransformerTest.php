@@ -9,6 +9,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
@@ -107,6 +108,14 @@ class ModuleDataTransformerTest extends TestCase
             ->method('state')
             ->willReturn($moduleState);
 
+        $modulePosition = $this->createMock(ModulePosition::class);
+        $modulePosition->expects(self::once())
+            ->method('value')
+            ->willReturn(2);
+        $this->module->expects(self::once())
+            ->method('position')
+            ->willReturn($modulePosition);
+
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
@@ -189,6 +198,14 @@ class ModuleDataTransformerTest extends TestCase
         $this->module->expects(self::exactly(2))
             ->method('state')
             ->willReturn($moduleState);
+
+        $modulePosition = $this->createMock(ModulePosition::class);
+        $modulePosition->expects(self::once())
+            ->method('value')
+            ->willReturn(2);
+        $this->module->expects(self::once())
+            ->method('position')
+            ->willReturn($modulePosition);
 
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())

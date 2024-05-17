@@ -280,6 +280,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $dataUpdateUser = [
             'profileId' => $request->input('profile'),
+            'login' => $request->input('login'),
         ];
 
         if (! is_null($request->input('token'))) {

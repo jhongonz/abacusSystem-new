@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ModuleController;
@@ -53,4 +54,8 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function 
     Route::get('/delete/{id}', 'deleteProfile')->whereNumber('id')->name('profile.delete-profile');
     Route::get('/get/{id?}', 'getProfile')->whereNumber('id')->name('profile.get-profile');
     Route::post('/store', 'storeProfile')->name('profile.store');
+});
+
+Route::controller(CompanyController::class)->prefix('company')->group(function () {
+    Route::get('', 'index')->name('company.index');
 });

@@ -44,6 +44,7 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
             'route' => $this->module->route()->value(),
             'icon' => $this->module->icon()->value(),
             'state' => $this->module->state()->value(),
+            'position' => $this->module->position()->value(),
             'createdAt' => $this->module->createdAt()->value(),
             'updatedAt' => $this->module->updatedAt()->value(),
         ];

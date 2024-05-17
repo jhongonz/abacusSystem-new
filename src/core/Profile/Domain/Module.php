@@ -7,6 +7,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -33,6 +34,7 @@ class Module
     private ModuleUpdatedAt $updatedAt;
 
     private ModuleSearch $search;
+    private ModulePosition $position;
 
     private array $options = [];
 
@@ -57,6 +59,7 @@ class Module
 
         $this->search = new ModuleSearch;
         $this->updatedAt = new ModuleUpdatedAt;
+        $this->position = new ModulePosition;
     }
 
     public function id(): ModuleId
@@ -176,6 +179,17 @@ class Module
     {
         $this->options = $data;
 
+        return $this;
+    }
+
+    public function position(): ModulePosition
+    {
+        return $this->position;
+    }
+
+    public function setPosition(ModulePosition $position): self
+    {
+        $this->position = $position;
         return $this;
     }
 
