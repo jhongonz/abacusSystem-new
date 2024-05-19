@@ -13,7 +13,6 @@ use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\ValueObjects\UserId;
@@ -131,8 +130,7 @@ class EmployeeController extends Controller implements HasMiddleware
             );
 
             try {
-                $user->state()->setValue($employee->state()->value());
-                $dataUpdate['state'] = $user->state()->value();
+                $dataUpdate['state'] = $employee->state()->value();
                 $this->userService->updateUser($user->id(), $dataUpdate);
                 UserUpdateOrDeleteEvent::dispatch($user->id());
             } catch (Exception $exception) {
@@ -239,9 +237,8 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee = $this->employeeService->searchEmployeeById($employeeId);
 
         try {
-            $this->employeeService->updateEmployee($employeeId, ['state' => ValueObjectStatus::STATE_DELETE]);
             $this->employeeService->deleteEmployee($employeeId);
-            $this->deleteImage($employee->phone()->value());
+            $this->deleteImage($employee->image()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
@@ -251,7 +248,6 @@ class EmployeeController extends Controller implements HasMiddleware
             $userId = $this->userFactory->buildId($employee->userId()->value());
 
             try {
-                $this->userService->updateUser($userId, ['state' => ValueObjectStatus::STATE_DELETE]);
                 $this->userService->deleteUser($userId);
             } catch (Exception $exception) {
                 $this->logger->error($exception->getMessage(), $exception->getTrace());

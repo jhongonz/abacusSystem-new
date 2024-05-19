@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ModuleController;
@@ -56,6 +56,6 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function 
     Route::post('/store', 'storeProfile')->name('profile.store');
 });
 
-Route::controller(CompanyController::class)->prefix('company')->group(function () {
-    Route::get('', 'index')->name('company.index');
+Route::controller(InstitutionController::class)->prefix('institution')->group(function () {
+    Route::get('', 'index')->name('institution.index');
 });

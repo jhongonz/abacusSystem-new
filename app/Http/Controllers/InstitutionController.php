@@ -8,7 +8,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 
-class CompanyController extends Controller implements HasMiddleware
+class InstitutionController extends Controller implements HasMiddleware
 {
     private ViewFactory $viewFactory;
 
