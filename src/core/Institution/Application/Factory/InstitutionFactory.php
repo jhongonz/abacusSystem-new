@@ -29,24 +29,41 @@ class InstitutionFactory implements InstitutionFactoryContract
      */
     public function buildInstitutionFromArray(array $data): Institution
     {
+        $data = $data[Institution::TYPE];
         $institution = $this->buildInstitution(
             $this->buildInstitutionId($data['id']),
             $this->buildInstitutionName($data['name'])
         );
 
-        $institution->shortname()->setValue($data['shortname']);
-        $institution->code()->setValue($data['code']);
-        $institution->logo()->setValue($data['logo']);
-        $institution->search()->setValue($data['search']);
-        $institution->observations()->setValue($data['observations']);
-        $institution->state()->setValue($data['state']);
-
-        $institution->createdAt()->setValue(
-            new DateTime($data['createdAt']['date'])
+        $institution->setShortname(
+            $this->buildInstitutionShortname($data['shortname'])
+        );
+        $institution->setCode(
+            $this->buildInstitutionCode($data['code'])
+        );
+        $institution->setLogo(
+            $this->buildInstitutionLogo($data['logo'])
+        );
+        $institution->setSearch(
+            $this->buildInstitutionSearch($data['search'])
+        );
+        $institution->setObservations(
+            $this->buildInstitutionObservations($data['observations'])
+        );
+        $institution->setState(
+            $this->buildInstitutionState($data['state'])
         );
 
-        $institution->updatedAt()->setValue(
-            new DateTime($data['updatedAt']['date'])
+        $institution->setCreatedAt(
+            $this->buildInstitutionCreatedAt(
+                $this->getDateTime($data['createdAt']['date'])
+            )
+        );
+
+        $institution->setUpdatedAt(
+            $this->buildInstitutionUpdatedAt(
+                $this->getDateTime($data['updatedAt']['date'])
+            )
         );
 
         return $institution;
@@ -113,5 +130,13 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutions(Institution ...$institutions): Institutions
     {
         return new Institutions(... $institutions);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(?string $datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }

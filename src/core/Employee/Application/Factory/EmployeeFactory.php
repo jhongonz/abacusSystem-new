@@ -4,6 +4,7 @@ namespace Core\Employee\Application\Factory;
 
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
 use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
@@ -187,5 +188,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     private function getDateTime(?string $datetime = null): DateTime
     {
         return new DateTime($datetime);
+    }
+
+    public function buildEmployees(Employee ...$employees): Employees
+    {
+        return new Employees(... $employees);
     }
 }

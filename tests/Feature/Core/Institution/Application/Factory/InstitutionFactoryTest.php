@@ -41,16 +41,18 @@ class InstitutionFactoryTest extends TestCase
     public function test_buildInstitutionFromArray_should_return_object(): void
     {
         $data = [
-            'id' => 1,
-            'name' => 'Testing',
-            'shortname' => 'Testing',
-            'code' => 'code',
-            'logo' => 'logo',
-            'search' => 'search',
-            'observations' => 'observations',
-            'state' => 1,
-            'createdAt' => json_decode(json_encode(new DateTime), true),
-            'updatedAt' => json_decode(json_encode(new DateTime), true),
+            Institution::TYPE => [
+                'id' => 1,
+                'name' => 'Testing',
+                'shortname' => 'Testing',
+                'code' => 'code',
+                'logo' => 'logo',
+                'search' => 'search',
+                'observations' => 'observations',
+                'state' => 1,
+                'createdAt' => json_decode(json_encode(new DateTime), true),
+                'updatedAt' => json_decode(json_encode(new DateTime), true),
+            ]
         ];
 
         $result = $this->factory->buildInstitutionFromArray($data);

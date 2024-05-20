@@ -3,6 +3,7 @@
 namespace Core\Employee\Domain\Contracts;
 
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
 use Core\Employee\Domain\ValueObjects\EmployeeBirthdate;
 use Core\Employee\Domain\ValueObjects\EmployeeCreatedAt;
@@ -65,4 +66,6 @@ interface EmployeeFactoryContract
     public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType;
 
     public function buildEmployeeImage(?string $image = null): EmployeeImage;
+
+    public function buildEmployees(Employee ...$employees): Employees;
 }
