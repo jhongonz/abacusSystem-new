@@ -19,6 +19,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 
 class Institution
 {
+    public const TYPE = 'institution';
     private InstitutionId $id;
     private InstitutionCode $code;
     private InstitutionName $name;
