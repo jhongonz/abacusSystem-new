@@ -15,7 +15,9 @@ use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use Tests\Feature\Core\Institution\Application\Factory\DataProvider\DataProviderInstitutionFactory;
 use Tests\TestCase;
 
 #[CoversClass(InstitutionFactory::class)]
@@ -38,23 +40,9 @@ class InstitutionFactoryTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_buildInstitutionFromArray_should_return_object(): void
+    #[DataProviderExternal(DataProviderInstitutionFactory::class, 'provider')]
+    public function test_buildInstitutionFromArray_should_return_object(array $data): void
     {
-        $data = [
-            Institution::TYPE => [
-                'id' => 1,
-                'name' => 'Testing',
-                'shortname' => 'Testing',
-                'code' => 'code',
-                'logo' => 'logo',
-                'search' => 'search',
-                'observations' => 'observations',
-                'state' => 1,
-                'createdAt' => json_decode(json_encode(new DateTime), true),
-                'updatedAt' => json_decode(json_encode(new DateTime), true),
-            ]
-        ];
-
         $result = $this->factory->buildInstitutionFromArray($data);
         $this->assertInstanceOf(Institution::class, $result);
     }

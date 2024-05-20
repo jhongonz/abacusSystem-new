@@ -6,6 +6,8 @@ use Core\Institution\Application\DataTransformer\InstitutionDataTransformer;
 use Core\Institution\Application\Factory\InstitutionFactory;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
+use Core\Institution\Domain\Contracts\InstitutionManagementContract;
+use Core\Institution\Infrastructure\Management\InstitutionService;
 use Illuminate\Support\ServiceProvider;
 
 class InstitutionServiceProvider extends ServiceProvider
@@ -16,6 +18,7 @@ class InstitutionServiceProvider extends ServiceProvider
     public array $singletons = [
         InstitutionFactoryContract::class => InstitutionFactory::class,
         InstitutionDataTransformerContract::class => InstitutionDataTransformer::class,
+        InstitutionManagementContract::class => InstitutionService::class,
     ];
 
     /**
