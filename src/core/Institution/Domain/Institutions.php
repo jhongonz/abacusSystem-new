@@ -11,15 +11,12 @@ use Core\SharedContext\Model\ArrayIterator;
 class Institutions extends ArrayIterator
 {
     public const TYPE = 'institutions';
-    private array $filters;
 
     public function __construct(Institution ...$institutions)
     {
         foreach ($institutions as $institution) {
             $this->addItem($institution);
         }
-
-        $this->filters = [];
     }
 
     /**

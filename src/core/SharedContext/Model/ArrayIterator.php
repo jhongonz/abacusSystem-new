@@ -15,6 +15,8 @@ abstract class ArrayIterator implements Countable, Iterator
 
     protected array $aggregator = [];
 
+    protected array $filters = [];
+
     abstract public function addItem(mixed $item): ArrayIterator;
 
     abstract public function items(): array;
@@ -22,6 +24,9 @@ abstract class ArrayIterator implements Countable, Iterator
     abstract public function addId(int $id): ArrayIterator;
 
     abstract public function aggregator(): array;
+
+    abstract public function filters(): array;
+    abstract public function setFilters(array $filters): ArrayIterator;
 
     public function current(): mixed
     {
