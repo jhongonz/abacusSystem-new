@@ -26,8 +26,6 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
 
     private string $domainToPersist;
 
-    private bool $deleteSource = false;
-
     public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -62,18 +60,11 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     }
 
     /**
-     * @throws UserNotFoundException
      * @throws Throwable
      */
     public function delete(UserId $id): void
     {
-        $this->deleteSource = true;
-
-        try {
-            $this->read(__FUNCTION__, $id);
-        } catch (Exception $exception) {
-            throw new UserNotFoundException($exception->getMessage());
-        }
+        $this->write(__FUNCTION__, $id);
     }
 
     public function persistUser(User $user): User
@@ -85,6 +76,6 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
 
     public function functionNameDelete(): bool
     {
-        return $this->deleteSource;
+        return false;
     }
 }
