@@ -151,6 +151,17 @@ class Institution extends Model
         return $this;
     }
 
+    public function search(): ?string
+    {
+        return $this->getAttribute('inst_search');
+    }
+
+    public function changeSearch(string $search): self
+    {
+        $this->setAttribute('inst_search', $search);
+        return $this;
+    }
+
     public function state(): int
     {
         return $this->getAttribute('inst_state');
@@ -192,6 +203,23 @@ class Institution extends Model
     public function changeUpdatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(?DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
 
         return $this;
     }

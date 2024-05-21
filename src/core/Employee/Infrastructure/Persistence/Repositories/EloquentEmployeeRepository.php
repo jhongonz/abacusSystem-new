@@ -38,7 +38,6 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $this->database = $database;
         $this->employeeTranslator = $translator;
         $this->priority = $priority;
-
         $this->model = $model;
     }
 
@@ -108,8 +107,11 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
-        $builder->where('emp_id', $id->value());
-        $builder->delete();
+        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
+        $employeeModel->changeState(ValueObjectStatus::STATE_DELETE);
+        $employeeModel->changeDeletedAt(new \DateTime);
+
+        $builder->update($employeeModel->toArray());
     }
 
     /**

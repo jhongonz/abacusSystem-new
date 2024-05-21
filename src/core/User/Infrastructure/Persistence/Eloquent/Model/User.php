@@ -233,6 +233,23 @@ class User extends Authenticatable
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(?DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
+
+        return $this;
+    }
+
     public function photo(): ?string
     {
         return $this->getAttribute('user_photo');
