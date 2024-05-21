@@ -23,6 +23,7 @@ class UpdateEmployee extends UseCasesService
     {
         $this->validateRequest($request, UpdateEmployeeRequest::class);
 
+        /** @var UpdateEmployeeRequest $request */
         $employee = $this->employeeRepository->find($request->employeeId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.ucfirst($field);

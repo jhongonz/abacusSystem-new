@@ -16,9 +16,9 @@ interface InstitutionManagementContract
 
     public function searchInstitutions(array $filters = []): Institutions;
 
-    public function updateInstitution(InstitutionId $id, array $data): void;
+    public function updateInstitution(InstitutionId $id, array $data): Institution;
 
-    public function createInstitution(Institution $institution): void;
+    public function createInstitution(Institution $institution): Institution;
 
     public function deleteInstitution(InstitutionId $id): void;
 }

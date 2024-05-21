@@ -1,18 +1,17 @@
 <?php
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
- * Date: 2024-05-21 12:56:37
+ * Date: 2024-05-21 22:23:08
  */
 
-namespace Core\Institution\Application\UseCases\SearchInstitution;
+namespace Core\Institution\Application\UseCases\DeleteInstitution;
 
 use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Core\Institution\Domain\Institutions;
 use Exception;
 
-class SearchInstitutions extends UseCasesService
+class DeleteInstitution extends UseCasesService
 {
     public function __construct(InstitutionRepositoryContract $institutionRepository)
     {
@@ -22,11 +21,13 @@ class SearchInstitutions extends UseCasesService
     /**
      * @throws Exception
      */
-    public function execute(RequestService $request): null|Institutions
+    public function execute(RequestService $request): null
     {
-        $this->validateRequest($request, SearchInstitutionsRequest::class);
+        $this->validateRequest($request, DeleteInstitutionRequest::class);
 
-        /** @var SearchInstitutionsRequest $request */
-        return $this->institutionRepository->getAll($request->filters());
+        /** @var DeleteInstitutionRequest $request */
+        $this->institutionRepository->delete($request->id());
+
+        return null;
     }
 }

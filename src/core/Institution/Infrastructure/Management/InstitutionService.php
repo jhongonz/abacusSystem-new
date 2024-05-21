@@ -6,10 +6,16 @@
 
 namespace Core\Institution\Infrastructure\Management;
 
+use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitution;
+use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitutionRequest;
+use Core\Institution\Application\UseCases\DeleteInstitution\DeleteInstitution;
+use Core\Institution\Application\UseCases\DeleteInstitution\DeleteInstitutionRequest;
 use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionById;
 use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionByIdRequest;
 use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutions;
 use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionsRequest;
+use Core\Institution\Application\UseCases\UpdateInstitution\UpdateInstitution;
+use Core\Institution\Application\UseCases\UpdateInstitution\UpdateInstitutionRequest;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
@@ -22,14 +28,24 @@ class InstitutionService implements InstitutionManagementContract
     private InstitutionFactoryContract $institutionFactory;
     private SearchInstitutionById $searchInstitutionById;
     private SearchInstitutions $searchInstitutions;
+    private UpdateInstitution $updateInstitution;
+    private CreateInstitution $createInstitution;
+    private DeleteInstitution $deleteInstitution;
+
     public function __construct(
         InstitutionFactoryContract $institutionFactory,
         SearchInstitutionById $searchInstitutionById,
         SearchInstitutions $searchInstitutions,
+        UpdateInstitution $updateInstitution,
+        CreateInstitution $createInstitution,
+        DeleteInstitution $deleteInstitution
     ) {
         $this->institutionFactory = $institutionFactory;
         $this->searchInstitutionById = $searchInstitutionById;
         $this->searchInstitutions = $searchInstitutions;
+        $this->updateInstitution = $updateInstitution;
+        $this->createInstitution = $createInstitution;
+        $this->deleteInstitution = $deleteInstitution;
     }
 
     /**
@@ -58,18 +74,33 @@ class InstitutionService implements InstitutionManagementContract
         return $institutions;
     }
 
-    public function updateInstitution(InstitutionId $id, array $data): void
+    /**
+     * @throws Exception
+     */
+    public function updateInstitution(InstitutionId $id, array $data): Institution
     {
-        // TODO: Implement updateInstitution() method.
+        $request = new UpdateInstitutionRequest($id, $data);
+
+        return $this->updateInstitution->execute($request);
     }
 
-    public function createInstitution(Institution $institution): void
+    /**
+     * @throws Exception
+     */
+    public function createInstitution(Institution $institution): Institution
     {
-        // TODO: Implement createInstitution() method.
+        $request = new CreateInstitutionRequest($institution);
+
+        return $this->createInstitution->execute($request);
     }
 
+    /**
+     * @throws Exception
+     */
     public function deleteInstitution(InstitutionId $id): void
     {
-        // TODO: Implement deleteInstitution() method.
+        $request = new DeleteInstitutionRequest($id);
+
+        $this->deleteInstitution->execute($request);
     }
 }

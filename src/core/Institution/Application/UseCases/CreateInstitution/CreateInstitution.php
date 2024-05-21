@@ -1,18 +1,17 @@
 <?php
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
- * Date: 2024-05-21 12:46:55
+ * Date: 2024-05-21 22:18:57
  */
 
-namespace Core\Institution\Application\UseCases\SearchInstitution;
+namespace Core\Institution\Application\UseCases\CreateInstitution;
 
 use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
-use Exception;
 
-class SearchInstitutionById extends UseCasesService
+class CreateInstitution extends UseCasesService
 {
     public function __construct(InstitutionRepositoryContract $institutionRepository)
     {
@@ -20,13 +19,13 @@ class SearchInstitutionById extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function execute(RequestService $request): null|Institution
+    public function execute(RequestService $request): Institution
     {
-        $this->validateRequest($request, SearchInstitutionByIdRequest::class);
+        $this->validateRequest($request, CreateInstitutionRequest::class);
 
-        /** @var SearchInstitutionByIdRequest $request */
-        return $this->institutionRepository->find($request->institutionId());
+        /** @var CreateInstitutionRequest $request */
+        return $this->institutionRepository->persistInstitution($request->institution());
     }
 }
