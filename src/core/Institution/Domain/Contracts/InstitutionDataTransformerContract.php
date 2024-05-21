@@ -6,12 +6,11 @@
 
 namespace Core\Institution\Domain\Contracts;
 
-use Core\Institution\Application\DataTransformer\InstitutionDataTransformer;
 use Core\Institution\Domain\Institution;
 
 interface InstitutionDataTransformerContract
 {
-    public function write(Institution $institution): InstitutionDataTransformer;
+    public function write(Institution $institution): InstitutionDataTransformerContract;
 
     public function read(): array;
 

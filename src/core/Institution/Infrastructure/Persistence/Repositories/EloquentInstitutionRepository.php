@@ -154,7 +154,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract
         $model->changeState($domain->state()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -138,7 +139,7 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function test_createdAt_should_return_null(): void
     {
@@ -147,7 +148,7 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function test_createdAt_should_change_and_return_datetime(): void
     {
@@ -160,7 +161,7 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function test_updatedAt_should_return_null(): void
     {
@@ -169,7 +170,7 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function test_updatedAt_should_change_and_return_string(): void
     {
@@ -179,5 +180,42 @@ class InstitutionTest extends TestCase
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($this->model, $result);
         $this->assertInstanceOf(\DateTime::class, $result->updatedAt());
+    }
+
+    public function test_search_should_return_null(): void
+    {
+        $result = $this->model->search();
+        $this->assertNull($result);
+    }
+
+    public function test_search_should_change_and_return_string(): void
+    {
+        $result = $this->model->changeSearch('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->search());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_deletedAt_should_return_null(): void
+    {
+        $result = $this->model->deletedAt();
+        $this->assertNull($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_deletedAt_should_change_and_return_string(): void
+    {
+        $datetime = new \DateTime('2024-05-19 22:09:00');
+        $result = $this->model->changeDeletedAt($datetime);
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertInstanceOf(\DateTime::class, $result->deletedAt());
     }
 }
