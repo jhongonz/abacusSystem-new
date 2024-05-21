@@ -24,6 +24,8 @@ class DeleteUser extends UseCasesService
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteUserRequest::class);
+
+        /** @var DeleteUserRequest $request */
         $this->userRepository->delete($request->userId());
 
         return null;

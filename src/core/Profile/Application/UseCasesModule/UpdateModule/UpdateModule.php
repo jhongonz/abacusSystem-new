@@ -22,6 +22,7 @@ class UpdateModule extends UseCasesService
     {
         $this->validateRequest($request, UpdateModuleRequest::class);
 
+        /** @var UpdateModuleRequest $request */
         $module = $this->moduleRepository->find($request->moduleId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);

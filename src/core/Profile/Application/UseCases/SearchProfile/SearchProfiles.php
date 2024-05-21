@@ -22,6 +22,7 @@ class SearchProfiles extends UseCasesService
     {
         $this->validateRequest($request, SearchProfilesRequest::class);
 
+        /** @var SearchProfilesRequest $request */
         return $this->profileRepository->getAll($request->filters());
     }
 }

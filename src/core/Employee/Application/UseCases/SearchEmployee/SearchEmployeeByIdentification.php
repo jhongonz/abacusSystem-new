@@ -22,6 +22,7 @@ class SearchEmployeeByIdentification extends UseCasesService
     {
         $this->validateRequest($request, SearchEmployeeByIdentificationRequest::class);
 
+        /** @var SearchEmployeeByIdentificationRequest $request */
         return $this->employeeRepository->findCriteria($request->employeeIdentification());
     }
 }

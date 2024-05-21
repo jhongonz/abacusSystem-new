@@ -22,6 +22,7 @@ class UpdateProfile extends UseCasesService
     {
         $this->validateRequest($request, UpdateProfileRequest::class);
 
+        /** @var UpdateProfileRequest $request */
         $profile = $this->profileRepository->find($request->profileId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);

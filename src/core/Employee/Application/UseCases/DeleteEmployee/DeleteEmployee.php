@@ -20,6 +20,8 @@ class DeleteEmployee extends UseCasesService
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteEmployeeRequest::class);
+
+        /** @var DeleteEmployeeRequest $request */
         $this->employeeRepository->delete($request->employeeId());
 
         return null;

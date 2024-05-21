@@ -22,6 +22,7 @@ class SearchModules extends UseCasesService
     {
         $this->validateRequest($request, SearchModulesRequest::class);
 
+        /** @var SearchModulesRequest $request */
         return $this->moduleRepository->getAll($request->filters());
     }
 }

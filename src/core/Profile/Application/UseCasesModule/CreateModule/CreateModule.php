@@ -22,7 +22,7 @@ class CreateModule extends UseCasesService
     {
         $this->validateRequest($request, CreateModuleRequest::class);
 
-        /** @var Module $module */
+        /** @var CreateModuleRequest $request */
         $module = $request->module();
         $module->refreshSearch();
 
