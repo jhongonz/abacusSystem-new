@@ -6,21 +6,56 @@
 
 namespace Core\Institution\Infrastructure\Management;
 
+use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionById;
+use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionByIdRequest;
+use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutions;
+use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionsRequest;
+use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
+use Exception;
 
 class InstitutionService implements InstitutionManagementContract
 {
-    public function searchInstitutionById(InstitutionId $id): ?Institution
-    {
-        // TODO: Implement searchInstitutionById() method.
+    private InstitutionFactoryContract $institutionFactory;
+    private SearchInstitutionById $searchInstitutionById;
+    private SearchInstitutions $searchInstitutions;
+    public function __construct(
+        InstitutionFactoryContract $institutionFactory,
+        SearchInstitutionById $searchInstitutionById,
+        SearchInstitutions $searchInstitutions,
+    ) {
+        $this->institutionFactory = $institutionFactory;
+        $this->searchInstitutionById = $searchInstitutionById;
+        $this->searchInstitutions = $searchInstitutions;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function searchInstitutionById(InstitutionId $id): ?Institution
+    {
+        $request = new SearchInstitutionByIdRequest($id);
+
+        return $this->searchInstitutionById->execute($request);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function searchInstitutions(array $filters = []): Institutions
     {
-        // TODO: Implement searchInstitutions() method.
+        $request = new SearchInstitutionsRequest($filters);
+        $institutions = $this->searchInstitutions->execute($request);
+
+        foreach ($institutions->aggregator() as $item) {
+            $institution = $this->searchInstitutionById($this->institutionFactory->buildInstitutionId($item));
+            $institutions->addItem($institution);
+        }
+
+        return $institutions;
     }
 
     public function updateInstitution(InstitutionId $id, array $data): void
