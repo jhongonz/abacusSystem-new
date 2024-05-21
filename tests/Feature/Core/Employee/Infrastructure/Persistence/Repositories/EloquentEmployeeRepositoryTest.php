@@ -290,7 +290,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
     public function test_delete_should_return_void(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
-        $employeeIdMock->expects(self::exactly(2))
+        $employeeIdMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
 
@@ -301,7 +301,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $builderMock = $this->mock(Builder::class);
 
         $builderMock->shouldReceive('where')
-            ->times(2)
+            ->once()
             ->with('emp_id', 1)
             ->andReturnSelf();
 
@@ -309,9 +309,14 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $builderMock->shouldReceive('delete')
+        $builderMock->shouldReceive('update')
             ->once()
+            ->with([])
             ->andReturn(1);
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
 
         $this->databaseManager->shouldReceive('table')
             ->once()
