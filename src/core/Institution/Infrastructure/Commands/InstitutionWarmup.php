@@ -69,6 +69,8 @@ class InstitutionWarmup extends Command
             return CommandSymfony::FAILURE;
         }
 
+        $this->logger->info('Institution command executed');
+
         return CommandSymfony::SUCCESS;
     }
 }
