@@ -6,7 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitutionRequest;
 use Exception;
 
 class CreateEmployee extends UseCasesService
