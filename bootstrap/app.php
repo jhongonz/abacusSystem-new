@@ -33,6 +33,7 @@ $application->withCommands([
     \Core\Profile\Infrastructure\Commands\ProfileWarmup::class,
     \Core\Employee\Infrastructure\Commands\EmployeeWarmup::class,
     \Core\User\Infrastructure\Commands\UserWarmup::class,
+    \Core\Institution\Infrastructure\Commands\InstitutionWarmup::class,
 ]);
 
 return $application->create();

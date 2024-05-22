@@ -14,11 +14,12 @@ use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionPersistException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
+use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
-class RedisInstitutionRepository implements InstitutionRepositoryContract
+class RedisInstitutionRepository implements InstitutionRepositoryContract, ChainPriority
 {
     /** @var int */
     private const PRIORITY_DEFAULT = 100;

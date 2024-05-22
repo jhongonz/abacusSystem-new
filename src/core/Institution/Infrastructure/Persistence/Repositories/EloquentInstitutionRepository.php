@@ -14,11 +14,12 @@ use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
+use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 
-class EloquentInstitutionRepository implements InstitutionRepositoryContract
+class EloquentInstitutionRepository implements InstitutionRepositoryContract, ChainPriority
 {
     /** @var int */
     private const PRIORITY_DEFAULT = 50;
