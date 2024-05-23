@@ -47,7 +47,7 @@ class InstitutionServiceProvider extends ServiceProvider
             return $chainRepository;
         });
 
-        #Commands
+        //Commands
         $this->app->singletonIf(InstitutionWarmup::class, function (Application $app) {
             return new InstitutionWarmup(
                 $app->make(LoggerInterface::class),

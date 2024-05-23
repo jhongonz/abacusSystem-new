@@ -52,7 +52,7 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function getAll(array $filters = []): Institutions
     {
-        $this->domainToPersist = Institution::class;
+        $this->domainToPersist = Institutions::class;
 
         try {
             return $this->read(__FUNCTION__, $filters);

@@ -58,4 +58,6 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function 
 
 Route::controller(InstitutionController::class)->prefix('institution')->group(function () {
     Route::get('', 'index')->name('institution.index');
+    Route::post('/get-list', 'getInstitutions')->name('institution.get-institutions');
+    Route::get('/get/{id?}', 'getInstitution')->whereNumber('id')->name('institution.get-institution');
 });
