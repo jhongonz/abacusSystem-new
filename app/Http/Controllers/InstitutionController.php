@@ -60,6 +60,30 @@ class InstitutionController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    public function changeStateInstitution(Request $request): JsonResponse
+    {
+        $institutionId = $this->institutionFactory->buildInstitutionId($request->input('id'));
+        $institution = $this->institutionService->searchInstitutionById($institutionId);
+
+        if ($institution->state()->isNew() || $institution->state()->isInactivated()) {
+            $institution->state()->activate();
+        } elseif ($institution->state()->isActivated()) {
+            $institution->state()->inactive();
+        }
+
+        $dataUpdate['state'] = $institution->state()->value();
+
+        try {
+            $this->institutionService->updateInstitution($institutionId, $dataUpdate);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(status: Response::HTTP_CREATED);
+    }
+
     /**
      * @throws DatatablesException
      */
@@ -134,11 +158,7 @@ class InstitutionController extends Controller implements HasMiddleware
             $institution->logo()->setValue($filename);
         }
 
-        try {
-            $this->institutionService->createInstitution($institution);
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
-        }
+        $this->institutionService->createInstitution($institution);
     }
 
     public function updateInstitution(StoreInstitutionRequest $request, InstitutionId $id): void

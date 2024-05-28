@@ -126,7 +126,7 @@ var table = $('#content-data').DataTable({
         $(".changeState").click(function(e){
             e.preventDefault();
 
-            axios.post("{{ route('panel.employee.change-state-employee') }}",{
+            axios.post("{{ route('panel.institution.change-state-institution') }}",{
                 id : $(this).data('id')
             })
             .then(function (response){

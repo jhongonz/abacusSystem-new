@@ -63,4 +63,5 @@ Route::controller(InstitutionController::class)->prefix('institution')->group(fu
     Route::post('/set-logo', 'setLogoInstitution')->name('institution.set-logo');
     Route::post('/store', 'storeInstitution')->name('institution.store');
     Route::get('/delete/{id}', 'deleteInstitution')->whereNumber('id')->name('institution.delete-institution');
+    Route::post('/set-state', 'changeStateInstitution')->name('institution.change-state-institution');
 });
