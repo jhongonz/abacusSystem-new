@@ -10,6 +10,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
@@ -505,6 +506,18 @@ class EloquentInstitutionRepositoryTest extends TestCase
             ->with('observations')
             ->willReturnSelf();
 
+        $search = $this->createMock(InstitutionSearch::class);
+        $search->expects(self::once())
+            ->method('value')
+            ->willReturn('testing');
+        $institutionMock->expects(self::once())
+            ->method('search')
+            ->willReturn($search);
+        $this->model->expects(self::once())
+            ->method('changeSearch')
+            ->with('testing')
+            ->willReturnSelf();
+
         $stateMock = $this->createMock(InstitutionState::class);
         $stateMock->expects(self::once())
             ->method('value')
@@ -665,6 +678,18 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $this->model->expects(self::once())
             ->method('changeObservations')
             ->with('observations')
+            ->willReturnSelf();
+
+        $search = $this->createMock(InstitutionSearch::class);
+        $search->expects(self::once())
+            ->method('value')
+            ->willReturn('testing');
+        $institutionMock->expects(self::once())
+            ->method('search')
+            ->willReturn($search);
+        $this->model->expects(self::once())
+            ->method('changeSearch')
+            ->with('testing')
             ->willReturnSelf();
 
         $stateMock = $this->createMock(InstitutionState::class);

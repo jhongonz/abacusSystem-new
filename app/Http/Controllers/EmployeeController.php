@@ -229,6 +229,8 @@ class EmployeeController extends Controller implements HasMiddleware
                 $this->userService->deleteUser($userId);
             } catch (Exception $exception) {
                 $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+                return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
 

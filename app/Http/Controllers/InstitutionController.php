@@ -161,6 +161,21 @@ class InstitutionController extends Controller implements HasMiddleware
         $this->institutionService->updateInstitution($id, $dataUpdate);
     }
 
+    public function deleteInstitution(int $id): JsonResponse
+    {
+        $institutionId = $this->institutionFactory->buildInstitutionId($id);
+
+        try {
+            $this->institutionService->deleteInstitution($institutionId);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(status: Response::HTTP_OK);
+    }
+
     /**
      * @throws DatatablesException
      */

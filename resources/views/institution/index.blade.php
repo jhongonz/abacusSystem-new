@@ -154,7 +154,7 @@ var table = $('#content-data').DataTable({
                 type: 'warning'
             }).then(function(result) {
                 if(result.value) {
-                    axios.get("{{url('/employees/delete')}}/" + _id)
+                    axios.get("{{url('/institution/delete')}}/" + _id)
                     .then(function (response){
                         $('#content-data').DataTable().ajax.reload(null, false);
                         toast.fire({
