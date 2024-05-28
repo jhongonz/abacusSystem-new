@@ -96,6 +96,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @throws EmployeeNotFoundException
+     * @throws Exception
      */
     public function delete(EmployeeId $id): void
     {
@@ -109,7 +110,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
         $employeeModel = $this->updateAttributesModelEmployee((array) $data);
         $employeeModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $employeeModel->changeDeletedAt(new \DateTime);
+        $employeeModel->changeDeletedAt($this->getDateTime());
 
         $builder->update($employeeModel->toArray());
     }
@@ -129,6 +130,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             $employeeId = $builder->insertGetId($dataModel);
             $employee->id()->setValue($employeeId);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+
             $builder->where('emp_id', $employeeId);
             $builder->update($dataModel);
         }
@@ -206,5 +209,13 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

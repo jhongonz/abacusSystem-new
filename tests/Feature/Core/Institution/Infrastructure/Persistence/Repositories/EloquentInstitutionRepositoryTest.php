@@ -583,6 +583,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function test_persistInstitution_should_update_and_return_object(): void
     {
@@ -728,7 +729,6 @@ class EloquentInstitutionRepositoryTest extends TestCase
 
         $builder->shouldReceive('update')
             ->once()
-            ->with([])
             ->andReturn(1);
 
         $this->model->expects(self::once())

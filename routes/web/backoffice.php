@@ -60,4 +60,6 @@ Route::controller(InstitutionController::class)->prefix('institution')->group(fu
     Route::get('', 'index')->name('institution.index');
     Route::post('/get-list', 'getInstitutions')->name('institution.get-institutions');
     Route::get('/get/{id?}', 'getInstitution')->whereNumber('id')->name('institution.get-institution');
+    Route::post('/set-logo', 'setLogoInstitution')->name('institution.set-logo');
+    Route::post('/store', 'storeInstitution')->name('institution.store');
 });

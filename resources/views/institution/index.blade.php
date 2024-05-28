@@ -37,10 +37,10 @@
     <thead>
         <tr class="bg-grey">
             <th>Id</th>
+            <th>Código</th>
             <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Email</th>
+            <th>Nombre Corto</th>
+            <th>Observaciones</th>
             <th>Estado</th>
             <th></th>
         </tr>
@@ -97,10 +97,10 @@ var table = $('#content-data').DataTable({
     ],
     columns: [
         {data: 'id', className: 'onclick-row', width: 100},
+        {data: 'code', className: 'onclick-row'},
         {data: 'name', className: 'onclick-row'},
-        {data: 'lastname', className: 'onclick-row'},
-        {data: 'phone', className: 'onclick-row'},
-        {data: 'email', className: 'onclick-row'},
+        {data: 'shortname', className: 'onclick-row'},
+        {data: 'observations', className: 'onclick-row'},
         {data: 'state_literal', name: 'state', orderable: false, searchable:false, width: 50},
         {data: 'tools', orderable: false, searchable: false, width: 10}
     ],
@@ -110,10 +110,10 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
             var _id = $(this).data('id');
 
-            axios.get("{{ route('panel.employee.get-employee') }}/" + _id)
+            axios.get("{{ route('panel.institution.get-institution') }}/" + _id)
             .then(function (response){
                 $('#content-body').html(response.data.html);
-                window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + _id);
+                window.history.pushState("data","Title","{{ route('panel.institution.get-institution') }}/" + _id);
             })
             .catch(function(error){
                 toast.fire({
@@ -178,10 +178,10 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
     e.preventDefault();
     var data = table.row($(this).closest('tr')).data();
 
-    axios.get("{{ route('panel.employee.get-employee') }}/" + data.id)
+    axios.get("{{ route('panel.institution.get-institution') }}/" + data.id)
     .then(function (response){
         $('#content-body').html(response.data.html);
-        window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + data.id);
+        window.history.pushState("data","Title","{{ route('panel.institution.get-institution') }}/" + data.id);
     })
     .catch(function(error){
         toast.fire({

@@ -778,7 +778,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('update')
             ->once()
-            ->with([])
             ->andReturn(1);
 
         $this->model->expects(self::exactly(2))

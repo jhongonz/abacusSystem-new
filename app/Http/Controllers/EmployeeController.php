@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
@@ -32,29 +33,16 @@ use Yajra\DataTables\DataTables;
 class EmployeeController extends Controller implements HasMiddleware
 {
     use UserTrait;
+    use MultimediaTrait;
 
     private EmployeeManagementContract $employeeService;
-
     private EmployeeFactory $employeeFactory;
-
     private EmployeeDataTransformerContract $employeeDataTransformer;
-
     private UserFactoryContract $userFactory;
-
     private UserManagementContract $userService;
-
     private ProfileManagementContract $profileService;
-
-    private ImageManager $imageManager;
-
     private DataTables $dataTable;
     private ViewFactory $viewFactory;
-
-    private string $imagePathTmp;
-
-    private string $imagePathFull;
-
-    private string $imagePathSmall;
 
     public function __construct(
         EmployeeManagementContract $employeeService,
@@ -70,6 +58,7 @@ class EmployeeController extends Controller implements HasMiddleware
     ) {
         parent::__construct($logger);
 
+        $this->setImageManager($imageManager);
         $this->employeeService = $employeeService;
         $this->employeeFactory = $employeeFactory;
         $this->employeeDataTransformer = $employeeDataTransformer;
@@ -77,11 +66,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $this->userService = $userService;
         $this->profileService = $profileService;
         $this->dataTable = $dataTable;
-        $this->imageManager = $imageManager;
         $this->viewFactory = $viewFactory;
-        $this->imagePathTmp = '/images/tmp/';
-        $this->imagePathFull = '/images/full/';
-        $this->imagePathSmall = '/images/small/';
     }
 
     public function index(): JsonResponse|string
@@ -150,14 +135,12 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $employee = null;
-        $user = null;
-        $urlFile = null;
 
         if (! is_null($employeeId->value())) {
             $employee = $this->employeeService->searchEmployeeById($employeeId);
             $user = $this->userService->searchUserById($this->userFactory->buildId($employee->userId()->value()));
 
-            $urlFile = url($this->imagePathFull.$employee->image()->value()).'?v='.Str::random(10);
+            $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
         }
 
         $profiles = $this->profileService->searchProfiles();
@@ -167,9 +150,9 @@ class EmployeeController extends Controller implements HasMiddleware
             ->with('userId', $userId)
             ->with('employeeId', $employeeId->value())
             ->with('employee', $employee)
-            ->with('user', $user)
+            ->with('user', $user ?? null)
             ->with('profiles', $profiles)
-            ->with('image', $urlFile)
+            ->with('image', $urlFile ?? null)
             ->render();
 
         return $this->renderView($view);
@@ -220,13 +203,8 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function setImageEmployee(Request $request): JsonResponse
     {
-        $originalImage = $request->file('file')->getRealPath();
         $random = Str::random(10);
-        $filename = $random.'.jpg';
-
-        $image = $this->imageManager->read($originalImage);
-        $image->save(public_path($this->imagePathTmp).$filename, quality: 70);
-        $imageUrl = url($this->imagePathTmp.$filename);
+        $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
 
         return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
     }
@@ -311,17 +289,15 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee->address()->setValue($request->input('address'));
         $employee->birthdate()->setValue(DateTime::createFromFormat('d/m/Y', $request->input('birthdate')));
 
+        if (! is_null($request->input('token'))) {
+            $filename = $this->saveImage($request->input('token'));
+            $employee->image()->setValue($filename);
+        }
+
         try {
             $this->employeeService->createEmployee($employee);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-        }
-
-        if (! is_null($request->input('token'))) {
-            $filename = $this->saveImage($request->input('token'));
-            $dataUpdate['image'] = $filename;
-
-            $this->employeeService->updateEmployee($employee->id(), $dataUpdate);
         }
 
         $user = $this->userFactory->buildUser(
@@ -334,26 +310,6 @@ class EmployeeController extends Controller implements HasMiddleware
         $user->photo()->setValue($filename ?? '');
 
         $this->userService->createUser($user);
-    }
-
-    private function saveImage(string $token): string
-    {
-        $imageTmp = public_path($this->imagePathTmp.$token.'.jpg');
-        $filename = Str::uuid()->toString().'.jpg';
-
-        $image = $this->imageManager->read($imageTmp);
-        $image->save(public_path($this->imagePathFull.$filename));
-        $image->resize(150, 150);
-        $image->save(public_path($this->imagePathSmall.$filename));
-        @unlink($imageTmp);
-
-        return $filename;
-    }
-
-    private function deleteImage(string $photo): void
-    {
-        @unlink(public_path($this->imagePathFull.$photo));
-        @unlink(public_path($this->imagePathSmall.$photo));
     }
 
     /**

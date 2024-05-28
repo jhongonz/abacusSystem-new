@@ -24,7 +24,7 @@
     <div class="card m-0 border-0">
         <div class="card-body">
             <form>
-                <input type="hidden" name="institutionId" id="employeeId" value="{{$institutionId}}">
+                <input type="hidden" name="institutionId" id="institutionId" value="{{$institutionId}}">
 
                 <ul class="nav nav-tabs nav-tabs-bottom">
                     <li class="nav-item"><a href="#institution" class="nav-link" data-toggle="tab">Datos Generales</a></li>
@@ -32,62 +32,45 @@
                 <div class="tab-content">
                     <div class="tab-pane fade show" id="institution">
                         <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group typeDocument">
-                                    <label>Tipo de Documento</label>
-                                    <select name="typeDocument" id="typeDocument" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
-                                        <option></option>
-                                        @foreach(config('configurations.document-type') as $index => $type)
-                                            <option value="{{$index}}" @isset($employee) @if($employee->identificationType()->value() == $index) selected @endif @endisset>{{$type}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Nro Identificacion</label>
-                                    <input type="text" class=" identifier form-control form-control form-control-sm" name="identifier" id="identifier" placeholder="Nro de Identidad" value="@isset($employee){{$employee->identification()->value()}}@endisset">
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Nombres</label>
-                                    <input type="text" class="name form-control form-control form-control-sm" name="name" id="name" placeholder="Nombres" value="@isset($employee){{$employee->name()->value()}}@endisset">
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label>Apellidos</label>
-                                    <input type="text" class="lastname form-control form-control form-control-sm" name="lastname" id="lastname" placeholder="Apellidos" value="@isset($employee){{$employee->lastname()->value()}}@endisset">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label>Fecha de nacimiento</label>
-                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->birthdate()->toString()}}@endisset">
+                                    <label>Código Institucional</label>
+                                    <input type="text" class=" identifier form-control form-control form-control-sm" name="code" id="code" placeholder="Código" value="@isset($institution){{$institution->code()->value()}}@endisset">
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <label>Telefono</label>
-                                <input type="text" class="phone form-control form-control form-control-sm" name="phone" id="phone" placeholder="Telefono" onkeypress="return valideKeyNumber(event)" maxlength="15" value="@isset($employee){{$employee->phone()->value()}}@endisset">
-                            </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>E-mail</label>
-                                    <input type="text" class="email form-control form-control form-control-sm" name="email" id="email" placeholder="E-mail" value="@isset($employee){{$employee->email()->value()}}@endisset">
+                                    <label>Nombre de Institución</label>
+                                    <input type="text" class="name form-control form-control form-control-sm" name="name" id="name" placeholder="Nombre" value="@isset($institution){{$institution->name()->value()}}@endisset">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Nombre corto</label>
+                                    <input type="text" class="name form-control form-control form-control-sm" name="shortname" id="shortname" placeholder="Nombre corto" value="@isset($institution){{$institution->shortname()->value()}}@endisset">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <label>Dirección</label>
-                                <textarea rows="3" cols="5" class="address form-control form-control form-control-sm" name="address" placeholder="Dirección" id="address">@isset($employee){{$employee->address()->value()}}@endisset</textarea>
+                                <input type="text" class="phone form-control form-control form-control-sm" name="address" id="address" placeholder="Dirección" value="">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
+                                <label>Telefono</label>
+                                <input type="text" class="phone form-control form-control form-control-sm" name="phone" id="phone" placeholder="Telefono" onkeypress="return valideKeyNumber(event)" maxlength="15" value="">
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input type="text" class="email form-control form-control form-control-sm" name="email" id="email" placeholder="E-mail" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
                                 <label>Observaciones</label>
-                                <textarea rows="3" cols="5" class="observations form-control form-control form-control-sm" name="observations" placeholder="Observaciones" id="observations">@isset($employee){{$employee->observations()->value()}}@endisset</textarea>
+                                <textarea rows="3" cols="5" class="observations form-control form-control form-control-sm" name="observations" placeholder="Observaciones" id="observations">@isset($institution){{$institution->observations()->value()}}@endisset</textarea>
                             </div>
                         </div>
                         <div class="row">
@@ -142,30 +125,36 @@ $('.select').select2({
     minimumResultsForSearch: Infinity
 });
 
+$('#photo').on('change',function(e) {
+    e.preventDefault();
+    _data = new FormData();
+    _data.append('file', $(this)[0].files[0]);
+
+    axios.post("{{ route('panel.institution.set-logo') }}",_data)
+    .then(function (response){
+        $('#token').val(response.data.token);
+        $('.showPhoto').removeAttr('src');
+        $('.showPhoto').attr('src',response.data.url);
+    });
+});
+
 $('.save-data').click(function(e){
     e.preventDefault();
 
-    axios.post("{{ route('panel.employee.store') }}",{
-        employeeId: $('#employeeId').val(),
-        userId: $('#userId').val(),
-        identifier: $('#identifier').val(),
-        typeDocument: $('#typeDocument').val(),
+    axios.post("{{ route('panel.institution.store') }}",{
+        institutionId: $('#institutionId').val(),
+        code: $('#code').val(),
         name: $('#name').val(),
-        lastname: $('#lastname').val(),
-        email: $('#email').val(),
-        login: $('#username').val(),
-        phone: $('#phone').val(),
+        shortname: $('#shortname').val(),
         address: $('#address').val(),
+        email: $('#email').val(),
+        phone: $('#phone').val(),
         observations: $('#observations').val(),
-        profile: $('#profileUser').val(),
-        birthdate: $('#birthdate').val(),
-        password: $('#password').val(),
-        password_confirmation: $('#repeat').val(),
         token: $('#token').val(),
     })
     .then(function (response){
 
-        $('#employeeId').val(response.data.employeeId);
+        $('#institutionId').val(response.data.institutionId);
 
         toast.fire({
             text: 'Registro guardado',
