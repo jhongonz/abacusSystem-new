@@ -26,6 +26,7 @@ class CreateUser extends UseCasesService
     {
         $this->validateRequest($request, CreateUserRequest::class);
 
+        /** @var CreateUserRequest $request */
         return $this->userRepository->persistUser($request->user());
     }
 }

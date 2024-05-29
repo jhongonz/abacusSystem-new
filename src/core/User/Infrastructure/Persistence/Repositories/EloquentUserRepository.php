@@ -127,8 +127,11 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
             throw new UserNotFoundException('User not found with id: '.$id->value());
         }
 
-        $builder->where('user_id', $id->value());
-        $builder->delete();
+        $userModel = $this->updateAttributesModelUser((array) $dataUser);
+        $userModel->changeState(ValueObjectStatus::STATE_DELETE);
+        $userModel->changeDeletedAt(new \DateTime);
+
+        $builder->update($userModel->toArray());
     }
 
     /**

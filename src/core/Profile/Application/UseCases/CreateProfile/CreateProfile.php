@@ -22,7 +22,7 @@ class CreateProfile extends UseCasesService
     {
         $this->validateRequest($request, CreateProfileRequest::class);
 
-        /** @var Profile $profile */
+        /** @var CreateProfileRequest $request */
         $profile = $request->profile();
         $profile->refreshSearch();
 

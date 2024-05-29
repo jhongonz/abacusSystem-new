@@ -21,7 +21,11 @@ abstract class Controller
     public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
     {
         if (request()->ajax()) {
-            return new JsonResponse(['html' => $html], $code);
+            $response = new JsonResponse(['html' => $html], $code);
+
+            return $response->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                    ->header('Pragma', 'no-cache')
+                    ->header('Expires', '0');
         }
 
         return $html;

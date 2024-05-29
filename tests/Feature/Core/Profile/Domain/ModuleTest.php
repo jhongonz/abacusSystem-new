@@ -8,6 +8,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -311,5 +312,24 @@ class ModuleTest extends TestCase
 
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($result, $this->module);
+    }
+
+    public function test_position_should_return_value_object(): void
+    {
+        $result = $this->module->position();
+        $this->assertInstanceOf(ModulePosition::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setPosition_should_change_and_return_self(): void
+    {
+        $position = $this->createMock(ModulePosition::class);
+        $result = $this->module->setPosition($position);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($result, $this->module);
+        $this->assertSame($position, $result->position());
     }
 }

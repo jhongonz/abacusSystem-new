@@ -237,6 +237,23 @@ class Employee extends Model
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(?DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
+
+        return $this;
+    }
+
     public function search(): ?string
     {
         return $this->getAttribute('emp_search');

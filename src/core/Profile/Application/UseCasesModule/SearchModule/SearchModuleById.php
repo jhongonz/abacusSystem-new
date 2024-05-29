@@ -22,6 +22,7 @@ class SearchModuleById extends UseCasesService
     {
         $this->validateRequest($request, SearchModuleByIdRequest::class);
 
+        /** @var SearchModuleByIdRequest $request */
         return $this->moduleRepository->find($request->moduleId());
     }
 }

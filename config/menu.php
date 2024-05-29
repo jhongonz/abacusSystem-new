@@ -2,13 +2,13 @@
 
 return [
     'options' => [
-        'settings' => [
-            'name' => 'Configuraciones',
+        'managers' => [
+            'name' => 'Gestión Administrativa',
             'icon' => 'fas fa-tools',
             'route' => null,
         ],
-        'managers' => [
-            'name' => 'Gestión Administrativa',
+        'settings' => [
+            'name' => 'Configuraciones',
             'icon' => 'fas fa-tools',
             'route' => null,
         ],

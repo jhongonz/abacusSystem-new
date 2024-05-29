@@ -22,7 +22,7 @@ class CreateEmployee extends UseCasesService
     {
         $this->validateRequest($request, CreateEmployeeRequest::class);
 
-        /** @var Employee $employee */
+        /** @var CreateEmployeeRequest $request */
         $employee = $request->employee();
         $employee->refreshSearch();
 

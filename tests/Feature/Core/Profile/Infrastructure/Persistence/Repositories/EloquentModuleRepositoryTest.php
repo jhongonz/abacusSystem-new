@@ -548,6 +548,11 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with('mod_search', 'test')
             ->andReturnSelf();
 
+        $builderMock->shouldReceive('orderBy')
+            ->once()
+            ->with('mod_position')
+            ->andReturnSelf();
+
         $this->model->expects(self::once())
             ->method('getTable')
             ->willReturn('modules');
@@ -615,6 +620,11 @@ class EloquentModuleRepositoryTest extends TestCase
         $builderMock->shouldReceive('whereFullText')
             ->once()
             ->with('mod_search', 'test')
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('orderBy')
+            ->once()
+            ->with('mod_position')
             ->andReturnSelf();
 
         $this->model->expects(self::once())

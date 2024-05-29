@@ -25,8 +25,6 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
 
     private string $domainToPersist;
 
-    private bool $deleteSource = false;
-
     public function functionNamePersist(): string
     {
         return self::FUNCTION_NAMES[$this->domainToPersist];
@@ -64,17 +62,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
 
     /**
      * @throws Throwable
-     * @throws EmployeeNotFoundException
      */
     public function delete(EmployeeId $id): void
     {
-        $this->deleteSource = true;
-
-        try {
-            $this->read(__FUNCTION__, $id);
-        } catch (Exception $exception) {
-            throw new EmployeeNotFoundException($exception->getMessage());
-        }
+        $this->write(__FUNCTION__, $id);
     }
 
     public function persistEmployee(Employee $employee): Employee
@@ -98,12 +89,12 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
-            throw new EmployeesNotFoundException('Employees no found');
+            throw new EmployeesNotFoundException('Employees not found');
         }
     }
 
     public function functionNameDelete(): bool
     {
-        return $this->deleteSource;
+        return false;
     }
 }

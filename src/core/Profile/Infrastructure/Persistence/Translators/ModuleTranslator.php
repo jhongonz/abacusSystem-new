@@ -49,6 +49,8 @@ class ModuleTranslator implements TranslatorDomainContract
             $this->moduleFactory->buildModuleCreatedAt($this->model->createdAt())
         );
 
+        $module->setPosition($this->moduleFactory->buildModulePosition($this->model->position()));
+
         $module->setSearch(
             $this->moduleFactory->buildModuleSearch($this->model->search())
         );

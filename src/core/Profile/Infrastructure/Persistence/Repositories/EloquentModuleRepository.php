@@ -105,6 +105,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         if (array_key_exists('q', $filters) && isset($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
+
+        $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
 
         if (empty($moduleCollection)) {

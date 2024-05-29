@@ -107,4 +107,16 @@ class EmployeeFactoryTest extends TestCase
         $this->assertSame($data['updatedAt'], json_decode(json_encode($result->updatedAt()->value()), true));
         $this->assertInstanceOf(EmployeeUpdateAt::class, $result->updatedAt());
     }
+
+    /**
+     * @throws Exception
+     */
+    public function test_buildEmployees_should_return_object(): void
+    {
+        $employee = $this->createMock(Employee::class);
+        $result = $this->factory->buildEmployees($employee);
+
+        $this->assertInstanceOf(Employees::class, $result);
+        $this->assertCount(1, $result->items());
+    }
 }

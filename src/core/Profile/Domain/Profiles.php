@@ -8,15 +8,11 @@ class Profiles extends ArrayIterator
 {
     public const TYPE = 'profiles';
 
-    private array $filters;
-
     public function __construct(Profile ...$profiles)
     {
         foreach ($profiles as $profile) {
             $this->addItem($profile);
         }
-
-        $this->filters = [];
     }
 
     /**

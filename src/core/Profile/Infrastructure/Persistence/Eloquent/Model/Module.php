@@ -35,6 +35,7 @@ class Module extends Model
      */
     protected $attributes = [
         'mod_state' => 1,
+        'mod_position' => 1,
     ];
 
     /**
@@ -50,6 +51,7 @@ class Module extends Model
         'mod_icon',
         'mod_search',
         'mod_state',
+        'mod_position',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -226,6 +228,20 @@ class Module extends Model
     public function changeDeletedAt(DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function position(): int
+    {
+        return $this->getAttribute('mod_position');
+    }
+
+    public function changePosition(int $position): self
+    {
+        $this->setAttribute('mod_position', $position);
         return $this;
     }
 
