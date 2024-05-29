@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use Core\SharedContext\Model\ValueObjectStatus;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class Controller
 {
     protected LoggerInterface $logger;
@@ -20,7 +24,10 @@ abstract class Controller
 
     public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
     {
-        if (request()->ajax()) {
+        /** @var Request $requestService */
+        $requestService = app(Request::class);
+
+        if ($requestService->ajax()) {
             $response = new JsonResponse(['html' => $html], $code);
 
             return $response->header('Cache-Control', 'no-cache, no-store, must-revalidate')
@@ -34,12 +41,16 @@ abstract class Controller
     public function getPagination(?string $route = null): string
     {
         if (is_null($route)) {
-            $route = Route::current()->uri();
+
+            /** @var Router $routerService */
+            $routerService = app(Router::class);
+            $route = $routerService->current()->uri();
         }
 
         return json_encode([
             'start' => 0,
             'filters' => [],
+            'uri' => $route
         ]);
     }
 

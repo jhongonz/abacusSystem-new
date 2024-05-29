@@ -7,8 +7,8 @@ use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
-use Core\Employee\Application\Factory\EmployeeFactory;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
+use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
@@ -25,7 +25,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
-use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -36,7 +36,7 @@ class EmployeeController extends Controller implements HasMiddleware
     use MultimediaTrait;
 
     private EmployeeManagementContract $employeeService;
-    private EmployeeFactory $employeeFactory;
+    private EmployeeFactoryContract $employeeFactory;
     private EmployeeDataTransformerContract $employeeDataTransformer;
     private UserFactoryContract $userFactory;
     private UserManagementContract $userService;
@@ -46,13 +46,13 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function __construct(
         EmployeeManagementContract $employeeService,
-        EmployeeFactory $employeeFactory,
+        EmployeeFactoryContract $employeeFactory,
         EmployeeDataTransformerContract $employeeDataTransformer,
         UserFactoryContract $userFactory,
         UserManagementContract $userService,
         ProfileManagementContract $profileService,
         DataTables $dataTable,
-        ImageManager $imageManager,
+        ImageManagerInterface $imageManager,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
