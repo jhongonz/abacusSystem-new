@@ -23,6 +23,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -193,9 +194,10 @@ class EmployeeController extends Controller implements HasMiddleware
             }
         }
 
-        $datatable = $this->dataTable->collection(collect($dataEmployees));
-        $datatable->addColumn('tools', function (array $item) {
-            return $this->retrieveMenuOptionHtml($item);
+        $collection = new Collection($dataEmployees);
+        $datatable = $this->dataTable->collection($collection);
+        $datatable->addColumn('tools', function (array $element): string {
+            return $this->retrieveMenuOptionHtml($element);
         });
 
         return $datatable->escapeColumns([])->toJson();
