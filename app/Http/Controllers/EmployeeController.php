@@ -116,12 +116,11 @@ class EmployeeController extends Controller implements HasMiddleware
             );
 
             try {
-                $dataUpdate['state'] = $employee->state()->value();
                 $this->userService->updateUser($user->id(), $dataUpdate);
                 UserUpdateOrDeleteEvent::dispatch($user->id());
             } catch (Exception $exception) {
                 $message = sprintf(
-                    'User with ID:%d by employee with ID: %d can not be updated',
+                    'User with ID: %d by employee with ID: %d can not be updated',
                     $user->id()->value(),
                     $employeeId->value()
                 );
@@ -318,6 +317,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     /**
      * Get the middleware that should be assigned to the controller.
+     * @codeCoverageIgnore
      */
     public static function middleware(): Middleware|array
     {
