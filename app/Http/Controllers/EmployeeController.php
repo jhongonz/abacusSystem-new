@@ -262,16 +262,18 @@ class EmployeeController extends Controller implements HasMiddleware
             'login' => $request->input('login'),
         ];
 
-        if (! is_null($request->input('token'))) {
-            $filename = $this->saveImage($request->input('token'));
+        $imageToken = $request->input('token');
+        if (! is_null($imageToken)) {
+            $filename = $this->saveImage($imageToken);
             $dataUpdate['image'] = $filename;
             $dataUpdateUser['image'] = $filename;
         }
 
         $this->employeeService->updateEmployee($employeeId, $dataUpdate);
 
-        if (! is_null($request->input('password'))) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
+        $password = $request->input('password');
+        if (! is_null($password)) {
+            $dataUpdateUser['password'] = $this->makeHashPassword($password);
         }
 
         if (! is_null($userId->value()) && $dataUpdateUser) {

@@ -1100,7 +1100,7 @@ class EmployeeControllerTest extends TestCase
             ->method('birthdate')
             ->willReturn($birthdate);
 
-        $imageTmp = '/images/tmp/token.jpg';
+        $imageTmp = '/var/www/abacusSystem-new/public/images/tmp/token.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
             ->method('save')
@@ -1114,7 +1114,7 @@ class EmployeeControllerTest extends TestCase
 
         $this->imageManager->expects(self::once())
             ->method('read')
-            ->with('/var/www/abacusSystem-new/public'.$imageTmp)
+            ->with($imageTmp)
             ->willReturn($imageMock);
 
         $employeeImageMock = $this->createMock(EmployeeImage::class);
@@ -1343,5 +1343,167 @@ class EmployeeControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(200, $result->getStatusCode());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_storeEmployee_should_return_json_response_when_update_object(): void
+    {
+        $request = $this->createMock(StoreEmployeeRequest::class);
+        $request->expects(self::exactly(15))
+            ->method('input')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(
+                10,
+                10,
+                null,
+                'identifier',
+                'typeDocument',
+                'name',
+                'lastname',
+                'email',
+                'phone',
+                'address',
+                'observations',
+                1,
+                'login',
+                'token',
+                'password'
+            );
+
+        $employeeIdMock = $this->createMock(EmployeeId::class);
+        $employeeIdMock->expects(self::exactly(3))
+            ->method('value')
+            ->willReturn(10);
+
+        $this->employeeFactory->expects(self::once())
+            ->method('buildEmployeeId')
+            ->with(10)
+            ->willReturn($employeeIdMock);
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::exactly(3))
+            ->method('value')
+            ->willReturn(10);
+
+        $this->userFactory->expects(self::once())
+            ->method('buildId')
+            ->with(10)
+            ->willReturn($userIdMock);
+
+        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock->expects(self::exactly(2))
+            ->method('save')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $imageMock->expects(self::once())
+            ->method('resize')
+            ->with(150, 150)
+            ->willReturnSelf();
+
+        $imageTmp = '/var/www/abacusSystem-new/public/images/tmp/token.jpg';
+        $this->imageManager->expects(self::once())
+            ->method('read')
+            ->with($imageTmp)
+            ->willReturn($imageMock);
+
+        $this->employeeService->expects(self::once())
+            ->method('updateEmployee')
+            ->withAnyParameters();
+
+        $this->hasher->expects(self::once())
+            ->method('make')
+            ->with('password')
+            ->willReturn('hash');
+
+        $result = $this->controller->storeEmployee($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(201, $result->getStatusCode());
+        $this->assertArrayHasKey('userId', $result->getData(true));
+        $this->assertArrayHasKey('employeeId', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_storeEmployee_should_return_json_response_with_exception_when_update_object(): void
+    {
+        $request = $this->createMock(StoreEmployeeRequest::class);
+        $request->expects(self::exactly(14))
+            ->method('input')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(
+                10,
+                10,
+                null,
+                'identifier',
+                'typeDocument',
+                'name',
+                'lastname',
+                'email',
+                'phone',
+                'address',
+                'observations',
+                1,
+                'login',
+                'token',
+            );
+
+        $employeeIdMock = $this->createMock(EmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(10);
+
+        $this->employeeFactory->expects(self::once())
+            ->method('buildEmployeeId')
+            ->with(10)
+            ->willReturn($employeeIdMock);
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::never())
+            ->method('value');
+
+        $this->userFactory->expects(self::once())
+            ->method('buildId')
+            ->with(10)
+            ->willReturn($userIdMock);
+
+        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock->expects(self::exactly(2))
+            ->method('save')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $imageMock->expects(self::once())
+            ->method('resize')
+            ->with(150, 150)
+            ->willReturnSelf();
+
+        $imageTmp = '/var/www/abacusSystem-new/public/images/tmp/token.jpg';
+        $this->imageManager->expects(self::once())
+            ->method('read')
+            ->with($imageTmp)
+            ->willReturn($imageMock);
+
+        $this->employeeService->expects(self::once())
+            ->method('updateEmployee')
+            ->withAnyParameters()
+            ->willThrowException(new \Exception('It can not update employee'));
+
+        $this->logger->expects(self::once())
+            ->method('error')
+            ->with('It can not update employee');
+
+        $this->hasher->expects(self::never())
+            ->method('make');
+
+        $result = $this->controller->storeEmployee($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
     }
 }
