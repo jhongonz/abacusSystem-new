@@ -6,6 +6,7 @@ use Core\SharedContext\Model\ValueObjectStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,11 +16,15 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class Controller
 {
     protected LoggerInterface $logger;
+    protected ViewFactory $viewFactory;
+
 
     public function __construct(
         LoggerInterface $logger,
+        ViewFactory $viewFactory,
     ) {
         $this->logger = $logger;
+        $this->viewFactory = $viewFactory;
     }
 
     public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
