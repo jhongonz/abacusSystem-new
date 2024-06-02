@@ -11,6 +11,8 @@ use App\Listeners\EmployeeWarmup;
 use App\Listeners\ProfilesWarmup;
 use App\Listeners\UserRefreshSession;
 use App\Listeners\UserWarmup;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singletonIf(ImageManagerInterface::class, function (Application $app) {
             return new ImageManager($app->make(Driver::class));
+        });
+
+        $this->app->singletonIf(StatefulGuard::class, function (Application $app) {
+            $authManager = $this->app->make(AuthManager::class);
+
+            return $authManager->guard();
         });
     }
 
