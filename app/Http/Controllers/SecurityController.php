@@ -26,7 +26,7 @@ use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
 
-class HomeController extends Controller implements HasMiddleware
+class SecurityController extends Controller implements HasMiddleware
 {
     use UserTrait;
 

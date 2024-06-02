@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SecurityController;
 use App\Http\Requests\User\LoginRequest;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
@@ -34,8 +34,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
-#[CoversClass(HomeController::class)]
-class HomeControllerTest extends TestCase
+#[CoversClass(SecurityController::class)]
+class SecurityControllerTest extends TestCase
 {
     private UserFactoryContract|MockObject $userFactory;
     private UserManagementContract|MockObject $userManagement;
@@ -46,7 +46,7 @@ class HomeControllerTest extends TestCase
     private StatefulGuard|MockObject $statefulGuard;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
-    private HomeController $controller;
+    private SecurityController $controller;
 
     /**
      * @throws Exception
@@ -63,7 +63,7 @@ class HomeControllerTest extends TestCase
         $this->statefulGuard = $this->createMock(StatefulGuard::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->controller = new HomeController(
+        $this->controller = new SecurityController(
             $this->userFactory,
             $this->userManagement,
             $this->employeeManagement,
