@@ -15,13 +15,13 @@ use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Exception;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseSymfony;
@@ -41,7 +41,7 @@ class HomeController extends Controller implements HasMiddleware
     private ProfileFactoryContract $profileFactory;
 
     private ProfileManagementContract $profileService;
-    private ViewFactory $viewFactory;
+    private StatefulGuard $guard;
 
     public function __construct(
         UserFactoryContract $userFactory,
@@ -52,8 +52,9 @@ class HomeController extends Controller implements HasMiddleware
         ProfileManagementContract $profileService,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
+        StatefulGuard $guard
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
 
         $this->userFactory = $userFactory;
         $this->userService = $userService;
@@ -61,7 +62,7 @@ class HomeController extends Controller implements HasMiddleware
         $this->employeeService = $employeeService;
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
-        $this->viewFactory = $viewFactory;
+        $this->guard = $guard;
     }
 
     public function index(): Response
@@ -70,25 +71,22 @@ class HomeController extends Controller implements HasMiddleware
         return new Response($html);
     }
 
-    /**
-     * @throws ProfileNotActiveException
-     */
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
         $login = $this->userFactory->buildLogin($request->input('login'));
         $user = $this->userService->searchUserByLogin($login);
 
-        $employee = $this->getEmployee($user);
-        $profile = $this->getProfile($user);
-
-        $credentials = [
-            'user_login' => $user->login()->value(),
-            'password' => $request->input('password'),
-            'user_id' => $user->id()->value(),
-        ];
-
         try {
-            if (Auth::attempt($credentials)) {
+            $employee = $this->getEmployee($user);
+            $profile = $this->getProfile($user);
+
+            $credentials = [
+                'user_login' => $user->login()->value(),
+                'password' => $request->input('password'),
+                'user_id' => $user->id()->value(),
+            ];
+
+            if ($this->guard->attempt($credentials)) {
                 session()->regenerate();
                 session()->put([
                     'user' => $user,
@@ -97,7 +95,7 @@ class HomeController extends Controller implements HasMiddleware
                 ]);
 
                 if ($request->ajax()) {
-                    return new JsonResponse;
+                    return new JsonResponse(status:ResponseSymfony::HTTP_OK);
                 }
 
                 return new RedirectResponse('/home');
@@ -119,7 +117,8 @@ class HomeController extends Controller implements HasMiddleware
 
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
+        $this->guard->logout();
+
         $request->session()->flush();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -127,17 +126,11 @@ class HomeController extends Controller implements HasMiddleware
         return new RedirectResponse(route('panel.login'));
     }
 
-    private function getEmployee(User $user): ?Employee
+    private function getEmployee(User $user): Employee
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
 
-        try {
-            return $this->employeeService->searchEmployeeById($employeeId);
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
-        }
-
-        return null;
+        return $this->employeeService->searchEmployeeById($employeeId);
     }
 
     /**
@@ -145,14 +138,8 @@ class HomeController extends Controller implements HasMiddleware
      */
     private function getProfile(User $user): ?Profile
     {
-        $profile = null;
         $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());
-
-        try {
-            $profile = $this->profileService->searchProfileById($profileId);
-        } catch (Exception $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
-        }
+        $profile = $this->profileService->searchProfileById($profileId);
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {
             $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
@@ -164,6 +151,7 @@ class HomeController extends Controller implements HasMiddleware
 
     /**
      * Get the middleware that should be assigned to the controller.
+     * @codeCoverageIgnore
      */
     public static function middleware(): Middleware|array
     {
