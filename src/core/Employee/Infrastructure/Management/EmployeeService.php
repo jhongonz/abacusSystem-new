@@ -59,9 +59,11 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeById(EmployeeId $id): ?Employee
+    public function searchEmployeeById(?int $id): ?Employee
     {
-        $request = new SearchEmployeeByIdRequest($id);
+        $request = new SearchEmployeeByIdRequest(
+            $this->employeeFactory->buildEmployeeId($id)
+        );
 
         return $this->searchEmployeeById->execute($request);
     }
@@ -85,7 +87,7 @@ class EmployeeService implements EmployeeManagementContract
         $employees = $this->searchEmployees->execute($request);
 
         foreach ($employees->aggregator() as $item) {
-            $employee = $this->searchEmployeeById($this->employeeFactory->buildEmployeeId($item));
+            $employee = $this->searchEmployeeById($item);
             $employees->addItem($employee);
         }
 

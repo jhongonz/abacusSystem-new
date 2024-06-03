@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Exceptions\ProfileNotActiveException;
 use App\Http\Requests\User\LoginRequest;
 use App\Traits\UserTrait;
-use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
-use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Exception;
@@ -30,25 +27,14 @@ class SecurityController extends Controller implements HasMiddleware
 {
     use UserTrait;
 
-    private UserFactoryContract $userFactory;
-
     private UserManagementContract $userService;
-
     private EmployeeManagementContract $employeeService;
-
-    private EmployeeFactoryContract $employeeFactory;
-
-    private ProfileFactoryContract $profileFactory;
-
     private ProfileManagementContract $profileService;
     private StatefulGuard $guard;
 
     public function __construct(
-        UserFactoryContract $userFactory,
         UserManagementContract $userService,
         EmployeeManagementContract $employeeService,
-        EmployeeFactoryContract $employeeFactory,
-        ProfileFactoryContract $profileFactory,
         ProfileManagementContract $profileService,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
@@ -56,11 +42,8 @@ class SecurityController extends Controller implements HasMiddleware
     ) {
         parent::__construct($logger, $viewFactory);
 
-        $this->userFactory = $userFactory;
         $this->userService = $userService;
-        $this->employeeFactory = $employeeFactory;
         $this->employeeService = $employeeService;
-        $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
         $this->guard = $guard;
     }
@@ -73,8 +56,7 @@ class SecurityController extends Controller implements HasMiddleware
 
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
-        $login = $this->userFactory->buildLogin($request->input('login'));
-        $user = $this->userService->searchUserByLogin($login);
+        $user = $this->userService->searchUserByLogin($request->input('login'));
 
         try {
             $employee = $this->getEmployee($user);
@@ -128,9 +110,7 @@ class SecurityController extends Controller implements HasMiddleware
 
     private function getEmployee(User $user): Employee
     {
-        $employeeId = $this->employeeFactory->buildEmployeeId($user->employeeId()->value());
-
-        return $this->employeeService->searchEmployeeById($employeeId);
+        return $this->employeeService->searchEmployeeById($user->employeeId()->value());
     }
 
     /**
@@ -138,11 +118,10 @@ class SecurityController extends Controller implements HasMiddleware
      */
     private function getProfile(User $user): ?Profile
     {
-        $profileId = $this->profileFactory->buildProfileId($user->profileId()->value());
-        $profile = $this->profileService->searchProfileById($profileId);
+        $profile = $this->profileService->searchProfileById($user->profileId()->value());
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {
-            $this->logger->warning("User's profile with id: ".$profileId->value().' is not active');
+            $this->logger->warning("User's profile with id: ".$profile->id()->value().' is not active');
             throw new ProfileNotActiveException('User is not authorized, contact with administrator');
         }
 

@@ -16,6 +16,7 @@ use Core\User\Application\UseCases\SearchUser\SearchUserByLogin;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLoginRequest;
 use Core\User\Application\UseCases\UpdateUser\UpdateUser;
 use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
+use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
@@ -28,6 +29,7 @@ use Tests\TestCase;
 #[CoversClass(UserService::class)]
 class UserServiceTest extends TestCase
 {
+    private UserFactoryContract|MockObject $factory;
     private SearchUserByLogin|MockObject $searchUserByLogin;
 
     private SearchUserById|MockObject $searchUserById;
@@ -46,6 +48,7 @@ class UserServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->factory = $this->createMock(UserFactoryContract::class);
         $this->searchUserById = $this->createMock(SearchUserById::class);
         $this->searchUserByLogin = $this->createMock(SearchUserByLogin::class);
         $this->updateUser = $this->createMock(UpdateUser::class);
@@ -53,6 +56,7 @@ class UserServiceTest extends TestCase
         $this->deleteUser = $this->createMock(DeleteUser::class);
 
         $this->userService = new UserService(
+            $this->factory,
             $this->searchUserByLogin,
             $this->searchUserById,
             $this->updateUser,
@@ -64,6 +68,7 @@ class UserServiceTest extends TestCase
     public function tearDown(): void
     {
         unset(
+            $this->factory,
             $this->searchUserByLogin,
             $this->searchUserById,
             $this->updateUser,
@@ -81,6 +86,11 @@ class UserServiceTest extends TestCase
     public function test_search_user_by_login_should_return_user(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
+        $this->factory->expects(self::once())
+            ->method('buildLogin')
+            ->with('login')
+            ->willReturn($loginMock);
+
         $request = new SearchUserByLoginRequest($loginMock);
 
         $userMock = $this->createMock(User::class);
@@ -90,7 +100,7 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn($userMock);
 
-        $result = $this->userService->searchUserByLogin($loginMock);
+        $result = $this->userService->searchUserByLogin('login');
 
         $this->assertSame($userMock, $result);
         $this->assertInstanceOf(User::class, $result);
@@ -103,6 +113,11 @@ class UserServiceTest extends TestCase
     public function test_search_user_by_login_should_return_null(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
+        $this->factory->expects(self::once())
+            ->method('buildLogin')
+            ->with('login')
+            ->willReturn($loginMock);
+
         $request = new SearchUserByLoginRequest($loginMock);
 
         $this->searchUserByLogin->expects(self::once())
@@ -110,7 +125,7 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $result = $this->userService->searchUserByLogin($loginMock);
+        $result = $this->userService->searchUserByLogin('login');
 
         $this->assertNull($result);
     }

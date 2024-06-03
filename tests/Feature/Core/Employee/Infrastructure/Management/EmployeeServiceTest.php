@@ -29,19 +29,12 @@ use Tests\TestCase;
 class EmployeeServiceTest extends TestCase
 {
     private EmployeeFactoryContract|MockObject $factory;
-
     private SearchEmployeeById|MockObject $searchEmployeeById;
-
     private SearchEmployeeByIdentification|MockObject $searchEmployeeByIdentification;
-
     private SearchEmployees|MockObject $searchEmployees;
-
     private UpdateEmployee|MockObject $updateEmployee;
-
     private CreateEmployee|MockObject $createEmployee;
-
     private DeleteEmployee|MockObject $deleteEmployee;
-
     private EmployeeService $service;
 
     /**
@@ -91,6 +84,10 @@ class EmployeeServiceTest extends TestCase
     public function test_searchEmployeeById_should_return_object(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeId')
+            ->with(1)
+            ->willReturn($employeeId);
 
         $request = new SearchEmployeeByIdRequest($employeeId);
 
@@ -100,7 +97,7 @@ class EmployeeServiceTest extends TestCase
             ->with($request)
             ->willReturn($employeeMock);
 
-        $result = $this->service->searchEmployeeById($employeeId);
+        $result = $this->service->searchEmployeeById(1);
 
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertSame($result, $employeeMock);
@@ -113,6 +110,10 @@ class EmployeeServiceTest extends TestCase
     public function test_searchEmployeeById_should_return_null(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
+        $this->factory->expects(self::once())
+            ->method('buildEmployeeId')
+            ->with(1)
+            ->willReturn($employeeId);
 
         $request = new SearchEmployeeByIdRequest($employeeId);
 
@@ -121,7 +122,7 @@ class EmployeeServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $result = $this->service->searchEmployeeById($employeeId);
+        $result = $this->service->searchEmployeeById(1);
 
         $this->assertNull($result);
     }
@@ -234,29 +235,20 @@ class EmployeeServiceTest extends TestCase
             ->method('aggregator')
             ->willReturn([1]);
 
-        $employeeId = $this->createMock(EmployeeId::class);
-        $this->factory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeId);
+        $this->searchEmployees->expects(self::once())
+            ->method('execute')
+            ->with($request)
+            ->willReturn($employees);
 
         $employeeMock = $this->createMock(Employee::class);
-
-        $requestSearchById = new SearchEmployeeByIdRequest($employeeId);
         $this->searchEmployeeById->expects(self::once())
             ->method('execute')
-            ->with($requestSearchById)
             ->willReturn($employeeMock);
 
         $employees->expects(self::once())
             ->method('addItem')
             ->with($employeeMock)
             ->willReturnSelf();
-
-        $this->searchEmployees->expects(self::once())
-            ->method('execute')
-            ->with($request)
-            ->willReturn($employees);
 
         $result = $this->service->searchEmployees();
 

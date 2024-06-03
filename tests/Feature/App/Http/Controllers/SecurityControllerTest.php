@@ -4,11 +4,8 @@ namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\SecurityController;
 use App\Http\Requests\User\LoginRequest;
-use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use Core\Employee\Domain\ValueObjects\EmployeeId;
-use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileId;
@@ -37,11 +34,8 @@ use Tests\TestCase;
 #[CoversClass(SecurityController::class)]
 class SecurityControllerTest extends TestCase
 {
-    private UserFactoryContract|MockObject $userFactory;
     private UserManagementContract|MockObject $userManagement;
     private EmployeeManagementContract|MockObject $employeeManagement;
-    private EmployeeFactoryContract|MockObject $employeeFactory;
-    private ProfileFactoryContract|MockObject $profileFactory;
     private ProfileManagementContract|MockObject $profileManagement;
     private StatefulGuard|MockObject $statefulGuard;
     private ViewFactory|MockObject $viewFactory;
@@ -57,18 +51,13 @@ class SecurityControllerTest extends TestCase
         $this->userFactory = $this->createMock(UserFactoryContract::class);
         $this->userManagement = $this->createMock(UserManagementContract::class);
         $this->employeeManagement = $this->createMock(EmployeeManagementContract::class);
-        $this->employeeFactory = $this->createMock(EmployeeFactoryContract::class);
         $this->profileManagement = $this->createMock(ProfileManagementContract::class);
-        $this->profileFactory = $this->createMock(ProfileFactoryContract::class);
         $this->statefulGuard = $this->createMock(StatefulGuard::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->controller = new SecurityController(
-            $this->userFactory,
             $this->userManagement,
             $this->employeeManagement,
-            $this->employeeFactory,
-            $this->profileFactory,
             $this->profileManagement,
             $this->viewFactory,
             $this->logger,
@@ -79,12 +68,9 @@ class SecurityControllerTest extends TestCase
     public function tearDown(): void
     {
         unset(
-            $this->userFactory,
             $this->userManagement,
-            $this->employeeFactory,
             $this->employeeManagement,
             $this->profileManagement,
-            $this->profileFactory,
             $this->statefulGuard,
             $this->viewFactory,
             $this->logger,
@@ -131,12 +117,6 @@ class SecurityControllerTest extends TestCase
             ->method('ajax')
             ->willReturn(true);
 
-        $loginMock = $this->createMock(UserLogin::class);
-        $this->userFactory->expects(self::once())
-            ->method('buildLogin')
-            ->with('login')
-            ->willReturn($loginMock);
-
         $userMock = $this->createMock(User::class);
 
         $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
@@ -173,26 +153,14 @@ class SecurityControllerTest extends TestCase
 
         $this->userManagement->expects(self::once())
             ->method('searchUserByLogin')
-            ->with($loginMock)
+            ->with('login')
             ->willReturn($userMock);
-
-        $employeeIdMock = $this->createMock(EmployeeId::class);
-        $this->employeeFactory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeIdMock);
 
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
-            ->with($employeeIdMock)
-            ->willReturn($employeeMock);
-
-        $profileIdMock = $this->createMock(ProfileId::class);
-        $this->profileFactory->expects(self::once())
-            ->method('buildProfileId')
             ->with(1)
-            ->willReturn($profileIdMock);
+            ->willReturn($employeeMock);
 
         $profileMock = $this->createMock(Profile::class);
 
@@ -207,7 +175,7 @@ class SecurityControllerTest extends TestCase
 
         $this->profileManagement->expects(self::once())
             ->method('searchProfileById')
-            ->with($profileIdMock)
+            ->with(1)
             ->willReturn($profileMock);
 
         $credentials = [
@@ -241,12 +209,6 @@ class SecurityControllerTest extends TestCase
             ->method('ajax')
             ->willReturn(false);
 
-        $loginMock = $this->createMock(UserLogin::class);
-        $this->userFactory->expects(self::once())
-            ->method('buildLogin')
-            ->with('login')
-            ->willReturn($loginMock);
-
         $userMock = $this->createMock(User::class);
 
         $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
@@ -283,26 +245,14 @@ class SecurityControllerTest extends TestCase
 
         $this->userManagement->expects(self::once())
             ->method('searchUserByLogin')
-            ->with($loginMock)
+            ->with('login')
             ->willReturn($userMock);
-
-        $employeeIdMock = $this->createMock(EmployeeId::class);
-        $this->employeeFactory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeIdMock);
 
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
-            ->with($employeeIdMock)
-            ->willReturn($employeeMock);
-
-        $profileIdMock = $this->createMock(ProfileId::class);
-        $this->profileFactory->expects(self::once())
-            ->method('buildProfileId')
             ->with(1)
-            ->willReturn($profileIdMock);
+            ->willReturn($employeeMock);
 
         $profileMock = $this->createMock(Profile::class);
 
@@ -317,7 +267,7 @@ class SecurityControllerTest extends TestCase
 
         $this->profileManagement->expects(self::once())
             ->method('searchProfileById')
-            ->with($profileIdMock)
+            ->with(1)
             ->willReturn($profileMock);
 
         $credentials = [
@@ -352,12 +302,6 @@ class SecurityControllerTest extends TestCase
             ->method('ajax')
             ->willReturn(true);
 
-        $loginMock = $this->createMock(UserLogin::class);
-        $this->userFactory->expects(self::once())
-            ->method('buildLogin')
-            ->with('login')
-            ->willReturn($loginMock);
-
         $userMock = $this->createMock(User::class);
 
         $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
@@ -370,18 +314,12 @@ class SecurityControllerTest extends TestCase
 
         $this->userManagement->expects(self::once())
             ->method('searchUserByLogin')
-            ->with($loginMock)
+            ->with('login')
             ->willReturn($userMock);
-
-        $employeeIdMock = $this->createMock(EmployeeId::class);
-        $this->employeeFactory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeIdMock);
 
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
-            ->with($employeeIdMock)
+            ->with(1)
             ->willThrowException(new \Exception('Employee not found'));
 
         $this->logger->expects(self::once())
@@ -410,12 +348,6 @@ class SecurityControllerTest extends TestCase
             ->method('ajax')
             ->willReturn(false);
 
-        $loginMock = $this->createMock(UserLogin::class);
-        $this->userFactory->expects(self::once())
-            ->method('buildLogin')
-            ->with('login')
-            ->willReturn($loginMock);
-
         $userMock = $this->createMock(User::class);
 
         $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
@@ -428,18 +360,12 @@ class SecurityControllerTest extends TestCase
 
         $this->userManagement->expects(self::once())
             ->method('searchUserByLogin')
-            ->with($loginMock)
+            ->with('login')
             ->willReturn($userMock);
-
-        $employeeIdMock = $this->createMock(EmployeeId::class);
-        $this->employeeFactory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeIdMock);
 
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
-            ->with($employeeIdMock)
+            ->with(1)
             ->willThrowException(new \Exception('Employee not found'));
 
         $this->logger->expects(self::once())
@@ -468,12 +394,6 @@ class SecurityControllerTest extends TestCase
             ->method('ajax')
             ->willReturn(false);
 
-        $loginMock = $this->createMock(UserLogin::class);
-        $this->userFactory->expects(self::once())
-            ->method('buildLogin')
-            ->with('login')
-            ->willReturn($loginMock);
-
         $userMock = $this->createMock(User::class);
 
         $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
@@ -494,30 +414,14 @@ class SecurityControllerTest extends TestCase
 
         $this->userManagement->expects(self::once())
             ->method('searchUserByLogin')
-            ->with($loginMock)
+            ->with('login')
             ->willReturn($userMock);
-
-        $employeeIdMock = $this->createMock(EmployeeId::class);
-        $this->employeeFactory->expects(self::once())
-            ->method('buildEmployeeId')
-            ->with(1)
-            ->willReturn($employeeIdMock);
 
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
-            ->with($employeeIdMock)
-            ->willReturn($employeeMock);
-
-        $profileIdMock = $this->createMock(ProfileId::class);
-        $profileIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-
-        $this->profileFactory->expects(self::once())
-            ->method('buildProfileId')
             ->with(1)
-            ->willReturn($profileIdMock);
+            ->willReturn($employeeMock);
 
         $profileMock = $this->createMock(Profile::class);
 
@@ -530,9 +434,17 @@ class SecurityControllerTest extends TestCase
             ->method('state')
             ->willReturn($profileStateMock);
 
+        $profileIdMock = $this->createMock(ProfileId::class);
+        $profileIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $profileMock->expects(self::once())
+            ->method('id')
+            ->willReturn($profileIdMock);
+
         $this->profileManagement->expects(self::once())
             ->method('searchProfileById')
-            ->with($profileIdMock)
+            ->with(1)
             ->willReturn($profileMock);
 
         $this->logger->expects(self::once())

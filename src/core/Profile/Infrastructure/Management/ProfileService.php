@@ -67,9 +67,11 @@ class ProfileService implements ProfileManagementContract
     /**
      * @throws Exception
      */
-    public function searchProfileById(ProfileId $id): ?Profile
+    public function searchProfileById(?int $id): ?Profile
     {
-        $request = new SearchProfileByIdRequest($id);
+        $request = new SearchProfileByIdRequest(
+            $this->profileFactory->buildProfileId($id)
+        );
         $profile = $this->searchProfileById->execute($request);
 
         $modules = new Modules;
@@ -99,7 +101,7 @@ class ProfileService implements ProfileManagementContract
 
         $profiles = $this->searchProfiles->execute($request);
         foreach ($profiles->aggregator() as $item) {
-            $profile = $this->searchProfileById($this->profileFactory->buildProfileId($item));
+            $profile = $this->searchProfileById($item);
             $profiles->addItem($profile);
         }
 

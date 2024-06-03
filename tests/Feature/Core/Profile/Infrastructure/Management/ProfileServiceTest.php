@@ -95,6 +95,11 @@ class ProfileServiceTest extends TestCase
     public function test_searchProfileById_should_return_object(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileId')
+            ->with(1)
+            ->willReturn($profileIdMock);
+
         $request = new SearchProfileByIdRequest($profileIdMock);
 
         $profileMock = $this->createMock(Profile::class);
@@ -128,7 +133,7 @@ class ProfileServiceTest extends TestCase
             ->with($moduleIdMock)
             ->willReturn($moduleMock);
 
-        $result = $this->service->searchProfileById($profileIdMock);
+        $result = $this->service->searchProfileById(1);
 
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($profileMock, $result);
@@ -141,6 +146,11 @@ class ProfileServiceTest extends TestCase
     public function test_searchProfileById_should_return_exception(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileId')
+            ->with(1)
+            ->willReturn($profileIdMock);
+
         $request = new SearchProfileByIdRequest($profileIdMock);
 
         $profileMock = $this->createMock(Profile::class);
@@ -168,7 +178,7 @@ class ProfileServiceTest extends TestCase
             ->method('warning')
             ->with('Module not found with id 1');
 
-        $result = $this->service->searchProfileById($profileIdMock);
+        $result = $this->service->searchProfileById(1);
 
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($profileMock, $result);
@@ -192,12 +202,6 @@ class ProfileServiceTest extends TestCase
             ->method('execute')
             ->with($request)
             ->willReturn($profilesMock);
-
-        $profileIdMock = $this->createMock(ProfileId::class);
-        $this->factory->expects(self::once())
-            ->method('buildProfileId')
-            ->with(1)
-            ->willReturn($profileIdMock);
 
         $profileMock = $this->createMock(Profile::class);
         $this->searchProfileById->expects(self::once())

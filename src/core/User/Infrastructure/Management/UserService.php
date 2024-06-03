@@ -16,31 +16,30 @@ use Core\User\Application\UseCases\SearchUser\SearchUserByLogin;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLoginRequest;
 use Core\User\Application\UseCases\UpdateUser\UpdateUser;
 use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
+use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
-use Core\User\Domain\ValueObjects\UserLogin;
 use Exception;
 
 class UserService implements UserManagementContract
 {
+    private UserFactoryContract $userFactory;
     private SearchUserByLogin $searchUserByLogin;
-
     private SearchUserById $searchUserById;
-
     private UpdateUser $updateUser;
-
     private CreateUser $createUser;
-
     private DeleteUser $deleteUser;
 
     public function __construct(
+        UserFactoryContract $userFactory,
         SearchUserByLogin $searchUserByLogin,
         SearchUserById $searchUserById,
         UpdateUser $updateUser,
         CreateUser $createUser,
         DeleteUser $deleteUser,
     ) {
+        $this->userFactory = $userFactory;
         $this->searchUserByLogin = $searchUserByLogin;
         $this->searchUserById = $searchUserById;
         $this->updateUser = $updateUser;
@@ -51,9 +50,11 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function searchUserByLogin(UserLogin $login): ?User
+    public function searchUserByLogin(string $login): ?User
     {
-        $request = new SearchUserByLoginRequest($login);
+        $request = new SearchUserByLoginRequest(
+            $this->userFactory->buildLogin($login)
+        );
 
         return $this->searchUserByLogin->execute($request);
     }

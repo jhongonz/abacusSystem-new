@@ -9,7 +9,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 
 interface EmployeeManagementContract
 {
-    public function searchEmployeeById(EmployeeId $id): ?Employee;
+    public function searchEmployeeById(?int $id): ?Employee;
 
     public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee;
 
