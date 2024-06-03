@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singletonIf(StatefulGuard::class, function (Application $app) {
-            $authManager = $this->app->make(AuthManager::class);
+            $authManager = $app->make(AuthManager::class);
 
             return $authManager->guard();
         });

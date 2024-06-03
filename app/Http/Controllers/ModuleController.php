@@ -34,7 +34,6 @@ class ModuleController extends Controller implements HasMiddleware
     private ModuleDataTransformerContract $moduleDataTransformer;
 
     private DataTables $dataTable;
-    private ViewFactory $viewFactory;
 
     public function __construct(
         ModuleFactoryContract $moduleFactory,
@@ -44,13 +43,12 @@ class ModuleController extends Controller implements HasMiddleware
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
 
         $this->moduleFactory = $moduleFactory;
         $this->moduleService = $moduleService;
         $this->moduleDataTransformer = $moduleDataTransformer;
         $this->dataTable = $dataTable;
-        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string

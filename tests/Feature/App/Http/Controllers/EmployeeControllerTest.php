@@ -161,7 +161,7 @@ class EmployeeControllerTest extends TestCase
         $result = $this->controller->index();
 
         $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertSame(['html' => $html], (array) $result->getData());
+        $this->assertSame(['html' => $html], $result->getData(true));
     }
 
     /**
@@ -250,7 +250,6 @@ class EmployeeControllerTest extends TestCase
             ->with(
                 'tools',
                 $this->callback(function ($closure) {
-
                     $viewMock = $this->createMock(View::class);
                     $viewMock->expects(self::exactly(2))
                         ->method('with')
@@ -330,7 +329,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(2);
 
         $employeeMock = $this->createMock(Employee::class);
-        $employeeMock->expects(self::exactly(3))
+        $employeeMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
 
@@ -420,7 +419,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(1);
 
         $employeeMock = $this->createMock(Employee::class);
-        $employeeMock->expects(self::exactly(5))
+        $employeeMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
 
@@ -503,7 +502,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(2);
 
         $employeeMock = $this->createMock(Employee::class);
-        $employeeMock->expects(self::exactly(3))
+        $employeeMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
 
@@ -563,7 +562,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(2);
 
         $employeeMock = $this->createMock(Employee::class);
-        $employeeMock->expects(self::exactly(3))
+        $employeeMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
 

@@ -5,19 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
-use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
-use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
-use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -26,30 +25,24 @@ use Yajra\DataTables\Exceptions\Exception as DatatablesException;
 class InstitutionController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
-
-    private InstitutionFactoryContract $institutionFactory;
     private InstitutionDataTransformerContract $dataTransformer;
     private InstitutionManagementContract $institutionService;
     private DataTables $dataTable;
-    private ViewFactory $viewFactory;
 
     public function __construct(
-        InstitutionFactoryContract $institutionFactory,
         InstitutionDataTransformerContract $dataTransformer,
         InstitutionManagementContract $institutionService,
         DataTables $dataTable,
-        ImageManager $imageManager,
+        ImageManagerInterface $imageManager,
         LoggerInterface $logger,
         ViewFactory $viewFactory,
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
 
         $this->setImageManager($imageManager);
-        $this->institutionFactory = $institutionFactory;
         $this->dataTransformer = $dataTransformer;
         $this->institutionService = $institutionService;
         $this->dataTable = $dataTable;
-        $this->viewFactory = $viewFactory;
     }
     public function index(): JsonResponse|string
     {
@@ -62,19 +55,19 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function changeStateInstitution(Request $request): JsonResponse
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($request->input('id'));
-        $institution = $this->institutionService->searchInstitutionById($institutionId);
+        $institution = $this->institutionService->searchInstitutionById($request->input('id'));
 
-        if ($institution->state()->isNew() || $institution->state()->isInactivated()) {
-            $institution->state()->activate();
-        } elseif ($institution->state()->isActivated()) {
-            $institution->state()->inactive();
+        $institutionState = $institution->state();
+        if ($institutionState->isNew() || $institutionState->isInactivated()) {
+            $institutionState->activate();
+        } elseif ($institutionState->isActivated()) {
+            $institutionState->inactive();
         }
 
-        $dataUpdate['state'] = $institution->state()->value();
+        $dataUpdate['state'] = $institutionState->value();
 
         try {
-            $this->institutionService->updateInstitution($institutionId, $dataUpdate);
+            $this->institutionService->updateInstitution($request->input('id'), $dataUpdate);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -96,17 +89,15 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function getInstitution(?int $id = null): JsonResponse|string
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($id);
-
         $institution = null;
         if (!is_null($id)) {
-            $institution = $this->institutionService->searchInstitutionById($institutionId);
+            $institution = $this->institutionService->searchInstitutionById($id);
 
             $urlFile = url(self::IMAGE_PATH_FULL.$institution->logo()->value().'?v='.Str::random(10));
         }
 
         $view = $this->viewFactory->make('institution.institution-form')
-            ->with('institutionId', $institutionId->value())
+            ->with('institutionId', $id)
             ->with('institution', $institution)
             ->with('image', $urlFile ?? null)
             ->render();
@@ -124,12 +115,11 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function storeInstitution(StoreInstitutionRequest $request): JsonResponse
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($request->input('institutionId'));
+        $institutionId = $request->input('institutionId');
 
         try {
-            $method = (is_null($institutionId->value())) ? 'createInstitution' : 'updateInstitution';
+            $method = (is_null($institutionId)) ? 'createInstitution' : 'updateInstitution';
             $this->{$method}($request, $institutionId);
-
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -139,29 +129,28 @@ class InstitutionController extends Controller implements HasMiddleware
             );
         }
 
-        return new JsonResponse(['institutionId' => $institutionId->value()], Response::HTTP_CREATED);
+        return new JsonResponse(['institutionId' => $institutionId], Response::HTTP_CREATED);
     }
 
-    public function createInstitution(StoreInstitutionRequest $request, InstitutionId $id): void
+    public function createInstitution(StoreInstitutionRequest $request, ?int $id): Institution
     {
-        $institution = $this->institutionFactory->buildInstitution(
-            $id,
-            $this->institutionFactory->buildInstitutionName($request->input('name'))
-        );
-
-        $institution->code()->setValue($request->input('code'));
-        $institution->shortname()->setValue($request->input('shortname'));
-        $institution->observations()->setValue($request->input('observations'));
+        $data = [
+            'id' => $id,
+            'name' => $request->input('name'),
+            'code' => $request->input('code'),
+            'shortname' => $request->input('shortname'),
+            'observations' => $request->input('observations')
+        ];
 
         if (! is_null($request->input('token'))) {
             $filename = $this->saveImage($request->input('token'));
-            $institution->logo()->setValue($filename);
+            $data['logo'] = $filename;
         }
 
-        $this->institutionService->createInstitution($institution);
+        return $this->institutionService->createInstitution($data);
     }
 
-    public function updateInstitution(StoreInstitutionRequest $request, InstitutionId $id): void
+    public function updateInstitution(StoreInstitutionRequest $request, int $id): void
     {
         $dataUpdate = [
             'code' => $request->input('code'),
@@ -183,10 +172,8 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function deleteInstitution(int $id): JsonResponse
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($id);
-
         try {
-            $this->institutionService->deleteInstitution($institutionId);
+            $this->institutionService->deleteInstitution($id);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -209,7 +196,8 @@ class InstitutionController extends Controller implements HasMiddleware
             }
         }
 
-        $datatable = $this->dataTable->collection(collect($dataInstitutions));
+        $collection = new Collection($dataInstitutions);
+        $datatable = $this->dataTable->collection($collection);
         $datatable->addColumn('tools', function (array $item) {
             return $this->retrieveMenuOptionHtml($item);
         });
@@ -217,6 +205,10 @@ class InstitutionController extends Controller implements HasMiddleware
         return $datatable->escapeColumns([])->toJson();
     }
 
+    /**
+     * Get the middleware that should be assigned to the controller.
+     * @codeCoverageIgnore
+     */
     public static function middleware(): array
     {
         return [

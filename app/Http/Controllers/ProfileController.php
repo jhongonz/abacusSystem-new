@@ -35,7 +35,6 @@ class ProfileController extends Controller implements HasMiddleware
     private ModuleManagementContract $moduleService;
 
     private DataTables $dataTable;
-    private ViewFactory $viewFactory;
 
     public function __construct(
         ProfileFactoryContract $profileFactory,
@@ -46,13 +45,12 @@ class ProfileController extends Controller implements HasMiddleware
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
         $this->profileFactory = $profileFactory;
         $this->profileService = $profileService;
         $this->profileDataTransformer = $profileDataTransformer;
         $this->moduleService = $moduleService;
         $this->dataTable = $dataTable;
-        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string

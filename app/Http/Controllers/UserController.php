@@ -32,7 +32,6 @@ class UserController extends Controller implements HasMiddleware
     private EmployeeFactoryContract $employeeFactory;
 
     private EmployeeManagementContract $employeeService;
-    private ViewFactory $viewFactory;
 
     public function __construct(
         UserFactoryContract $userFactory,
@@ -42,13 +41,12 @@ class UserController extends Controller implements HasMiddleware
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
 
         $this->userFactory = $userFactory;
         $this->userService = $userService;
         $this->employeeFactory = $employeeFactory;
         $this->employeeService = $employeeService;
-        $this->viewFactory = $viewFactory;
     }
 
     public function index(): JsonResponse|string
