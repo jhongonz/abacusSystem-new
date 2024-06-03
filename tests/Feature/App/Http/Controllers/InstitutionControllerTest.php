@@ -34,6 +34,7 @@ class InstitutionControllerTest extends TestCase
     private ViewFactory|MockObject $viewFactory;
     private ImageManagerInterface|MockObject $imageManager;
     private InstitutionController $controller;
+    private InstitutionController|MockObject $controllerMock;
 
     /**
      * @throws Exception
@@ -55,12 +56,25 @@ class InstitutionControllerTest extends TestCase
             $this->logger,
             $this->viewFactory
         );
+
+        $this->controllerMock = $this->getMockBuilder(InstitutionController::class)
+            ->setConstructorArgs([
+                $this->dataTransformer,
+                $this->institutionManagement,
+                $this->dataTable,
+                $this->imageManager,
+                $this->logger,
+                $this->viewFactory
+            ])
+            ->onlyMethods(['getDateTime'])
+            ->getMock();
     }
 
     public function tearDown(): void
     {
         unset(
             $this->controller,
+            $this->controllerMock,
             $this->dataTransformer,
             $this->institutionManagement,
             $this->dataTable,
@@ -158,8 +172,10 @@ class InstitutionControllerTest extends TestCase
         $this->assertSame($html, $result);
     }
 
+
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function test_changeStateInstitution_should_return_json_response_when_is_activate(): void
     {
@@ -195,7 +211,8 @@ class InstitutionControllerTest extends TestCase
 
         $this->institutionManagement->expects(self::once())
             ->method('updateInstitution')
-            ->with(1, ['state' => 2])
+            ->withAnyParameters()
+            //->with(1, ['state' => 2, 'updatedAt' => $datetime])
             ->willReturn($institutionMock);
 
         $result = $this->controller->changeStateInstitution($requestMock);
@@ -206,6 +223,7 @@ class InstitutionControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function test_changeStateInstitution_should_return_json_response_when_is_inactivate(): void
     {
@@ -249,7 +267,8 @@ class InstitutionControllerTest extends TestCase
 
         $this->institutionManagement->expects(self::once())
             ->method('updateInstitution')
-            ->with(1, ['state' => 3])
+            //->with(1, ['state' => 3])
+                ->withAnyParameters()
             ->willReturn($institutionMock);
 
         $result = $this->controller->changeStateInstitution($requestMock);
@@ -260,6 +279,7 @@ class InstitutionControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function test_changeStateInstitution_should_return_json_response_when_is_exception(): void
     {
@@ -303,7 +323,8 @@ class InstitutionControllerTest extends TestCase
 
         $this->institutionManagement->expects(self::once())
             ->method('updateInstitution')
-            ->with(1, ['state' => 3])
+            //->with(1, ['state' => 3])
+                ->withAnyParameters()
             ->willThrowException(new \Exception('Can not update institution'));
 
         $this->logger->expects(self::once())

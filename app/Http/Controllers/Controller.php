@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -64,5 +65,13 @@ abstract class Controller
             ->with('item', $item)
             ->with('permission', $permission)
             ->render();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function getDateTime($datetime = null): DateTime
+    {
+        return new DateTime($datetime);
     }
 }

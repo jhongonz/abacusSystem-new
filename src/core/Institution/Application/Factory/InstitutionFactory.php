@@ -55,16 +55,14 @@ class InstitutionFactory implements InstitutionFactoryContract
         );
 
         $institution->setCreatedAt(
-            $this->buildInstitutionCreatedAt(
-                $this->getDateTime($data['createdAt']['date'])
-            )
+            $this->buildInstitutionCreatedAt($data['createdAt'])
         );
 
-        $institution->setUpdatedAt(
-            $this->buildInstitutionUpdatedAt(
-                $this->getDateTime($data['updatedAt']['date'])
-            )
-        );
+        if (! is_null($data['updatedAt'])) {
+            $institution->setUpdatedAt(
+                $this->buildInstitutionUpdatedAt($data['updatedAt'])
+            );
+        }
 
         return $institution;
     }
@@ -130,13 +128,5 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutions(Institution ...$institutions): Institutions
     {
         return new Institutions(... $institutions);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getDateTime(?string $datetime = null): DateTime
-    {
-        return new DateTime($datetime);
     }
 }

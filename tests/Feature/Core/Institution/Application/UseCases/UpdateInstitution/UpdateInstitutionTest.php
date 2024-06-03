@@ -14,6 +14,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
+use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
@@ -117,6 +118,15 @@ class UpdateInstitutionTest extends TestCase
         $institutionMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
+
+        $updatedAtMock = $this->createMock(InstitutionUpdatedAt::class);
+        $updatedAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($data['updatedAt'])
+            ->willReturnSelf();
+        $institutionMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAtMock);
 
         $institutionMock->expects(self::once())
             ->method('refreshSearch')

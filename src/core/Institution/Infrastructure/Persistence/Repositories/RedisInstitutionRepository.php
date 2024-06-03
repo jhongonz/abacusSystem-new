@@ -15,6 +15,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionPersistException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
+use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
@@ -59,6 +60,7 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
     /**
      * @throws InstitutionsNotFoundException
+     * @throws Exception
      */
     public function find(InstitutionId $id): ?Institution
     {
@@ -71,6 +73,8 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
         if (!is_null($data)) {
             $dataArray = json_decode($data, true);
+            $dataArray['createdAt'] = new DateTime($dataArray['createdAt']['date']);
+            $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
 
             /**@var Institution*/
             return $this->institutionFactory->buildInstitutionFromArray($dataArray);

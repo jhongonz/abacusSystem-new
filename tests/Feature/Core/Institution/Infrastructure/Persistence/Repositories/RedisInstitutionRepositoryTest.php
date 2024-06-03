@@ -79,15 +79,19 @@ class RedisInstitutionRepositoryTest extends TestCase
             ->method('value')
             ->willReturn(1);
 
+        $dataExpected = [
+            'createdAt' => new \DateTime('2024-06-03 08:50:00'),
+            'updatedAt' => new \DateTime('2024-06-03 08:50:00'),
+        ];
         Redis::shouldReceive('get')
             ->once()
             ->with('institution::1')
-            ->andReturn('{}');
+            ->andReturn(json_encode($dataExpected));
 
         $institution = $this->createMock(Institution::class);
         $this->factory->expects(self::once())
             ->method('buildInstitutionFromArray')
-            ->with([])
+            ->with($dataExpected)
             ->willReturn($institution);
 
         $result = $this->repository->find($idMock);

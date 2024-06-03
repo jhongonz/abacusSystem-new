@@ -53,6 +53,9 @@ class InstitutionController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws Exception
+     */
     public function changeStateInstitution(Request $request): JsonResponse
     {
         $institution = $this->institutionService->searchInstitutionById($request->input('id'));
@@ -65,6 +68,7 @@ class InstitutionController extends Controller implements HasMiddleware
         }
 
         $dataUpdate['state'] = $institutionState->value();
+        $dataUpdate['updatedAt'] = $this->getDateTime();
 
         try {
             $this->institutionService->updateInstitution($request->input('id'), $dataUpdate);
@@ -89,16 +93,14 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function getInstitution(?int $id = null): JsonResponse|string
     {
-        $institution = null;
         if (!is_null($id)) {
             $institution = $this->institutionService->searchInstitutionById($id);
-
             $urlFile = url(self::IMAGE_PATH_FULL.$institution->logo()->value().'?v='.Str::random(10));
         }
 
         $view = $this->viewFactory->make('institution.institution-form')
             ->with('institutionId', $id)
-            ->with('institution', $institution)
+            ->with('institution', $institution ?? null)
             ->with('image', $urlFile ?? null)
             ->render();
 
@@ -132,6 +134,9 @@ class InstitutionController extends Controller implements HasMiddleware
         return new JsonResponse(['institutionId' => $institutionId], Response::HTTP_CREATED);
     }
 
+    /**
+     * @throws Exception
+     */
     public function createInstitution(StoreInstitutionRequest $request, ?int $id): Institution
     {
         $data = [
@@ -139,7 +144,8 @@ class InstitutionController extends Controller implements HasMiddleware
             'name' => $request->input('name'),
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
-            'observations' => $request->input('observations')
+            'observations' => $request->input('observations'),
+            'createdAt' => $this->getDateTime(),
         ];
 
         if (! is_null($request->input('token'))) {
@@ -147,9 +153,12 @@ class InstitutionController extends Controller implements HasMiddleware
             $data['logo'] = $filename;
         }
 
-        return $this->institutionService->createInstitution($data);
+        return $this->institutionService->createInstitution([Institution::TYPE => $data]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function updateInstitution(StoreInstitutionRequest $request, int $id): void
     {
         $dataUpdate = [
@@ -159,7 +168,8 @@ class InstitutionController extends Controller implements HasMiddleware
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
             'address' => $request->input('address'),
-            'observations' => $request->input('observations')
+            'observations' => $request->input('observations'),
+            'updatedAt' => $this->getDateTime(),
         ];
 
         if (! is_null($request->input('token'))) {
