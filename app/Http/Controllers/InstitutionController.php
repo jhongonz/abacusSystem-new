@@ -148,8 +148,9 @@ class InstitutionController extends Controller implements HasMiddleware
             'createdAt' => $this->getDateTime(),
         ];
 
-        if (! is_null($request->input('token'))) {
-            $filename = $this->saveImage($request->input('token'));
+        $token = $request->input('token');
+        if (! is_null($token)) {
+            $filename = $this->saveImage($token);
             $data['logo'] = $filename;
         }
 
@@ -172,8 +173,9 @@ class InstitutionController extends Controller implements HasMiddleware
             'updatedAt' => $this->getDateTime(),
         ];
 
-        if (! is_null($request->input('token'))) {
-            $filename = $this->saveImage($request->input('token'));
+        $token = $request->input('token');
+        if (! is_null($token)) {
+            $filename = $this->saveImage($token);
             $dataUpdate['logo'] = $filename;
         }
 
