@@ -11,13 +11,13 @@ interface EmployeeManagementContract
 {
     public function searchEmployeeById(?int $id): ?Employee;
 
-    public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee;
+    public function searchEmployeeByIdentification(string $identification): ?Employee;
 
     public function searchEmployees(array $filters = []): Employees;
 
-    public function updateEmployee(EmployeeId $id, array $data): void;
+    public function updateEmployee(int $id, array $data): void;
 
-    public function createEmployee(Employee $employee): void;
+    public function createEmployee(array $data): Employee;
 
-    public function deleteEmployee(EmployeeId $id): void;
+    public function deleteEmployee(int $id): void;
 }

@@ -130,9 +130,8 @@ class SecurityController extends Controller implements HasMiddleware
 
     /**
      * Get the middleware that should be assigned to the controller.
-     * @codeCoverageIgnore
      */
-    public static function middleware(): Middleware|array
+    public static function middleware(): array
     {
         return [
             new Middleware('auth', only: ['home']),

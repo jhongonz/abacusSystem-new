@@ -62,9 +62,11 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function searchUserById(UserId $id): ?User
+    public function searchUserById(?int $id): ?User
     {
-        $request = new SearchUserByIdRequest($id);
+        $request = new SearchUserByIdRequest(
+            $this->userFactory->buildId($id)
+        );
 
         return $this->searchUserById->execute($request);
     }
@@ -72,27 +74,32 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function updateUser(UserId $id, array $data): void
+    public function updateUser(int $id, array $data): void
     {
-        $request = new UpdateUserRequest($id, $data);
+        $userId = $this->userFactory->buildId($id);
+        $request = new UpdateUserRequest($userId, $data);
         $this->updateUser->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function createUser(User $user): void
+    public function createUser(array $data): User
     {
+        $user = $this->userFactory->buildUserFromArray($data);
         $request = new CreateUserRequest($user);
-        $this->createUser->execute($request);
+
+        return $this->createUser->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function deleteUser(UserId $id): void
+    public function deleteUser(int $id): void
     {
-        $request = new DeleteUserRequest($id);
+        $request = new DeleteUserRequest(
+            $this->userFactory->buildId($id)
+        );
         $this->deleteUser->execute($request);
     }
 }

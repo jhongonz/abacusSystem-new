@@ -24,6 +24,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -546,5 +547,16 @@ class SecurityControllerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame(302, $result->getStatusCode());
         $this->assertSame('http://localhost/login', $result->getTargetUrl());
+    }
+
+    public function test_middleware_should_return_object(): void
+    {
+        $result = $this->controller::middleware();
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        foreach ($result as $item) {
+            $this->assertInstanceOf(Middleware::class, $item);
+        }
     }
 }

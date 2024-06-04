@@ -14,6 +14,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
@@ -703,5 +704,16 @@ class InstitutionControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(500, $result->getStatusCode());
+    }
+
+    public function test_middleware_should_return_object(): void
+    {
+        $result = $this->controller::middleware();
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+        foreach ($result as $item) {
+            $this->assertInstanceOf(Middleware::class, $item);
+        }
     }
 }

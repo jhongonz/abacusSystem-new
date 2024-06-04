@@ -25,17 +25,11 @@ use Exception;
 class EmployeeService implements EmployeeManagementContract
 {
     private EmployeeFactoryContract $employeeFactory;
-
     private SearchEmployeeById $searchEmployeeById;
-
     private SearchEmployeeByIdentification $searchEmployeeByIdentification;
-
     private SearchEmployees $searchEmployees;
-
     private UpdateEmployee $updateEmployee;
-
     private CreateEmployee $createEmployee;
-
     private DeleteEmployee $deleteEmployee;
 
     public function __construct(
@@ -71,9 +65,11 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee
+    public function searchEmployeeByIdentification(string $identification): ?Employee
     {
-        $request = new SearchEmployeeByIdentificationRequest($identification);
+        $request = new SearchEmployeeByIdentificationRequest(
+            $this->employeeFactory->buildEmployeeIdentification($identification)
+        );
 
         return $this->searchEmployeeByIdentification->execute($request);
     }
@@ -97,9 +93,10 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function updateEmployee(EmployeeId $id, array $data): void
+    public function updateEmployee(int $id, array $data): void
     {
-        $request = new UpdateEmployeeRequest($id, $data);
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
+        $request = new UpdateEmployeeRequest($employeeId, $data);
 
         $this->updateEmployee->execute($request);
     }
@@ -107,19 +104,22 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function createEmployee(Employee $employee): void
+    public function createEmployee(array $data): Employee
     {
+        $employee = $this->employeeFactory->buildEmployeeFromArray($data);
         $request = new CreateEmployeeRequest($employee);
 
-        $this->createEmployee->execute($request);
+        return $this->createEmployee->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function deleteEmployee(EmployeeId $id): void
+    public function deleteEmployee(int $id): void
     {
-        $request = new DeleteEmployeeRequest($id);
+        $request = new DeleteEmployeeRequest(
+            $this->employeeFactory->buildEmployeeId($id)
+        );
 
         $this->deleteEmployee->execute($request);
     }

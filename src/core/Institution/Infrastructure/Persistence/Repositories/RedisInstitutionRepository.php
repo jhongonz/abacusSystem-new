@@ -74,7 +74,10 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
         if (!is_null($data)) {
             $dataArray = json_decode($data, true);
             $dataArray['createdAt'] = new DateTime($dataArray['createdAt']['date']);
-            $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
+
+            if (! is_null($dataArray['updatedAt'])) {
+                $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
+            }
 
             /**@var Institution*/
             return $this->institutionFactory->buildInstitutionFromArray($dataArray);
