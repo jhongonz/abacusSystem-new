@@ -18,8 +18,6 @@ use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
-use Core\Employee\Domain\ValueObjects\EmployeeId;
-use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Exception;
 
 class EmployeeService implements EmployeeManagementContract
@@ -93,12 +91,12 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function updateEmployee(int $id, array $data): void
+    public function updateEmployee(int $id, array $data): Employee
     {
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
         $request = new UpdateEmployeeRequest($employeeId, $data);
 
-        $this->updateEmployee->execute($request);
+        return $this->updateEmployee->execute($request);
     }
 
     /**

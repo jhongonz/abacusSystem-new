@@ -19,7 +19,6 @@ use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
-use Core\User\Domain\ValueObjects\UserId;
 use Exception;
 
 class UserService implements UserManagementContract
@@ -74,11 +73,12 @@ class UserService implements UserManagementContract
     /**
      * @throws Exception
      */
-    public function updateUser(int $id, array $data): void
+    public function updateUser(int $id, array $data): User
     {
         $userId = $this->userFactory->buildId($id);
         $request = new UpdateUserRequest($userId, $data);
-        $this->updateUser->execute($request);
+
+        return $this->updateUser->execute($request);
     }
 
     /**
@@ -100,6 +100,7 @@ class UserService implements UserManagementContract
         $request = new DeleteUserRequest(
             $this->userFactory->buildId($id)
         );
+
         $this->deleteUser->execute($request);
     }
 }

@@ -7,7 +7,6 @@
 namespace Core\User\Domain\Contracts;
 
 use Core\User\Domain\User;
-use Core\User\Domain\ValueObjects\UserId;
 
 interface UserManagementContract
 {
@@ -15,7 +14,7 @@ interface UserManagementContract
 
     public function searchUserByLogin(string $login): ?User;
 
-    public function updateUser(int $id, array $data): void;
+    public function updateUser(int $id, array $data): User;
 
     public function createUser(array $data): User;
 

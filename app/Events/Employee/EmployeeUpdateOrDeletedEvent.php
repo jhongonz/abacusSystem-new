@@ -2,7 +2,6 @@
 
 namespace App\Events\Employee;
 
-use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;

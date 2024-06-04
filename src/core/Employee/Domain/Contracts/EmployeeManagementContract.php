@@ -4,8 +4,6 @@ namespace Core\Employee\Domain\Contracts;
 
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
-use Core\Employee\Domain\ValueObjects\EmployeeId;
-use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 
 interface EmployeeManagementContract
 {
@@ -15,7 +13,7 @@ interface EmployeeManagementContract
 
     public function searchEmployees(array $filters = []): Employees;
 
-    public function updateEmployee(int $id, array $data): void;
+    public function updateEmployee(int $id, array $data): Employee;
 
     public function createEmployee(array $data): Employee;
 

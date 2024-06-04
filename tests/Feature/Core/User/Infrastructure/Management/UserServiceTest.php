@@ -137,6 +137,11 @@ class UserServiceTest extends TestCase
     public function test_search_user_by_id_should_return_user(): void
     {
         $userIdMock = $this->createMock(UserId::class);
+        $this->factory->expects(self::once())
+            ->method('buildId')
+            ->with(1)
+            ->willReturn($userIdMock);
+
         $request = new SearchUserByIdRequest($userIdMock);
 
         $userMock = $this->createMock(User::class);
@@ -145,7 +150,7 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn($userMock);
 
-        $result = $this->userService->searchUserById($userIdMock);
+        $result = $this->userService->searchUserById(1);
 
         $this->assertSame($userMock, $result);
         $this->assertInstanceOf(User::class, $result);
@@ -158,6 +163,11 @@ class UserServiceTest extends TestCase
     public function test_search_user_by_id_should_return_null(): void
     {
         $userIdMock = $this->createMock(UserId::class);
+        $this->factory->expects(self::once())
+            ->method('buildId')
+            ->with(1)
+            ->willReturn($userIdMock);
+
         $request = new SearchUserByIdRequest($userIdMock);
 
         $this->searchUserById->expects(self::once())
@@ -165,7 +175,7 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $result = $this->userService->searchUserById($userIdMock);
+        $result = $this->userService->searchUserById(1);
 
         $this->assertNull($result);
     }
@@ -178,6 +188,11 @@ class UserServiceTest extends TestCase
     {
         $dataUpdate = [];
         $userIdMock = $this->createMock(UserId::class);
+        $this->factory->expects(self::once())
+            ->method('buildId')
+            ->with(1)
+            ->willReturn($userIdMock);
+
         $userMock = $this->createMock(User::class);
 
         $request = new UpdateUserRequest($userIdMock, $dataUpdate);
@@ -187,8 +202,10 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn($userMock);
 
-        $this->userService->updateUser($userIdMock, $dataUpdate);
-        $this->assertTrue(true);
+        $result = $this->userService->updateUser(1, $dataUpdate);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertSame($userMock, $result);
     }
 
     /**
@@ -198,6 +215,11 @@ class UserServiceTest extends TestCase
     public function test_create_user_should_void(): void
     {
         $userMock = $this->createMock(User::class);
+        $this->factory->expects(self::once())
+            ->method('buildUserFromArray')
+            ->with([])
+            ->willReturn($userMock);
+
         $request = new CreateUserRequest($userMock);
 
         $this->createUser->expects(self::once())
@@ -205,8 +227,10 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn($userMock);
 
-        $this->userService->createUser($userMock);
-        $this->assertTrue(true);
+        $result = $this->userService->createUser([]);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertSame($userMock, $result);
     }
 
     /**
@@ -216,6 +240,11 @@ class UserServiceTest extends TestCase
     public function test_delete_user_should_void(): void
     {
         $userIdMock = $this->createMock(UserId::class);
+        $this->factory->expects(self::once())
+            ->method('buildId')
+            ->with(1)
+            ->willReturn($userIdMock);
+
         $request = new DeleteUserRequest($userIdMock);
 
         $this->deleteUser->expects(self::once())
@@ -223,7 +252,7 @@ class UserServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $this->userService->deleteUser($userIdMock);
+        $this->userService->deleteUser(1);
         $this->assertTrue(true);
     }
 }
