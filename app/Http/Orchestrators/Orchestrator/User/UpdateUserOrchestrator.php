@@ -33,6 +33,7 @@ class UpdateUserOrchestrator extends UserOrchestrator
         $dataUpdateUser = [
             'profileId' => $request->input('profile'),
             'login' => $request->input('login'),
+            'state' => $request->input('state')
         ];
 
         $password = $request->input('password');

@@ -26,11 +26,8 @@ class UserController extends Controller implements HasMiddleware
     use UserTrait;
 
     private UserFactoryContract $userFactory;
-
     private UserManagementContract $userService;
-
     private EmployeeFactoryContract $employeeFactory;
-
     private EmployeeManagementContract $employeeService;
 
     public function __construct(

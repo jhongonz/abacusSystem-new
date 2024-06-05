@@ -10,6 +10,7 @@ use App\Traits\MultimediaTrait;
 use App\Traits\UtilsDateTimeTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 
@@ -39,6 +40,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'shortname' => $request->input('shortname'),
             'observations' => $request->input('observations'),
             'createdAt' => $this->getCurrentTime(),
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         $token = $request->input('token');

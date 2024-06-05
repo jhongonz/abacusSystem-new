@@ -10,6 +10,7 @@ use App\Traits\MultimediaTrait;
 use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -43,7 +44,8 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
-            'createAt' => $this->getCurrentTime()
+            'createAt' => $this->getCurrentTime(),
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         $token = $request->input('token');

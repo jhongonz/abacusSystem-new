@@ -7,6 +7,7 @@
 namespace App\Http\Orchestrators\Orchestrator\User;
 
 use App\Traits\UserTrait;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -36,7 +37,8 @@ class CreateUserOrchestrator extends UserOrchestrator
             'profileId' => $request->input('profile'),
             'login' => $request->input('login'),
             'password' => $this->makeHashPassword($request->input('password')),
-            'photo' => $request->input('image') ?? ''
+            'photo' => $request->input('image') ?? '',
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->userManagement->createUser([User::TYPE => $dataUser]);
