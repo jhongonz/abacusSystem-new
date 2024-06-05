@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Exceptions\ProfileNotActiveException;
+use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\User\LoginRequest;
 use App\Traits\UserTrait;
-use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
-use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Exception;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -27,24 +25,18 @@ class SecurityController extends Controller implements HasMiddleware
 {
     use UserTrait;
 
-    private UserManagementContract $userService;
-    private EmployeeManagementContract $employeeService;
-    private ProfileManagementContract $profileService;
     private StatefulGuard $guard;
+    private OrchestratorHandlerContract $orchestratorHandler;
 
     public function __construct(
-        UserManagementContract $userService,
-        EmployeeManagementContract $employeeService,
-        ProfileManagementContract $profileService,
+        OrchestratorHandlerContract $orchestratorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
         StatefulGuard $guard
     ) {
         parent::__construct($logger, $viewFactory);
 
-        $this->userService = $userService;
-        $this->employeeService = $employeeService;
-        $this->profileService = $profileService;
+        $this->orchestratorHandler = $orchestratorHandler;
         $this->guard = $guard;
     }
 
@@ -56,11 +48,12 @@ class SecurityController extends Controller implements HasMiddleware
 
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
-        $user = $this->userService->searchUserByLogin($request->input('login'));
+        /** @var User $user */
+        $user = $this->orchestratorHandler->handler('retrieve-user', $request);
 
         try {
-            $employee = $this->getEmployee($user);
-            $profile = $this->getProfile($user);
+            $employee = $this->getEmployee($request, $user);
+            $profile = $this->getProfile($request, $user);
 
             $credentials = [
                 'user_login' => $user->login()->value(),
@@ -108,17 +101,20 @@ class SecurityController extends Controller implements HasMiddleware
         return new RedirectResponse(route('panel.login'));
     }
 
-    private function getEmployee(User $user): Employee
+    private function getEmployee(Request $request, User $user): Employee
     {
-        return $this->employeeService->searchEmployeeById($user->employeeId()->value());
+        $request->mergeIfMissing(['employeeId' => $user->employeeId()->value()]);
+        return $this->orchestratorHandler->handler('retrieve-employee', $request);
     }
 
     /**
      * @throws ProfileNotActiveException
      */
-    private function getProfile(User $user): ?Profile
+    private function getProfile(Request $request, User $user): Profile
     {
-        $profile = $this->profileService->searchProfileById($user->profileId()->value());
+        $request->mergeIfMissing(['profileId' => $user->profileId()->value()]);
+
+        $profile = $this->orchestratorHandler->handler('retrieve-profile', $request);
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {
             $this->logger->warning("User's profile with id: ".$profile->id()->value().' is not active');

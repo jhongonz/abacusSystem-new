@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\UtilsDateTimeTrait;
 use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,9 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class Controller
 {
+    use UtilsDateTimeTrait;
+
     protected LoggerInterface $logger;
     protected ViewFactory $viewFactory;
-
 
     public function __construct(
         LoggerInterface $logger,
@@ -65,13 +67,5 @@ abstract class Controller
             ->with('item', $item)
             ->with('permission', $permission)
             ->render();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function getDateTime($datetime = null): DateTime
-    {
-        return new DateTime($datetime);
     }
 }

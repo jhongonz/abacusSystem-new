@@ -3,15 +3,12 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\SecurityController;
+use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\User\LoginRequest;
-use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileState;
-use Core\User\Domain\Contracts\UserFactoryContract;
-use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserEmployeeId;
 use Core\User\Domain\ValueObjects\UserId;
@@ -35,9 +32,7 @@ use Tests\TestCase;
 #[CoversClass(SecurityController::class)]
 class SecurityControllerTest extends TestCase
 {
-    private UserManagementContract|MockObject $userManagement;
-    private EmployeeManagementContract|MockObject $employeeManagement;
-    private ProfileManagementContract|MockObject $profileManagement;
+    private OrchestratorHandlerContract|MockObject $orchestrator;
     private StatefulGuard|MockObject $statefulGuard;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
@@ -49,17 +44,12 @@ class SecurityControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->userFactory = $this->createMock(UserFactoryContract::class);
-        $this->userManagement = $this->createMock(UserManagementContract::class);
-        $this->employeeManagement = $this->createMock(EmployeeManagementContract::class);
-        $this->profileManagement = $this->createMock(ProfileManagementContract::class);
+        $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
         $this->statefulGuard = $this->createMock(StatefulGuard::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->controller = new SecurityController(
-            $this->userManagement,
-            $this->employeeManagement,
-            $this->profileManagement,
+            $this->orchestrator,
             $this->viewFactory,
             $this->logger,
             $this->statefulGuard
@@ -69,9 +59,7 @@ class SecurityControllerTest extends TestCase
     public function tearDown(): void
     {
         unset(
-            $this->userManagement,
-            $this->employeeManagement,
-            $this->profileManagement,
+            $this->orchestrator,
             $this->statefulGuard,
             $this->viewFactory,
             $this->logger,
@@ -109,40 +97,22 @@ class SecurityControllerTest extends TestCase
     public function test_authenticate_should_return_json_response_when_attempt_true_and_request_is_ajax(): void
     {
         $request = $this->createMock(LoginRequest::class);
+
         $request->expects(self::exactly(2))
-            ->method('input')
+            ->method('mergeIfMissing')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls('login', 'password');
+            ->willReturnSelf();
+
+        $request->expects(self::once())
+            ->method('input')
+            ->with('password')
+            ->willReturn('password');
 
         $request->expects(self::once())
             ->method('ajax')
             ->willReturn(true);
 
         $userMock = $this->createMock(User::class);
-
-        $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
-        $userEmployeeIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('employeeId')
-            ->willReturn($userEmployeeIdMock);
-
-        $userProfileIdMock = $this->createMock(UserProfileId::class);
-        $userProfileIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('profileId')
-            ->willReturn($userProfileIdMock);
-
-        $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('id')
-            ->willReturn($userIdMock);
 
         $userLoginMock = $this->createMock(UserLogin::class);
         $userLoginMock->expects(self::once())
@@ -152,41 +122,53 @@ class SecurityControllerTest extends TestCase
             ->method('login')
             ->willReturn($userLoginMock);
 
-        $this->userManagement->expects(self::once())
-            ->method('searchUserByLogin')
-            ->with('login')
-            ->willReturn($userMock);
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userIdMock);
+
+        $employeeIdMock = $this->createMock(UserEmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('employeeId')
+            ->willReturn($employeeIdMock);
+
+        $profileIdMock = $this->createMock(UserProfileId::class);
+        $profileIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(2);
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileIdMock);
 
         $employeeMock = $this->createMock(Employee::class);
-        $this->employeeManagement->expects(self::once())
-            ->method('searchEmployeeById')
-            ->with(1)
-            ->willReturn($employeeMock);
-
         $profileMock = $this->createMock(Profile::class);
 
-        $profileStateMock = $this->createMock(ProfileState::class);
-        $profileStateMock->expects(self::once())
+        $profileState = $this->createMock(ProfileState::class);
+        $profileState->expects(self::once())
             ->method('isInactivated')
             ->willReturn(false);
-
         $profileMock->expects(self::once())
             ->method('state')
-            ->willReturn($profileStateMock);
+            ->willReturn($profileState);
 
-        $this->profileManagement->expects(self::once())
-            ->method('searchProfileById')
-            ->with(1)
-            ->willReturn($profileMock);
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
 
-        $credentials = [
-            'user_login' => 'login',
-            'password' => 'password',
-            'user_id' => 1
-        ];
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
-            ->with($credentials)
+            ->with([
+                'user_login' => 'login',
+                'password' => 'password',
+                'user_id' => 1
+            ])
             ->willReturn(true);
 
         $result = $this->controller->authenticate($request);
@@ -201,40 +183,22 @@ class SecurityControllerTest extends TestCase
     public function test_authenticate_should_return_redirect_response_when_attempt_true_and_request_is_not_ajax(): void
     {
         $request = $this->createMock(LoginRequest::class);
+
         $request->expects(self::exactly(2))
-            ->method('input')
+            ->method('mergeIfMissing')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls('login', 'password');
+            ->willReturnSelf();
+
+        $request->expects(self::once())
+            ->method('input')
+            ->with('password')
+            ->willReturn('password');
 
         $request->expects(self::once())
             ->method('ajax')
             ->willReturn(false);
 
         $userMock = $this->createMock(User::class);
-
-        $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
-        $userEmployeeIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('employeeId')
-            ->willReturn($userEmployeeIdMock);
-
-        $userProfileIdMock = $this->createMock(UserProfileId::class);
-        $userProfileIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('profileId')
-            ->willReturn($userProfileIdMock);
-
-        $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('id')
-            ->willReturn($userIdMock);
 
         $userLoginMock = $this->createMock(UserLogin::class);
         $userLoginMock->expects(self::once())
@@ -244,41 +208,53 @@ class SecurityControllerTest extends TestCase
             ->method('login')
             ->willReturn($userLoginMock);
 
-        $this->userManagement->expects(self::once())
-            ->method('searchUserByLogin')
-            ->with('login')
-            ->willReturn($userMock);
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userIdMock);
+
+        $employeeIdMock = $this->createMock(UserEmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('employeeId')
+            ->willReturn($employeeIdMock);
+
+        $profileIdMock = $this->createMock(UserProfileId::class);
+        $profileIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(2);
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileIdMock);
 
         $employeeMock = $this->createMock(Employee::class);
-        $this->employeeManagement->expects(self::once())
-            ->method('searchEmployeeById')
-            ->with(1)
-            ->willReturn($employeeMock);
-
         $profileMock = $this->createMock(Profile::class);
 
-        $profileStateMock = $this->createMock(ProfileState::class);
-        $profileStateMock->expects(self::once())
+        $profileState = $this->createMock(ProfileState::class);
+        $profileState->expects(self::once())
             ->method('isInactivated')
             ->willReturn(false);
-
         $profileMock->expects(self::once())
             ->method('state')
-            ->willReturn($profileStateMock);
+            ->willReturn($profileState);
 
-        $this->profileManagement->expects(self::once())
-            ->method('searchProfileById')
-            ->with(1)
-            ->willReturn($profileMock);
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
 
-        $credentials = [
-            'user_login' => 'login',
-            'password' => 'password',
-            'user_id' => 1
-        ];
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
-            ->with($credentials)
+            ->with([
+                'user_login' => 'login',
+                'password' => 'password',
+                'user_id' => 1
+            ])
             ->willReturn(true);
 
         $result = $this->controller->authenticate($request);
@@ -294,10 +270,16 @@ class SecurityControllerTest extends TestCase
     public function test_authenticate_should_return_json_response_with_exception(): void
     {
         $request = $this->createMock(LoginRequest::class);
+
+        $request->expects(self::exactly(2))
+            ->method('mergeIfMissing')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
         $request->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturn('login');
+            ->with('password')
+            ->willReturn('password');
 
         $request->expects(self::once())
             ->method('ajax')
@@ -305,27 +287,63 @@ class SecurityControllerTest extends TestCase
 
         $userMock = $this->createMock(User::class);
 
-        $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
-        $userEmployeeIdMock->expects(self::once())
+        $userLogin = $this->createMock(UserLogin::class);
+        $userLogin->expects(self::once())
+            ->method('value')
+            ->willReturn('login');
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($userLogin);
+
+        $userId = $this->createMock(UserId::class);
+        $userId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userId);
+
+        $employeeId = $this->createMock(UserEmployeeId::class);
+        $employeeId->expects(self::once())
             ->method('value')
             ->willReturn(1);
         $userMock->expects(self::once())
             ->method('employeeId')
-            ->willReturn($userEmployeeIdMock);
+            ->willReturn($employeeId);
 
-        $this->userManagement->expects(self::once())
-            ->method('searchUserByLogin')
-            ->with('login')
-            ->willReturn($userMock);
+        $profileId = $this->createMock(UserProfileId::class);
+        $profileId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileId);
 
-        $this->employeeManagement->expects(self::once())
-            ->method('searchEmployeeById')
-            ->with(1)
-            ->willThrowException(new \Exception('Employee not found'));
+        $employeeMock = $this->createMock(Employee::class);
 
-        $this->logger->expects(self::once())
-            ->method('error')
-            ->with('Employee not found');
+        $profileMock = $this->createMock(Profile::class);
+
+        $profileState = $this->createMock(ProfileState::class);
+        $profileState->expects(self::once())
+            ->method('isInactivated')
+            ->willReturn(false);
+        $profileMock->expects(self::once())
+            ->method('state')
+            ->willReturn($profileState);
+
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+
+        $this->statefulGuard->expects(self::once())
+            ->method('attempt')
+            ->with([
+                'user_login' => 'login',
+                'password' => 'password',
+                'user_id' => 1,
+            ])
+            ->willReturn(false);
 
         $result = $this->controller->authenticate($request);
 
@@ -340,10 +358,16 @@ class SecurityControllerTest extends TestCase
     public function test_authenticate_should_return_redirect_response_with_exception(): void
     {
         $request = $this->createMock(LoginRequest::class);
+
+        $request->expects(self::exactly(2))
+            ->method('mergeIfMissing')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
         $request->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturn('login');
+            ->with('password')
+            ->willReturn('password');
 
         $request->expects(self::once())
             ->method('ajax')
@@ -351,27 +375,63 @@ class SecurityControllerTest extends TestCase
 
         $userMock = $this->createMock(User::class);
 
-        $userEmployeeIdMock = $this->createMock(UserEmployeeId::class);
-        $userEmployeeIdMock->expects(self::once())
+        $userLogin = $this->createMock(UserLogin::class);
+        $userLogin->expects(self::once())
+            ->method('value')
+            ->willReturn('login');
+        $userMock->expects(self::once())
+            ->method('login')
+            ->willReturn($userLogin);
+
+        $userId = $this->createMock(UserId::class);
+        $userId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userId);
+
+        $employeeId = $this->createMock(UserEmployeeId::class);
+        $employeeId->expects(self::once())
             ->method('value')
             ->willReturn(1);
         $userMock->expects(self::once())
             ->method('employeeId')
-            ->willReturn($userEmployeeIdMock);
+            ->willReturn($employeeId);
 
-        $this->userManagement->expects(self::once())
-            ->method('searchUserByLogin')
-            ->with('login')
-            ->willReturn($userMock);
+        $profileId = $this->createMock(UserProfileId::class);
+        $profileId->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $userMock->expects(self::once())
+            ->method('profileId')
+            ->willReturn($profileId);
 
-        $this->employeeManagement->expects(self::once())
-            ->method('searchEmployeeById')
-            ->with(1)
-            ->willThrowException(new \Exception('Employee not found'));
+        $employeeMock = $this->createMock(Employee::class);
 
-        $this->logger->expects(self::once())
-            ->method('error')
-            ->with('Employee not found');
+        $profileMock = $this->createMock(Profile::class);
+
+        $profileState = $this->createMock(ProfileState::class);
+        $profileState->expects(self::once())
+            ->method('isInactivated')
+            ->willReturn(false);
+        $profileMock->expects(self::once())
+            ->method('state')
+            ->willReturn($profileState);
+
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+
+        $this->statefulGuard->expects(self::once())
+            ->method('attempt')
+            ->with([
+                'user_login' => 'login',
+                'password' => 'password',
+                'user_id' => 1,
+            ])
+            ->willReturn(false);
 
         $result = $this->controller->authenticate($request);
 
@@ -386,10 +446,11 @@ class SecurityControllerTest extends TestCase
     public function test_authenticate_should_return_exception_when_profile_is_not_active(): void
     {
         $request = $this->createMock(LoginRequest::class);
-        $request->expects(self::once())
-            ->method('input')
+
+        $request->expects(self::exactly(2))
+            ->method('mergeIfMissing')
             ->withAnyParameters()
-            ->willReturn('login');
+            ->willReturnSelf();
 
         $request->expects(self::once())
             ->method('ajax')
@@ -413,24 +474,13 @@ class SecurityControllerTest extends TestCase
             ->method('profileId')
             ->willReturn($userProfileIdMock);
 
-        $this->userManagement->expects(self::once())
-            ->method('searchUserByLogin')
-            ->with('login')
-            ->willReturn($userMock);
-
         $employeeMock = $this->createMock(Employee::class);
-        $this->employeeManagement->expects(self::once())
-            ->method('searchEmployeeById')
-            ->with(1)
-            ->willReturn($employeeMock);
-
         $profileMock = $this->createMock(Profile::class);
 
         $profileStateMock = $this->createMock(ProfileState::class);
         $profileStateMock->expects(self::once())
             ->method('isInactivated')
             ->willReturn(true);
-
         $profileMock->expects(self::once())
             ->method('state')
             ->willReturn($profileStateMock);
@@ -443,10 +493,10 @@ class SecurityControllerTest extends TestCase
             ->method('id')
             ->willReturn($profileIdMock);
 
-        $this->profileManagement->expects(self::once())
-            ->method('searchProfileById')
-            ->with(1)
-            ->willReturn($profileMock);
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
 
         $this->logger->expects(self::once())
             ->method('warning')

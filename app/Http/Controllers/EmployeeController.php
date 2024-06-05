@@ -24,7 +24,7 @@ class EmployeeController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
 
-    private OrchestratorHandlerContract $orchestrators;
+    private OrchestratorHandlerContract $orchestratorHandler;
 
     public function __construct(
         OrchestratorHandlerContract $orchestrators,
@@ -35,7 +35,7 @@ class EmployeeController extends Controller implements HasMiddleware
         parent::__construct($logger, $viewFactory);
         $this->setImageManager($imageManager);
 
-        $this->orchestrators = $orchestrators;
+        $this->orchestratorHandler = $orchestrators;
     }
 
     public function index(): JsonResponse|string
@@ -49,7 +49,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function getEmployees(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-employees', $request);
+        return $this->orchestratorHandler->handler('retrieve-employees', $request);
     }
 
     public function changeStateEmployee(Request $request): JsonResponse
@@ -58,7 +58,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         try {
             /** @var Employee $employee */
-            $employee = $this->orchestrators->handler('change-state-employee', $request);
+            $employee = $this->orchestratorHandler->handler('change-state-employee', $request);
         } catch (Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$employeeId, $exception->getTrace());
 
@@ -73,7 +73,7 @@ class EmployeeController extends Controller implements HasMiddleware
                 'state' => $employee->state()->value()
             ]);
 
-            $this->orchestrators->handler('change-state-user', $request);
+            $this->orchestratorHandler->handler('change-state-user', $request);
             UserUpdateOrDeleteEvent::dispatch($userId);
         }
 
@@ -83,7 +83,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function getEmployee(Request $request, ?int $employeeId = null): JsonResponse|string
     {
         $request->mergeIfMissing(['employeeId' => $employeeId]);
-        $dataEmployee = $this->orchestrators->handler('detail-employee', $request);
+        $dataEmployee = $this->orchestratorHandler->handler('detail-employee', $request);
 
         $view = $this->viewFactory->make('employee.employee-form', $dataEmployee)
             ->render();
@@ -93,10 +93,8 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
-        $employeeId = $request->input('employeeId');
-
         try {
-            $method = (is_null($employeeId)) ? 'createEmployee' : 'updateEmployee';
+            $method = (is_null($request->input('employeeId'))) ? 'createEmployee' : 'updateEmployee';
 
             /** @var Employee $employee */
             $employee = $this->{$method}($request);
@@ -114,8 +112,8 @@ class EmployeeController extends Controller implements HasMiddleware
 
         return new JsonResponse(
             [
-                'userId' => $employee->userId()->value() ?? null,
-                'employeeId' => $employee->id()->value() ?? null,
+                'userId' => $employee->userId()->value(),
+                'employeeId' => $employee->id()->value(),
             ],
             Response::HTTP_CREATED
         );
@@ -134,11 +132,11 @@ class EmployeeController extends Controller implements HasMiddleware
         $request->mergeIfMissing(['employeeId' => $employeeId]);
 
         /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('get-employee', $request);
+        $employee = $this->orchestratorHandler->handler('get-employee', $request);
 
         try {
 
-            $this->orchestrators->handler('delete-employee', $request);
+            $this->orchestratorHandler->handler('delete-employee', $request);
             $this->deleteImage($employee->image()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -149,7 +147,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $userId = $employee->userId()->value();
         if (! is_null($userId)) {
             $request->mergeIfMissing(['userId' => $userId]);
-            $this->orchestrators->handler('delete-user', $request);
+            $this->orchestratorHandler->handler('delete-user', $request);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
@@ -160,7 +158,7 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     private function updateEmployee(StoreEmployeeRequest $request): Employee
     {
-        $employee = $this->orchestrators->handler('update-employee', $request);
+        $employee = $this->orchestratorHandler->handler('update-employee', $request);
         $this->updateUser($request);
 
         return $employee;
@@ -168,13 +166,13 @@ class EmployeeController extends Controller implements HasMiddleware
 
     private function updateUser(StoreEmployeeRequest $request): User
     {
-        return $this->orchestrators->handler('update-user', $request);
+        return $this->orchestratorHandler->handler('update-user', $request);
     }
 
     private function createEmployee(StoreEmployeeRequest $request): Employee
     {
         /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('create-employee', $request);
+        $employee = $this->orchestratorHandler->handler('create-employee', $request);
 
         $user = $this->createUser($request, $employee);
         $employee->userId()->setValue($user->id()->value());
@@ -187,7 +185,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $request->mergeIfMissing(['image' => $employee->image()->value()]);
         $request->mergeIfMissing(['employeeId' => $employee->id()->value()]);
 
-        return $this->orchestrators->handler('create-user', $request);
+        return $this->orchestratorHandler->handler('create-user', $request);
     }
 
     /**

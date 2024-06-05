@@ -23,8 +23,12 @@ class GetUserOrchestrator extends UserOrchestrator
      */
     public function make(Request $request): ?User
     {
-        $userId = $request->input('userId');
+        $login = $request->input('login');
+        if (isset($login)) {
+            return $this->userManagement->searchUserByLogin($login);
+        }
 
+        $userId = $request->input('userId');
         return $this->userManagement->searchUserById($userId);
     }
 

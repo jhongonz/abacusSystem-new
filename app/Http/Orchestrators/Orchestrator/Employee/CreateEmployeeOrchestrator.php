@@ -7,6 +7,7 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use App\Traits\MultimediaTrait;
+use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use DateTime;
@@ -16,6 +17,7 @@ use Intervention\Image\Interfaces\ImageManagerInterface;
 class CreateEmployeeOrchestrator extends EmployeeOrchestrator
 {
     use MultimediaTrait;
+    use UtilsDateTimeTrait;
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
@@ -41,6 +43,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
+            'createAt' => $this->getCurrentTime()
         ];
 
         $token = $request->input('token');
