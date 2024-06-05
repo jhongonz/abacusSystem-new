@@ -393,10 +393,41 @@ class InstitutionControllerTest extends TestCase
     public function test_updateInstitution_should_return_json_response_when_update_institution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
-        $requestMock->expects(self::once())
+        $requestMock->expects(self::exactly(9))
             ->method('input')
             ->withAnyParameters()
-            ->willReturn(1);
+            ->willReturnOnConsecutiveCalls(
+                1,
+                'code',
+                'name',
+                'shortname',
+                'phone',
+                'email',
+                'address',
+                'observations',
+                'token'
+            );
+
+        $requestMock->expects(self::once())
+            ->method('mergeIfMissing')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock->expects(self::exactly(2))
+            ->method('save')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $imageMock->expects(self::once())
+            ->method('resize')
+            ->with(150, 150)
+            ->willReturnSelf();
+
+        $this->imageManager->expects(self::once())
+            ->method('read')
+            ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
+            ->willReturn($imageMock);
 
         $institutionMock = $this->createMock(Institution::class);
 

@@ -6,24 +6,19 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Institution;
 
-use App\Traits\MultimediaTrait;
 use App\Traits\UtilsDateTimeTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
-use Intervention\Image\Interfaces\ImageManagerInterface;
 
 class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
 {
-    use MultimediaTrait;
     use UtilsDateTimeTrait;
 
     public function __construct(
         InstitutionManagementContract $institutionManagement,
-        ImageManagerInterface $imageManager
     ) {
         parent::__construct($institutionManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**
@@ -32,22 +27,8 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
      */
     public function make(Request $request): Institution
     {
-        $dataUpdate = [
-            'code' => $request->input('code'),
-            'name' => $request->input('name'),
-            'shortname' => $request->input('shortname'),
-            'phone' => $request->input('phone'),
-            'email' => $request->input('email'),
-            'address' => $request->input('address'),
-            'observations' => $request->input('observations'),
-            'updatedAt' => $this->getCurrentTime(),
-        ];
-
-        $token = $request->input('token');
-        if (! is_null($token)) {
-            $filename = $this->saveImage($token);
-            $dataUpdate['logo'] = $filename;
-        }
+        $dataUpdate = json_decode($request->input('dataUpdate'), true);
+        $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
         return $this->institutionManagement->updateInstitution($request->input('institutionId'), $dataUpdate);
     }

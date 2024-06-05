@@ -6,22 +6,19 @@
 
 namespace App\Http\Orchestrators\Orchestrator\User;
 
-use App\Traits\UserTrait;
+use App\Traits\UtilsDateTimeTrait;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
-use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 
 class UpdateUserOrchestrator extends UserOrchestrator
 {
-    use UserTrait;
+    use UtilsDateTimeTrait;
 
     public function __construct(
         UserManagementContract $userManagement,
-        Hasher $hasher
     ) {
         parent::__construct($userManagement);
-        $this->setHasher($hasher);
     }
 
     /**
@@ -30,16 +27,8 @@ class UpdateUserOrchestrator extends UserOrchestrator
      */
     public function make(Request $request): User
     {
-        $dataUpdateUser = [
-            'profileId' => $request->input('profile'),
-            'login' => $request->input('login'),
-            'state' => $request->input('state')
-        ];
-
-        $password = $request->input('password');
-        if (! is_null($password)) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($password);
-        }
+        $dataUpdateUser = json_decode($request->input('dataUpdate'), true);
+        $dataUpdateUser['updatedAt'] = $this->getCurrentTime();
 
         return $this->userManagement->updateUser($request->input('userId'), $dataUpdateUser);
     }

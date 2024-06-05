@@ -112,6 +112,23 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function updateInstitution(StoreInstitutionRequest $request): Institution
     {
+        $dataUpdate = [
+            'code' => $request->input('code'),
+            'name' => $request->input('name'),
+            'shortname' => $request->input('shortname'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'address' => $request->input('address'),
+            'observations' => $request->input('observations'),
+        ];
+
+        $token = $request->input('token');
+        if (! is_null($token)) {
+            $filename = $this->saveImage($token);
+            $dataUpdate['logo'] = $filename;
+        }
+
+        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
         return $this->orchestratorHandler->handler('update-institution', $request);
     }
 

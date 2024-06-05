@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Traits\UtilsDateTimeTrait;
-use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;

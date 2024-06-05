@@ -7,9 +7,11 @@ use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\MultimediaTrait;
+use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
 use Core\User\Domain\User;
 use Exception;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -23,17 +25,20 @@ use Symfony\Component\HttpFoundation\Response;
 class EmployeeController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
+    use UserTrait;
 
     private OrchestratorHandlerContract $orchestratorHandler;
 
     public function __construct(
         OrchestratorHandlerContract $orchestrators,
         ImageManagerInterface $imageManager,
+        Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger, $viewFactory);
         $this->setImageManager($imageManager);
+        $this->setHasher($hasher);
 
         $this->orchestratorHandler = $orchestrators;
     }
@@ -158,6 +163,26 @@ class EmployeeController extends Controller implements HasMiddleware
      */
     private function updateEmployee(StoreEmployeeRequest $request): Employee
     {
+        $birthdate = $request->date('birthdate', 'd/m/Y');
+        $dataUpdate = [
+            'identifier' => $request->input('identifier'),
+            'typeDocument' => $request->input('typeDocument'),
+            'name' => $request->input('name'),
+            'lastname' => $request->input('lastname'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+            'observations' => $request->input('observations'),
+            'birthdate' => $birthdate->format('Y-m-d'),
+        ];
+
+        $imageToken = $request->input('token');
+        if (! is_null($imageToken)) {
+            $filename = $this->saveImage($imageToken);
+            $dataUpdate['image'] = $filename;
+        }
+
+        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
         $employee = $this->orchestratorHandler->handler('update-employee', $request);
         $this->updateUser($request);
 
@@ -166,6 +191,17 @@ class EmployeeController extends Controller implements HasMiddleware
 
     private function updateUser(StoreEmployeeRequest $request): User
     {
+        $dataUpdateUser = [
+            'profileId' => $request->input('profile'),
+            'login' => $request->input('login')
+        ];
+
+        $password = $request->input('password');
+        if (! is_null($password)) {
+            $dataUpdateUser['password'] = $this->makeHashPassword($password);
+        }
+
+        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdateUser)]);
         return $this->orchestratorHandler->handler('update-user', $request);
     }
 

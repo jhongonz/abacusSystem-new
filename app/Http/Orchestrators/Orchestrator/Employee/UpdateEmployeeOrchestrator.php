@@ -6,23 +6,19 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
-use App\Traits\MultimediaTrait;
+use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use DateTime;
 use Illuminate\Http\Request;
-use Intervention\Image\Interfaces\ImageManagerInterface;
 
 class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
 {
-    use MultimediaTrait;
+    use UtilsDateTimeTrait;
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        ImageManagerInterface $imageManager,
     ) {
         parent::__construct($employeeManagement);
-        $this->setImageManager($imageManager);
     }
     /**
      * @param Request $request
@@ -30,25 +26,8 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): Employee
     {
-        $birthdate = $request->input('birthdate');
-
-        $dataUpdate = [
-            'identifier' => $request->input('identifier'),
-            'typeDocument' => $request->input('typeDocument'),
-            'name' => $request->input('name'),
-            'lastname' => $request->input('lastname'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'observations' => $request->input('observations'),
-            'birthdate' => ($birthdate) ? DateTime::createFromFormat('d/m/Y', $birthdate) : $birthdate,
-        ];
-
-        $imageToken = $request->input('token');
-        if (! is_null($imageToken)) {
-            $filename = $this->saveImage($imageToken);
-            $dataUpdate['image'] = $filename;
-        }
+        $dataUpdate = json_decode($request->input('dataUpdate'), true);
+        $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
         return $this->employeeManagement->updateEmployee($request->input('employeeId'), $dataUpdate);
     }
