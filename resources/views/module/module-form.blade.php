@@ -74,7 +74,7 @@ $('.save-data').click(function(e){
     e.preventDefault();
 
     axios.post("{{ route('panel.module.store') }}",{
-        'id': '{{ $id }}',
+        'id': '{{ $moduleId }}',
         'name': $('#name').val(),
         'route': $('#route').val(),
         'key': $('#key').val(),

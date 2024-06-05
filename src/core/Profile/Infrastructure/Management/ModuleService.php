@@ -16,7 +16,6 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
-use Core\Profile\Domain\ValueObjects\ModuleId;
 use Exception;
 
 class ModuleService implements ModuleManagementContract
@@ -52,9 +51,11 @@ class ModuleService implements ModuleManagementContract
     /**
      * @throws Exception
      */
-    public function searchModuleById(ModuleId $id): ?Module
+    public function searchModuleById(?int $id): ?Module
     {
-        $request = new SearchModuleByIdRequest($id);
+        $request = new SearchModuleByIdRequest(
+            $this->moduleFactory->buildModuleId($id)
+        );
 
         return $this->searchModuleById->execute($request);
     }
@@ -68,7 +69,7 @@ class ModuleService implements ModuleManagementContract
 
         $modules = $this->searchModules->execute($request);
         foreach ($modules->aggregator() as $item) {
-            $module = $this->searchModuleById($this->moduleFactory->buildModuleId($item));
+            $module = $this->searchModuleById($item);
             $modules->addItem($module);
         }
 
@@ -78,19 +79,24 @@ class ModuleService implements ModuleManagementContract
     /**
      * @throws Exception
      */
-    public function updateModule(ModuleId $moduleId, array $data): void
+    public function updateModule(int $moduleId, array $data): Module
     {
-        $request = new UpdateModuleRequest($moduleId, $data);
+        $request = new UpdateModuleRequest(
+            $this->moduleFactory->buildModuleId($moduleId),
+            $data
+        );
 
-        $this->updateModule->execute($request);
+        return $this->updateModule->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function deleteModule(ModuleId $moduleId): void
+    public function deleteModule(int $moduleId): void
     {
-        $request = new DeleteModuleRequest($moduleId);
+        $request = new DeleteModuleRequest(
+            $this->moduleFactory->buildModuleId($moduleId)
+        );
 
         $this->deleteModule->execute($request);
     }
@@ -98,8 +104,9 @@ class ModuleService implements ModuleManagementContract
     /**
      * @throws Exception
      */
-    public function createModule(Module $module): Module
+    public function createModule(array $dataModule): Module
     {
+        $module = $this->moduleFactory->buildModuleFromArray($dataModule);
         $request = new CreateModuleRequest($module);
 
         return $this->createModule->execute($request);

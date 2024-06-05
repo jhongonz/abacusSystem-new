@@ -15,6 +15,11 @@ use App\Http\Orchestrators\Orchestrator\Institution\DeleteInstitutionOrchestrato
 use App\Http\Orchestrators\Orchestrator\Institution\DetailInstitutionOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Institution\GetInstitutionsOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Institution\UpdateInstitutionOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\ChangeStateModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\CreateModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\DeleteModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\DetailModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\UpdateModuleOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\GetProfileOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\GetProfilesOrchestrator;
 use App\Http\Orchestrators\Orchestrator\User\CreateUserOrchestrator;
@@ -119,6 +124,27 @@ class OrchestratorHandlerProvider extends ServiceProvider
 
             $orchestratorHandler->addOrchestrator(
                 $app->make(DeleteInstitutionOrchestrator::class)
+            );
+
+            //Module Orchestrators
+            $orchestratorHandler->addOrchestrator(
+                $app->make(ChangeStateModuleOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(DetailModuleOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(CreateModuleOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(UpdateModuleOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(DeleteModuleOrchestrator::class)
             );
 
             return $orchestratorHandler;

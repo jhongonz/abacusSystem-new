@@ -5,15 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
 use App\Http\Exceptions\RouteNotFoundException;
+use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
-use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
-use Core\Profile\Domain\Contracts\ModuleFactoryContract;
-use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
-use Core\Profile\Domain\Modules;
-use Core\Profile\Domain\ValueObjects\ModuleId;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,32 +19,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Yajra\DataTables\DataTables;
 
 class ModuleController extends Controller implements HasMiddleware
 {
-    private ModuleFactoryContract $moduleFactory;
-
-    private ModuleManagementContract $moduleService;
-
-    private ModuleDataTransformerContract $moduleDataTransformer;
-
-    private DataTables $dataTable;
+    private OrchestratorHandlerContract $orchestratorHandler;
 
     public function __construct(
-        ModuleFactoryContract $moduleFactory,
-        ModuleManagementContract $moduleService,
-        ModuleDataTransformerContract $moduleDataTransformer,
-        DataTables $dataTable,
+        OrchestratorHandlerContract $orchestratorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger, $viewFactory);
 
-        $this->moduleFactory = $moduleFactory;
-        $this->moduleService = $moduleService;
-        $this->moduleDataTransformer = $moduleDataTransformer;
-        $this->dataTable = $dataTable;
+        $this->orchestratorHandler = $orchestratorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -60,35 +43,21 @@ class ModuleController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
-    /**
-     * @throws \Yajra\DataTables\Exceptions\Exception
-     */
     public function getModules(Request $request): JsonResponse
     {
-        $modules = $this->moduleService->searchModules($request->input('filters'));
-
-        return $this->prepareListModules($modules);
+        return $this->orchestratorHandler->handler('retrieve-modules', $request);
     }
 
     public function changeStateModule(Request $request): JsonResponse
     {
-        $moduleId = $this->moduleFactory->buildModuleId($request->input('id'));
-        $module = $this->moduleService->searchModuleById($moduleId);
-
-        if ($module->state()->isNew() || $module->state()->isInactivated()) {
-            $module->state()->activate();
-        } elseif ($module->state()->isActivated()) {
-            $module->state()->inactive();
-        }
-
-        $dataUpdate['state'] = $module->state()->value();
-
         try {
-            $this->moduleService->updateModule($moduleId, $dataUpdate);
-            ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
+            /** @var Module $module */
+            $module = $this->orchestratorHandler->handler('change-state-module', $request);
+
+            ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
             RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
-            $this->logger->error('Module can not be updated with id: '.$moduleId->value(), $exception->getTrace());
+            $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -96,30 +65,25 @@ class ModuleController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
-    public function getModule(?int $id = null): JsonResponse
+    public function getModule(Request $request, ?int $id = null): JsonResponse
     {
-        $module = null;
-        if (! is_null($id)) {
-            $moduleId = $this->moduleFactory->buildModuleId($id);
-            $module = $this->moduleService->searchModuleById($moduleId);
-        }
+        $request->mergeIfMissing(['moduleId' => $id]);
+        $dataModule = $this->orchestratorHandler->handler('detail-module', $request);
 
-        $view = $this->viewFactory->make('module.module-form')
-            ->with('id', $id)
-            ->with('module', $module)
-            ->with('menuKeys', config('menu.options'));
+        $view = $this->viewFactory->make('module.module-form', $dataModule);
 
         return $this->renderView($view);
     }
 
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
-        $moduleId = $this->moduleFactory->buildModuleId($request->input('id'));
-
         try {
-            $method = (is_null($moduleId->value())) ? 'createModule' : 'updateModule';
-            $this->{$method}($request, $moduleId);
-            ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
+            $method = (is_null($request->input('moduleId'))) ? 'createModule' : 'updateModule';
+
+            /** @var Module $module */
+            $module = $this->{$method}($request);
+
+            ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -132,75 +96,47 @@ class ModuleController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
-    public function deleteModule(int $id): JsonResponse
+    public function deleteModule(Request $request, int $id): JsonResponse
     {
-        $moduleId = $this->moduleFactory->buildModuleId($id);
-
         try {
-            $this->moduleService->deleteModule($moduleId);
+            $request->mergeIfMissing(['moduleId' => $id]);
+            $this->orchestratorHandler->handler('delete-module', $request);
+
+            ModuleUpdatedOrDeletedEvent::dispatch($id);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
-
-        ModuleUpdatedOrDeletedEvent::dispatch($moduleId);
 
         return new JsonResponse(status: Response::HTTP_OK);
     }
 
     /**
-     * @throws \Yajra\DataTables\Exceptions\Exception
+     * @throws RouteNotFoundException
      */
-    private function prepareListModules(Modules $modules): JsonResponse
+    private function createModule(StoreModuleRequest $request): Module
     {
-        $dataModules = [];
-        if ($modules->count()) {
-            /** @var Module $item */
-            foreach ($modules as $item) {
-                $dataModules[] = $this->moduleDataTransformer->write($item)->readToShare();
-            }
-        }
+        $this->validateRoute($request->input('route'));
 
-        $datatable = $this->dataTable->collection(collect($dataModules));
-        $datatable->addColumn('tools', function (array $item) {
-            return $this->retrieveMenuOptionHtml($item);
-        });
-
-        return $datatable->escapeColumns([])->toJson();
+        return $this->orchestratorHandler->handler('create-module', $request);
     }
 
     /**
      * @throws RouteNotFoundException
      */
-    private function createModule(StoreModuleRequest $request, ModuleId $id): void
+    public function updateModule(StoreModuleRequest $request): Module
     {
-        $this->validateRoute($request->input('route'));
-
-        $module = $this->moduleFactory->buildModule(
-            $id,
-            $this->moduleFactory->buildModuleMenuKey($request->input('key')),
-            $this->moduleFactory->buildModuleName($request->input('name')),
-            $this->moduleFactory->buildModuleRoute($request->input('route')),
-            $this->moduleFactory->buildModuleIcon($request->input('icon')),
-        );
-
-        $this->moduleService->createModule($module);
-    }
-
-    /**
-     * @throws RouteNotFoundException
-     */
-    public function updateModule(StoreModuleRequest $request, ModuleId $id): void
-    {
-        $this->validateRoute($request->input('route'));
+        $route = $request->input('route');
+        $this->validateRoute($route);
 
         $dataUpdate = [
             'name' => $request->input('name'),
-            'route' => $request->input('route'),
+            'route' => $route,
             'icon' => $request->input('icon'),
             'key' => $request->input('key'),
         ];
 
-        $this->moduleService->updateModule($id, $dataUpdate);
+        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        return $this->orchestratorHandler->handler('update-module', $request);
     }
 
     /**
