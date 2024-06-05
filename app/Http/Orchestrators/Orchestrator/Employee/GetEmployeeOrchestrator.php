@@ -23,8 +23,13 @@ class GetEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): ?Employee
     {
-        $employeeId = $request->input('employeeId');
+        $identification = $request->input('identification');
+        if (! is_null($identification)) {
 
+            return $this->employeeManagement->searchEmployeeByIdentification($identification);
+        }
+
+        $employeeId = $request->input('employeeId');
         return $this->employeeManagement->searchEmployeeById($employeeId);
     }
 

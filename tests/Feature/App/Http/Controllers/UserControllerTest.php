@@ -1,0 +1,311 @@
+<?php
+
+namespace Tests\Feature\App\Http\Controllers;
+
+use App\Http\Controllers\UserController;
+use App\Http\Orchestrators\OrchestratorHandlerContract;
+use App\Http\Requests\User\RecoveryAccountRequest;
+use App\Http\Requests\User\ResetPasswordRequest;
+use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
+use Core\User\Domain\User;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Route;
+use Illuminate\Routing\Router;
+use Illuminate\View\Factory as ViewFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Tests\TestCase;
+
+#[CoversClass(UserController::class)]
+class UserControllerTest extends TestCase
+{
+    private OrchestratorHandlerContract|MockObject $orchestrator;
+    private ViewFactory|MockObject $viewFactory;
+    private LoggerInterface|MockObject $logger;
+    private Hasher|MockObject $hasher;
+    private UserController $controller;
+
+    /**
+     * @throws Exception
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->hasher = $this->createMock(Hasher::class);
+        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
+        $this->controller = new UserController(
+            $this->orchestrator,
+            $this->hasher,
+            $this->viewFactory,
+            $this->logger
+        );
+    }
+
+    public function tearDown(): void
+    {
+        unset(
+            $this->controller,
+            $this->viewFactory,
+            $this->logger,
+            $this->orchestrator,
+            $this->hasher
+        );
+        parent::tearDown();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_index_should_return_json_response(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request->expects(self::once())
+            ->method('ajax')
+            ->willReturn(true);
+        $this->app->instance(Request::class, $request);
+
+        $routeMock = $this->createMock(Route::class);
+        $routeMock->expects(self::once())
+            ->method('uri')
+            ->willReturn('users');
+
+        $routerMock = $this->createMock(Router::class);
+        $routerMock->expects(self::once())
+            ->method('current')
+            ->willReturn($routeMock);
+        $this->app->instance(Router::class, $routerMock);
+
+        $view = $this->createMock(View::class);
+        $view->expects(self::once())
+            ->method('with')
+            ->with('pagination', '{"start":0,"filters":[],"uri":"users"}')
+            ->willReturnSelf();
+
+        $html = '<html lang="es"></html>';
+        $view->expects(self::once())
+            ->method('render')
+            ->willReturn($html);
+
+        $this->viewFactory->expects(self::once())
+            ->method('make')
+            ->with('user.index')
+            ->willReturn($view);
+
+        $result = $this->controller->index();
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame(['html' => $html], $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_index_should_return_string(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request->expects(self::once())
+            ->method('ajax')
+            ->willReturn(false);
+        $this->app->instance(Request::class, $request);
+
+        $routeMock = $this->createMock(Route::class);
+        $routeMock->expects(self::once())
+            ->method('uri')
+            ->willReturn('users');
+
+        $routerMock = $this->createMock(Router::class);
+        $routerMock->expects(self::once())
+            ->method('current')
+            ->willReturn($routeMock);
+        $this->app->instance(Router::class, $routerMock);
+
+        $view = $this->createMock(View::class);
+        $view->expects(self::once())
+            ->method('with')
+            ->with('pagination', '{"start":0,"filters":[],"uri":"users"}')
+            ->willReturnSelf();
+
+        $html = '<html lang="es"></html>';
+        $view->expects(self::once())
+            ->method('render')
+            ->willReturn($html);
+
+        $this->viewFactory->expects(self::once())
+            ->method('make')
+            ->with('user.index')
+            ->willReturn($view);
+
+        $result = $this->controller->index();
+
+        $this->assertNotInstanceOf(JsonResponse::class, $result);
+        $this->assertSame($html, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_recoveryAccount_should_return_json_response(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request->expects(self::once())
+            ->method('ajax')
+            ->willReturn(true);
+        $this->app->instance(Request::class, $request);
+
+        $html = '<html lang="es"></html>';
+        $viewMock = $this->createMock(View::class);
+        $viewMock->expects(self::once())
+            ->method('render')
+            ->willReturn($html);
+
+        $this->viewFactory->expects(self::once())
+            ->method('make')
+            ->with('user.recovery-account')
+            ->willReturn($viewMock);
+
+        $result = $this->controller->recoveryAccount();
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertSame(['html' => $html], $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_recoveryAccount_should_return_string(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request->expects(self::once())
+            ->method('ajax')
+            ->willReturn(false);
+        $this->app->instance(Request::class, $request);
+
+        $html = '<html lang="es"></html>';
+        $viewMock = $this->createMock(View::class);
+        $viewMock->expects(self::once())
+            ->method('render')
+            ->willReturn($html);
+
+        $this->viewFactory->expects(self::once())
+            ->method('make')
+            ->with('user.recovery-account')
+            ->willReturn($viewMock);
+
+        $result = $this->controller->recoveryAccount();
+
+        $this->assertNotInstanceOf(JsonResponse::class, $result);
+        $this->assertSame($html, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_validateAccount_should_return_json_response(): void
+    {
+        $requestMock = $this->createMock(RecoveryAccountRequest::class);
+
+        $employeeMock = $this->createMock(Employee::class);
+
+        $userIdMock = $this->createMock(EmployeeUserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $employeeMock->expects(self::once())
+            ->method('userId')
+            ->willReturn($userIdMock);
+
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('retrieve-employee', $requestMock)
+            ->willReturn($employeeMock);
+
+        $result = $this->controller->validateAccount($requestMock);
+
+        $dataResult = $result->getData(true);
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertArrayHasKey('link', $dataResult);
+        $this->assertSame('http://localhost/reset/1', $dataResult['link']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_resetAccount_should_return_response(): void
+    {
+        $view = $this->createMock(View::class);
+
+        $html = '<html lang="es"></html>';
+        $view->expects(self::once())
+            ->method('render')
+            ->willReturn($html);
+
+        $this->viewFactory->expects(self::once())
+            ->method('make')
+            ->with('user.restart-password', [
+                'userId' => 1,
+                'activeLink' => true
+            ])
+            ->willReturn($view);
+
+        $result = $this->controller->resetAccount(1);
+
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertSame($html, $result->content());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_resetPassword_should_return_json_response(): void
+    {
+        $requestMock = $this->createMock(ResetPasswordRequest::class);
+        $requestMock->expects(self::once())
+            ->method('input')
+            ->with('password')
+            ->willReturn('password');
+
+        $requestMock->expects(self::once())
+            ->method('mergeIfMissing')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $this->hasher->expects(self::once())
+            ->method('make')
+            ->with('password')
+            ->willReturn('password');
+
+        $userMock = $this->createMock(User::class);
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('update-user', $requestMock)
+            ->willReturn($userMock);
+
+        $result = $this->controller->resetPassword($requestMock);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(201, $result->getStatusCode());
+    }
+
+    public function test_middleware_should_return_object(): void
+    {
+        $result = $this->controller::middleware();
+
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        foreach ($result as $item) {
+            $this->assertInstanceOf(Middleware::class, $item);
+        }
+    }
+}

@@ -97,6 +97,7 @@ class InstitutionControllerTest extends TestCase
 
         $this->viewFactory->expects(self::once())
             ->method('make')
+            ->with('institution.index')
             ->willReturn($view);
 
         $result = $this->controller->index();
@@ -141,6 +142,7 @@ class InstitutionControllerTest extends TestCase
 
         $this->viewFactory->expects(self::once())
             ->method('make')
+            ->with('institution.index')
             ->willReturn($view);
 
         $result = $this->controller->index();
