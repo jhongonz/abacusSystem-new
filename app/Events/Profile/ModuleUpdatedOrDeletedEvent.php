@@ -14,12 +14,12 @@ class ModuleUpdatedOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private ModuleId $moduleId;
+    private int $moduleId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(ModuleId $moduleId)
+    public function __construct(int $moduleId)
     {
         $this->moduleId = $moduleId;
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
-use App\Events\User\RefreshModulesSession;
 use App\Http\Exceptions\RouteNotFoundException;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
@@ -15,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Router;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,15 +22,18 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleController extends Controller implements HasMiddleware
 {
     private OrchestratorHandlerContract $orchestratorHandler;
+    private Router $router;
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
+        Router $router
     ) {
         parent::__construct($logger, $viewFactory);
 
         $this->orchestratorHandler = $orchestratorHandler;
+        $this->router = $router;
     }
 
     public function index(): JsonResponse|string
@@ -55,14 +57,13 @@ class ModuleController extends Controller implements HasMiddleware
             $module = $this->orchestratorHandler->handler('change-state-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
-            RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
             $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_OK);
     }
 
     public function getModule(Request $request, ?int $id = null): JsonResponse
@@ -70,7 +71,8 @@ class ModuleController extends Controller implements HasMiddleware
         $request->mergeIfMissing(['moduleId' => $id]);
         $dataModule = $this->orchestratorHandler->handler('detail-module', $request);
 
-        $view = $this->viewFactory->make('module.module-form', $dataModule);
+        $view = $this->viewFactory->make('module.module-form', $dataModule)
+            ->render();
 
         return $this->renderView($view);
     }
@@ -105,6 +107,8 @@ class ModuleController extends Controller implements HasMiddleware
             ModuleUpdatedOrDeletedEvent::dispatch($id);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
@@ -144,7 +148,7 @@ class ModuleController extends Controller implements HasMiddleware
      */
     private function validateRoute(string $route): void
     {
-        $routes = Route::getRoutes();
+        $routes = $this->router->getRoutes();
         $slugs = [];
         /** @var \Illuminate\Routing\Route $item */
         foreach ($routes as $item) {
@@ -159,14 +163,14 @@ class ModuleController extends Controller implements HasMiddleware
             Assertion::inArray($route, $slugs);
         } catch (AssertionFailedException $exception) {
             $this->logger->warning('Route not found - Route: '.$route, $exception->getTrace());
-            throw new RouteNotFoundException('Route not found', Response::HTTP_NOT_FOUND);
+            throw new RouteNotFoundException('Route <'.$route.'> not found', Response::HTTP_NOT_FOUND);
         }
     }
 
     /**
      * Get the middleware that should be assigned to the controller.
      */
-    public static function middleware(): Middleware|array
+    public static function middleware(): array
     {
         return [
             new Middleware(['auth', 'verify-session']),

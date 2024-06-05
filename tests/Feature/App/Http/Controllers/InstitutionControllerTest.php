@@ -151,7 +151,6 @@ class InstitutionControllerTest extends TestCase
         $this->assertSame($html, $result);
     }
 
-
     /**
      * @throws Exception
      * @throws \Exception
