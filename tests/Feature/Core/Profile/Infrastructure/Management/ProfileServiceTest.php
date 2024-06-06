@@ -17,7 +17,6 @@ use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
-use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
@@ -112,12 +111,6 @@ class ProfileServiceTest extends TestCase
             ->with($request)
             ->willReturn($profileMock);
 
-        $moduleIdMock = $this->createMock(ModuleId::class);
-        $this->moduleFactory->expects(self::once())
-            ->method('buildModuleId')
-            ->with(1)
-            ->willReturn($moduleIdMock);
-
         $moduleState = $this->createMock(ModuleState::class);
         $moduleState->expects(self::once())
             ->method('isActivated')
@@ -130,7 +123,7 @@ class ProfileServiceTest extends TestCase
 
         $this->moduleService->expects(self::once())
             ->method('searchModuleById')
-            ->with($moduleIdMock)
+            ->with(1)
             ->willReturn($moduleMock);
 
         $result = $this->service->searchProfileById(1);
@@ -163,15 +156,9 @@ class ProfileServiceTest extends TestCase
             ->with($request)
             ->willReturn($profileMock);
 
-        $moduleIdMock = $this->createMock(ModuleId::class);
-        $this->moduleFactory->expects(self::once())
-            ->method('buildModuleId')
-            ->with(1)
-            ->willReturn($moduleIdMock);
-
         $this->moduleService->expects(self::once())
             ->method('searchModuleById')
-            ->with($moduleIdMock)
+            ->with(1)
             ->willThrowException(new ModuleNotFoundException('Module not found with id 1'));
 
         $this->logger->expects(self::once())
@@ -226,9 +213,12 @@ class ProfileServiceTest extends TestCase
     public function test_updateProfile_should_return_void(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
-        $data = [];
+        $this->factory->expects(self::once())
+            ->method('buildProfileId')
+            ->with(1)
+            ->willReturn($profileIdMock);
 
-        $request = new UpdateProfileRequest($profileIdMock, $data);
+        $request = new UpdateProfileRequest($profileIdMock, []);
 
         $profileMock = $this->createMock(Profile::class);
         $this->updateProfile->expects(self::once())
@@ -236,8 +226,10 @@ class ProfileServiceTest extends TestCase
             ->with($request)
             ->willReturn($profileMock);
 
-        $this->service->updateProfile($profileIdMock, $data);
-        $this->assertTrue(true);
+        $result = $this->service->updateProfile(1, []);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
     }
 
     /**
@@ -247,6 +239,11 @@ class ProfileServiceTest extends TestCase
     public function test_deleteProfile_should_return_void(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileId')
+            ->with(1)
+            ->willReturn($profileIdMock);
+
         $request = new DeleteProfileRequest($profileIdMock);
 
         $this->deleteProfile->expects(self::once())
@@ -254,7 +251,7 @@ class ProfileServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $this->service->deleteProfile($profileIdMock);
+        $this->service->deleteProfile(1);
         $this->assertTrue(true);
     }
 
@@ -265,6 +262,11 @@ class ProfileServiceTest extends TestCase
     public function test_createProfile_should_return_object(): void
     {
         $profileMock = $this->createMock(Profile::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileFromArray')
+            ->with([])
+            ->willReturn($profileMock);
+
         $request = new CreateProfileRequest($profileMock);
 
         $this->createProfile->expects(self::once())
@@ -272,7 +274,9 @@ class ProfileServiceTest extends TestCase
             ->with($request)
             ->willReturn($profileMock);
 
-        $this->service->createProfile($profileMock);
-        $this->assertTrue(true);
+        $result = $this->service->createProfile([]);
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
     }
 }

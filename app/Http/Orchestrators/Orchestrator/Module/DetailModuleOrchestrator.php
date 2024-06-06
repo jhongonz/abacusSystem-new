@@ -8,14 +8,19 @@ namespace App\Http\Orchestrators\Orchestrator\Module;
 
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 
 class DetailModuleOrchestrator extends ModuleOrchestrator
 {
+    private Config $config;
+
     public function __construct(
-        ModuleManagementContract $moduleManagement
+        ModuleManagementContract $moduleManagement,
+        Config $config
     ) {
         parent::__construct($moduleManagement);
+        $this->config = $config;
     }
 
     /**
@@ -33,7 +38,7 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
         return [
             'moduleId' => $moduleId,
             'module' => $module ?? null,
-            'menuKeys' => config('menu.options')
+            'menuKeys' => $this->config->get('menu.options')
         ];
     }
 

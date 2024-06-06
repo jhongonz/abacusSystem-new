@@ -39,12 +39,10 @@ class ModuleFactory implements ModuleFactoryContract
             $module->position()->setValue($data['position']);
         }
 
-        if ($data['createdAt']) {
-            $module->createdAt()->setValue(new DateTime($data['createdAt']['date']));
-        }
+        $module->createdAt()->setValue($data['createdAt']);
 
         if ($data['updatedAt']) {
-            $module->updatedAt()->setValue(new DateTime($data['updatedAt']['date']));
+            $module->updatedAt()->setValue($data['updatedAt']);
         }
 
         return $module;

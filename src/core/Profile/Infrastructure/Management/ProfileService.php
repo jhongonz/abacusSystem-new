@@ -18,28 +18,19 @@ use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
-use Core\Profile\Domain\ValueObjects\ProfileId;
 use Exception;
 use Psr\Log\LoggerInterface;
 
 class ProfileService implements ProfileManagementContract
 {
     private ProfileFactoryContract $profileFactory;
-
     private ModuleService $moduleService;
-
     private ModuleFactoryContract $moduleFactory;
-
     private SearchProfileById $searchProfileById;
-
     private SearchProfiles $searchProfiles;
-
     private UpdateProfile $updateProfile;
-
     private DeleteProfile $deleteProfile;
-
     private CreateProfile $createProfile;
-
     private LoggerInterface $logger;
 
     public function __construct(
@@ -77,8 +68,7 @@ class ProfileService implements ProfileManagementContract
         $modules = new Modules;
         foreach ($profile->modulesAggregator() as $item) {
             try {
-                $moduleId = $this->moduleFactory->buildModuleId($item);
-                $module = $this->moduleService->searchModuleById($moduleId);
+                $module = $this->moduleService->searchModuleById($item);
 
                 if ($module->state()->isActivated()) {
                     $modules->addItem($module);
@@ -111,28 +101,37 @@ class ProfileService implements ProfileManagementContract
     /**
      * @throws Exception
      */
-    public function updateProfile(ProfileId $id, array $data): void
+    public function updateProfile(int $id, array $data): Profile
     {
-        $request = new UpdateProfileRequest($id, $data);
+        $request = new UpdateProfileRequest(
+            $this->profileFactory->buildProfileId($id),
+            $data
+        );
 
-        $this->updateProfile->execute($request);
+        return $this->updateProfile->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function deleteProfile(ProfileId $id): void
+    public function deleteProfile(int $id): void
     {
-        $request = new DeleteProfileRequest($id);
+        $request = new DeleteProfileRequest(
+            $this->profileFactory->buildProfileId($id)
+        );
+
         $this->deleteProfile->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function createProfile(Profile $profile): void
+    public function createProfile(array $data): Profile
     {
-        $request = new CreateProfileRequest($profile);
-        $this->createProfile->execute($request);
+        $request = new CreateProfileRequest(
+            $this->profileFactory->buildProfileFromArray($data)
+        );
+
+        return $this->createProfile->execute($request);
     }
 }

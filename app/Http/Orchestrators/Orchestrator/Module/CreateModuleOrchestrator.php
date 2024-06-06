@@ -32,7 +32,7 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'icon' => $request->input('icon'),
         ];
 
-        return $this->moduleManagement->createModule($dataModule);
+        return $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
     }
 
     /**
