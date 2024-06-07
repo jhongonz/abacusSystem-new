@@ -19,17 +19,13 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
     /** @var int */
     private const PRIORITY_DEFAULT = 100;
-
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
 
     private ModuleFactoryContract $moduleFactory;
-
     private ModuleDataTransformerContract $moduleDataTransformer;
     private LoggerInterface $logger;
-
     private int $priority;
-
     private string $keyPrefix;
 
     public function __construct(

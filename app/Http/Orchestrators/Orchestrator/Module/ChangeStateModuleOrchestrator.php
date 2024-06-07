@@ -6,12 +6,15 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Module;
 
+use App\Traits\UtilsDateTimeTrait;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Illuminate\Http\Request;
 
 class ChangeStateModuleOrchestrator extends ModuleOrchestrator
 {
+    use UtilsDateTimeTrait;
+
     public function __construct(
         ModuleManagementContract $moduleManagement
     ) {
@@ -37,6 +40,8 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
+        $dataUpdate['updatedAt'] = $this->getCurrentTime();
+
         return $this->moduleManagement->updateModule($moduleId, $dataUpdate);
     }
 

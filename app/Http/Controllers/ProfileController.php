@@ -4,16 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
+use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
-use Core\Profile\Domain\Contracts\ModuleManagementContract;
-use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
-use Core\Profile\Domain\Contracts\ProfileFactoryContract;
-use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Module;
-use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
-use Core\Profile\Domain\ValueObjects\ProfileId;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,35 +15,18 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller implements HasMiddleware
 {
-    private ProfileFactoryContract $profileFactory;
-
-    private ProfileManagementContract $profileService;
-
-    private ProfileDataTransformerContract $profileDataTransformer;
-
-    private ModuleManagementContract $moduleService;
-
-    private DataTables $dataTable;
+    private OrchestratorHandlerContract $orchestratorHandler;
 
     public function __construct(
-        ProfileFactoryContract $profileFactory,
-        ProfileManagementContract $profileService,
-        ProfileDataTransformerContract $profileDataTransformer,
-        ModuleManagementContract $moduleService,
-        DataTables $dataTable,
+        OrchestratorHandlerContract $orchestratorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
         parent::__construct($logger, $viewFactory);
-        $this->profileFactory = $profileFactory;
-        $this->profileService = $profileService;
-        $this->profileDataTransformer = $profileDataTransformer;
-        $this->moduleService = $moduleService;
-        $this->dataTable = $dataTable;
+        $this->orchestratorHandler = $orchestratorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -67,27 +43,16 @@ class ProfileController extends Controller implements HasMiddleware
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        $profiles = $this->profileService->searchProfiles($request->input('filters'));
-
-        return $this->prepareListProfiles($profiles);
+        return $this->orchestratorHandler->handler('retrieve-profiles', $request);
     }
 
     public function changeStateProfile(Request $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
-        $profile = $this->profileService->searchProfileById($profileId);
-
-        if ($profile->state()->isNew() || $profile->state()->isInactivated()) {
-            $profile->state()->activate();
-        } elseif ($profile->state()->isActivated()) {
-            $profile->state()->inactive();
-        }
-
-        $dataUpdate['state'] = $profile->state()->value();
-
         try {
-            $this->profileService->updateProfile($profileId, $dataUpdate);
-            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
+            /** @var Profile $profile */
+            $profile = $this->orchestratorHandler->handler('change-state-profile', $request);
+
+            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
             RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -98,38 +63,27 @@ class ProfileController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
-    public function deleteProfile(int $id): JsonResponse
+    public function deleteProfile(Request $request, int $id): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($id);
-
         try {
-            $this->profileService->deleteProfile($profileId);
+            $request->mergeIfMissing(['profileId' => $id]);
+
+            $this->orchestratorHandler->handler('delete-profile', $request);
+            ProfileUpdatedOrDeletedEvent::dispatch($id);
+
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
-        ProfileUpdatedOrDeletedEvent::dispatch($profileId);
-
         return new JsonResponse(status: Response::HTTP_OK);
     }
 
-    public function getProfile(?int $id = null): JsonResponse
+    public function getProfile(Request $request, ?int $id = null): JsonResponse
     {
-        $profile = null;
-        if (! is_null($id)) {
-            $profile = $this->profileService->searchProfileById(
-                $this->profileFactory->buildProfileId($id)
-            );
-        }
+        $request->mergeIfMissing(['profileId' => $id]);
+        $dataProfile = $this->orchestratorHandler->handler('detail-profile', $request);
 
-        $modules = $this->moduleService->searchModules();
-        $privileges = $this->retrievePrivilegesProfile($profile, $modules);
-
-        $view = $this->viewFactory->make('profile.profile-form')
-            ->with('id', $id)
-            ->with('profile', $profile)
-            ->with('modules', $modules)
-            ->with('privileges', $privileges)
+        $view = $this->viewFactory->make('profile.profile-form', $dataProfile)
             ->render();
 
         return $this->renderView($view);
@@ -137,12 +91,13 @@ class ProfileController extends Controller implements HasMiddleware
 
     public function storeProfile(StoreProfileRequest $request): JsonResponse
     {
-        $profileId = $this->profileFactory->buildProfileId($request->input('id'));
-
         try {
-            $method = (is_null($profileId->value())) ? 'createProfile' : 'updateProfile';
-            $this->{$method}($request, $profileId);
-            ProfileUpdatedOrDeletedEvent::dispatch($profileId);
+            $method = (is_null($request->input('id'))) ? 'createProfile' : 'updateProfile';
+
+            /** @var Profile $profile */
+            $profile = $this->{$method}($request);
+
+            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -155,80 +110,25 @@ class ProfileController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
-    private function createProfile(StoreProfileRequest $request, ProfileId $profileId): void
+    private function createProfile(StoreProfileRequest $request): Profile
     {
-        $profile = $this->profileFactory->buildProfile(
-            $profileId,
-            $this->profileFactory->buildProfileName($request->input('name'))
-        );
-        $profile->description()->setValue($request->input('description'));
-
         $modulesAggregator = $this->getModulesAggregator($request);
-        $profile->setModulesAggregator($modulesAggregator);
+        $request->mergeIfMissing(['modulesAggregator' => json_encode($modulesAggregator)]);
 
-        $this->profileService->createProfile($profile);
+        return $this->orchestratorHandler->handler('create-profile', $request);
     }
 
-    private function updateProfile(StoreProfileRequest $request, ProfileId $profileId): void
+    private function updateProfile(StoreProfileRequest $request): Profile
     {
         $modulesAggregator = $this->getModulesAggregator($request);
-
         $dataUpdate = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'modules' => $modulesAggregator,
         ];
 
-        $this->profileService->updateProfile($profileId, $dataUpdate);
-    }
-
-    /**
-     * @throws \Yajra\DataTables\Exceptions\Exception
-     */
-    private function prepareListProfiles(Profiles $profiles): JsonResponse
-    {
-        $dataProfiles = [];
-        if ($profiles->count()) {
-            /** @var Profile $item */
-            foreach ($profiles as $item) {
-                $dataProfiles[] = $this->profileDataTransformer->write($item)->readToShare();
-            }
-        }
-
-        $datatable = $this->dataTable->collection(collect($dataProfiles));
-        $datatable->addColumn('tools', function (array $item) {
-            return $this->retrieveMenuOptionHtml($item);
-        });
-
-        return $datatable->escapeColumns([])->toJson();
-    }
-
-    public function retrievePrivilegesProfile(?Profile $profile, Modules $modules): array
-    {
-        $modulesToProfile = (! is_null($profile)) ? $profile->modulesAggregator() : [];
-        $parents = config('menu.options');
-        $privileges = [];
-
-        foreach ($parents as $index => $item) {
-            $modulesParent = $modules->moduleElementsOfKey($index);
-
-            if (count($modulesParent) > 0) {
-                $privileges[$index]['menu'] = $item;
-                $privileges[$index]['children'] = [];
-            }
-
-            /** @var Module $module */
-            foreach ($modulesParent as $module) {
-                if (! $module->state()->isInactivated()) {
-                    $privileges[$index]['children'][] = [
-                        'module' => $module,
-                        'selected' => in_array($module->id()->value(), $modulesToProfile),
-                    ];
-                }
-            }
-        }
-
-        return $privileges;
+        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        return $this->orchestratorHandler->handler('update-profile', $request);
     }
 
     private function getModulesAggregator(Request $request): array
@@ -244,7 +144,7 @@ class ProfileController extends Controller implements HasMiddleware
     /**
      * Get the middleware that should be assigned to the controller.
      */
-    public static function middleware(): Middleware|array
+    public static function middleware(): array
     {
         return [
             new Middleware(['auth', 'verify-session']),

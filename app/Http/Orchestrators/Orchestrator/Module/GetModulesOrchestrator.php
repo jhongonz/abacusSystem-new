@@ -12,6 +12,7 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Exceptions\Exception;
@@ -56,7 +57,8 @@ class GetModulesOrchestrator extends ModuleOrchestrator
             }
         }
 
-        $datatable = $this->dataTables->collection(collect($dataModules));
+        $collection = new Collection($dataModules);
+        $datatable = $this->dataTables->collection($collection);
         $datatable->addColumn('tools', function (array $item) {
             return $this->retrieveMenuOptionHtml($item);
         });

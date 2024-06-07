@@ -6,26 +6,63 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
+use App\Traits\DataTablesTrait;
+use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Profiles;
+use Core\Profile\Domain\Profile;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\View\Factory as ViewFactory;
+use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Exceptions\Exception;
 
 class GetProfilesOrchestrator extends ProfileOrchestrator
 {
-    public function __construct(ProfileManagementContract $profileManagement)
-    {
+    use DataTablesTrait;
+
+    private ViewFactory $viewFactory;
+    private DataTables $dataTables;
+    private ProfileDataTransformerContract $profileDataTransformer;
+
+    public function __construct(
+        ProfileManagementContract $profileManagement,
+        ViewFactory $viewFactory,
+        DataTables $dataTables,
+        ProfileDataTransformerContract $dataTransformer
+    ) {
         parent::__construct($profileManagement);
+        $this->setViewFactory($viewFactory);
+
+        $this->dataTables = $dataTables;
+        $this->profileDataTransformer = $dataTransformer;
     }
 
     /**
      * @param Request $request
-     * @return Profiles
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function make(Request $request): Profiles
+    public function make(Request $request): JsonResponse
     {
         $filters = $request->input('filters', []);
+        $profiles = $this->profileManagement->searchProfiles($filters);
 
-        return $this->profileManagement->searchProfiles($filters);
+        $dataProfiles = [];
+        if ($profiles->count()) {
+            /** @var Profile $item */
+            foreach ($profiles as $item) {
+                $dataProfiles[] = $this->profileDataTransformer->write($item)->readToShare();
+            }
+        }
+
+        $collection = new Collection($dataProfiles);
+        $datatable = $this->dataTables->collection($collection);
+        $datatable->addColumn('tools', function (array $element) {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     /**

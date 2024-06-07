@@ -6,12 +6,16 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Module;
 
+use App\Traits\UtilsDateTimeTrait;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Illuminate\Http\Request;
 
 class CreateModuleOrchestrator extends ModuleOrchestrator
 {
+    use UtilsDateTimeTrait;
+
     public function __construct(
         ModuleManagementContract $moduleManagement
     ) {
@@ -30,6 +34,8 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'name' => $request->input('name'),
             'route' => $request->input('route'),
             'icon' => $request->input('icon'),
+            'state' => ValueObjectStatus::STATE_NEW,
+            'createdAt' => $this->getCurrentTime(),
         ];
 
         return $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
