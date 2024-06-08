@@ -37,7 +37,7 @@ use App\Http\Orchestrators\OrchestratorHandlerContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
-class OrchestratorHandlerProvider extends ServiceProvider
+class OrchestratorServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

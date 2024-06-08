@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSession;
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use Core\Profile\Domain\Profile;
@@ -19,14 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 class ProfileController extends Controller implements HasMiddleware
 {
     private OrchestratorHandlerContract $orchestratorHandler;
+    private ActionExecutorHandler $actionExecutorHandler;
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
+        ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
         parent::__construct($logger, $viewFactory);
+
         $this->orchestratorHandler = $orchestratorHandler;
+        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -92,10 +97,10 @@ class ProfileController extends Controller implements HasMiddleware
     public function storeProfile(StoreProfileRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('id'))) ? 'createProfile' : 'updateProfile';
+            $method = (is_null($request->input('id'))) ? 'create-profile-action' : 'update-profile-action';
 
             /** @var Profile $profile */
-            $profile = $this->{$method}($request);
+            $profile = $this->actionExecutorHandler->invoke($method, $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
         } catch (Exception $exception) {
@@ -108,37 +113,6 @@ class ProfileController extends Controller implements HasMiddleware
         }
 
         return new JsonResponse(status: Response::HTTP_CREATED);
-    }
-
-    private function createProfile(StoreProfileRequest $request): Profile
-    {
-        $modulesAggregator = $this->getModulesAggregator($request);
-        $request->mergeIfMissing(['modulesAggregator' => json_encode($modulesAggregator)]);
-
-        return $this->orchestratorHandler->handler('create-profile', $request);
-    }
-
-    private function updateProfile(StoreProfileRequest $request): Profile
-    {
-        $modulesAggregator = $this->getModulesAggregator($request);
-        $dataUpdate = [
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'modules' => $modulesAggregator,
-        ];
-
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
-        return $this->orchestratorHandler->handler('update-profile', $request);
-    }
-
-    private function getModulesAggregator(Request $request): array
-    {
-        $modulesAggregator = [];
-        foreach ($request->input('modules') as $item) {
-            $modulesAggregator[] = $item['id'];
-        }
-
-        return $modulesAggregator;
     }
 
     /**
