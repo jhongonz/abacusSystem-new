@@ -58,14 +58,14 @@ class ProfileController extends Controller implements HasMiddleware
             $profile = $this->orchestratorHandler->handler('change-state-profile', $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
-            RefreshModulesSession::dispatch();
+            //RefreshModulesSession::dispatch();
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(status: Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_OK);
     }
 
     public function deleteProfile(Request $request, int $id): JsonResponse
@@ -78,6 +78,8 @@ class ProfileController extends Controller implements HasMiddleware
 
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);

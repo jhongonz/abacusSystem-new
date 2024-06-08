@@ -37,7 +37,7 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
             'createdAt' => $this->getCurrentTime()
         ];
 
-        return $this->profileManagement->createProfile($dataProfile);
+        return $this->profileManagement->createProfile([Profile::TYPE => $dataProfile]);
     }
 
     /**

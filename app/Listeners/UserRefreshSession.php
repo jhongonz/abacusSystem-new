@@ -5,17 +5,22 @@ namespace App\Listeners;
 use App\Events\User\RefreshModulesSession;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
+use Illuminate\Contracts\Session\Session;
 
 class UserRefreshSession
 {
     private ProfileManagementContract $profileService;
+    private Session $session;
 
     /**
      * Create the event listener.
      */
-    public function __construct(ProfileManagementContract $profileService)
-    {
+    public function __construct(
+        ProfileManagementContract $profileService,
+        Session $session
+    ) {
         $this->profileService = $profileService;
+        $this->session = $session;
     }
 
     /**
@@ -24,10 +29,10 @@ class UserRefreshSession
     public function handle(RefreshModulesSession $event): void
     {
         /** @var Profile $profileSession */
-        $profileSession = session('profile');
-        $profile = $this->profileService->searchProfileById($profileSession->id());
+        $profileSession = $this->session->get('profile');
+        $profile = $this->profileService->searchProfileById($profileSession->id()->value());
 
-        session()->forget('profile');
-        session()->put('profile', $profile);
+        $this->session->forget('profile');
+        $this->session->put('profile', $profile);
     }
 }
