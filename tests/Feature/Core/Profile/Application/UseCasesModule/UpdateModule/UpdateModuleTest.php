@@ -48,7 +48,7 @@ class UpdateModuleTest extends TestCase
      */
     public function test_execute_should_return_object(): void
     {
-        $datetime = new \DateTime();
+        $datetime = new \DateTime;
 
         $dataUpdate = [
             'name' => 'test',

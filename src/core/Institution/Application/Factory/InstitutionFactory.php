@@ -38,18 +38,15 @@ class InstitutionFactory implements InstitutionFactoryContract
         $institution->setShortname(
             $this->buildInstitutionShortname($data['shortname'])
         );
+
         $institution->setCode(
             $this->buildInstitutionCode($data['code'])
         );
-        $institution->setLogo(
-            $this->buildInstitutionLogo($data['logo'])
-        );
-        $institution->setSearch(
-            $this->buildInstitutionSearch($data['search'])
-        );
+
         $institution->setObservations(
             $this->buildInstitutionObservations($data['observations'])
         );
+
         $institution->setState(
             $this->buildInstitutionState($data['state'])
         );
@@ -58,7 +55,13 @@ class InstitutionFactory implements InstitutionFactoryContract
             $this->buildInstitutionCreatedAt($data['createdAt'])
         );
 
-        if (! is_null($data['updatedAt'])) {
+        if (isset($data['logo'])) {
+            $institution->setLogo(
+                $this->buildInstitutionLogo($data['logo'])
+            );
+        }
+
+        if (isset($data['updatedAt'])) {
             $institution->setUpdatedAt(
                 $this->buildInstitutionUpdatedAt($data['updatedAt'])
             );

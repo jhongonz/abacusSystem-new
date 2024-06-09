@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
@@ -27,6 +28,7 @@ use Tests\TestCase;
 class InstitutionControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
+    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private LoggerInterface|MockObject $logger;
     private ViewFactory|MockObject $viewFactory;
     private ImageManagerInterface|MockObject $imageManager;
@@ -42,8 +44,11 @@ class InstitutionControllerTest extends TestCase
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
+        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
+
         $this->controller = new InstitutionController(
             $this->orchestrator,
+            $this->actionExecutorHandler,
             $this->imageManager,
             $this->logger,
             $this->viewFactory
@@ -54,6 +59,7 @@ class InstitutionControllerTest extends TestCase
     {
         unset(
             $this->orchestrator,
+            $this->actionExecutorHandler,
             $this->controller,
             $this->logger,
             $this->viewFactory,
@@ -336,7 +342,7 @@ class InstitutionControllerTest extends TestCase
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
+            ->with('institutionId')
             ->willReturn(null);
 
         $institutionMock = $this->createMock(Institution::class);
@@ -349,9 +355,9 @@ class InstitutionControllerTest extends TestCase
             ->method('id')
             ->willReturn($institutionIdMock);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('create-institution', $requestMock)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-institution-action', $requestMock)
             ->willReturn($institutionMock);
 
         $result = $this->controller->storeInstitution($requestMock);
@@ -369,12 +375,12 @@ class InstitutionControllerTest extends TestCase
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
+            ->with('institutionId')
             ->willReturn(null);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('create-institution', $requestMock)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-institution-action', $requestMock)
             ->willThrowException(new \Exception('Can not create new institution'));
 
         $this->logger->expects(self::once())
@@ -394,41 +400,10 @@ class InstitutionControllerTest extends TestCase
     public function test_updateInstitution_should_return_json_response_when_update_institution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
-        $requestMock->expects(self::exactly(9))
-            ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                1,
-                'code',
-                'name',
-                'shortname',
-                'phone',
-                'email',
-                'address',
-                'observations',
-                'token'
-            );
-
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $imageMock = $this->createMock(ImageInterface::class);
-        $imageMock->expects(self::exactly(2))
-            ->method('save')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $imageMock->expects(self::once())
-            ->method('resize')
-            ->with(150, 150)
-            ->willReturnSelf();
-
-        $this->imageManager->expects(self::once())
-            ->method('read')
-            ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
-            ->willReturn($imageMock);
+            ->method('input')
+            ->with('institutionId')
+            ->willReturn(1);
 
         $institutionMock = $this->createMock(Institution::class);
 
@@ -440,9 +415,9 @@ class InstitutionControllerTest extends TestCase
             ->method('id')
             ->willReturn($institutionIdMock);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('update-institution', $requestMock)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('update-institution-action', $requestMock)
             ->willReturn($institutionMock);
 
         $result = $this->controller->storeInstitution($requestMock);

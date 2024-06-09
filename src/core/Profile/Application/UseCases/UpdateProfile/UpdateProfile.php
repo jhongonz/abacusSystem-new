@@ -7,7 +7,6 @@ use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
 use Exception;
-use Illuminate\Support\Facades\Date;
 
 class UpdateProfile extends UseCasesService
 {
