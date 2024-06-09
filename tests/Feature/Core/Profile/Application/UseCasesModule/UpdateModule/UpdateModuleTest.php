@@ -11,6 +11,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -51,6 +52,7 @@ class UpdateModuleTest extends TestCase
             'route' => 'test',
             'icon' => 'test',
             'key' => 'test',
+            'position' => 1,
             'state' => 2,
         ];
         $moduleId = $this->createMock(ModuleId::class);
@@ -108,6 +110,16 @@ class UpdateModuleTest extends TestCase
         $moduleMock->expects(self::once())
             ->method('menuKey')
             ->willReturn($keyMock);
+
+        $positionMock = $this->createMock(ModulePosition::class);
+        $positionMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+
+        $moduleMock->expects(self::once())
+            ->method('position')
+            ->willReturn($positionMock);
 
         $stateMock = $this->createMock(ModuleState::class);
         $stateMock->expects(self::once())

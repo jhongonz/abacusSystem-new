@@ -35,11 +35,19 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
+                                        <label for="icon">Posición</label>
+                                        <input type="text" class="form-control form-control-sm icon" name="position" id="position" placeholder="position" value="@isset($module){{$module->position()->value()}}@endisset">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
                                         <label for="key">Key</label>
                                         <select name="key" id="key" data-placeholder="Seleccione key" class="key form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                             <option value=""></option>
                                             @foreach($menuKeys as $key => $item)
-                                            <option value="{{$key}}" @isset($module) @if($module->menuKey()->value() === $key) selected @endif @endisset>{{$key}}</option>
+                                                <option value="{{$key}}" @isset($module) @if($module->menuKey()->value() === $key) selected @endif @endisset>{{$key}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -74,11 +82,12 @@ $('.save-data').click(function(e){
     e.preventDefault();
 
     axios.post("{{ route('panel.module.store') }}",{
-        'id': '{{ $moduleId }}',
+        'moduleId': '{{ $moduleId }}',
         'name': $('#name').val(),
         'route': $('#route').val(),
         'key': $('#key').val(),
         'icon': $('#icon').val(),
+        'position': $('#position').val()
 	})
     .then(function (response){
         $('.module_form').modal('hide');

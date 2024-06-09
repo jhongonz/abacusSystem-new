@@ -74,4 +74,11 @@ class UpdateModule extends UseCasesService
 
         return $module;
     }
+
+    private function changePosition(Module $module, int $value): Module
+    {
+        $module->position()->setValue($value);
+
+        return $module;
+    }
 }

@@ -166,6 +166,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $model->changeIcon($domain->icon()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
+        $model->changePosition($domain->position()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
         if (! is_null($domain->updatedAt()->value())) {

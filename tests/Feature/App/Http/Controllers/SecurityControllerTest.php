@@ -36,6 +36,7 @@ class SecurityControllerTest extends TestCase
     private StatefulGuard|MockObject $statefulGuard;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private Session|MockObject $session;
     private SecurityController $controller;
 
     /**
@@ -48,11 +49,14 @@ class SecurityControllerTest extends TestCase
         $this->statefulGuard = $this->createMock(StatefulGuard::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->session = $this->createMock(Session::class);
+
         $this->controller = new SecurityController(
             $this->orchestrator,
             $this->viewFactory,
             $this->logger,
-            $this->statefulGuard
+            $this->statefulGuard,
+            $this->session
         );
     }
 
@@ -63,7 +67,8 @@ class SecurityControllerTest extends TestCase
             $this->statefulGuard,
             $this->viewFactory,
             $this->logger,
-            $this->controller
+            $this->controller,
+            $this->session,
         );
         parent::tearDown();
     }
@@ -170,6 +175,18 @@ class SecurityControllerTest extends TestCase
                 'user_id' => 1
             ])
             ->willReturn(true);
+
+        $this->session->expects(self::once())
+            ->method('regenerate')
+            ->willReturn(true);
+
+        $this->session->expects(self::once())
+            ->method('put')
+            ->with([
+                'user' => $userMock,
+                'profile' => $profileMock,
+                'employee' => $employeeMock
+            ]);
 
         $result = $this->controller->authenticate($request);
 
@@ -572,27 +589,20 @@ class SecurityControllerTest extends TestCase
      */
     public function test_logout_should_return_redirect(): void
     {
-        $request = $this->createMock(Request::class);
-
-        $sessionMock = $this->createMock(Session::class);
-        $sessionMock->expects(self::once())
+        $this->session->expects(self::once())
             ->method('flush');
 
-        $sessionMock->expects(self::once())
+        $this->session->expects(self::once())
             ->method('invalidate')
             ->willReturn(true);
 
-        $sessionMock->expects(self::once())
+        $this->session->expects(self::once())
             ->method('regenerateToken');
-
-        $request->expects(self::exactly(3))
-            ->method('session')
-            ->willReturn($sessionMock);
 
         $this->statefulGuard->expects(self::once())
             ->method('logout');
 
-        $result = $this->controller->logout($request);
+        $result = $this->controller->logout();
 
         $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame(302, $result->getStatusCode());

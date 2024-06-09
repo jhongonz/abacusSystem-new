@@ -34,6 +34,7 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'name' => $request->input('name'),
             'route' => $request->input('route'),
             'icon' => $request->input('icon'),
+            'position' => $request->input('position'),
             'state' => ValueObjectStatus::STATE_NEW,
             'createdAt' => $this->getCurrentTime(),
         ];

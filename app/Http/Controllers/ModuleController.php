@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
-use App\Http\Exceptions\RouteNotFoundException;
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
-use Assert\Assertion;
-use Assert\AssertionFailedException;
 use Core\Profile\Domain\Module;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Routing\Router;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,18 +19,18 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleController extends Controller implements HasMiddleware
 {
     private OrchestratorHandlerContract $orchestratorHandler;
-    private Router $router;
+    private ActionExecutorHandler $actionExecutorHandler;
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
+        ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
-        Router $router
     ) {
         parent::__construct($logger, $viewFactory);
 
         $this->orchestratorHandler = $orchestratorHandler;
-        $this->router = $router;
+        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -80,10 +77,10 @@ class ModuleController extends Controller implements HasMiddleware
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('moduleId'))) ? 'createModule' : 'updateModule';
+            $method = (is_null($request->input('moduleId'))) ? 'create-module-action' : 'update-module-action';
 
             /** @var Module $module */
-            $module = $this->{$method}($request);
+            $module = $this->actionExecutorHandler->invoke($method, $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
         } catch (Exception $exception) {
@@ -112,59 +109,6 @@ class ModuleController extends Controller implements HasMiddleware
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
-    }
-
-    /**
-     * @throws RouteNotFoundException
-     */
-    private function createModule(StoreModuleRequest $request): Module
-    {
-        $this->validateRoute($request->input('route'));
-
-        return $this->orchestratorHandler->handler('create-module', $request);
-    }
-
-    /**
-     * @throws RouteNotFoundException
-     */
-    public function updateModule(StoreModuleRequest $request): Module
-    {
-        $route = $request->input('route');
-        $this->validateRoute($route);
-
-        $dataUpdate = [
-            'name' => $request->input('name'),
-            'route' => $route,
-            'icon' => $request->input('icon'),
-            'key' => $request->input('key'),
-        ];
-
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
-        return $this->orchestratorHandler->handler('update-module', $request);
-    }
-
-    /**
-     * @throws RouteNotFoundException
-     */
-    private function validateRoute(string $route): void
-    {
-        $routes = $this->router->getRoutes();
-        $slugs = [];
-        /** @var \Illuminate\Routing\Route $item */
-        foreach ($routes as $item) {
-            $method = $item->methods();
-            if ($method[0] === 'GET') {
-                $slugs[] = $item->uri();
-            }
-        }
-        $slugs = array_unique($slugs);
-
-        try {
-            Assertion::inArray($route, $slugs);
-        } catch (AssertionFailedException $exception) {
-            $this->logger->warning('Route not found - Route: '.$route, $exception->getTrace());
-            throw new RouteNotFoundException('Route <'.$route.'> not found', Response::HTTP_NOT_FOUND);
-        }
     }
 
     /**

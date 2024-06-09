@@ -35,13 +35,13 @@ class ModuleFactory implements ModuleFactoryContract
             $this->buildModuleState($data['state']),
         );
 
-        if ($data['position']) {
+        if (isset($data['position'])) {
             $module->position()->setValue($data['position']);
         }
 
         $module->createdAt()->setValue($data['createdAt']);
 
-        if ($data['updatedAt']) {
+        if (isset($data['updatedAt'])) {
             $module->updatedAt()->setValue($data['updatedAt']);
         }
 

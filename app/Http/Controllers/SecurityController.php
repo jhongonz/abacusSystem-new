@@ -11,6 +11,7 @@ use Core\Profile\Domain\Profile;
 use Core\User\Domain\User;
 use Exception;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,17 +28,20 @@ class SecurityController extends Controller implements HasMiddleware
 
     private StatefulGuard $guard;
     private OrchestratorHandlerContract $orchestratorHandler;
+    private Session $session;
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
-        StatefulGuard $guard
+        StatefulGuard $guard,
+        Session $session
     ) {
         parent::__construct($logger, $viewFactory);
 
         $this->orchestratorHandler = $orchestratorHandler;
         $this->guard = $guard;
+        $this->session = $session;
     }
 
     public function index(): Response
@@ -62,8 +66,8 @@ class SecurityController extends Controller implements HasMiddleware
             ];
 
             if ($this->guard->attempt($credentials)) {
-                session()->regenerate();
-                session()->put([
+                $this->session->regenerate();
+                $this->session->put([
                     'user' => $user,
                     'profile' => $profile,
                     'employee' => $employee,
@@ -90,13 +94,13 @@ class SecurityController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
-    public function logout(Request $request): RedirectResponse
+    public function logout(): RedirectResponse
     {
         $this->guard->logout();
 
-        $request->session()->flush();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $this->session->flush();
+        $this->session->invalidate();
+        $this->session->regenerateToken();
 
         return new RedirectResponse(route('panel.login'));
     }

@@ -19,6 +19,7 @@ use App\Http\Orchestrators\Orchestrator\Module\ChangeStateModuleOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Module\CreateModuleOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Module\DeleteModuleOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Module\DetailModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\GetModulesOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Module\UpdateModuleOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\ChangeStateProfileOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\CreateProfileOrchestrator;
@@ -170,6 +171,10 @@ class OrchestratorServiceProvider extends ServiceProvider
 
             $orchestratorHandler->addOrchestrator(
                 $app->make(DeleteModuleOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(GetModulesOrchestrator::class)
             );
 
             return $orchestratorHandler;

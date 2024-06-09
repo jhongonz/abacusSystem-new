@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
@@ -24,9 +25,9 @@ use Tests\TestCase;
 class ModuleControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
+    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
-    private Router|MockObject $router;
     private ModuleController $controller;
 
     /**
@@ -38,13 +39,13 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->router = $this->createMock(Router::class);
+        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
 
         $this->controller = new ModuleController(
             $this->orchestrator,
+            $this->actionExecutorHandler,
             $this->viewFactory,
             $this->logger,
-            $this->router
         );
     }
 
@@ -55,7 +56,7 @@ class ModuleControllerTest extends TestCase
             $this->viewFactory,
             $this->logger,
             $this->controller,
-            $this->router
+            $this->actionExecutorHandler
         );
         parent::tearDown();
     }
@@ -267,23 +268,10 @@ class ModuleControllerTest extends TestCase
     public function test_storeModule_should_create_new_module_and_return_json_response(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(null, 'testing');
-
-        $routeMock = $this->createMock(Route::class);
-        $routeMock->expects(self::once())
-            ->method('methods')
-            ->willReturn(['GET']);
-
-        $routeMock->expects(self::once())
-            ->method('uri')
-            ->willReturn('testing');
-
-        $this->router->expects(self::once())
-            ->method('getRoutes')
-            ->willReturn([$routeMock]);
+            ->with('moduleId')
+            ->willReturn(null);
 
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -295,9 +283,9 @@ class ModuleControllerTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('create-module', $requestMock)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-module-action', $requestMock)
             ->willReturn($moduleMock);
 
         $result = $this->controller->storeModule($requestMock);
@@ -312,34 +300,19 @@ class ModuleControllerTest extends TestCase
     public function test_storeModule_should_return_json_response_when_exception_routing(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(null, 'testing');
+            ->with('moduleId')
+            ->willReturn(null);
 
-        $routeMock = $this->createMock(Route::class);
-        $routeMock->expects(self::once())
-            ->method('methods')
-            ->willReturn(['GET']);
-
-        $routeMock->expects(self::once())
-            ->method('uri')
-            ->willReturn('localhost');
-
-        $this->router->expects(self::once())
-            ->method('getRoutes')
-            ->willReturn([$routeMock]);
-
-        $this->orchestrator->expects(self::never())
-            ->method('handler');
-
-        $this->logger->expects(self::once())
-            ->method('warning')
-            ->with('Route not found - Route: testing');
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-module-action', $requestMock)
+            ->willThrowException(new \Exception('Can not create module'));
 
         $this->logger->expects(self::once())
             ->method('error')
-            ->with('Route <testing> not found');
+            ->with('Can not create module');
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -354,34 +327,10 @@ class ModuleControllerTest extends TestCase
     public function test_storeModule_should_update_module_and_return_json_response(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
-        $requestMock->expects(self::exactly(5))
-            ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                1,
-                'testing',
-                'name',
-                'icon',
-                'key'
-            );
-
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $routeMock = $this->createMock(Route::class);
-        $routeMock->expects(self::once())
-            ->method('methods')
-            ->willReturn(['GET']);
-
-        $routeMock->expects(self::once())
-            ->method('uri')
-            ->willReturn('testing');
-
-        $this->router->expects(self::once())
-            ->method('getRoutes')
-            ->willReturn([$routeMock]);
+            ->method('input')
+            ->with('moduleId')
+            ->willReturn(1);
 
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -393,9 +342,9 @@ class ModuleControllerTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('update-module', $requestMock)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('update-module-action', $requestMock)
             ->willReturn($moduleMock);
 
         $result = $this->controller->storeModule($requestMock);
@@ -410,37 +359,19 @@ class ModuleControllerTest extends TestCase
     public function test_storeModule_should_return_json_response_when_is_exception(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                1,
-                'testing',
-            );
+            ->with('moduleId')
+            ->willReturn(1);
 
-        $routeMock = $this->createMock(Route::class);
-        $routeMock->expects(self::once())
-            ->method('methods')
-            ->willReturn(['GET']);
-
-        $routeMock->expects(self::once())
-            ->method('uri')
-            ->willReturn('localhost');
-
-        $this->router->expects(self::once())
-            ->method('getRoutes')
-            ->willReturn([$routeMock]);
-
-        $this->orchestrator->expects(self::never())
-            ->method('handler');
-
-        $this->logger->expects(self::once())
-            ->method('warning')
-            ->with('Route not found - Route: testing');
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('update-module-action', $requestMock)
+            ->willThrowException(new \Exception('Can not update module'));
 
         $this->logger->expects(self::once())
             ->method('error')
-            ->with('Route <testing> not found');
+            ->with('Can not update module');
 
         $result = $this->controller->storeModule($requestMock);
 
