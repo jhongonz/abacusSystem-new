@@ -11,6 +11,7 @@ use Core\Profile\Domain\ValueObjects\ProfileDescription;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -47,11 +48,13 @@ class UpdateProfileTest extends TestCase
      */
     public function test_execute_should_return_object(): void
     {
+        $datetime = new \DateTime();
         $data = [
             'state' => 1,
             'description' => 'test',
             'name' => 'test',
             'modules' => [1,2,3],
+            'updateAt' => $datetime,
         ];
         $profileId = $this->createMock(ProfileId::class);
 
@@ -103,6 +106,15 @@ class UpdateProfileTest extends TestCase
             ->method('setModulesAggregator')
             ->with([1,2,3])
             ->willReturnSelf();
+
+        $updatedAt = $this->createMock(ProfileUpdatedAt::class);
+        $updatedAt->expects(self::once())
+            ->method('setValue')
+            ->with($datetime)
+            ->willReturnSelf();
+        $profileMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAt);
 
         $this->repository->expects(self::once())
             ->method('find')

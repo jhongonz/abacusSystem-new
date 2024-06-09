@@ -80,7 +80,7 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
 
             /** @var Module $module */
             foreach ($modulesParent as $module) {
-                if (! $module->state()->isInactivated()) {
+                if ($module->state()->isActivated()) {
                     $privileges[$index]['children'][] = [
                         'module' => $module,
                         'selected' => in_array($module->id()->value(), $modulesToProfile),

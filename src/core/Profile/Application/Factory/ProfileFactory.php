@@ -36,7 +36,7 @@ class ProfileFactory implements ProfileFactoryContract
 
         $profile->setModulesAggregator($data['modulesAggregator']);
 
-        if ($data['updatedAt']) {
+        if (isset($data['updatedAt'])) {
             $profile->updatedAt()->setValue($data['updatedAt']);
         }
 

@@ -81,4 +81,11 @@ class UpdateModule extends UseCasesService
 
         return $module;
     }
+
+    private function changeUpdatedAt(Module $module, \DateTime $dateTime): Module
+    {
+        $module->updatedAt()->setValue($dateTime);
+
+        return $module;
+    }
 }

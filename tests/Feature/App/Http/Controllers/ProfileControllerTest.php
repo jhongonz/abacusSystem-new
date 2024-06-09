@@ -318,7 +318,7 @@ class ProfileControllerTest extends TestCase
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
             ->method('input')
-            ->with('id')
+            ->with('profileId')
             ->willReturn(null);
 
         $profileMock = $this->createMock(Profile::class);
@@ -350,7 +350,7 @@ class ProfileControllerTest extends TestCase
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
             ->method('input')
-            ->with('id')
+            ->with('profileId')
             ->willReturn(1);
 
         $profileMock = $this->createMock(Profile::class);
@@ -382,7 +382,7 @@ class ProfileControllerTest extends TestCase
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
             ->method('input')
-            ->with('id')
+            ->with('profileId')
             ->willReturn(null);
 
         $this->actionExecutorHandler->expects(self::once())

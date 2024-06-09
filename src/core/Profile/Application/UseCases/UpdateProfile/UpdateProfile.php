@@ -7,6 +7,7 @@ use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
 use Exception;
+use Illuminate\Support\Facades\Date;
 
 class UpdateProfile extends UseCasesService
 {
@@ -64,6 +65,13 @@ class UpdateProfile extends UseCasesService
     private function changeModules(Profile $profile, array $modules): Profile
     {
         $profile->setModulesAggregator($modules);
+
+        return $profile;
+    }
+
+    private function changeUpdateAt(Profile $profile, \DateTime $dateTime): Profile
+    {
+        $profile->updatedAt()->setValue($dateTime);
 
         return $profile;
     }
