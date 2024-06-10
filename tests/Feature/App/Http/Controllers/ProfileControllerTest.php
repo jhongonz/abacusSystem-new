@@ -229,7 +229,7 @@ class ProfileControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['profileId' => 1])
             ->willReturnSelf();
 
@@ -251,7 +251,7 @@ class ProfileControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['profileId' => 1])
             ->willReturnSelf();
 
@@ -277,7 +277,7 @@ class ProfileControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['profileId' => null])
             ->willReturnSelf();
 

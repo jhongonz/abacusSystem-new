@@ -226,7 +226,7 @@ class InstitutionControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['institutionId' => 1])
             ->willReturnSelf();
 
@@ -271,7 +271,7 @@ class InstitutionControllerTest extends TestCase
         $this->app->instance(Request::class, $requestMock);
 
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['institutionId' => null])
             ->willReturnSelf();
 
@@ -434,7 +434,7 @@ class InstitutionControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['institutionId' => 1])
             ->willReturnSelf();
 
@@ -456,7 +456,7 @@ class InstitutionControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['institutionId' => 1])
             ->willReturnSelf();
 

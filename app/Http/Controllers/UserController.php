@@ -83,7 +83,7 @@ class UserController extends Controller implements HasMiddleware
             'password' => $this->makeHashPassword($request->input('password')),
         ];
 
-        $request->mergeIfMissing(['dataUpdate' => $dataUpdate]);
+        $request->merge(['dataUpdate' => $dataUpdate]);
         $this->orchestratorHandler->handler('update-user', $request);
         return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }

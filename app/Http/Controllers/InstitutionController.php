@@ -70,7 +70,7 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function getInstitution(Request $request, ?int $id = null): JsonResponse|string
     {
-        $request->mergeIfMissing(['institutionId' => $id]);
+        $request->merge(['institutionId' => $id]);
         $dataInstitution = $this->orchestratorHandler->handler('detail-institution', $request);
 
         $view = $this->viewFactory->make('institution.institution-form', $dataInstitution)
@@ -111,7 +111,7 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function deleteInstitution(Request $request, int $id): JsonResponse
     {
-        $request->mergeIfMissing(['institutionId' => $id]);
+        $request->merge(['institutionId' => $id]);
 
         try {
             $this->orchestratorHandler->handler('delete-institution', $request);

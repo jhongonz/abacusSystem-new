@@ -107,7 +107,7 @@ class SecurityController extends Controller implements HasMiddleware
 
     private function getEmployee(Request $request, User $user): Employee
     {
-        $request->mergeIfMissing(['employeeId' => $user->employeeId()->value()]);
+        $request->merge(['employeeId' => $user->employeeId()->value()]);
         return $this->orchestratorHandler->handler('retrieve-employee', $request);
     }
 
@@ -116,7 +116,7 @@ class SecurityController extends Controller implements HasMiddleware
      */
     private function getProfile(Request $request, User $user): Profile
     {
-        $request->mergeIfMissing(['profileId' => $user->profileId()->value()]);
+        $request->merge(['profileId' => $user->profileId()->value()]);
 
         $profile = $this->orchestratorHandler->handler('retrieve-profile', $request);
 

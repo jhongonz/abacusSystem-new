@@ -229,7 +229,7 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['moduleId' => null])
             ->willReturnSelf();
 
@@ -387,7 +387,7 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['moduleId' => 1])
             ->willReturnSelf();
 
@@ -409,7 +409,7 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['moduleId' => 1])
             ->willReturnSelf();
 

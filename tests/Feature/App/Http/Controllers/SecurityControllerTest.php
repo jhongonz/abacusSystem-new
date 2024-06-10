@@ -104,7 +104,7 @@ class SecurityControllerTest extends TestCase
         $request = $this->createMock(LoginRequest::class);
 
         $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
@@ -202,7 +202,7 @@ class SecurityControllerTest extends TestCase
         $request = $this->createMock(LoginRequest::class);
 
         $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
@@ -289,7 +289,7 @@ class SecurityControllerTest extends TestCase
         $request = $this->createMock(LoginRequest::class);
 
         $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
@@ -377,7 +377,7 @@ class SecurityControllerTest extends TestCase
         $request = $this->createMock(LoginRequest::class);
 
         $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
@@ -465,7 +465,7 @@ class SecurityControllerTest extends TestCase
         $request = $this->createMock(LoginRequest::class);
 
         $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 

@@ -65,7 +65,7 @@ class ModuleController extends Controller implements HasMiddleware
 
     public function getModule(Request $request, ?int $id = null): JsonResponse
     {
-        $request->mergeIfMissing(['moduleId' => $id]);
+        $request->merge(['moduleId' => $id]);
         $dataModule = $this->orchestratorHandler->handler('detail-module', $request);
 
         $view = $this->viewFactory->make('module.module-form', $dataModule)
@@ -98,7 +98,7 @@ class ModuleController extends Controller implements HasMiddleware
     public function deleteModule(Request $request, int $id): JsonResponse
     {
         try {
-            $request->mergeIfMissing(['moduleId' => $id]);
+            $request->merge(['moduleId' => $id]);
             $this->orchestratorHandler->handler('delete-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($id);

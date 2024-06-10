@@ -69,7 +69,7 @@ class ProfileController extends Controller implements HasMiddleware
     public function deleteProfile(Request $request, int $id): JsonResponse
     {
         try {
-            $request->mergeIfMissing(['profileId' => $id]);
+            $request->merge(['profileId' => $id]);
 
             $this->orchestratorHandler->handler('delete-profile', $request);
             ProfileUpdatedOrDeletedEvent::dispatch($id);
@@ -85,7 +85,7 @@ class ProfileController extends Controller implements HasMiddleware
 
     public function getProfile(Request $request, ?int $id = null): JsonResponse
     {
-        $request->mergeIfMissing(['profileId' => $id]);
+        $request->merge(['profileId' => $id]);
         $dataProfile = $this->orchestratorHandler->handler('detail-profile', $request);
 
         $view = $this->viewFactory->make('profile.profile-form', $dataProfile)

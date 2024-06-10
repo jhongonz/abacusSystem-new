@@ -288,7 +288,7 @@ class UserControllerTest extends TestCase
             ->willReturn('password');
 
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
