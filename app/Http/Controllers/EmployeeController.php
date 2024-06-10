@@ -73,7 +73,7 @@ class EmployeeController extends Controller implements HasMiddleware
         $userId = $employee->userId()->value();
         if (! is_null($userId)) {
 
-            $request->mergeIfMissing([
+            $request->merge([
                 'userId' => $userId,
                 'state' => $employee->state()->value()
             ]);
@@ -87,7 +87,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function getEmployee(Request $request, ?int $employeeId = null): JsonResponse|string
     {
-        $request->mergeIfMissing(['employeeId' => $employeeId]);
+        $request->merge(['employeeId' => $employeeId]);
         $dataEmployee = $this->orchestratorHandler->handler('detail-employee', $request);
 
         $view = $this->viewFactory->make('employee.employee-form', $dataEmployee)
@@ -134,10 +134,10 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function deleteEmployee(Request $request, int $employeeId): JsonResponse
     {
-        $request->mergeIfMissing(['employeeId' => $employeeId]);
+        $request->merge(['employeeId' => $employeeId]);
 
         /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('get-employee', $request);
+        $employee = $this->orchestratorHandler->handler('retrieve-employee', $request);
 
         try {
 
@@ -151,7 +151,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $userId = $employee->userId()->value();
         if (isset($userId)) {
-            $request->mergeIfMissing(['userId' => $userId]);
+            $request->merge(['userId' => $userId]);
             $this->orchestratorHandler->handler('delete-user', $request);
         }
 

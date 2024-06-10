@@ -9,6 +9,7 @@ namespace App\Http\Controllers\ActionExecutors\EmployeeActions;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
+use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Employee;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
@@ -63,8 +64,12 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             'login' => $request->input('login')
         ];
 
+        if (isset($dataUpdate['image'])) {
+            $dataUpdateUser['image'] = $dataUpdate['image'];
+        }
+
         $password = $request->input('password');
-        if (empty($password)) {
+        if (isset($password)) {
             $dataUpdateUser['password'] = $this->makeHashPassword($password);
         }
 

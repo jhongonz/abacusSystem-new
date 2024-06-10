@@ -219,7 +219,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
 
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with([
                 'userId' => 10,
                 'state' => 2
@@ -264,7 +264,7 @@ class EmployeeControllerTest extends TestCase
         $userMock = $this->createMock(User::class);
 
         $request->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with([
                 'userId' => 10,
                 'state' => 1,
@@ -318,7 +318,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(true);
 
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['employeeId' => null])
             ->willReturnSelf();
 
@@ -359,7 +359,7 @@ class EmployeeControllerTest extends TestCase
 
         $id = 1;
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['employeeId' => $id])
             ->willReturnSelf();
 
@@ -399,7 +399,7 @@ class EmployeeControllerTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['employeeId' => null])
             ->willReturnSelf();
 
@@ -542,7 +542,7 @@ class EmployeeControllerTest extends TestCase
         $requestMock = $this->createMock(Request::class);
 
         $requestMock->expects(self::exactly(2))
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();
 
@@ -582,7 +582,7 @@ class EmployeeControllerTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('mergeIfMissing')
+            ->method('merge')
             ->with(['employeeId' => 10])
             ->willReturnSelf();
 
