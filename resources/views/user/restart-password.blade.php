@@ -30,7 +30,7 @@
 				<div class="form-group">
 					<button type="submit" class="btn-restart btn btn-success btn-block">Restablecer <i class="icon-shield-check ml-2"></i></button>
 				</div>
-                
+
                 <a href="" class="ml-auto text-grey-400 btn-home text-dark"><u>Ir a principal</u></a>
 			@else
 				<div class="alert alert-danger alert-dismissible">
@@ -52,7 +52,7 @@ $('.btn-restart').click(function(e){
     e.preventDefault();
 
     axios.post("{{ url('reset-password') }}",{
-        idUser : "{{$idUser}}",
+        userId : "{{$idUser}}",
         password : $('#password').val(),
         password_confirmation : $('#repeat').val(),
     })
@@ -84,7 +84,7 @@ $('.btn-restart').click(function(e){
 
 $('.btn-home').click(function(e){
     e.preventDefault();
-    
+
     window.location.href = "{{ url('/') }}";
 });
 

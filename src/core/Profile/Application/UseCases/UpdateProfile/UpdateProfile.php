@@ -67,4 +67,11 @@ class UpdateProfile extends UseCasesService
 
         return $profile;
     }
+
+    private function changeUpdateAt(Profile $profile, \DateTime $dateTime): Profile
+    {
+        $profile->updatedAt()->setValue($dateTime);
+
+        return $profile;
+    }
 }

@@ -24,8 +24,8 @@ final class DataProviderInstitutionFactory
                         'search' => 'search',
                         'observations' => 'observations',
                         'state' => 1,
-                        'createdAt' => json_decode(json_encode(new DateTime), true),
-                        'updatedAt' => json_decode(json_encode(new DateTime), true),
+                        'createdAt' => new DateTime,
+                        'updatedAt' => new DateTime,
                     ]
                 ]
             ]

@@ -11,11 +11,14 @@ use App\Listeners\EmployeeWarmup;
 use App\Listeners\ProfilesWarmup;
 use App\Listeners\UserRefreshSession;
 use App\Listeners\UserWarmup;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,8 +27,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singletonIf(ImageManager::class, function (Application $app) {
+        $this->app->singletonIf(ImageManagerInterface::class, function (Application $app) {
             return new ImageManager($app->make(Driver::class));
+        });
+
+        $this->app->singletonIf(StatefulGuard::class, function (Application $app) {
+            $authManager = $app->make(AuthManager::class);
+
+            return $authManager->guard();
         });
     }
 

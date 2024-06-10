@@ -2,7 +2,6 @@
 
 namespace App\Events\Profile;
 
-use Core\Profile\Domain\ValueObjects\ProfileId;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,17 +13,17 @@ class ProfileUpdatedOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private ProfileId $profileId;
+    private int $profileId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(ProfileId $id)
+    public function __construct(int $id)
     {
         $this->profileId = $id;
     }
 
-    public function moduleId(): ProfileId
+    public function profileId(): int
     {
         return $this->profileId;
     }

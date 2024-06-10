@@ -2,7 +2,6 @@
 
 namespace App\Events\User;
 
-use Core\User\Domain\ValueObjects\UserId;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,17 +13,17 @@ class UserUpdateOrDeleteEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private UserId $userId;
+    private int $userId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(UserId $id)
+    public function __construct(int $id)
     {
         $this->userId = $id;
     }
 
-    public function userId(): UserId
+    public function userId(): int
     {
         return $this->userId;
     }

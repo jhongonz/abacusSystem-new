@@ -38,9 +38,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeName($data['name']),
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
-            $this->buildEmployeeCreatedAt(
-                $this->getDateTime($data['createdAt']['date'])
-            ),
+            $this->buildEmployeeCreatedAt($data['createdAt']),
         );
 
         $employee->setIdentificationType($this->buildEmployeeIdentificationType($data['identification_type']));
@@ -49,22 +47,20 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
 
-        if (! is_null($data['updatedAt'])) {
-            $employee->setUpdatedAt($this->buildEmployeeUpdatedAt(
-                $this->getDateTime($data['updatedAt']['date'])
-            ));
+        if (isset($data['updatedAt'])) {
+            $employee->setUpdatedAt(
+                $this->buildEmployeeUpdatedAt($data['updatedAt'])
+            );
         }
 
-        if (! is_null($data['birthdate'])) {
-            $employee->setBirthdate($this->buildEmployeeBirthdate(
-                $this->getDateTime($data['birthdate']['date'])
-            ));
+        if (isset($data['birthdate'])) {
+            $employee->setBirthdate($this->buildEmployeeBirthdate($data['birthdate']));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
         $employee->setImage($this->buildEmployeeImage($data['image']));
 
-        if (array_key_exists('search', $data)) {
+        if (isset($data['search'])) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
         }
 
@@ -180,14 +176,6 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployeeImage(?string $image = null): EmployeeImage
     {
         return new EmployeeImage($image);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getDateTime(?string $datetime = null): DateTime
-    {
-        return new DateTime($datetime);
     }
 
     public function buildEmployees(Employee ...$employees): Employees

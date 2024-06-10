@@ -122,7 +122,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
 
             axios.post("{{ route('panel.profile.change-state-profile') }}",{
-                id : $(this).data('id')
+                profileId : $(this).data('id')
             })
             .then(function (response){
                 $('#content-data').DataTable().ajax.reload(null, false);

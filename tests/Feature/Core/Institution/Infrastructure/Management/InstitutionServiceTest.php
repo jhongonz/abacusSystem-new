@@ -76,6 +76,11 @@ class InstitutionServiceTest extends TestCase
     public function test_searchInstitutionById_should_return_object(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionId')
+            ->with(1)
+            ->willReturn($idMock);
+
         $request = new SearchInstitutionByIdRequest($idMock);
 
         $institutionMock = $this->createMock(Institution::class);
@@ -84,7 +89,7 @@ class InstitutionServiceTest extends TestCase
             ->with($request)
             ->willReturn($institutionMock);
 
-        $result = $this->service->searchInstitutionById($idMock);
+        $result = $this->service->searchInstitutionById(1);
 
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($institutionMock, $result);
@@ -97,6 +102,11 @@ class InstitutionServiceTest extends TestCase
     public function test_searchInstitutionById_should_return_null(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionId')
+            ->with(null)
+            ->willReturn($idMock);
+
         $request = new SearchInstitutionByIdRequest($idMock);
 
         $this->searchInstitutionById->expects(self::once())
@@ -104,7 +114,7 @@ class InstitutionServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $result = $this->service->searchInstitutionById($idMock);
+        $result = $this->service->searchInstitutionById(null);
 
         $this->assertNotInstanceOf(Institution::class, $result);
         $this->assertNull($result);
@@ -159,6 +169,11 @@ class InstitutionServiceTest extends TestCase
     public function test_updateInstitution_should_return_object(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionId')
+            ->with(1)
+            ->willReturn($idMock);
+
         $request = new UpdateInstitutionRequest($idMock, []);
 
         $institutionMock = $this->createMock(Institution::class);
@@ -168,7 +183,7 @@ class InstitutionServiceTest extends TestCase
             ->with($request)
             ->willReturn($institutionMock);
 
-        $result = $this->service->updateInstitution($idMock, []);
+        $result = $this->service->updateInstitution(1, []);
 
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($institutionMock, $result);
@@ -181,6 +196,11 @@ class InstitutionServiceTest extends TestCase
     public function test_createInstitution_should_return_object(): void
     {
         $institutionMock = $this->createMock(Institution::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionFromArray')
+            ->with([])
+            ->willReturn($institutionMock);
+
         $request = new CreateInstitutionRequest($institutionMock);
 
         $this->createInstitution->expects(self::once())
@@ -188,7 +208,7 @@ class InstitutionServiceTest extends TestCase
             ->with($request)
             ->willReturn($institutionMock);
 
-        $result = $this->service->createInstitution($institutionMock);
+        $result = $this->service->createInstitution([]);
 
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($institutionMock, $result);
@@ -201,6 +221,11 @@ class InstitutionServiceTest extends TestCase
     public function test_deleteInstitution_should_return_object(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionId')
+            ->with(1)
+            ->willreturn($idMock);
+
         $request = new DeleteInstitutionRequest($idMock);
 
         $this->deleteInstitution->expects(self::once())
@@ -208,7 +233,7 @@ class InstitutionServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $this->service->deleteInstitution($idMock);
+        $this->service->deleteInstitution(1);
         $this->assertTrue(true);
     }
 }

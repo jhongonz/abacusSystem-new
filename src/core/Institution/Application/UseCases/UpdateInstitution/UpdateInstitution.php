@@ -85,4 +85,11 @@ class UpdateInstitution extends UseCasesService
 
         return $institution;
     }
+
+    private function changeUpdatedAt(Institution $institution, \DateTime $dateTime): Institution
+    {
+        $institution->updatedAt()->setValue($dateTime);
+
+        return $institution;
+    }
 }

@@ -98,13 +98,13 @@ class EmployeeFactoryTest extends TestCase
         $this->assertSame($data['search'], $result->search()->value());
         $this->assertInstanceOf(EmployeeSearch::class, $result->search());
 
-        $this->assertSame($data['birthdate'], json_decode(json_encode($result->birthdate()->value()), true));
+        $this->assertSame($data['birthdate'], $result->birthdate()->value());
         $this->assertInstanceOf(EmployeeBirthdate::class, $result->birthdate());
 
-        $this->assertSame($data['createdAt'], json_decode(json_encode($result->createdAt()->value()), true));
+        $this->assertSame($data['createdAt'], $result->createdAt()->value());
         $this->assertInstanceOf(EmployeeCreatedAt::class, $result->createdAt());
 
-        $this->assertSame($data['updatedAt'], json_decode(json_encode($result->updatedAt()->value()), true));
+        $this->assertSame($data['updatedAt'], $result->updatedAt()->value());
         $this->assertInstanceOf(EmployeeUpdateAt::class, $result->updatedAt());
     }
 

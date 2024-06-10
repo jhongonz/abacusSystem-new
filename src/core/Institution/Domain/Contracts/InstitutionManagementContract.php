@@ -8,17 +8,16 @@ namespace Core\Institution\Domain\Contracts;
 
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
-use Core\Institution\Domain\ValueObjects\InstitutionId;
 
 interface InstitutionManagementContract
 {
-    public function searchInstitutionById(InstitutionId $id): ?Institution;
+    public function searchInstitutionById(?int $id): ?Institution;
 
     public function searchInstitutions(array $filters = []): Institutions;
 
-    public function updateInstitution(InstitutionId $id, array $data): Institution;
+    public function updateInstitution(int $id, array $data): Institution;
 
-    public function createInstitution(Institution $institution): Institution;
+    public function createInstitution(array $data): Institution;
 
-    public function deleteInstitution(InstitutionId $id): void;
+    public function deleteInstitution(int $id): void;
 }

@@ -19,17 +19,13 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
     /** @var int */
     private const PRIORITY_DEFAULT = 100;
-
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
 
     private ModuleFactoryContract $moduleFactory;
-
     private ModuleDataTransformerContract $moduleDataTransformer;
     private LoggerInterface $logger;
-
     private int $priority;
-
     private string $keyPrefix;
 
     public function __construct(
@@ -60,6 +56,7 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 
     /**
      * @throws ModuleNotFoundException
+     * @throws Exception
      */
     public function find(ModuleId $id): ?Module
     {
@@ -72,6 +69,11 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 
         if (! is_null($data)) {
             $dataArray = json_decode($data, true);
+            $dataArray['createdAt'] = new \DateTime($dataArray['createdAt']['date']);
+
+            if (! is_null($dataArray['updatedAt'])) {
+                $dataArray['updatedAt'] = new \DateTime($dataArray['updatedAt']['date']);
+            }
 
             /** @var Module */
             return $this->moduleFactory->buildModuleFromArray($dataArray);

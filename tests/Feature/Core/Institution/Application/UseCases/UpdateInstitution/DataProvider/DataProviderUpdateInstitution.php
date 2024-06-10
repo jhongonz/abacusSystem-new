@@ -18,7 +18,8 @@ final class DataProviderUpdateInstitution
                     'shortname' => 'shortname',
                     'logo' => 'logo',
                     'observations' => 'observations',
-                    'state' => 2
+                    'state' => 2,
+                    'updatedAt' => new \DateTime,
                 ]
             ]
         ];

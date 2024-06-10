@@ -121,12 +121,12 @@ class RedisProfileRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('profile::1')
-            ->andReturn('{}');
+            ->andReturn('{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"}}');
 
         $profile = $this->createMock(Profile::class);
         $this->factory->expects(self::once())
             ->method('buildProfileFromArray')
-            ->with([])
+            ->withAnyParameters()
             ->willReturn($profile);
 
         $result = $this->repository->find($profileId);

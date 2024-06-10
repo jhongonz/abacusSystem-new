@@ -20,6 +20,6 @@ class EmployeeWarmup
      */
     public function handle(EmployeeUpdateOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch('employee:warmup '.$event->employeeId()->value());
+        ProcessCommandWarmup::dispatch('employee:warmup '.$event->employeeId());
     }
 }

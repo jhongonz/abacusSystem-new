@@ -20,7 +20,6 @@ use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
-use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Exception;
 
 class InstitutionService implements InstitutionManagementContract
@@ -51,9 +50,11 @@ class InstitutionService implements InstitutionManagementContract
     /**
      * @throws Exception
      */
-    public function searchInstitutionById(InstitutionId $id): ?Institution
+    public function searchInstitutionById(?int $id): ?Institution
     {
-        $request = new SearchInstitutionByIdRequest($id);
+        $request = new SearchInstitutionByIdRequest(
+            $this->institutionFactory->buildInstitutionId($id)
+        );
 
         return $this->searchInstitutionById->execute($request);
     }
@@ -67,7 +68,7 @@ class InstitutionService implements InstitutionManagementContract
         $institutions = $this->searchInstitutions->execute($request);
 
         foreach ($institutions->aggregator() as $item) {
-            $institution = $this->searchInstitutionById($this->institutionFactory->buildInstitutionId($item));
+            $institution = $this->searchInstitutionById($item);
             $institutions->addItem($institution);
         }
 
@@ -77,18 +78,22 @@ class InstitutionService implements InstitutionManagementContract
     /**
      * @throws Exception
      */
-    public function updateInstitution(InstitutionId $id, array $data): Institution
+    public function updateInstitution(int $id, array $data): Institution
     {
-        $request = new UpdateInstitutionRequest($id, $data);
+        $institutionId = $this->institutionFactory->buildInstitutionId($id);
+        $request = new UpdateInstitutionRequest($institutionId, $data);
 
         return $this->updateInstitution->execute($request);
     }
 
     /**
+     * @param array $data
+     * @return Institution
      * @throws Exception
      */
-    public function createInstitution(Institution $institution): Institution
+    public function createInstitution(array $data): Institution
     {
+        $institution = $this->institutionFactory->buildInstitutionFromArray($data);
         $request = new CreateInstitutionRequest($institution);
 
         return $this->createInstitution->execute($request);
@@ -97,9 +102,11 @@ class InstitutionService implements InstitutionManagementContract
     /**
      * @throws Exception
      */
-    public function deleteInstitution(InstitutionId $id): void
+    public function deleteInstitution(int $id): void
     {
-        $request = new DeleteInstitutionRequest($id);
+        $request = new DeleteInstitutionRequest(
+            $this->institutionFactory->buildInstitutionId($id)
+        );
 
         $this->deleteInstitution->execute($request);
     }

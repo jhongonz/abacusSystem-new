@@ -26,6 +26,10 @@ class CreateInstitution extends UseCasesService
         $this->validateRequest($request, CreateInstitutionRequest::class);
 
         /** @var CreateInstitutionRequest $request */
-        return $this->institutionRepository->persistInstitution($request->institution());
+        $institution = $request->institution();
+        $institution->refreshSearch();
+
+        /** @var CreateInstitutionRequest $request */
+        return $this->institutionRepository->persistInstitution($institution);
     }
 }

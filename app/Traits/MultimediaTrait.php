@@ -7,16 +7,16 @@
 namespace App\Traits;
 
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManager;
+use Intervention\Image\Interfaces\ImageManagerInterface;
 
 trait MultimediaTrait
 {
     private const IMAGE_PATH_TMP = '/images/tmp/';
     private const IMAGE_PATH_FULL = '/images/full/';
     private const IMAGE_PATH_SMALL = '/images/small/';
-    private ImageManager $imageManager;
+    private ImageManagerInterface $imageManager;
 
-    public function setImageManager(ImageManager $imageManager): void
+    public function setImageManager(ImageManagerInterface $imageManager): void
     {
         $this->imageManager = $imageManager;
     }
