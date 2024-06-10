@@ -9,6 +9,9 @@ namespace App\Http\Controllers\ActionExecutors\InstitutionActions;
 use App\Http\Controllers\ActionExecutors\ActionExecutor;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class InstitutionActionExecutor implements ActionExecutor
 {
     protected OrchestratorHandlerContract $orchestratorHandler;

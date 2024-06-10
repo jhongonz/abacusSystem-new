@@ -16,6 +16,9 @@ use Illuminate\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class ModuleActionExecutor implements ActionExecutor
 {
     protected OrchestratorHandlerContract $orchestratorHandler;

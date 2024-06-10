@@ -25,7 +25,7 @@ class CreateProfileActionExecutor extends ProfileActionExecutor
     public function invoke(Request $request): Profile
     {
         $modulesAggregator = $this->getModulesAggregator($request);
-        $request->mergeIfMissing(['modulesAggregator' => json_encode($modulesAggregator)]);
+        $request->merge(['modulesAggregator' => json_encode($modulesAggregator)]);
 
         return $this->orchestratorHandler->handler('create-profile', $request);
     }
