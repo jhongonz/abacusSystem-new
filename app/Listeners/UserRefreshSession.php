@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\User\RefreshModulesSession;
+use App\Events\User\RefreshModulesSessionEvent;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Illuminate\Contracts\Session\Session;
@@ -26,7 +26,7 @@ class UserRefreshSession
     /**
      * Handle the event.
      */
-    public function handle(RefreshModulesSession $event): void
+    public function handle(RefreshModulesSessionEvent $event): void
     {
         /** @var Profile $profileSession */
         $profileSession = $this->session->get('profile');

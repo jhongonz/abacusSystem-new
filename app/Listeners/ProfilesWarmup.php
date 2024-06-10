@@ -6,6 +6,9 @@ use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ProfilesWarmup
 {
     /**
