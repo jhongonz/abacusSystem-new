@@ -53,7 +53,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             $filename = $this->saveImage($imageToken);
             $dataUpdate['image'] = $filename;
         }
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
 
         /** @var Employee $employee */
         $employee = $this->orchestratorHandler->handler('update-employee', $request);
@@ -68,7 +68,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             $dataUpdateUser['password'] = $this->makeHashPassword($password);
         }
 
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdateUser)]);
+        $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);
         $this->orchestratorHandler->handler('update-user', $request);
 
         return $employee;

@@ -35,9 +35,7 @@ class UserFactory implements UserFactoryContract
             $this->buildLogin($data['login']),
             $this->buildPassword($data['password']),
             $this->buildState($data['state']),
-            $this->buildCreatedAt(
-                new DateTime($data['createdAt']['date'])
-            )
+            $this->buildCreatedAt($data['createdAt'])
         );
         $user->photo()->setValue($data['photo']);
 

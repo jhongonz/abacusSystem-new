@@ -42,7 +42,7 @@ class ViewServiceProvider extends ServiceProvider
             $requestService = $this->app->make(Request::class);
 
             $isAjax = $requestService->ajax();
-            if ($this->session->get('user') !== null && $isAjax) {
+            if ($this->session->get('user') !== null && ! $isAjax) {
                 View::composer('layouts.menu', MenuComposer::class);
             }
 

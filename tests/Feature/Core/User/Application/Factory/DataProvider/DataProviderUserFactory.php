@@ -22,7 +22,7 @@ final class DataProviderUserFactory
                         'login' => 'login',
                         'password' => '12345',
                         'state' => 2,
-                        'createdAt' => json_decode(json_encode(new DateTime('2024-04-21 10:24:00')), true),
+                        'createdAt' => new DateTime('2024-04-21 10:24:00'),
                         'photo' => 'image.jpg',
                     ],
                 ],

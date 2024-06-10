@@ -28,8 +28,8 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
         /** @var Employee $employee */
         $employee = $this->orchestratorHandler->handler('create-employee', $request);
 
-        $request->mergeIfMissing(['image' => $employee->image()->value()]);
-        $request->mergeIfMissing(['employeeId' => $employee->id()->value()]);
+        $request->merge(['image' => $employee->image()->value()]);
+        $request->merge(['employeeId' => $employee->id()->value()]);
 
         /** @var User $user */
         $user = $this->orchestratorHandler->handler('create-user', $request);

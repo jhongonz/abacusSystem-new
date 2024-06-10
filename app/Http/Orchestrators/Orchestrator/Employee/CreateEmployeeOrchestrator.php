@@ -36,16 +36,19 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
     {
         $dataEmployee = [
             'id' => $request->input('employeeId'),
-            'identifier' => $request->input('identifier'),
+            'userId' => null,
+            'identification' => $request->input('identifier'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
-            'typeDocument' => $request->input('typeDocument'),
+            'identification_type' => $request->input('typeDocument'),
             'observations' => $request->input('observations'),
             'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
-            'createAt' => $this->getCurrentTime(),
-            'state' => ValueObjectStatus::STATE_NEW
+            'createdAt' => $this->getCurrentTime(),
+            'state' => ValueObjectStatus::STATE_NEW,
+            'image' => null
         ];
 
         $token = $request->input('token');
