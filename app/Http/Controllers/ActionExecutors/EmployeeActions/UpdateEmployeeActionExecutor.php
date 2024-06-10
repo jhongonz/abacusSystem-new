@@ -9,7 +9,6 @@ namespace App\Http\Controllers\ActionExecutors\EmployeeActions;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
-use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Employee;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
@@ -38,8 +37,8 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
     {
         $birthdate = $request->date('birthdate', 'd/m/Y');
         $dataUpdate = [
-            'identifier' => $request->input('identifier'),
-            'typeDocument' => $request->input('typeDocument'),
+            'identification' => $request->input('identifier'),
+            'identification_type' => $request->input('typeDocument'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
             'email' => $request->input('email'),
