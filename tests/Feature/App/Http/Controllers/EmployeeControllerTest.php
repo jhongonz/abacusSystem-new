@@ -2,18 +2,16 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
-use Carbon\Carbon;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\User\Domain\User;
-use Core\User\Domain\ValueObjects\UserId;
-use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,7 +35,7 @@ class EmployeeControllerTest extends TestCase
     private ViewFactory|MockObject $viewFactory;
     private ImageManagerInterface|MockObject $imageManager;
     private LoggerInterface|MockObject $logger;
-    private Hasher|MockObject $hasher;
+    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private EmployeeController $controller;
 
     /**
@@ -50,12 +48,12 @@ class EmployeeControllerTest extends TestCase
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->hasher = $this->createMock(Hasher::class);
+        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
 
         $this->controller = new EmployeeController(
             $this->orchestrator,
+            $this->actionExecutorHandler,
             $this->imageManager,
-            $this->hasher,
             $this->viewFactory,
             $this->logger
         );
@@ -64,12 +62,12 @@ class EmployeeControllerTest extends TestCase
     public function tearDown(): void
     {
         unset(
-            $this->hasher,
             $this->orchestrator,
             $this->viewFactory,
             $this->imageManager,
             $this->logger,
-            $this->controller
+            $this->controller,
+            $this->actionExecutorHandler
         );
 
         parent::tearDown();
@@ -443,19 +441,11 @@ class EmployeeControllerTest extends TestCase
 
         $employeeMock = $this->createMock(Employee::class);
 
-        $imageMock = $this->createMock(EmployeeImage::class);
-        $imageMock->expects(self::once())
-            ->method('value')
-            ->willReturn('image.jpg');
-        $employeeMock->expects(self::once())
-            ->method('image')
-            ->willReturn($imageMock);
-
         $employeeIdMock = $this->createMock(EmployeeId::class);
-        $employeeIdMock->expects(self::exactly(3))
+        $employeeIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $employeeMock->expects(self::exactly(3))
+        $employeeMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($employeeIdMock);
 
@@ -463,33 +453,15 @@ class EmployeeControllerTest extends TestCase
         $employeeUserId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $employeeUserId->expects(self::once())
-            ->method('setValue')
-            ->with(1)
-            ->willReturnSelf();
-        $employeeMock->expects(self::exactly(3))
+
+        $employeeMock->expects(self::exactly(2))
             ->method('userId')
             ->willReturn($employeeUserId);
 
-        $userMock = $this->createMock(User::class);
-
-        $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-        $userMock->expects(self::once())
-            ->method('id')
-            ->willReturn($userIdMock);
-
-        $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $this->orchestrator->expects(self::exactly(2))
-            ->method('handler')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-employee-action', $request)
+            ->willReturn($employeeMock);
 
         $result = $this->controller->storeEmployee($request);
 
@@ -510,9 +482,9 @@ class EmployeeControllerTest extends TestCase
             ->with('employeeId')
             ->willReturn(null);
 
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('create-employee', $request)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('create-employee-action', $request)
             ->willThrowException(new \Exception('Can not create new employee'));
 
         $this->logger->expects(self::once())
@@ -639,60 +611,10 @@ class EmployeeControllerTest extends TestCase
     public function test_storeEmployee_should_return_json_response_when_update_object(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
-        $request->expects(self::exactly(13))
-            ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                1,
-                'identifier',
-                'typeDocument',
-                'name',
-                'lastname',
-                'email',
-                'phone',
-                'address',
-                'observations',
-                'token',
-                1,
-                'login',
-                'password'
-            );
-
-        $carbonDateMock = $this->createMock(Carbon::class);
-        $carbonDateMock->expects(self::once())
-            ->method('format')
-            ->with('Y-m-d');
-
         $request->expects(self::once())
-            ->method('date')
-            ->with('birthdate', 'd/m/Y')
-            ->willReturn($carbonDateMock);
-
-        $request->expects(self::exactly(2))
-            ->method('mergeIfMissing')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $imageMock = $this->createMock(ImageInterface::class);
-        $imageMock->expects(self::exactly(2))
-            ->method('save')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $imageMock->expects(self::once())
-            ->method('resize')
-            ->with(150, 150)
-            ->willReturnSelf();
-
-        $this->imageManager->expects(self::once())
-            ->method('read')
-            ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
-            ->willReturn($imageMock);
-
-        $this->hasher->expects(self::once())
-            ->method('make')
-            ->with('password')
-            ->willReturn('password');
+            ->method('input')
+            ->with('employeeId')
+            ->willReturn(1);
 
         $employeeMock = $this->createMock(Employee::class);
 
@@ -712,11 +634,10 @@ class EmployeeControllerTest extends TestCase
             ->method('userId')
             ->willReturn($employeeUserIdMock);
 
-        $userMock = $this->createMock(User::class);
-        $this->orchestrator->expects(self::exactly(2))
-            ->method('handler')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('update-employee-action')
+            ->willReturn($employeeMock);
 
         $result = $this->controller->storeEmployee($request);
 
@@ -732,40 +653,14 @@ class EmployeeControllerTest extends TestCase
     public function test_storeEmployee_should_return_json_response_with_exception_when_update_object(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
-        $request->expects(self::exactly(10))
+        $request->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                1,
-                'identifier',
-                'typeDocument',
-                'name',
-                'lastname',
-                'email',
-                'phone',
-                'address',
-                'observations',
-                'token',
-            );
+            ->with('employeeId')
+            ->willReturn(1);
 
-        $carbonDateMock = $this->createMock(Carbon::class);
-        $carbonDateMock->expects(self::once())
-            ->method('format')
-            ->with('Y-m-d');
-
-        $request->expects(self::once())
-            ->method('date')
-            ->with('birthdate', 'd/m/Y')
-            ->willReturn($carbonDateMock);
-
-        $request->expects(self::once())
-            ->method('mergeIfMissing')
-            ->withAnyParameters()
-            ->willReturnSelf();
-
-        $this->orchestrator->expects(self::once())
-            ->method('handler')
-            ->with('update-employee', $request)
+        $this->actionExecutorHandler->expects(self::once())
+            ->method('invoke')
+            ->with('update-employee-action', $request)
             ->willThrowException(new \Exception('Can not update employee'));
 
         $this->logger->expects(self::once())

@@ -9,6 +9,7 @@ use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -22,17 +23,20 @@ class UserController extends Controller implements HasMiddleware
     use UserTrait;
 
     private OrchestratorHandlerContract $orchestratorHandler;
+    private UrlGenerator $urlGenerator;
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
         Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
+        UrlGenerator $urlGenerator
     ) {
         parent::__construct($logger, $viewFactory);
         $this->setHasher($hasher);
 
         $this->orchestratorHandler = $orchestratorHandler;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function index(): JsonResponse|string
@@ -56,7 +60,7 @@ class UserController extends Controller implements HasMiddleware
         /** @var Employee $employee */
         $employee = $this->orchestratorHandler->handler('retrieve-employee', $request);
 
-        $link = url('reset'.'/'.$employee->userId()->value());
+        $link = $this->urlGenerator->route('user.reset-account', ['id' => $employee->userId()->value()]);
 
         return new JsonResponse(['link' => $link]);
     }

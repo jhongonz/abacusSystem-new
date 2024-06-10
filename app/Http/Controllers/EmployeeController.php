@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
-use Core\User\Domain\User;
 use Exception;
-use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -28,19 +27,20 @@ class EmployeeController extends Controller implements HasMiddleware
     use UserTrait;
 
     private OrchestratorHandlerContract $orchestratorHandler;
+    private ActionExecutorHandler $actionExecutorHandler;
 
     public function __construct(
         OrchestratorHandlerContract $orchestrators,
+        ActionExecutorHandler $actionExecutorHandler,
         ImageManagerInterface $imageManager,
-        Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger, $viewFactory);
         $this->setImageManager($imageManager);
-        $this->setHasher($hasher);
 
         $this->orchestratorHandler = $orchestrators;
+        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -99,10 +99,10 @@ class EmployeeController extends Controller implements HasMiddleware
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('employeeId'))) ? 'createEmployee' : 'updateEmployee';
+            $method = (is_null($request->input('employeeId'))) ? 'create-employee-action' : 'update-employee-action';
 
             /** @var Employee $employee */
-            $employee = $this->{$method}($request);
+            $employee = $this->actionExecutorHandler->invoke($method, $request);
 
             EmployeeUpdateOrDeletedEvent::dispatch($employee->id()->value());
             UserUpdateOrDeleteEvent::dispatch($employee->userId()->value());
@@ -150,78 +150,12 @@ class EmployeeController extends Controller implements HasMiddleware
         }
 
         $userId = $employee->userId()->value();
-        if (! is_null($userId)) {
+        if (isset($userId)) {
             $request->mergeIfMissing(['userId' => $userId]);
             $this->orchestratorHandler->handler('delete-user', $request);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function updateEmployee(StoreEmployeeRequest $request): Employee
-    {
-        $birthdate = $request->date('birthdate', 'd/m/Y');
-        $dataUpdate = [
-            'identifier' => $request->input('identifier'),
-            'typeDocument' => $request->input('typeDocument'),
-            'name' => $request->input('name'),
-            'lastname' => $request->input('lastname'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
-            'observations' => $request->input('observations'),
-            'birthdate' => $birthdate->format('Y-m-d'),
-        ];
-
-        $imageToken = $request->input('token');
-        if (! is_null($imageToken)) {
-            $filename = $this->saveImage($imageToken);
-            $dataUpdate['image'] = $filename;
-        }
-
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
-        $employee = $this->orchestratorHandler->handler('update-employee', $request);
-        $this->updateUser($request);
-
-        return $employee;
-    }
-
-    private function updateUser(StoreEmployeeRequest $request): User
-    {
-        $dataUpdateUser = [
-            'profileId' => $request->input('profile'),
-            'login' => $request->input('login')
-        ];
-
-        $password = $request->input('password');
-        if (! is_null($password)) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($password);
-        }
-
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdateUser)]);
-        return $this->orchestratorHandler->handler('update-user', $request);
-    }
-
-    private function createEmployee(StoreEmployeeRequest $request): Employee
-    {
-        /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('create-employee', $request);
-
-        $user = $this->createUser($request, $employee);
-        $employee->userId()->setValue($user->id()->value());
-
-        return $employee;
-    }
-
-    private function createUser(StoreEmployeeRequest $request, Employee $employee): User
-    {
-        $request->mergeIfMissing(['image' => $employee->image()->value()]);
-        $request->mergeIfMissing(['employeeId' => $employee->id()->value()]);
-
-        return $this->orchestratorHandler->handler('create-user', $request);
     }
 
     /**

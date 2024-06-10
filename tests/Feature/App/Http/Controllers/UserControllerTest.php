@@ -10,6 +10,7 @@ use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\User\Domain\User;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,6 +32,7 @@ class UserControllerTest extends TestCase
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
     private Hasher|MockObject $hasher;
+    private UrlGenerator|MockObject $urlGenerator;
     private UserController $controller;
 
     /**
@@ -43,11 +45,13 @@ class UserControllerTest extends TestCase
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
+        $this->urlGenerator = $this->createMock(UrlGenerator::class);
         $this->controller = new UserController(
             $this->orchestrator,
             $this->hasher,
             $this->viewFactory,
-            $this->logger
+            $this->logger,
+            $this->urlGenerator
         );
     }
 
@@ -58,7 +62,8 @@ class UserControllerTest extends TestCase
             $this->viewFactory,
             $this->logger,
             $this->orchestrator,
-            $this->hasher
+            $this->hasher,
+            $this->urlGenerator
         );
         parent::tearDown();
     }
@@ -231,12 +236,18 @@ class UserControllerTest extends TestCase
             ->with('retrieve-employee', $requestMock)
             ->willReturn($employeeMock);
 
+        $link = 'http://localhost/reset-account/1';
+        $this->urlGenerator->expects(self::once())
+            ->method('route')
+            ->with('user.reset-account', ['id' => 1])
+            ->willReturn($link);
+
         $result = $this->controller->validateAccount($requestMock);
 
         $dataResult = $result->getData(true);
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertArrayHasKey('link', $dataResult);
-        $this->assertSame('http://localhost/reset/1', $dataResult['link']);
+        $this->assertSame($link, $dataResult['link']);
     }
 
     /**
