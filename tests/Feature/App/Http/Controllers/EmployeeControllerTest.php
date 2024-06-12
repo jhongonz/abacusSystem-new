@@ -187,11 +187,6 @@ class EmployeeControllerTest extends TestCase
     public function test_changeStateEmployee_should_activate_and_return_json_response(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::once())
-            ->method('input')
-            ->with('id')
-            ->willReturn(10);
-
         $employeeMock = $this->createMock(Employee::class);
 
         $employeeUserId = $this->createMock(EmployeeUserId::class);
@@ -238,10 +233,6 @@ class EmployeeControllerTest extends TestCase
     public function test_changeStateEmployee_should_inactivate_and_return_json_response(): void
     {
         $request = $this->createMock(Request::class);
-        $request->expects(self::once())
-            ->method('input')
-            ->with('id')
-            ->willReturn(10);
 
         $stateMock = $this->createMock(EmployeeState::class);
         $stateMock->expects(self::once())
@@ -435,9 +426,9 @@ class EmployeeControllerTest extends TestCase
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('employeeId')
-            ->willReturn(null);
+            ->willReturn(false);
 
         $employeeMock = $this->createMock(Employee::class);
 
@@ -478,9 +469,9 @@ class EmployeeControllerTest extends TestCase
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('employeeId')
-            ->willReturn(null);
+            ->willReturn(false);
 
         $this->actionExecutorHandler->expects(self::once())
             ->method('invoke')
@@ -612,9 +603,9 @@ class EmployeeControllerTest extends TestCase
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('employeeId')
-            ->willReturn(1);
+            ->willReturn(true);
 
         $employeeMock = $this->createMock(Employee::class);
 
@@ -654,9 +645,9 @@ class EmployeeControllerTest extends TestCase
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('employeeId')
-            ->willReturn(1);
+            ->willReturn(true);
 
         $this->actionExecutorHandler->expects(self::once())
             ->method('invoke')

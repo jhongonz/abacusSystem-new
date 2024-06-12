@@ -37,6 +37,7 @@ class ProfileUpdatedOrDeletedEventTest extends TestCase
         $result = $this->event->broadcastOn();
 
         $this->assertIsArray($result);
+        $this->assertCount(1, $result);
         foreach ($result as $item) {
             $this->assertInstanceOf(PrivateChannel::class, $item);
         }
