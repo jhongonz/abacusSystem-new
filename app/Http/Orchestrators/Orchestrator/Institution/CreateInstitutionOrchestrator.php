@@ -43,9 +43,8 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'state' => ValueObjectStatus::STATE_NEW
         ];
 
-        $token = $request->input('token');
-        if (! is_null($token)) {
-            $filename = $this->saveImage($token);
+        if ($request->filled('token')) {
+            $filename = $this->saveImage($request->input('token'));
             $dataInstitution['logo'] = $filename;
         }
 

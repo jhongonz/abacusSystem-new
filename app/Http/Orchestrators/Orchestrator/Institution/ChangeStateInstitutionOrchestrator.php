@@ -27,7 +27,7 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
      */
     public function make(Request $request): Institution
     {
-        $institutionId = $request->input('id');
+        $institutionId = $request->input('institutionId');
 
         /** @var Institution $institution */
         $institution = $this->institutionManagement->searchInstitutionById($institutionId);

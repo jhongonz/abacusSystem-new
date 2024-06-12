@@ -9,6 +9,9 @@ namespace App\Http\Orchestrators\Orchestrator\Institution;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class InstitutionOrchestrator implements Orchestrator
 {
     protected InstitutionManagementContract $institutionManagement;
