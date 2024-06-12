@@ -9,6 +9,9 @@ namespace App\Http\Orchestrators\Orchestrator\Employee;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class EmployeeOrchestrator implements Orchestrator
 {
     protected EmployeeManagementContract $employeeManagement;

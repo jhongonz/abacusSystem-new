@@ -43,7 +43,7 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @inheritDoc
+     * @return string
      */
     public function canOrchestrate(): string
     {

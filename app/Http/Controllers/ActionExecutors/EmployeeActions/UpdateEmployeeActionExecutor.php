@@ -48,9 +48,8 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             'birthdate' => $birthdate->format('Y-m-d'),
         ];
 
-        $imageToken = $request->input('token');
-        if (isset($imageToken)) {
-            $filename = $this->saveImage($imageToken);
+        if ($request->filled('token')) {
+            $filename = $this->saveImage($request->input('token'));
             $dataUpdate['image'] = $filename;
         }
         $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
@@ -67,9 +66,8 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             $dataUpdateUser['image'] = $dataUpdate['image'];
         }
 
-        $password = $request->input('password');
-        if (isset($password)) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($password);
+        if ($request->filled('password')) {
+            $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
         }
 
         $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);

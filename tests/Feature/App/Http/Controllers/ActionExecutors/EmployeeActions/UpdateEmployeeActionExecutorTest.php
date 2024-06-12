@@ -88,6 +88,11 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             );
 
         $requestMock->expects(self::exactly(2))
+            ->method('filled')
+            ->withAnyParameters()
+            ->willReturn(true);
+
+        $requestMock->expects(self::exactly(2))
             ->method('merge')
             ->withAnyParameters()
             ->willReturnSelf();

@@ -2,7 +2,6 @@
 
 namespace App\Events\Profile;
 
-use Core\Profile\Domain\ValueObjects\ModuleId;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
