@@ -10,8 +10,8 @@
         "customPath": ".\/vendor\/bin\/phpunit"
     },
     "logs": {
-        "text": ".\/var\/infection.log",
-        "html": ".\/var\/infection.html"
+        "text": ".\/var\/infection\/infection.log",
+        "html": ".\/var\/infection\/infection.html"
     },
     "mutators": {
         "@default": true
