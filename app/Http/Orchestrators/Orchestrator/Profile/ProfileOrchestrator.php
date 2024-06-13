@@ -9,6 +9,9 @@ namespace App\Http\Orchestrators\Orchestrator\Profile;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class ProfileOrchestrator implements Orchestrator
 {
     protected ProfileManagementContract $profileManagement;

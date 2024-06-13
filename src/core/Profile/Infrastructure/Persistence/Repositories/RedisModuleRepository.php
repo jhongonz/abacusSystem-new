@@ -100,11 +100,6 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
         return $module;
     }
 
-    private function moduleKey(ModuleId $id): string
-    {
-        return sprintf(self::MODULE_KEY_FORMAT, $this->keyPrefix, $id->value());
-    }
-
     public function getAll(array $filters = []): ?Modules
     {
         return null;
@@ -118,5 +113,10 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     public function deleteModule(ModuleId $id): void
     {
         Redis::delete($this->moduleKey($id));
+    }
+
+    private function moduleKey(ModuleId $id): string
+    {
+        return sprintf(self::MODULE_KEY_FORMAT, $this->keyPrefix, $id->value());
     }
 }

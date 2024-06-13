@@ -29,7 +29,7 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
     public function make(Request $request): array
     {
         $moduleId = $request->input('moduleId');
-        if (! is_null($moduleId)) {
+        if (isset($moduleId)) {
 
             /** @var Module $module */
             $module = $this->moduleManagement->searchModuleById($moduleId);
