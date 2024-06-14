@@ -77,7 +77,7 @@ class ModuleController extends Controller implements HasMiddleware
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('moduleId'))) ? 'create-module-action' : 'update-module-action';
+            $method = (! $request->filled('moduleId')) ? 'create-module-action' : 'update-module-action';
 
             /** @var Module $module */
             $module = $this->actionExecutorHandler->invoke($method, $request);
