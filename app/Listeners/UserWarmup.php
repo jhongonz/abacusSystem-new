@@ -5,6 +5,9 @@ namespace App\Listeners;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Jobs\ProcessCommandWarmup;
 
+/**
+ * @codeCoverageIgnore
+ */
 class UserWarmup
 {
     /**
@@ -20,6 +23,6 @@ class UserWarmup
      */
     public function handle(UserUpdateOrDeleteEvent $event): void
     {
-        ProcessCommandWarmup::dispatch('user:warmup '.$event->userId());
+        ProcessCommandWarmup::dispatch(sprintf('user:warmup %d', $event->userId()));
     }
 }

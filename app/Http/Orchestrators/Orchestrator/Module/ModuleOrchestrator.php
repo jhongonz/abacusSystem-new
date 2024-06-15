@@ -9,6 +9,9 @@ namespace App\Http\Orchestrators\Orchestrator\Module;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class ModuleOrchestrator implements Orchestrator
 {
     protected ModuleManagementContract $moduleManagement;

@@ -269,9 +269,9 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('moduleId')
-            ->willReturn(null);
+            ->willReturn(false);
 
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -301,9 +301,9 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('moduleId')
-            ->willReturn(null);
+            ->willReturn(false);
 
         $this->actionExecutorHandler->expects(self::once())
             ->method('invoke')
@@ -328,9 +328,9 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('moduleId')
-            ->willReturn(1);
+            ->willReturn(true);
 
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -360,9 +360,9 @@ class ModuleControllerTest extends TestCase
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('filled')
             ->with('moduleId')
-            ->willReturn(1);
+            ->willReturn(true);
 
         $this->actionExecutorHandler->expects(self::once())
             ->method('invoke')

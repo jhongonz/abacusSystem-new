@@ -98,9 +98,12 @@ class EmployeesTest extends TestCase
 
         $this->dataTransformer->write($this->employee);
         $result = $this->dataTransformer->read();
+        $dataResult = $result[Employee::TYPE];
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey(Employee::TYPE, $result);
+        $this->assertIsArray($dataResult);
+        $this->assertArrayHasKey('id', $dataResult);
     }
 
     /**
@@ -170,5 +173,6 @@ class EmployeesTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertArrayNotHasKey(Employee::TYPE, $result);
+        $this->assertArrayHasKey('state_literal', $result);
     }
 }

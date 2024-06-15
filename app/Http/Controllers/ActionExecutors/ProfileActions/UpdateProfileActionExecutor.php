@@ -31,7 +31,7 @@ class UpdateProfileActionExecutor extends ProfileActionExecutor
             'modules' => $modulesAggregator,
         ];
 
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
         return $this->orchestratorHandler->handler('update-profile', $request);
     }
 

@@ -59,19 +59,17 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function changeStateEmployee(Request $request): JsonResponse
     {
-        $employeeId = $request->input('id');
-
         try {
             /** @var Employee $employee */
             $employee = $this->orchestratorHandler->handler('change-state-employee', $request);
         } catch (Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$employeeId, $exception->getTrace());
+            $this->logger->error('Employee can not be updated with id: '.$request->input('id'), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $userId = $employee->userId()->value();
-        if (! is_null($userId)) {
+        if (isset($userId)) {
 
             $request->merge([
                 'userId' => $userId,
@@ -99,7 +97,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('employeeId'))) ? 'create-employee-action' : 'update-employee-action';
+            $method = (! $request->filled('employeeId')) ? 'create-employee-action' : 'update-employee-action';
 
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);

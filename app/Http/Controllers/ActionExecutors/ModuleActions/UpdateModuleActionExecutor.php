@@ -41,7 +41,7 @@ class UpdateModuleActionExecutor extends ModuleActionExecutor
             'key' => $request->input('key'),
         ];
 
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
         return $this->orchestratorHandler->handler('update-module', $request);
     }
 

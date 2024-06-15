@@ -11,7 +11,6 @@ use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 
@@ -34,6 +33,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): Employee
     {
+        $birthdate = $request->date('birthdate', 'd/m/Y');
         $dataEmployee = [
             'id' => $request->input('employeeId'),
             'userId' => null,
@@ -45,15 +45,14 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => DateTime::createFromFormat('d/m/Y', $request->input('birthdate')),
+            'birthdate' => $birthdate->format('Y-m-d'),
             'createdAt' => $this->getCurrentTime(),
             'state' => ValueObjectStatus::STATE_NEW,
             'image' => null
         ];
 
-        $token = $request->input('token');
-        if (! is_null($token)) {
-            $filename = $this->saveImage($token);
+        if ($request->filled('token')) {
+            $filename = $this->saveImage($request->input('token'));
             $dataEmployee['image'] = $filename;
         }
 

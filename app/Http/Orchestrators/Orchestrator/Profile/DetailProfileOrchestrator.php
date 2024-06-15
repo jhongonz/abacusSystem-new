@@ -39,14 +39,14 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         $profileId = $request->input('profileId');
         $profile = null;
 
-        if (! is_null($profileId)) {
+        if (isset($profileId)) {
 
             /** @var Profile $profile */
             $profile = $this->profileManagement->searchProfileById($profileId);
         }
 
         $modules = $this->moduleManagement->searchModules();
-        $privileges = $this->retrievePrivilegesProfile($profile, $modules);
+        $privileges = $this->retrievePrivilegesProfile($modules, $profile);
 
         return [
             'profileId' => $profileId,
@@ -64,9 +64,9 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         return 'detail-profile';
     }
 
-    private function retrievePrivilegesProfile(?Profile $profile, Modules $modules): array
+    private function retrievePrivilegesProfile(Modules $modules, ?Profile $profile): array
     {
-        $modulesToProfile = (! is_null($profile)) ? $profile->modulesAggregator() : [];
+        $modulesToProfile = (isset($profile)) ? $profile->modulesAggregator() : [];
         $parents = $this->config->get('menu.options');
         $privileges = [];
 

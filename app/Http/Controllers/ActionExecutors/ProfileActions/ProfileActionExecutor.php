@@ -9,7 +9,12 @@ namespace App\Http\Controllers\ActionExecutors\ProfileActions;
 use App\Http\Controllers\ActionExecutors\ActionExecutor;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * @codeCoverageIgnore
+ */
+#[CoversClass(ProfileActionExecutor::class)]
 abstract class ProfileActionExecutor implements ActionExecutor
 {
     protected OrchestratorHandlerContract $orchestratorHandler;

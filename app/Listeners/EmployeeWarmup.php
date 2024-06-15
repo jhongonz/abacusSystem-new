@@ -5,6 +5,9 @@ namespace App\Listeners;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EmployeeWarmup
 {
     /**
@@ -20,6 +23,6 @@ class EmployeeWarmup
      */
     public function handle(EmployeeUpdateOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch('employee:warmup '.$event->employeeId());
+        ProcessCommandWarmup::dispatch(sprintf('employee:warmup %d', $event->employeeId()));
     }
 }

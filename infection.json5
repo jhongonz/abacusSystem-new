@@ -1,0 +1,19 @@
+{
+    "timeout": 10,
+    "source": {
+        "directories": [
+            "src",
+            "app"
+        ]
+    },
+    "phpUnit": {
+        "customPath": ".\/vendor\/bin\/phpunit"
+    },
+    "logs": {
+        "text": ".\/var\/infection\/infection.log",
+        "html": ".\/var\/infection\/infection.html"
+    },
+    "mutators": {
+        "@default": true
+    }
+}

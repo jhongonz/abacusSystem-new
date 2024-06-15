@@ -41,12 +41,12 @@ class UpdateInstitutionActionExecutor extends InstitutionActionExecutor
         ];
 
         $token = $request->input('token');
-        if (! is_null($token)) {
+        if (isset($token)) {
             $filename = $this->saveImage($token);
             $dataUpdate['logo'] = $filename;
         }
 
-        $request->mergeIfMissing(['dataUpdate' => json_encode($dataUpdate)]);
+        $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
         return $this->orchestratorHandler->handler('update-institution', $request);
     }
 

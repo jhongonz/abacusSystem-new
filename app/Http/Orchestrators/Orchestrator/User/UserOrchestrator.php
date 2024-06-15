@@ -9,6 +9,9 @@ namespace App\Http\Orchestrators\Orchestrator\User;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\User\Domain\Contracts\UserManagementContract;
 
+/**
+ * @codeCoverageIgnore
+ */
 abstract class UserOrchestrator implements Orchestrator
 {
     protected UserManagementContract $userManagement;

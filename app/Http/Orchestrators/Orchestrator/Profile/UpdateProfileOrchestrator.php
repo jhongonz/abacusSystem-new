@@ -27,11 +27,10 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): Profile
     {
-        $profileId = $request->input('profileId');
         $dataUpdate = json_decode($request->input('dataUpdate'), true);
         $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
-        return $this->profileManagement->updateProfile($profileId, $dataUpdate);
+        return $this->profileManagement->updateProfile($request->input('profileId'), $dataUpdate);
     }
 
     /**
