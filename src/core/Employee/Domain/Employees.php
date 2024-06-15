@@ -15,11 +15,7 @@ class Employees extends ArrayIterator
         }
     }
 
-    /**
-     * @param  Employee  $item
-     * @return $this
-     */
-    public function addItem($item): self
+    public function addItem(Employee $item): self
     {
         $this->items[] = $item;
 

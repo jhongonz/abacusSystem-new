@@ -9,7 +9,7 @@ namespace Core\Institution\Domain\ValueObjects;
 use Core\SharedContext\Model\ValueObjectContract;
 use InvalidArgumentException;
 
-class InstitutionId implements ValueObjectContract
+class InstitutionId
 {
     private ?int $value;
 
@@ -27,11 +27,7 @@ class InstitutionId implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param int $value
-     * @return self
-     */
-    public function setValue($value): self
+    public function setValue(int $value): self
     {
         $this->validate($value);
         $this->value = $value;

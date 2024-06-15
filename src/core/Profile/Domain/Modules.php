@@ -15,10 +15,7 @@ class Modules extends ArrayIterator
         }
     }
 
-    /**
-     * @param  Module  $item
-     */
-    public function addItem($item): self
+    public function addItem(Module $item): self
     {
         $this->items[] = $item;
 

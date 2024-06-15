@@ -8,7 +8,7 @@ namespace Core\Institution\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectContract;
 
-class InstitutionShortname implements ValueObjectContract
+class InstitutionShortname
 {
     private ?string $value;
 
@@ -21,11 +21,7 @@ class InstitutionShortname implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(string $value): self
     {
         $this->value = $value;
         return $this;
