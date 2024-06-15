@@ -3,7 +3,9 @@
 namespace App\Providers\Service;
 
 use Core\Institution\Application\DataTransformer\InstitutionDataTransformer;
+use Core\Institution\Application\Factory\ContactCardInstitutionFactory;
 use Core\Institution\Application\Factory\InstitutionFactory;
+use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
@@ -24,6 +26,7 @@ class InstitutionServiceProvider extends ServiceProvider
      */
     public array $singletons = [
         InstitutionFactoryContract::class => InstitutionFactory::class,
+        ContactCardInstitutionFactoryContract::class => ContactCardInstitutionFactory::class,
         InstitutionDataTransformerContract::class => InstitutionDataTransformer::class,
         InstitutionManagementContract::class => InstitutionService::class,
     ];

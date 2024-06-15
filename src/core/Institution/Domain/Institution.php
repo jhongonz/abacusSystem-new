@@ -30,6 +30,7 @@ class Institution
     private InstitutionSearch $search;
     private InstitutionCreatedAt $createdAt;
     private InstitutionUpdatedAt $updatedAt;
+    private ContactCards $contactCards;
 
     public function __construct(
         InstitutionId $id,
@@ -49,6 +50,7 @@ class Institution
         $this->observations = new InstitutionObservations;
         $this->createdAt = new InstitutionCreatedAt;
         $this->updatedAt = new InstitutionUpdatedAt;
+        $this->contactCards = new ContactCards;
     }
 
     public function id(): InstitutionId
@@ -171,6 +173,17 @@ class Institution
         ];
 
         $this->search->setValue(implode(' ', $data));
+        return $this;
+    }
+
+    public function contactCards(): ContactCards
+    {
+        return $this->contactCards;
+    }
+
+    public function setContactCards(ContactCards $contactCards): self
+    {
+        $this->contactCards = $contactCards;
         return $this;
     }
 }

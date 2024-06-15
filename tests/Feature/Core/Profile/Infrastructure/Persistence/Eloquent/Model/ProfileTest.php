@@ -45,7 +45,7 @@ class ProfileTest extends TestCase
     {
         $relationHasMany = $this->createMock(HasMany::class);
         $this->modelMock = $this->getMockBuilder(Profile::class)
-            ->onlyMethods(['newRelatedInstance','hasMany','newHasMany'])
+            ->onlyMethods(['hasMany'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
@@ -77,7 +77,7 @@ class ProfileTest extends TestCase
             ->willReturnSelf();
 
         $this->modelMock = $this->getMockBuilder(Profile::class)
-            ->onlyMethods(['newRelatedInstance','belongsToMany','newBelongsToMany'])
+            ->onlyMethods(['belongsToMany'])
             ->getMock();
 
         $this->modelMock->expects(self::once())

@@ -6,6 +6,7 @@
 
 namespace Core\Institution\Application\Factory;
 
+use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
@@ -24,6 +25,14 @@ use Exception;
 
 class InstitutionFactory implements InstitutionFactoryContract
 {
+    private ContactCardInstitutionFactoryContract $cardInstitutionFactory;
+
+    public function __construct(
+        ContactCardInstitutionFactoryContract $cardInstitutionFactory
+    ) {
+        $this->cardInstitutionFactory = $cardInstitutionFactory;
+    }
+
     /**
      * @throws Exception
      */

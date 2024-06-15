@@ -1,25 +1,25 @@
 <?php
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
- * Date: 2024-05-19 22:22:41
+ * Date: 2024-06-15 20:24:52
  */
 
 namespace Core\Institution\Domain;
 
 use Core\SharedContext\Model\ArrayIterator;
 
-class Institutions extends ArrayIterator
+class ContactCards extends ArrayIterator
 {
-    public const TYPE = 'institutions';
+    public const TYPE = 'contact-cards-institution';
 
-    public function __construct(Institution ...$institutions)
+    public function __construct(ContactCard... $contactCards)
     {
-        foreach ($institutions as $institution) {
-            $this->addItem($institution);
+        foreach ($contactCards as $contactCard) {
+            $this->addItem($contactCard);
         }
     }
 
-    public function addItem(Institution $item): self
+    public function addItem(ContactCard $item): ArrayIterator
     {
         $this->items[] = $item;
         return $this;
@@ -30,10 +30,9 @@ class Institutions extends ArrayIterator
         return $this->items;
     }
 
-    public function addId(int $id): self
+    public function addId(int $id): ArrayIterator
     {
         $this->aggregator[] = $id;
-        return $this;
     }
 
     public function aggregator(): array
@@ -46,7 +45,7 @@ class Institutions extends ArrayIterator
         return $this->filters;
     }
 
-    public function setFilters(array $filters): self
+    public function setFilters(array $filters): ArrayIterator
     {
         $this->filters = $filters;
         return $this;

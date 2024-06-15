@@ -6,10 +6,10 @@ use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Institution extends Model
+class InstitutionContactCard extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -19,14 +19,14 @@ class Institution extends Model
      *
      * @var string
      */
-    protected $table = 'institutions';
+    protected $table = 'institutions_contact_card';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'inst_id';
+    protected $primaryKey = 'card_id';
 
     /**
      * The model's default values for attributes.
@@ -34,7 +34,7 @@ class Institution extends Model
      * @var array
      */
     protected $attributes = [
-        'inst_state' => 1,
+        'card_state' => 1,
     ];
 
     /**
@@ -43,14 +43,14 @@ class Institution extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'inst_id',
-        'inst_code',
-        'inst_name',
-        'inst_shortname',
-        'inst_logo',
-        'inst_observations',
-        'inst_state',
-        'inst_search',
+        'card_id',
+        'card_phone',
+        'card_email',
+        'card_contact_person',
+        'card_default',
+        'card_observations',
+        'card_state',
+        'card_search',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -59,7 +59,7 @@ class Institution extends Model
     /**
      * The search field associated with the table.
      */
-    protected string $mainSearchField = 'inst_search';
+    protected string $mainSearchField = 'card_search';
 
     /**
      * The attributes that should be cast.
@@ -86,96 +86,63 @@ class Institution extends Model
         return $this->mainSearchField;
     }
 
-    public function contactCard(): HasMany
+    public function relationWithInstitution(): BelongsTo
     {
-        return $this->hasMany(InstitutionContactCard::class, 'card__inst_id', 'inst_id');
+        return $this->belongsTo(Institution::class, 'card__inst_id', 'inst_id');
     }
 
     public function id(): ?int
     {
-        return $this->getAttribute('inst_id');
+        return $this->getAttribute('card_id');
     }
 
     public function changeId(?int $id): self
     {
-        $this->setAttribute('inst_id', $id);
+        $this->setAttribute('card_id', $id);
         return $this;
     }
 
-    public function code(): ?string
+    public function phone(): string
     {
-        return $this->getAttribute('inst_code');
+        return $this->getAttribute('card_phone');
     }
 
-    public function changeCode(?string $code): self
+    public function changePhone(string $phone): self
     {
-        $this->setAttribute('inst_code', $code);
+        $this->setAttribute('card_phone', $phone);
         return $this;
     }
 
-    public function name(): ?string
+    public function email(): ?string
     {
-        return $this->getAttribute('inst_name');
+        return $this->getAttribute('card_email');
     }
 
-    public function changeName(?string $name): self
+    public function changeEmail(?string $email): self
     {
-        $this->setAttribute('inst_name', $name);
+        $this->setAttribute('card_email', $email);
         return $this;
     }
 
-    public function shortname(): ?string
+    public function contactPerson(): ?string
     {
-        return $this->getAttribute('inst_shortname');
+        return $this->getAttribute('card_contact_person');
     }
 
-    public function changeShortname(?string $shortname): self
+    public function changeContactPerson(?string $person): self
     {
-        $this->setAttribute('inst_shortname', $shortname);
+        $this->setAttribute('card_contact_person', $person);
         return $this;
     }
 
-    public function logo(): ?string
+    public function contactDefault(): int
     {
-        return $this->getAttribute('inst_logo');
+        return $this->getAttribute('card_default');
     }
 
-    public function changeLogo(?string $logo): self
+    public function changeContactDefault(int $value): self
     {
-        $this->setAttribute('inst_logo', $logo);
-        return $this;
-    }
-
-    public function observations(): ?string
-    {
-        return $this->getAttribute('inst_observations');
-    }
-
-    public function changeObservations(?string $observations): self
-    {
-        $this->setAttribute('inst_observations', $observations);
-        return $this;
-    }
-
-    public function search(): ?string
-    {
-        return $this->getAttribute('inst_search');
-    }
-
-    public function changeSearch(string $search): self
-    {
-        $this->setAttribute('inst_search', $search);
-        return $this;
-    }
-
-    public function state(): int
-    {
-        return $this->getAttribute('inst_state');
-    }
-
-    public function changeState(int $state): self
-    {
-        $this->setAttribute('inst_state', $state);
+        $this->setAttribute('card_default', $value);
         return $this;
     }
 

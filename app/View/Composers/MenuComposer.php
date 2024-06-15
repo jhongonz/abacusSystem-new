@@ -2,11 +2,13 @@
 
 namespace App\View\Composers;
 
+use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Employee;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\User;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator;
@@ -17,6 +19,8 @@ use Illuminate\View\View;
 
 class MenuComposer
 {
+    use UtilsDateTimeTrait;
+
     private ModuleFactoryContract $moduleFactory;
     private Config $config;
     private Router $router;
@@ -66,6 +70,8 @@ class MenuComposer
         $menuUnique = [];
         foreach ($this->config->get('menu.options') as $index => $item) {
             $item['id'] = 0;
+            $item['state'] = ValueObjectStatus::STATE_ACTIVE;
+            $item['createdAt'] = $this->getCurrentTime();
 
             if (empty($item['route'])) {
                 $options = $modules->moduleElementsOfKey($index);

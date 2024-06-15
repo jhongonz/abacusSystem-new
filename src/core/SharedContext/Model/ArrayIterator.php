@@ -17,8 +17,6 @@ abstract class ArrayIterator implements Countable, Iterator
 
     protected array $filters = [];
 
-    abstract public function addItem(mixed $item): ArrayIterator;
-
     abstract public function items(): array;
 
     abstract public function addId(int $id): ArrayIterator;
