@@ -6,6 +6,7 @@
 
 namespace App\Http\Orchestrators\Orchestrator\User;
 
+use App\Traits\UtilsDateTimeTrait;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Exception;
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
 
 class ChangeStateUserOrchestrator extends UserOrchestrator
 {
+    use UtilsDateTimeTrait;
+
     public function __construct(UserManagementContract $userManagement)
     {
         parent::__construct($userManagement);
@@ -23,17 +26,10 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
      */
     public function make(Request $request): User
     {
-        $userId = $request->input('userId');
-        $state = $request->input('state');
+        $dataUpdate['state'] = $request->input('state');
+        $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
-        $user = $this->userManagement->searchUserById($userId);
-
-        $user->state()->setValue($state);
-        $dataUpdate['state'] = $state;
-
-        $this->userManagement->updateUser($user->id()->value(), $dataUpdate);
-
-        return $user;
+        return $this->userManagement->updateUser($request->input('userId'), $dataUpdate);
     }
 
     /**
