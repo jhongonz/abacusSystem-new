@@ -22,6 +22,7 @@ class UpdateModule extends UseCasesService
     {
         $this->validateRequest($request, UpdateModuleRequest::class);
 
+        /** @var UpdateModuleRequest $request */
         $module = $this->moduleRepository->find($request->moduleId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);
@@ -70,6 +71,20 @@ class UpdateModule extends UseCasesService
     private function changeState(Module $module, int $value): Module
     {
         $module->state()->setValue($value);
+
+        return $module;
+    }
+
+    private function changePosition(Module $module, int $value): Module
+    {
+        $module->position()->setValue($value);
+
+        return $module;
+    }
+
+    private function changeUpdatedAt(Module $module, \DateTime $dateTime): Module
+    {
+        $module->updatedAt()->setValue($dateTime);
 
         return $module;
     }

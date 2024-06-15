@@ -22,6 +22,7 @@ class UpdateProfile extends UseCasesService
     {
         $this->validateRequest($request, UpdateProfileRequest::class);
 
+        /** @var UpdateProfileRequest $request */
         $profile = $this->profileRepository->find($request->profileId());
         foreach ($request->data() as $field => $value) {
             $methodName = 'change'.\ucfirst($field);
@@ -63,6 +64,13 @@ class UpdateProfile extends UseCasesService
     private function changeModules(Profile $profile, array $modules): Profile
     {
         $profile->setModulesAggregator($modules);
+
+        return $profile;
+    }
+
+    private function changeUpdateAt(Profile $profile, \DateTime $dateTime): Profile
+    {
+        $profile->updatedAt()->setValue($dateTime);
 
         return $profile;
     }

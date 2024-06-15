@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -34,12 +35,14 @@ class ModuleFactory implements ModuleFactoryContract
             $this->buildModuleState($data['state']),
         );
 
-        if ($data['createdAt']) {
-            $module->createdAt()->setValue(new DateTime($data['createdAt']['date']));
+        if (isset($data['position'])) {
+            $module->position()->setValue($data['position']);
         }
 
-        if ($data['updatedAt']) {
-            $module->updatedAt()->setValue(new DateTime($data['updatedAt']['date']));
+        $module->createdAt()->setValue($data['createdAt']);
+
+        if (isset($data['updatedAt'])) {
+            $module->updatedAt()->setValue($data['updatedAt']);
         }
 
         return $module;
@@ -134,5 +137,10 @@ class ModuleFactory implements ModuleFactoryContract
     public function buildModuleSearch(?string $search = null): ModuleSearch
     {
         return new ModuleSearch($search);
+    }
+
+    public function buildModulePosition(int $position = 1): ModulePosition
+    {
+        return new ModulePosition($position);
     }
 }

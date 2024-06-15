@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -65,6 +66,9 @@ class ModuleFactoryTest extends TestCase
 
         $this->assertSame($data['state'], $result->state()->value());
         $this->assertInstanceOf(ModuleState::class, $result->state());
+
+        $this->assertSame($data['position'], $result->position()->value());
+        $this->assertInstanceOf(ModulePosition::class, $result->position());
     }
 
     public function test_buildModuleCreatedAt_should_return_value_object_with_datetime(): void
@@ -118,5 +122,13 @@ class ModuleFactoryTest extends TestCase
         $this->assertInstanceOf(Modules::class, $result);
         $this->assertCount(1, $result->items());
         $this->assertIsArray($result->items());
+    }
+
+    public function test_buildModulePosition_should_return_value_object(): void
+    {
+        $result = $this->factory->buildModulePosition();
+
+        $this->assertInstanceOf(ModulePosition::class, $result);
+        $this->assertIsInt($result->value());
     }
 }

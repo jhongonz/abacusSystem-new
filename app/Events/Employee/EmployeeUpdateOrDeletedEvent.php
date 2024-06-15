@@ -2,7 +2,7 @@
 
 namespace App\Events\Employee;
 
-use Core\Employee\Domain\ValueObjects\EmployeeId;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,17 +14,17 @@ class EmployeeUpdateOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private EmployeeId $employeeId;
+    private int $employeeId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(EmployeeId $employeeId)
+    public function __construct(int $employeeId)
     {
         $this->employeeId = $employeeId;
     }
 
-    public function employeeId(): EmployeeId
+    public function employeeId(): int
     {
         return $this->employeeId;
     }
@@ -32,7 +32,7 @@ class EmployeeUpdateOrDeletedEvent
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {

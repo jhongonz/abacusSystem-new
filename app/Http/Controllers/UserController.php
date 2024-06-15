@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\User\RecoveryAccountRequest;
 use App\Http\Requests\User\ResetPasswordRequest;
 use App\Traits\UserTrait;
-use Assert\Assertion;
-use Assert\AssertionFailedException;
-use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
-use Core\Employee\Domain\Contracts\EmployeeManagementContract;
+use Core\Employee\Domain\Employee;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Core\User\Domain\Contracts\UserFactoryContract;
-use Core\User\Domain\Contracts\UserManagementContract;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -25,30 +22,21 @@ class UserController extends Controller implements HasMiddleware
 {
     use UserTrait;
 
-    private UserFactoryContract $userFactory;
-
-    private UserManagementContract $userService;
-
-    private EmployeeFactoryContract $employeeFactory;
-
-    private EmployeeManagementContract $employeeService;
-    private ViewFactory $viewFactory;
+    private OrchestratorHandlerContract $orchestratorHandler;
+    private UrlGenerator $urlGenerator;
 
     public function __construct(
-        UserFactoryContract $userFactory,
-        UserManagementContract $userService,
-        EmployeeFactoryContract $employeeFactory,
-        EmployeeManagementContract $employeeService,
+        OrchestratorHandlerContract $orchestratorHandler,
+        Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
+        UrlGenerator $urlGenerator
     ) {
-        parent::__construct($logger);
+        parent::__construct($logger, $viewFactory);
+        $this->setHasher($hasher);
 
-        $this->userFactory = $userFactory;
-        $this->userService = $userService;
-        $this->employeeFactory = $employeeFactory;
-        $this->employeeService = $employeeService;
-        $this->viewFactory = $viewFactory;
+        $this->orchestratorHandler = $orchestratorHandler;
+        $this->urlGenerator = $urlGenerator;
     }
 
     public function index(): JsonResponse|string
@@ -67,49 +55,36 @@ class UserController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
-    public function validateAccount(RecoveryAccountRequest $request): void
+    public function validateAccount(RecoveryAccountRequest $request): JsonResponse
     {
-        $identification = $this->employeeFactory->buildEmployeeIdentification(
-            $request->input('identification')
-        );
+        /** @var Employee $employee */
+        $employee = $this->orchestratorHandler->handler('retrieve-employee', $request);
 
-        $employee = $this->employeeService->searchEmployeeByIdentification($identification);
+        $link = $this->urlGenerator->route('user.reset-account', ['id' => $employee->userId()->value()]);
 
-        $link = url('reset'.'/'.$employee->userId()->value());
+        return new JsonResponse(['link' => $link]);
     }
 
-    public function resetAccount(?int $id = null): Response|RedirectResponse
+    public function resetAccount(int $id): Response
     {
-        try {
-            Assertion::notNull($id);
-        } catch (AssertionFailedException $exception) {
-            $this->logger->error($exception->getMessage(), $exception->getTrace());
-
-            return new RedirectResponse(route('index'));
-        }
-
         $view = $this->viewFactory->make('user.restart-password', [
-                'idUser' => $id,
-                'activeLink' => true,
-            ])
-            ->render();
+            'userId' => $id,
+            'activeLink' => true,
+        ])
+        ->render();
 
         return new Response($view);
     }
 
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
-        $idUser = $this->userFactory->buildId(
-            $request->input('idUser')
-        );
-
         $dataUpdate = [
             'state' => ValueObjectStatus::STATE_ACTIVE,
             'password' => $this->makeHashPassword($request->input('password')),
         ];
 
-        $this->userService->updateUser($idUser, $dataUpdate);
-
+        $request->merge(['dataUpdate' => $dataUpdate]);
+        $this->orchestratorHandler->handler('update-user', $request);
         return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }
 

@@ -126,7 +126,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
 
             axios.post("{{ route('panel.module.change-state-module') }}",{
-                id : $(this).data('id')
+                moduleId : $(this).data('id')
             })
             .then(function (response){
                 $('#content-data').DataTable().ajax.reload(null, false);

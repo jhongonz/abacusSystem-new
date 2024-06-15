@@ -8,15 +8,11 @@ class Modules extends ArrayIterator
 {
     public const TYPE = 'modules';
 
-    private array $filters;
-
     public function __construct(Module ...$modules)
     {
         foreach ($modules as $module) {
             $this->addItem($module);
         }
-
-        $this->filters = [];
     }
 
     /**

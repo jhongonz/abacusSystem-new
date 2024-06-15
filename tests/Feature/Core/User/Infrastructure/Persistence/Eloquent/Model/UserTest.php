@@ -560,6 +560,47 @@ class UserTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
+     */
+    public function test_deletedAt_should_return_null(): void
+    {
+        $this->modelMock = $this->getMockBuilder(User::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('deleted_at')
+            ->willReturn(null);
+
+        $result = $this->modelMock->deletedAt();
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_changeDeletedAt_should_return_self(): void
+    {
+        $datetime = new DateTime('2024-04-26 6:45:00');
+        $this->modelMock = $this->getMockBuilder(User::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('deleted_at', $datetime)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeDeletedAt($datetime);
+
+        $this->assertInstanceOf(User::class, $result);
+        $this->assertSame($result, $this->modelMock);
+    }
+
+    /**
+     * @throws Exception
      */
     public function test_photo_should_return_string(): void
     {

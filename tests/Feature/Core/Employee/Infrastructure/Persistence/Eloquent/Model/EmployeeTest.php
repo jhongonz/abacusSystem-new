@@ -580,6 +580,43 @@ class EmployeeTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function test_deletedAt_should_return_null(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('deleted_at')
+            ->willReturn(null);
+
+        $result = $this->modelMock->deletedAt();
+
+        $this->assertNull($result);
+    }
+
+    public function test_changeDeletedAt_should_change_and_return_self(): void
+    {
+        $datetime = new \DateTime;
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('deleted_at', $datetime)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeDeletedAt($datetime);
+
+        $this->assertInstanceOf(Employee::class, $result);
+        $this->assertSame($result, $this->modelMock);
+    }
+
     public function test_search_should_return_string(): void
     {
         $this->modelMock = $this->getMockBuilder(Employee::class)

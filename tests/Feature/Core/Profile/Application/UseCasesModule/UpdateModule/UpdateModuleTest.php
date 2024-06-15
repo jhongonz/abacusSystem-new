@@ -11,8 +11,10 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleState;
+use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -46,12 +48,16 @@ class UpdateModuleTest extends TestCase
      */
     public function test_execute_should_return_object(): void
     {
+        $datetime = new \DateTime;
+
         $dataUpdate = [
             'name' => 'test',
             'route' => 'test',
             'icon' => 'test',
             'key' => 'test',
+            'position' => 1,
             'state' => 2,
+            'updatedAt' => $datetime,
         ];
         $moduleId = $this->createMock(ModuleId::class);
 
@@ -109,6 +115,16 @@ class UpdateModuleTest extends TestCase
             ->method('menuKey')
             ->willReturn($keyMock);
 
+        $positionMock = $this->createMock(ModulePosition::class);
+        $positionMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+
+        $moduleMock->expects(self::once())
+            ->method('position')
+            ->willReturn($positionMock);
+
         $stateMock = $this->createMock(ModuleState::class);
         $stateMock->expects(self::once())
             ->method('setValue')
@@ -118,6 +134,15 @@ class UpdateModuleTest extends TestCase
         $moduleMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
+
+        $updateAtMock = $this->createMock(ModuleUpdatedAt::class);
+        $updateAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($datetime)
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updateAtMock);
 
         $this->repository->expects(self::once())
             ->method('find')

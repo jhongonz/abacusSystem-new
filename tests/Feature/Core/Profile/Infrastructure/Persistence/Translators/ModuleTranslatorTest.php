@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
@@ -122,6 +123,15 @@ class ModuleTranslatorTest extends TestCase
             ->method('buildModuleCreatedAt')
             ->with($datetime)
             ->willReturn($updatedAt);
+
+        $this->model->expects(self::once())
+            ->method('position')
+            ->willReturn(2);
+        $position = $this->createMock(ModulePosition::class);
+        $this->factory->expects(self::once())
+            ->method('buildModulePosition')
+            ->with(2)
+            ->willReturn($position);
 
         $this->model->expects(self::once())
             ->method('search')

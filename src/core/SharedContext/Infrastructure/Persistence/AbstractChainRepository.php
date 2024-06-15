@@ -17,8 +17,6 @@ abstract class AbstractChainRepository
 
     abstract public function functionNamePersist(): string;
 
-    abstract public function functionNameDelete(): bool;
-
     public function addRepository(ChainPriority $repository): self
     {
         $this->repositories[] = $repository;

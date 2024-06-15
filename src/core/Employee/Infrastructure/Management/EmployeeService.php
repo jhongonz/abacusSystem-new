@@ -18,24 +18,16 @@ use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
-use Core\Employee\Domain\ValueObjects\EmployeeId;
-use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Exception;
 
 class EmployeeService implements EmployeeManagementContract
 {
     private EmployeeFactoryContract $employeeFactory;
-
     private SearchEmployeeById $searchEmployeeById;
-
     private SearchEmployeeByIdentification $searchEmployeeByIdentification;
-
     private SearchEmployees $searchEmployees;
-
     private UpdateEmployee $updateEmployee;
-
     private CreateEmployee $createEmployee;
-
     private DeleteEmployee $deleteEmployee;
 
     public function __construct(
@@ -59,9 +51,11 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeById(EmployeeId $id): ?Employee
+    public function searchEmployeeById(?int $id): ?Employee
     {
-        $request = new SearchEmployeeByIdRequest($id);
+        $request = new SearchEmployeeByIdRequest(
+            $this->employeeFactory->buildEmployeeId($id)
+        );
 
         return $this->searchEmployeeById->execute($request);
     }
@@ -69,9 +63,11 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function searchEmployeeByIdentification(EmployeeIdentification $identification): ?Employee
+    public function searchEmployeeByIdentification(string $identification): ?Employee
     {
-        $request = new SearchEmployeeByIdentificationRequest($identification);
+        $request = new SearchEmployeeByIdentificationRequest(
+            $this->employeeFactory->buildEmployeeIdentification($identification)
+        );
 
         return $this->searchEmployeeByIdentification->execute($request);
     }
@@ -83,8 +79,9 @@ class EmployeeService implements EmployeeManagementContract
     {
         $request = new SearchEmployeesRequest($filters);
         $employees = $this->searchEmployees->execute($request);
+
         foreach ($employees->aggregator() as $item) {
-            $employee = $this->searchEmployeeById($this->employeeFactory->buildEmployeeId($item));
+            $employee = $this->searchEmployeeById($item);
             $employees->addItem($employee);
         }
 
@@ -94,29 +91,33 @@ class EmployeeService implements EmployeeManagementContract
     /**
      * @throws Exception
      */
-    public function updateEmployee(EmployeeId $id, array $data): void
+    public function updateEmployee(int $id, array $data): Employee
     {
-        $request = new UpdateEmployeeRequest($id, $data);
+        $employeeId = $this->employeeFactory->buildEmployeeId($id);
+        $request = new UpdateEmployeeRequest($employeeId, $data);
 
-        $this->updateEmployee->execute($request);
+        return $this->updateEmployee->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function createEmployee(Employee $employee): void
+    public function createEmployee(array $data): Employee
     {
+        $employee = $this->employeeFactory->buildEmployeeFromArray($data);
         $request = new CreateEmployeeRequest($employee);
 
-        $this->createEmployee->execute($request);
+        return $this->createEmployee->execute($request);
     }
 
     /**
      * @throws Exception
      */
-    public function deleteEmployee(EmployeeId $id): void
+    public function deleteEmployee(int $id): void
     {
-        $request = new DeleteEmployeeRequest($id);
+        $request = new DeleteEmployeeRequest(
+            $this->employeeFactory->buildEmployeeId($id)
+        );
 
         $this->deleteEmployee->execute($request);
     }

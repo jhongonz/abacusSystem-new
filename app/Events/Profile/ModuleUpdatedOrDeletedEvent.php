@@ -2,7 +2,7 @@
 
 namespace App\Events\Profile;
 
-use Core\Profile\Domain\ValueObjects\ModuleId;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -14,17 +14,17 @@ class ModuleUpdatedOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private ModuleId $moduleId;
+    private int $moduleId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(ModuleId $moduleId)
+    public function __construct(int $moduleId)
     {
         $this->moduleId = $moduleId;
     }
 
-    public function moduleId(): ModuleId
+    public function moduleId(): int
     {
         return $this->moduleId;
     }
@@ -32,7 +32,7 @@ class ModuleUpdatedOrDeletedEvent
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {

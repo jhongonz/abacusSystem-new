@@ -26,6 +26,7 @@ class SearchUserByLogin extends UseCasesService
     {
         $this->validateRequest($request, SearchUserByLoginRequest::class);
 
+        /** @var SearchUserByLoginRequest $request */
         return $this->userRepository->findCriteria($request->login());
     }
 }

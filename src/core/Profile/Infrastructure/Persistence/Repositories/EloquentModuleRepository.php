@@ -105,6 +105,8 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         if (array_key_exists('q', $filters) && isset($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
+
+        $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
 
         if (empty($moduleCollection)) {
@@ -164,6 +166,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $model->changeIcon($domain->icon()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
+        $model->changePosition($domain->position()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
         if (! is_null($domain->updatedAt()->value())) {

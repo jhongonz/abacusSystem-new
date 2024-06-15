@@ -519,4 +519,41 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function test_position_should_return_int(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Module::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('mod_position')
+            ->willReturn(1);
+
+        $result = $this->modelMock->position();
+
+        $this->assertIsInt($result);
+        $this->assertSame(1, $result);
+    }
+
+    public function test_changePosition_should_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Module::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('mod_position', 2)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changePosition(2);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($this->modelMock, $result);
+    }
 }

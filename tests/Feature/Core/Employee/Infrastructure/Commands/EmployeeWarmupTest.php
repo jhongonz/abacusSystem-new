@@ -126,14 +126,14 @@ class EmployeeWarmupTest extends TestCase
         $this->readRepository->expects(self::once())
             ->method('find')
             ->with($employeeIdMock)
-            ->willThrowException(new EmployeeNotFoundException('Employee not found with id: 2'));
+            ->willThrowException(new EmployeeNotFoundException('Employee not found with id: 1'));
 
         $this->writeRepository->expects(self::never())
             ->method('persistEmployee');
 
         $this->logger->expects(self::once())
             ->method('error')
-            ->with('Employee not found with id: 2');
+            ->with('Employee not found with id: 1');
 
         $this->command->setInput($inputMock);
         $result = $this->command->handle();

@@ -76,6 +76,11 @@ class ModuleServiceTest extends TestCase
     public function test_searchModuleById_should_return_object(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleId')
+            ->with(1)
+            ->willReturn($moduleId);
+
         $request = new SearchModuleByIdRequest($moduleId);
 
         $moduleMock = $this->createMock(Module::class);
@@ -84,7 +89,7 @@ class ModuleServiceTest extends TestCase
             ->with($request)
             ->willReturn($moduleMock);
 
-        $result = $this->service->searchModuleById($moduleId);
+        $result = $this->service->searchModuleById(1);
 
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($moduleMock, $result);
@@ -97,6 +102,11 @@ class ModuleServiceTest extends TestCase
     public function test_searchModuleById_should_return_null(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleId')
+            ->with(1)
+            ->willReturn($moduleId);
+
         $request = new SearchModuleByIdRequest($moduleId);
 
         $this->searchModuleById->expects(self::once())
@@ -104,7 +114,7 @@ class ModuleServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $result = $this->service->searchModuleById($moduleId);
+        $result = $this->service->searchModuleById(1);
 
         $this->assertNull($result);
     }
@@ -158,6 +168,11 @@ class ModuleServiceTest extends TestCase
     {
         $data = [];
         $moduleId = $this->createMock(ModuleId::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleId')
+            ->with(1)
+            ->willReturn($moduleId);
+
         $request = new UpdateModuleRequest($moduleId, $data);
 
         $moduleMock = $this->createMock(Module::class);
@@ -166,8 +181,10 @@ class ModuleServiceTest extends TestCase
             ->with($request)
             ->willReturn($moduleMock);
 
-        $this->service->updateModule($moduleId, $data);
-        $this->assertTrue(true);
+        $result = $this->service->updateModule(1, $data);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($moduleMock, $moduleMock);
     }
 
     /**
@@ -177,6 +194,11 @@ class ModuleServiceTest extends TestCase
     public function test_deleteModule_should_return_void(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleId')
+            ->with(1)
+            ->willReturn($moduleId);
+
         $request = new DeleteModuleRequest($moduleId);
 
         $this->deleteModule->expects(self::once())
@@ -184,7 +206,7 @@ class ModuleServiceTest extends TestCase
             ->with($request)
             ->willReturn(null);
 
-        $this->service->deleteModule($moduleId);
+        $this->service->deleteModule(1);
         $this->assertTrue(true);
     }
 
@@ -195,6 +217,11 @@ class ModuleServiceTest extends TestCase
     public function test_createModule_should_return_object(): void
     {
         $moduleMock = $this->createMock(Module::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleFromArray')
+            ->with([])
+            ->willReturn($moduleMock);
+
         $request = new CreateModuleRequest($moduleMock);
 
         $this->createModule->expects(self::once())
@@ -202,7 +229,7 @@ class ModuleServiceTest extends TestCase
             ->with($request)
             ->willReturn($moduleMock);
 
-        $result = $this->service->createModule($moduleMock);
+        $result = $this->service->createModule([]);
 
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($moduleMock, $result);

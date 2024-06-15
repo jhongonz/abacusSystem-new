@@ -8,44 +8,50 @@ use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\User\Domain\User;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class MenuComposer
 {
     private ModuleFactoryContract $moduleFactory;
-
-    private array $menuOptions;
-
+    private Config $config;
+    private Router $router;
+    private Session $session;
+    private UrlGenerator $urlGenerator;
     private string $imagePathFull;
 
     public function __construct(
         ModuleFactoryContract $moduleFactory,
+        Config $config,
+        Router $router,
+        Session $session,
+        UrlGenerator $urlGenerator
     ) {
         $this->moduleFactory = $moduleFactory;
-        $this->menuOptions = config('menu.options');
+        $this->config = $config;
+        $this->router = $router;
+        $this->session = $session;
+        $this->urlGenerator = $urlGenerator;
         $this->imagePathFull = '/images/full/';
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function compose(View $view): void
     {
         /** @var User $user */
-        $user = session()->get('user');
+        $user = $this->session->get('user');
 
         /** @var Profile $profile */
-        $profile = session()->get('profile');
+        $profile = $this->session->get('profile');
+
         /** @var Employee $employee */
-        $employee = session()->get('employee');
+        $employee = $this->session->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
-        $image = url($this->imagePathFull.$user->photo()->value().'?v='.Str::random(10));
+        $image = $this->urlGenerator->to($this->imagePathFull.$user->photo()->value().'?v='.Str::random(10));
 
         $view->with('menu', $menu);
         $view->with('user', $user);
@@ -58,18 +64,17 @@ class MenuComposer
     {
         $menuWithChildren = [];
         $menuUnique = [];
-        foreach ($this->menuOptions as $index => $item) {
+        foreach ($this->config->get('menu.options') as $index => $item) {
             $item['id'] = 0;
 
-            if (is_null($item['route'])) {
+            if (empty($item['route'])) {
                 $options = $modules->moduleElementsOfKey($index);
 
-                if (count($options)) {
+                if (count($options) > 0) {
                     $item['key'] = $index;
                     $item['route'] = '';
 
                     $mainModule = $this->changeExpandedToModule($options, $this->getModuleMenu($item));
-
                     $menuWithChildren[] = $mainModule;
                 }
             } else {
@@ -83,13 +88,7 @@ class MenuComposer
 
     private function getModuleMenu(array $data): Module
     {
-        return $this->moduleFactory->buildModule(
-            $this->moduleFactory->buildModuleId($data['id']),
-            $this->moduleFactory->buildModuleMenuKey($data['key']),
-            $this->moduleFactory->buildModuleName($data['name']),
-            $this->moduleFactory->buildModuleRoute($data['route']),
-            $this->moduleFactory->buildModuleIcon($data['icon']),
-        );
+        return $this->moduleFactory->buildModuleFromArray([Module::TYPE => $data]);
     }
 
     /**
@@ -97,7 +96,7 @@ class MenuComposer
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {
-        $routeCurrent = Route::current()->uri();
+        $routeCurrent = $this->router->current()->uri();
 
         foreach ($modules as $item) {
             if ($item->route()->value() === $routeCurrent) {

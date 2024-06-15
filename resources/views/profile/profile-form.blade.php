@@ -137,7 +137,7 @@
         });
 
         axios.post("{{ route('panel.profile.store') }}",{
-            id: "{{ $id }}",
+            profileId: "{{ $profileId }}",
             name: $('#name').val(),
             modules: _modules,
             //permission: $('#permission').val(),

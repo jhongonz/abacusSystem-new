@@ -20,6 +20,8 @@ class DeleteProfile extends UseCasesService
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteProfileRequest::class);
+
+        /** @var DeleteProfileRequest $request */
         $this->profileRepository->deleteProfile($request->id());
 
         return null;

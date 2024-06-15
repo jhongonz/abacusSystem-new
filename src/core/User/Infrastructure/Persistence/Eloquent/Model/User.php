@@ -67,7 +67,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'user_remember_token',
     ];
 
@@ -229,6 +228,23 @@ class User extends Authenticatable
     public function changeUpdatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
+        return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deletedAt(): ?DateTime
+    {
+        $datetime = $this->getAttribute('deleted_at');
+
+        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+    }
+
+    public function changeDeletedAt(?DateTime $datetime): self
+    {
+        $this->setAttribute('deleted_at', $datetime);
 
         return $this;
     }

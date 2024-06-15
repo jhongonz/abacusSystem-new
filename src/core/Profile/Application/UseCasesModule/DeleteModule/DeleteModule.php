@@ -20,6 +20,8 @@ class DeleteModule extends UseCasesService
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteModuleRequest::class);
+
+        /** @var DeleteModuleRequest $request */
         $this->moduleRepository->deleteModule($request->id());
 
         return null;

@@ -8,15 +8,11 @@ class Employees extends ArrayIterator
 {
     public const TYPE = 'employees';
 
-    private array $filters;
-
     public function __construct(Employee ...$employees)
     {
         foreach ($employees as $employee) {
             $this->addItem($employee);
         }
-
-        $this->filters = [];
     }
 
     /**

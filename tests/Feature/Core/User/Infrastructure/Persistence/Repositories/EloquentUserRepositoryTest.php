@@ -628,7 +628,7 @@ class EloquentUserRepositoryTest extends TestCase
     public function test_delete_should_delete_row(array $dataReturn): void
     {
         $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::exactly(2))
+        $userIdMock->expects(self::once())
             ->method('value')
             ->willReturn(7);
 
@@ -647,12 +647,18 @@ class EloquentUserRepositoryTest extends TestCase
             ->andReturn($builderMock);
 
         $builderMock->shouldReceive('where')
-            ->times(2)
+            ->once()
             ->with('user_id', 7)
             ->andReturnSelf();
 
-        $builderMock->shouldReceive('delete')
+        $builderMock->shouldReceive('update')
+            ->once()
+            ->with([])
             ->andReturn(1);
+
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
 
         $this->repository->delete($userIdMock);
 

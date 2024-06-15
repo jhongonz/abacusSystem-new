@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(HomeController::class)->group(function () {
+Route::controller(SecurityController::class)->group(function () {
     Route::get('/login', 'index')->name('login');
     Route::post('/login', 'authenticate')->name('authentication');
     Route::get('/home', 'home')->name('home');
@@ -53,4 +54,14 @@ Route::controller(ProfileController::class)->prefix('profiles')->group(function 
     Route::get('/delete/{id}', 'deleteProfile')->whereNumber('id')->name('profile.delete-profile');
     Route::get('/get/{id?}', 'getProfile')->whereNumber('id')->name('profile.get-profile');
     Route::post('/store', 'storeProfile')->name('profile.store');
+});
+
+Route::controller(InstitutionController::class)->prefix('institution')->group(function () {
+    Route::get('', 'index')->name('institution.index');
+    Route::post('/get-list', 'getInstitutions')->name('institution.get-institutions');
+    Route::get('/get/{id?}', 'getInstitution')->whereNumber('id')->name('institution.get-institution');
+    Route::post('/set-logo', 'setLogoInstitution')->name('institution.set-logo');
+    Route::post('/store', 'storeInstitution')->name('institution.store');
+    Route::get('/delete/{id}', 'deleteInstitution')->whereNumber('id')->name('institution.delete-institution');
+    Route::post('/set-state', 'changeStateInstitution')->name('institution.change-state-institution');
 });
