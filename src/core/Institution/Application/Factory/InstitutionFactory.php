@@ -6,7 +6,6 @@
 
 namespace Core\Institution\Application\Factory;
 
-use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
@@ -26,14 +25,6 @@ use Exception;
 
 class InstitutionFactory implements InstitutionFactoryContract
 {
-    private ContactCardInstitutionFactoryContract $cardInstitutionFactory;
-
-    public function __construct(
-        ContactCardInstitutionFactoryContract $cardInstitutionFactory
-    ) {
-        $this->cardInstitutionFactory = $cardInstitutionFactory;
-    }
-
     /**
      * @throws Exception
      */
@@ -79,11 +70,6 @@ class InstitutionFactory implements InstitutionFactoryContract
             $institution->setUpdatedAt(
                 $this->buildInstitutionUpdatedAt($data['updatedAt'])
             );
-        }
-
-        if (isset($data['contactCard'])) {
-            $contactCard = $this->cardInstitutionFactory->buildContactCardFromArray($data['contactCard']);
-            $institution->setContactCard($contactCard);
         }
 
         return $institution;

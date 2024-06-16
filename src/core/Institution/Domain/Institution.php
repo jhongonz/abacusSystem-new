@@ -32,7 +32,6 @@ class Institution
     private InstitutionSearch $search;
     private InstitutionCreatedAt $createdAt;
     private InstitutionUpdatedAt $updatedAt;
-    private ?ContactCard $contactCard;
 
     public function __construct(
         InstitutionId $id,
@@ -52,7 +51,6 @@ class Institution
         $this->observations = new InstitutionObservations;
         $this->createdAt = new InstitutionCreatedAt;
         $this->updatedAt = new InstitutionUpdatedAt;
-        $this->contactCard = null;
     }
 
     public function id(): InstitutionId
@@ -186,17 +184,6 @@ class Institution
         ];
 
         $this->search->setValue(implode(' ', $data));
-        return $this;
-    }
-
-    public function contactCard(): ?ContactCard
-    {
-        return $this->contactCard;
-    }
-
-    public function setContactCard(ContactCard $contactCard): self
-    {
-        $this->contactCard = $contactCard;
         return $this;
     }
 }

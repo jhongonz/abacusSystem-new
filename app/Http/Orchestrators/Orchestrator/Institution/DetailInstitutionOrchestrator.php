@@ -39,7 +39,6 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
         return [
             'institutionId' => $institutionId,
             'institution' => $institution ?? null,
-            'contactCard' => (isset($institution)) ? $institution->contactCard() : null,
             'image' => $urlFile ?? null
         ];
     }

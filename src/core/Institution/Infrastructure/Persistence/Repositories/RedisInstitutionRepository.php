@@ -6,7 +6,6 @@
 
 namespace Core\Institution\Infrastructure\Persistence\Repositories;
 
-use Core\Institution\Domain\ContactCard;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;

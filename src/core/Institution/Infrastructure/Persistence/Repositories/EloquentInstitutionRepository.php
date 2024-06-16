@@ -28,19 +28,16 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     private InstitutionModel $model;
     private InstitutionTranslator $institutionTranslator;
-    private ContactCardInstitutionTranslator $contactCardInstitutionTranslator;
     private DatabaseManager $databaseManager;
     private int $priority;
     public function __construct(
         InstitutionModel $model,
         InstitutionTranslator $translator,
-        ContactCardInstitutionTranslator $contactCardInstitutionTranslator,
         DatabaseManager $databaseManager,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->model = $model;
         $this->institutionTranslator = $translator;
-        $this->contactCardInstitutionTranslator = $contactCardInstitutionTranslator;
         $this->databaseManager = $databaseManager;
         $this->priority = $priority;
     }
@@ -75,14 +72,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
-        $institutionDomain = $this->institutionTranslator->setModel($institutionModel)->toDomain();
-
-        /** @var InstitutionContactCard $contactCardModel */
-        $contactCardModel = $institutionModel->contactCard()->where('card_default', 1)->first();
-        $contactCardDomain = $this->contactCardInstitutionTranslator->setModel($contactCardModel)->toDomain();
-
-        $institutionDomain->setContactCard($contactCardDomain);
-        return $institutionDomain;
+        return $this->institutionTranslator->setModel($institutionModel)->toDomain();
     }
 
     /**

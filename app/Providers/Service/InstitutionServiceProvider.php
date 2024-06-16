@@ -2,24 +2,16 @@
 
 namespace App\Providers\Service;
 
-use Core\Institution\Application\DataTransformer\ContactCardInstitutionDataTransformer;
 use Core\Institution\Application\DataTransformer\InstitutionDataTransformer;
-use Core\Institution\Application\Factory\ContactCardInstitutionFactory;
 use Core\Institution\Application\Factory\InstitutionFactory;
-use Core\Institution\Domain\Contracts\ContactCardInstitutionDataTransformerContract;
-use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
-use Core\Institution\Domain\Contracts\ContactCardInstitutionRepositoryContract;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Infrastructure\Commands\InstitutionWarmup;
 use Core\Institution\Infrastructure\Management\InstitutionService;
-use Core\Institution\Infrastructure\Persistence\Repositories\ChainContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
-use Core\Institution\Infrastructure\Persistence\Repositories\EloquentContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\EloquentInstitutionRepository;
-use Core\Institution\Infrastructure\Persistence\Repositories\RedisContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\RedisInstitutionRepository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -32,9 +24,7 @@ class InstitutionServiceProvider extends ServiceProvider
      */
     public array $singletons = [
         InstitutionFactoryContract::class => InstitutionFactory::class,
-        ContactCardInstitutionFactoryContract::class => ContactCardInstitutionFactory::class,
         InstitutionDataTransformerContract::class => InstitutionDataTransformer::class,
-        ContactCardInstitutionDataTransformerContract::class => ContactCardInstitutionDataTransformer::class,
         InstitutionManagementContract::class => InstitutionService::class,
     ];
 
@@ -52,20 +42,6 @@ class InstitutionServiceProvider extends ServiceProvider
 
             $chainRepository->addRepository(
                 $app->make(EloquentInstitutionRepository::class)
-            );
-
-            return $chainRepository;
-        });
-
-        $this->app->singletonIf(ContactCardInstitutionRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainContactCardInstitutionRepository;
-
-            $chainRepository->addRepository(
-                $app->make(RedisContactCardInstitutionRepository::class)
-            );
-
-            $chainRepository->addRepository(
-                $app->make(EloquentContactCardInstitutionRepository::class)
             );
 
             return $chainRepository;

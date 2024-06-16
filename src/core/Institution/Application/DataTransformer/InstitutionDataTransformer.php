@@ -6,20 +6,11 @@
 
 namespace Core\Institution\Application\DataTransformer;
 
-use Core\Institution\Domain\Contracts\ContactCardInstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Institution;
 
 class InstitutionDataTransformer implements InstitutionDataTransformerContract
 {
-    private ContactCardInstitutionDataTransformerContract $contactCardInstitutionDataTransformer;
-
-    public function __construct(
-        ContactCardInstitutionDataTransformerContract $contactCardInstitutionDataTransformer
-    ) {
-        $this->contactCardInstitutionDataTransformer = $contactCardInstitutionDataTransformer;
-    }
-
     private Institution $institution;
     public function write(Institution $institution): self
     {
@@ -45,7 +36,7 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
 
     private function retrieveData(): array
     {
-        $data = [
+        return [
             'id' => $this->institution->id()->value(),
             'code' => $this->institution->code()->value(),
             'name' => $this->institution->name()->value(),
@@ -58,13 +49,5 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
             'createdAt' => $this->institution->createdAt()->value(),
             'updatedAt' => $this->institution->updatedAt()->value(),
         ];
-
-        $contactCard = $this->institution->contactCard();
-        if (! is_null($contactCard)) {
-            $dataContactCard = $this->contactCardInstitutionDataTransformer->write($contactCard)->read();
-        }
-        $data['contactCard'] = $dataContactCard ?? null;
-
-        return $data;
     }
 }
