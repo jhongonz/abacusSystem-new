@@ -44,6 +44,8 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
             'logo' => $this->institution->logo()->value(),
             'observations' => $this->institution->observations()->value(),
             'address' => $this->institution->address()->value(),
+            'phone' => $this->institution->phone()->value(),
+            'email' => $this->institution->email()->value(),
             'state' => $this->institution->state()->value(),
             'search' => $this->institution->search()->value(),
             'createdAt' => $this->institution->createdAt()->value(),

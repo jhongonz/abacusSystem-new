@@ -47,6 +47,8 @@ class InstitutionTranslator
         $institution->setState($this->institutionFactory->buildInstitutionState($this->institution->state()));
         $institution->setObservations($this->institutionFactory->buildInstitutionObservations($this->institution->observations()));
         $institution->setAddress($this->institutionFactory->buildInstitutionAddress($this->institution->address()));
+        $institution->setPhone($this->institutionFactory->buildInstitutionPhone($this->institution->phone()));
+        $institution->setEmail($this->institutionFactory->buildInstitutionEmail($this->institution->email()));
         $institution->setCreatedAt($this->institutionFactory->buildInstitutionCreatedAt($this->institution->createdAt()));
         $institution->setUpdatedAt($this->institutionFactory->buildInstitutionUpdatedAt($this->institution->updatedAt()));
         $institution->setSearch($this->institutionFactory->buildInstitutionSearch($this->institution->search()));

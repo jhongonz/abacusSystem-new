@@ -12,10 +12,12 @@ use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -58,6 +60,14 @@ class InstitutionFactory implements InstitutionFactoryContract
 
         $institution->setAddress(
             $this->buildInstitutionAddress($data['address'])
+        );
+
+        $institution->setPhone(
+            $this->buildInstitutionPhone($data['phone'])
+        );
+
+        $institution->setEmail(
+            $this->buildInstitutionEmail($data['email'])
         );
 
         if (isset($data['logo'])) {
@@ -141,5 +151,15 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutionAddress(?string $address = null): InstitutionAddress
     {
         return new InstitutionAddress($address);
+    }
+
+    public function buildInstitutionPhone(string $phone): InstitutionPhone
+    {
+        return new InstitutionPhone($phone);
+    }
+
+    public function buildInstitutionEmail(?string $email = null): InstitutionEmail
+    {
+        return new InstitutionEmail($email);
     }
 }

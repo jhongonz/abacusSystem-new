@@ -9,10 +9,12 @@ namespace Core\Institution\Domain;
 use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -30,6 +32,8 @@ class Institution
     private InstitutionAddress $address;
     private InstitutionState $state;
     private InstitutionSearch $search;
+    private InstitutionPhone $phone;
+    private InstitutionEmail $email;
     private InstitutionCreatedAt $createdAt;
     private InstitutionUpdatedAt $updatedAt;
 
@@ -51,6 +55,8 @@ class Institution
         $this->observations = new InstitutionObservations;
         $this->createdAt = new InstitutionCreatedAt;
         $this->updatedAt = new InstitutionUpdatedAt;
+        $this->phone = new InstitutionPhone;
+        $this->email = new InstitutionEmail;
     }
 
     public function id(): InstitutionId
@@ -180,10 +186,35 @@ class Institution
             $this->code->value(),
             $this->name->value(),
             $this->shortname->value(),
-            $this->observations->value()
+            $this->observations->value(),
+            $this->address->value(),
+            $this->phone->value(),
+            $this->email->value(),
         ];
 
         $this->search->setValue(implode(' ', $data));
+        return $this;
+    }
+
+    public function phone(): InstitutionPhone
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(InstitutionPhone $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    public function email(): InstitutionEmail
+    {
+        return $this->email;
+    }
+
+    public function setEmail(InstitutionEmail $email): self
+    {
+        $this->email = $email;
         return $this;
     }
 }

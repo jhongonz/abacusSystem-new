@@ -83,6 +83,20 @@ class UpdateInstitution extends UseCasesService
         return $institution;
     }
 
+    private function changePhone(Institution $institution, string $phone): Institution
+    {
+        $institution->phone()->setValue($phone);
+
+        return $institution;
+    }
+
+    private function changeEmail(Institution $institution, string $email): Institution
+    {
+        $institution->email()->setValue($email);
+
+        return $institution;
+    }
+
     /**
      * @throws Exception
      */

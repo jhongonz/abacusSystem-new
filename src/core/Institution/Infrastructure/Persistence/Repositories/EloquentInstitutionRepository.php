@@ -163,6 +163,8 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $model->changeLogo($domain->logo()->value());
         $model->changeObservations($domain->observations()->value());
         $model->changeAddress($domain->address()->value());
+        $model->changePhone($domain->phone()->value());
+        $model->changeEmail($domain->email()->value());
         $model->changeSearch($domain->search()->value());
         $model->changeState($domain->state()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
