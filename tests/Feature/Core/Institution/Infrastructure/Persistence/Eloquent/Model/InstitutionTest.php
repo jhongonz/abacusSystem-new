@@ -3,18 +3,14 @@
 namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
-use Core\Institution\Infrastructure\Persistence\Eloquent\Model\InstitutionContactCard;
 use Exception;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(Institution::class)]
 class InstitutionTest extends TestCase
 {
     private Institution $model;
-    private Institution|MockObject $modelMock;
 
     public function setUp(): void
     {
@@ -34,27 +30,6 @@ class InstitutionTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertSame('inst_search', $result);
-    }
-
-    /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    public function test_contactCard_should_return_has_many(): void
-    {
-        $relationHasMany = $this->createMock(HasMany::class);
-        $this->modelMock = $this->getMockBuilder(Institution::class)
-            ->onlyMethods(['hasMany'])
-            ->getMock();
-
-        $this->modelMock->expects(self::once())
-            ->method('hasMany')
-            ->with(InstitutionContactCard::class, 'card__inst_id', 'inst_id')
-            ->willReturn($relationHasMany);
-
-        $result = $this->modelMock->contactCard();
-
-        $this->assertInstanceOf(HasMany::class, $result);
-        $this->assertSame($relationHasMany, $result);
     }
 
     public function test_id_should_return_null(): void

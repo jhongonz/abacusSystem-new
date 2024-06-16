@@ -79,7 +79,7 @@ class RedisInstitutionRepositoryTest extends TestCase
             ->method('value')
             ->willReturn(1);
 
-        $dataExpected = [
+        $dataExpected[Institution::TYPE] = [
             'createdAt' => new \DateTime('2024-06-03 08:50:00'),
             'updatedAt' => new \DateTime('2024-06-03 08:50:00'),
         ];

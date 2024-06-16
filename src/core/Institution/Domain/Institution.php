@@ -55,6 +55,7 @@ class Institution
         $this->observations = new InstitutionObservations;
         $this->createdAt = new InstitutionCreatedAt;
         $this->updatedAt = new InstitutionUpdatedAt;
+        $this->address = new InstitutionAddress;
         $this->phone = new InstitutionPhone;
         $this->email = new InstitutionEmail;
     }

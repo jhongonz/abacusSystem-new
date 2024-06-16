@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Core\Institution\Application\Factory;
 
-use Core\Institution\Application\Factory\ContactCardInstitutionFactory;
 use Core\Institution\Application\Factory\InstitutionFactory;
-use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
@@ -19,7 +17,6 @@ use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Institution\Application\Factory\DataProvider\DataProviderInstitutionFactory;
 use Tests\TestCase;
 
@@ -27,21 +24,16 @@ use Tests\TestCase;
 class InstitutionFactoryTest extends TestCase
 {
     private InstitutionFactory $factory;
-    private ContactCardInstitutionFactoryContract|MockObject $contactCardInstitutionFactory;
 
-    /**
-     * @throws Exception
-     */
     public function setUp(): void
     {
         parent::setUp();
-        $this->contactCardInstitutionFactory = $this->createMock(ContactCardInstitutionFactory::class);
-        $this->factory = new InstitutionFactory($this->contactCardInstitutionFactory);
+        $this->factory = new InstitutionFactory;
     }
 
     public function tearDown(): void
     {
-        unset($this->factory, $this->contactCardInstitutionFactory);
+        unset($this->factory);
         parent::tearDown();
     }
 

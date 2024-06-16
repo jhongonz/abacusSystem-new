@@ -13,8 +13,6 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
-use Core\Institution\Infrastructure\Persistence\Eloquent\Model\InstitutionContactCard;
-use Core\Institution\Infrastructure\Persistence\Translators\ContactCardInstitutionTranslator;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;

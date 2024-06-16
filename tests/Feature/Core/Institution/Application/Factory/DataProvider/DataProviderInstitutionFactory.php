@@ -24,6 +24,9 @@ final class DataProviderInstitutionFactory
                         'search' => 'search',
                         'observations' => 'observations',
                         'state' => 1,
+                        'address' => 'address',
+                        'phone' => 'phone',
+                        'email' => 'email',
                         'createdAt' => new DateTime,
                         'updatedAt' => new DateTime,
                     ]
