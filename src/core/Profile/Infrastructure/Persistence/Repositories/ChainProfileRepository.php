@@ -101,9 +101,4 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
     {
         return $this->write(__FUNCTION__, $profiles);
     }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
-    }
 }

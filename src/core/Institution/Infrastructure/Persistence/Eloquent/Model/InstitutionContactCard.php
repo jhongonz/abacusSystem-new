@@ -44,6 +44,7 @@ class InstitutionContactCard extends Model
      */
     protected $fillable = [
         'card_id',
+        'card__inst_id',
         'card_phone',
         'card_email',
         'card_contact_person',
@@ -102,6 +103,17 @@ class InstitutionContactCard extends Model
         return $this;
     }
 
+    public function institutionId(): int
+    {
+        return $this->getAttribute('card__inst_id');
+    }
+
+    public function changeInstitutionId(int $institutionId): self
+    {
+        $this->setAttribute('card__inst_id', $institutionId);
+        return $this;
+    }
+
     public function phone(): string
     {
         return $this->getAttribute('card_phone');
@@ -143,6 +155,39 @@ class InstitutionContactCard extends Model
     public function changeContactDefault(int $value): self
     {
         $this->setAttribute('card_default', $value);
+        return $this;
+    }
+
+    public function state(): int
+    {
+        return $this->getAttribute('card_state');
+    }
+
+    public function changeState(int $state): self
+    {
+        $this->setAttribute('card_state', $state);
+        return $this;
+    }
+
+    public function observations(): ?string
+    {
+        return $this->getAttribute('card_observations');
+    }
+
+    public function changeObservations(?string $observations): self
+    {
+        $this->setAttribute('card_observations', $observations);
+        return $this;
+    }
+
+    public function search(): ?string
+    {
+        return $this->getAttribute('card_search');
+    }
+
+    public function changeSearch(?string $search): self
+    {
+        $this->setAttribute('card_search', $search);
         return $this;
     }
 

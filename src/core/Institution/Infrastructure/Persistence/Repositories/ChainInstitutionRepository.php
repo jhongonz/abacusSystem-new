@@ -70,9 +70,4 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
     {
         return $this->write(__FUNCTION__, $institution);
     }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
-    }
 }

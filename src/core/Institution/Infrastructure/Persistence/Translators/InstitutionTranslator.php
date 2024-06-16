@@ -10,9 +10,9 @@ use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
-use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
+use Exception;
 
-class InstitutionTranslator implements TranslatorDomainContract
+class InstitutionTranslator
 {
     private InstitutionFactoryContract $institutionFactory;
     private InstitutionModel $institution;
@@ -25,18 +25,14 @@ class InstitutionTranslator implements TranslatorDomainContract
         $this->collection = [];
     }
 
-    /**
-     * @param InstitutionModel $model
-     * @return $this
-     */
-    public function setModel($model): self
+    public function setModel(InstitutionModel $model): self
     {
         $this->institution = $model;
         return $this;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function toDomain(): Institution
     {

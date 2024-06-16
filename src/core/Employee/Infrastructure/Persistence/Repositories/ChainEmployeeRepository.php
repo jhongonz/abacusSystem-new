@@ -92,9 +92,4 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
             throw new EmployeesNotFoundException('Employees not found');
         }
     }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
-    }
 }
