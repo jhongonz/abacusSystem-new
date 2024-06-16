@@ -55,7 +55,7 @@ class InstitutionFactory implements InstitutionFactoryContract
         );
 
         $institution->setCreatedAt(
-            $this->buildInstitutionCreatedAt($data['createdAt'])
+            $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']['date']))
         );
 
         $institution->setAddress(
@@ -78,7 +78,7 @@ class InstitutionFactory implements InstitutionFactoryContract
 
         if (isset($data['updatedAt'])) {
             $institution->setUpdatedAt(
-                $this->buildInstitutionUpdatedAt($data['updatedAt'])
+                $this->buildInstitutionUpdatedAt($this->getDateTime($data['updatedAt']['date']))
             );
         }
 
@@ -161,5 +161,13 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutionEmail(?string $email = null): InstitutionEmail
     {
         return new InstitutionEmail($email);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

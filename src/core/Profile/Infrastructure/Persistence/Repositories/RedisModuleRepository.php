@@ -69,13 +69,6 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 
         if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $data = $dataArray[Module::TYPE];
-
-            $data['createdAt'] = new \DateTime($data['createdAt']['date']);
-            if (isset($data['updatedAt'])) {
-                $data['updatedAt'] = new \DateTime($data['updatedAt']['date']);
-            }
-            $dataArray[Module::TYPE] = $data;
 
             /** @var Module */
             return $this->moduleFactory->buildModuleFromArray($dataArray);

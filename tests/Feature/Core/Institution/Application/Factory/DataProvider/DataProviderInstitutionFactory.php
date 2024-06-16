@@ -27,8 +27,8 @@ final class DataProviderInstitutionFactory
                         'address' => 'address',
                         'phone' => 'phone',
                         'email' => 'email',
-                        'createdAt' => new DateTime,
-                        'updatedAt' => new DateTime,
+                        'createdAt' => json_decode(json_encode(new DateTime), true),
+                        'updatedAt' => json_decode(json_encode(new DateTime), true),
                     ]
                 ]
             ]

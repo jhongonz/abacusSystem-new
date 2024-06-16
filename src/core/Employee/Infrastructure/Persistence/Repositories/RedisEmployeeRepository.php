@@ -75,17 +75,6 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
 
         if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $data = $dataArray[Employee::TYPE];
-
-            $data['createdAt'] = new \DateTime($data['createdAt']['date']);
-            if (isset($data['updatedAt'])) {
-                $data['updatedAt'] = new \DateTime($data['updatedAt']['date']);
-            }
-
-            if (isset($data['birthdate'])) {
-                $data['birthdate'] = new \DateTime($data['birthdate']['date']);
-            }
-            $dataArray[Employee::TYPE] = $data;
 
             /** @var Employee */
             return $this->employeeFactory->buildEmployeeFromArray($dataArray);

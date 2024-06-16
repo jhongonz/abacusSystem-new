@@ -12,7 +12,6 @@ use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
@@ -75,14 +74,8 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
 
         if (! is_null($data)) {
             $dataArray = json_decode($data, true);
-            $data = $dataArray[Profile::TYPE];
 
-            $data['createdAt'] = new DateTime($data['createdAt']['date']);
-            if (isset($data['updatedAt'])) {
-                $data['updatedAt'] = new DateTime($data['updatedAt']['date']);
-            }
-            $dataArray[Profile::TYPE] = $data;
-
+            /** @var Profile */
             return $this->profileFactory->buildProfileFromArray($dataArray);
         }
 

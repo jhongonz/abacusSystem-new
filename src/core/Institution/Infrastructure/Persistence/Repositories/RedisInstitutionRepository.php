@@ -15,7 +15,6 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionPersistException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
@@ -73,13 +72,6 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
         if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $data = $dataArray[Institution::TYPE];
-
-            $data['createdAt'] = new DateTime($data['createdAt']['date']);
-            if (isset($data['updatedAt'])) {
-                $data['updatedAt'] = new DateTime($data['updatedAt']['date']);
-            }
-            $dataArray[Institution::TYPE] = $data;
 
             /**@var Institution*/
             return $this->institutionFactory->buildInstitutionFromArray($dataArray);

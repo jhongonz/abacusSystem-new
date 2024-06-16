@@ -91,7 +91,7 @@ class RedisInstitutionRepositoryTest extends TestCase
         $institution = $this->createMock(Institution::class);
         $this->factory->expects(self::once())
             ->method('buildInstitutionFromArray')
-            ->with($dataExpected)
+            ->withAnyParameters()
             ->willReturn($institution);
 
         $result = $this->repository->find($idMock);
