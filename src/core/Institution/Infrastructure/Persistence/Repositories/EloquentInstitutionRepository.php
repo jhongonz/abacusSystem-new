@@ -13,6 +13,8 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
+use Core\Institution\Infrastructure\Persistence\Eloquent\Model\InstitutionContactCard;
+use Core\Institution\Infrastructure\Persistence\Translators\ContactCardInstitutionTranslator;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
@@ -26,16 +28,19 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     private InstitutionModel $model;
     private InstitutionTranslator $institutionTranslator;
+    private ContactCardInstitutionTranslator $contactCardInstitutionTranslator;
     private DatabaseManager $databaseManager;
     private int $priority;
     public function __construct(
         InstitutionModel $model,
         InstitutionTranslator $translator,
+        ContactCardInstitutionTranslator $contactCardInstitutionTranslator,
         DatabaseManager $databaseManager,
         int $priority = self::PRIORITY_DEFAULT
     ) {
         $this->model = $model;
         $this->institutionTranslator = $translator;
+        $this->contactCardInstitutionTranslator = $contactCardInstitutionTranslator;
         $this->databaseManager = $databaseManager;
         $this->priority = $priority;
     }
@@ -62,13 +67,22 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);
 
         $data = $builder->first();
+
         if (is_null($data)) {
-            throw new InstitutionNotFoundException('Institution not found with id '.$id->value());
+            throw new InstitutionNotFoundException(
+                sprintf('Institution not found with id %s', $id->value())
+            );
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
+        $institutionDomain = $this->institutionTranslator->setModel($institutionModel)->toDomain();
 
-        return $this->institutionTranslator->setModel($institutionModel)->toDomain();
+        /** @var InstitutionContactCard $contactCardModel */
+        $contactCardModel = $institutionModel->contactCard()->where('card_default', 1)->first();
+        $contactCardDomain = $this->contactCardInstitutionTranslator->setModel($contactCardModel)->toDomain();
+
+        $institutionDomain->setContactCard($contactCardDomain);
+        return $institutionDomain;
     }
 
     /**
@@ -111,7 +125,9 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException('Institution not found with id '.$id->value());
+            throw new InstitutionNotFoundException(
+                sprintf('Institution not found with id %s', $id->value())
+            );
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);

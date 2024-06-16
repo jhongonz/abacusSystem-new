@@ -1,12 +1,12 @@
 <?php
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
- * Date: 2024-06-15 20:47:45
+ * Date: 2024-06-16 19:26:00
  */
 
-namespace Core\Institution\Domain\ValueObjectsContactCard;
+namespace Core\Institution\Domain\ValueObjects;
 
-class ContactPerson
+class InstitutionAddress
 {
     private ?string $value;
 

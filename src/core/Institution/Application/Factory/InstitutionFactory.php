@@ -10,6 +10,7 @@ use Core\Institution\Domain\Contracts\ContactCardInstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
@@ -64,6 +65,10 @@ class InstitutionFactory implements InstitutionFactoryContract
             $this->buildInstitutionCreatedAt($data['createdAt'])
         );
 
+        $institution->setAddress(
+            $this->buildInstitutionAddress($data['address'])
+        );
+
         if (isset($data['logo'])) {
             $institution->setLogo(
                 $this->buildInstitutionLogo($data['logo'])
@@ -74,6 +79,11 @@ class InstitutionFactory implements InstitutionFactoryContract
             $institution->setUpdatedAt(
                 $this->buildInstitutionUpdatedAt($data['updatedAt'])
             );
+        }
+
+        if (isset($data['contactCard'])) {
+            $contactCard = $this->cardInstitutionFactory->buildContactCardFromArray($data['contactCard']);
+            $institution->setContactCard($contactCard);
         }
 
         return $institution;
@@ -140,5 +150,10 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutions(Institution ...$institutions): Institutions
     {
         return new Institutions(... $institutions);
+    }
+
+    public function buildInstitutionAddress(?string $address = null): InstitutionAddress
+    {
+        return new InstitutionAddress($address);
     }
 }

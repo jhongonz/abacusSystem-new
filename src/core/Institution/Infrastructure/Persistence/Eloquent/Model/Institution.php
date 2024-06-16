@@ -51,6 +51,7 @@ class Institution extends Model
         'inst_observations',
         'inst_state',
         'inst_search',
+        'inst_address',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -154,6 +155,17 @@ class Institution extends Model
     public function changeObservations(?string $observations): self
     {
         $this->setAttribute('inst_observations', $observations);
+        return $this;
+    }
+
+    public function address(): ?string
+    {
+        return $this->getAttribute('inst_address');
+    }
+
+    public function changeAddress(?string $address): self
+    {
+        $this->setAttribute('inst_address', $address);
         return $this;
     }
 

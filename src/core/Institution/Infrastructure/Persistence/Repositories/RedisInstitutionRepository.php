@@ -6,6 +6,7 @@
 
 namespace Core\Institution\Infrastructure\Persistence\Repositories;
 
+use Core\Institution\Domain\ContactCard;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
@@ -73,10 +74,10 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
         if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new DateTime($dataArray['createdAt']['date']);
+            $dataArray[Institution::TYPE]['createdAt'] = new DateTime($dataArray[Institution::TYPE]['createdAt']['date']);
 
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
+            if (! is_null($dataArray[Institution::TYPE]['updatedAt'])) {
+                $dataArray[Institution::TYPE]['updatedAt'] = new DateTime($dataArray[Institution::TYPE]['updatedAt']['date']);
             }
 
             /**@var Institution*/

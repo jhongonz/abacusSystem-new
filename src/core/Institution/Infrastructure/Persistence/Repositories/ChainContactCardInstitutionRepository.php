@@ -15,8 +15,6 @@ use Core\Institution\Domain\ValueObjectsContactCard\ContactId;
 use Core\Institution\Domain\ValueObjectsContactCard\ContactInstitutionId;
 use Core\Institution\Exceptions\ContactCardInstitutionNotFoundException;
 use Core\Institution\Exceptions\ContactCardsInstitutionNotFoundException;
-use Core\Institution\Exceptions\InstitutionNotFoundException;
-use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;

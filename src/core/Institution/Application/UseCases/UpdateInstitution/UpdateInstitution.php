@@ -76,6 +76,13 @@ class UpdateInstitution extends UseCasesService
         return $institution;
     }
 
+    private function changeAddress(Institution $institution, string $address): Institution
+    {
+        $institution->address()->setValue($address);
+
+        return $institution;
+    }
+
     /**
      * @throws Exception
      */

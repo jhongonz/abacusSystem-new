@@ -6,8 +6,6 @@
 
 namespace Core\Institution\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
 class InstitutionCode
 {
     private ?string $value;

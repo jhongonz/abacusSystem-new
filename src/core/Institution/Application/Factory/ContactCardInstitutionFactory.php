@@ -75,12 +75,16 @@ class ContactCardInstitutionFactory implements ContactCardInstitutionFactoryCont
         );
 
         $contactCard->setCreatedAt(
-            $this->buildContactCreatedAt($data['createdAt'])
+            $this->buildContactCreatedAt(
+                new DateTime($data['createdAt']['date'])
+            )
         );
 
         if (isset($data['updatedAt'])) {
             $contactCard->setUpdateAt(
-                $this->buildContactUpdatedAt($data['updatedAt'])
+                $this->buildContactUpdatedAt(
+                    new DateTime($data['updatedAt']['date'])
+                )
             );
         }
 

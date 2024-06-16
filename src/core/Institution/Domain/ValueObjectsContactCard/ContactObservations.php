@@ -6,8 +6,6 @@
 
 namespace Core\Institution\Domain\ValueObjectsContactCard;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
 class ContactObservations
 {
     private ?string $value;

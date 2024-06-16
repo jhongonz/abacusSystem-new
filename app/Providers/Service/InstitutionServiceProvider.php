@@ -17,6 +17,7 @@ use Core\Institution\Infrastructure\Commands\InstitutionWarmup;
 use Core\Institution\Infrastructure\Management\InstitutionService;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
+use Core\Institution\Infrastructure\Persistence\Repositories\EloquentContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\EloquentInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\RedisContactCardInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\RedisInstitutionRepository;
@@ -61,6 +62,10 @@ class InstitutionServiceProvider extends ServiceProvider
 
             $chainRepository->addRepository(
                 $app->make(RedisContactCardInstitutionRepository::class)
+            );
+
+            $chainRepository->addRepository(
+                $app->make(EloquentContactCardInstitutionRepository::class)
             );
 
             return $chainRepository;

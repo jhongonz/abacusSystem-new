@@ -6,6 +6,7 @@
 
 namespace Core\Institution\Domain;
 
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
@@ -26,11 +27,12 @@ class Institution
     private InstitutionShortname $shortname;
     private InstitutionLogo $logo;
     private InstitutionObservations $observations;
+    private InstitutionAddress $address;
     private InstitutionState $state;
     private InstitutionSearch $search;
     private InstitutionCreatedAt $createdAt;
     private InstitutionUpdatedAt $updatedAt;
-    private ContactCards $contactCards;
+    private ?ContactCard $contactCard;
 
     public function __construct(
         InstitutionId $id,
@@ -50,7 +52,7 @@ class Institution
         $this->observations = new InstitutionObservations;
         $this->createdAt = new InstitutionCreatedAt;
         $this->updatedAt = new InstitutionUpdatedAt;
-        $this->contactCards = new ContactCards;
+        $this->contactCard = null;
     }
 
     public function id(): InstitutionId
@@ -119,6 +121,17 @@ class Institution
         return $this;
     }
 
+    public function address(): InstitutionAddress
+    {
+        return $this->address;
+    }
+
+    public function setAddress(InstitutionAddress $address): self
+    {
+        $this->address = $address;
+        return $this;
+    }
+
     public function state(): InstitutionState
     {
         return $this->state;
@@ -176,14 +189,14 @@ class Institution
         return $this;
     }
 
-    public function contactCards(): ContactCards
+    public function contactCard(): ?ContactCard
     {
-        return $this->contactCards;
+        return $this->contactCard;
     }
 
-    public function setContactCards(ContactCards $contactCards): self
+    public function setContactCard(ContactCard $contactCard): self
     {
-        $this->contactCards = $contactCards;
+        $this->contactCard = $contactCard;
         return $this;
     }
 }
