@@ -67,13 +67,15 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (! is_null($data)) {
+        if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new \DateTime($dataArray['createdAt']['date']);
+            $data = $dataArray[Module::TYPE];
 
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new \DateTime($dataArray['updatedAt']['date']);
+            $data['createdAt'] = new \DateTime($data['createdAt']['date']);
+            if (isset($data['updatedAt'])) {
+                $data['updatedAt'] = new \DateTime($data['updatedAt']['date']);
             }
+            $dataArray[Module::TYPE] = $data;
 
             /** @var Module */
             return $this->moduleFactory->buildModuleFromArray($dataArray);

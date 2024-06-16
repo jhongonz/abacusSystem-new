@@ -87,16 +87,16 @@ class RedisEmployeeRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('employee::1')
-            ->andReturn('{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"},"birthdate":{"date":"2024-06-04 12:34:56"}}');
+            ->andReturn('{"employee":{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"},"birthdate":{"date":"2024-06-04 12:34:56"}}}');
 
         $employeeMock = $this->createMock(Employee::class);
         $this->factory->expects(self::once())
             ->method('buildEmployeeFromArray')
-            ->with([
+            ->with(['employee' => [
                 'createdAt' => new \DateTime('2024-06-04 12:34:56'),
                 'updatedAt' => new \DateTime('2024-06-04 12:34:56'),
                 'birthdate' => new \DateTime('2024-06-04 12:34:56'),
-            ])
+            ]])
             ->willReturn($employeeMock);
 
         $result = $this->repository->find($employeeIdMock);

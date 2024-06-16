@@ -75,11 +75,13 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
 
         if (! is_null($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new DateTime($dataArray['createdAt']['date']);
+            $data = $dataArray[Profile::TYPE];
 
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
+            $data['createdAt'] = new DateTime($data['createdAt']['date']);
+            if (isset($data['updatedAt'])) {
+                $data['updatedAt'] = new DateTime($data['updatedAt']['date']);
             }
+            $dataArray[Profile::TYPE] = $data;
 
             return $this->profileFactory->buildProfileFromArray($dataArray);
         }
