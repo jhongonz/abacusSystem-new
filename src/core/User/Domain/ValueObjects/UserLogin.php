@@ -6,9 +6,7 @@
 
 namespace Core\User\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
-class UserLogin implements ValueObjectContract
+class UserLogin
 {
     private string $value;
 
@@ -22,11 +20,7 @@ class UserLogin implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  string  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(string $value): self
     {
         $this->value = $value;
 

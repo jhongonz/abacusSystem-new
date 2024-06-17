@@ -7,16 +7,13 @@ use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
-use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 
-class ProfileTranslator implements TranslatorDomainContract
+class ProfileTranslator
 {
     private ProfileFactoryContract $profileFactory;
-
     private ProfileModel $model;
-
     private array $collection;
 
     public function __construct(
@@ -26,11 +23,7 @@ class ProfileTranslator implements TranslatorDomainContract
         $this->collection = [];
     }
 
-    /**
-     * @param  ProfileModel  $model
-     * @return $this
-     */
-    public function setModel($model): self
+    public function setModel(ProfileModel $model): self
     {
         $this->model = $model;
 

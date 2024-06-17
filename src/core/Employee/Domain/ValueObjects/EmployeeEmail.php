@@ -2,10 +2,9 @@
 
 namespace Core\Employee\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
 use InvalidArgumentException;
 
-class EmployeeEmail implements ValueObjectContract
+class EmployeeEmail
 {
     private ?string $value;
 
@@ -22,11 +21,7 @@ class EmployeeEmail implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  string  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(string $value): self
     {
         $this->validate($value);
         $this->value = $value;

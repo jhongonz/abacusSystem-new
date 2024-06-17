@@ -6,11 +6,10 @@ use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
-use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use Exception;
 
-class EmployeeTranslator implements TranslatorDomainContract
+class EmployeeTranslator
 {
     private EmployeeFactoryContract $employeeFactory;
 
@@ -25,11 +24,7 @@ class EmployeeTranslator implements TranslatorDomainContract
         $this->collection = [];
     }
 
-    /**
-     * @param  EmployeeModel  $model
-     * @return $this
-     */
-    public function setModel($model): self
+    public function setModel(EmployeeModel $model): self
     {
         $this->employee = $model;
 

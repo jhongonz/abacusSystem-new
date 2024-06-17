@@ -2,9 +2,7 @@
 
 namespace Core\Employee\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
-class EmployeeAddress implements ValueObjectContract
+class EmployeeAddress
 {
     private ?string $value;
 
@@ -18,11 +16,7 @@ class EmployeeAddress implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  null|string  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 

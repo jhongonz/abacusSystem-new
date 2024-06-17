@@ -26,7 +26,7 @@ final class DataProviderInstitutionFactory
                         'state' => 1,
                         'address' => 'address',
                         'phone' => 'phone',
-                        'email' => 'email',
+                        'email' => 'algo@algo.com',
                         'createdAt' => json_decode(json_encode(new DateTime), true),
                         'updatedAt' => json_decode(json_encode(new DateTime), true),
                     ]
