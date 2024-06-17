@@ -7,6 +7,7 @@
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserProfileId;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -56,5 +57,17 @@ class UserProfileIdTest extends TestCase
         $this->assertInstanceOf(UserProfileId::class, $object);
         $this->assertIsInt($return);
         $this->assertNotEquals($expected, $original);
+    }
+
+    public function test_setValue_should_return_exception(): void
+    {
+        $expectedMessage = '<Core\User\Domain\ValueObjects\UserProfileId> does not allow the value <0>.';
+
+        try {
+            $valueObject = new UserProfileId(0);
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+            $this->assertSame($expectedMessage, $exception->getMessage());
+        }
     }
 }

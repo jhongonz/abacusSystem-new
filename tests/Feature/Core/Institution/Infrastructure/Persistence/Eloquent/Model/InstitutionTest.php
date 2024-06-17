@@ -122,6 +122,51 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->observations());
     }
 
+    public function test_address_should_return_null(): void
+    {
+        $result = $this->model->address();
+        $this->assertNull($result);
+    }
+
+    public function test_address_should_change_and_return_string(): void
+    {
+        $result = $this->model->changeAddress('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->address());
+    }
+
+    public function test_phone_should_return_null(): void
+    {
+        $result = $this->model->phone();
+        $this->assertNull($result);
+    }
+
+    public function test_phone_should_change_and_return_string(): void
+    {
+        $result = $this->model->changePhone('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->phone());
+    }
+
+    public function test_email_should_return_null(): void
+    {
+        $result = $this->model->email();
+        $this->assertNull($result);
+    }
+
+    public function test_email_should_change_and_return_string(): void
+    {
+        $result = $this->model->changeEmail('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->email());
+    }
+
     public function test_state_should_return_int(): void
     {
         $result = $this->model->state();

@@ -165,7 +165,7 @@ class Institution extends Model
         return $this;
     }
 
-    public function phone(): string
+    public function phone(): ?string
     {
         return $this->getAttribute('inst_phone');
     }

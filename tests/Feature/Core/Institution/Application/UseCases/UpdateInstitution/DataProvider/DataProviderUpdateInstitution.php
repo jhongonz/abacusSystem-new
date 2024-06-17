@@ -18,6 +18,9 @@ final class DataProviderUpdateInstitution
                     'shortname' => 'shortname',
                     'logo' => 'logo',
                     'observations' => 'observations',
+                    'address' => 'address',
+                    'phone' => 'phone',
+                    'email' => 'email',
                     'state' => 2,
                     'updatedAt' => new \DateTime,
                 ]

@@ -7,6 +7,7 @@ use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -74,6 +75,15 @@ class InstitutionTranslatorTest extends TestCase
             ->method('buildInstitutionName')
             ->with('name')
             ->willReturn($nameMock);
+
+        $this->model->expects(self::once())
+            ->method('phone')
+            ->willReturn('phone');
+        $phoneMock = $this->createMock(InstitutionPhone::class);
+        $this->factory->expects(self::once())
+            ->method('buildInstitutionPhone')
+            ->with('phone')
+            ->willReturn($phoneMock);
 
         $this->factory->expects(self::once())
             ->method('buildInstitution')

@@ -71,7 +71,7 @@ class MenuComposer
         foreach ($this->config->get('menu.options') as $index => $item) {
             $item['id'] = 0;
             $item['state'] = ValueObjectStatus::STATE_ACTIVE;
-            $item['createdAt'] = $this->getCurrentTime();
+            $item['createdAt'] = json_decode(json_encode($this->getCurrentTime()), true);
 
             if (empty($item['route'])) {
                 $options = $modules->moduleElementsOfKey($index);
