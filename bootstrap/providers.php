@@ -2,6 +2,7 @@
 
 return [
     App\Providers\AppServiceProvider::class,
+    App\Providers\Service\CampusServiceProvider::class,
     App\Providers\Service\ControllerServiceProvider::class,
     App\Providers\Service\EmployeeServiceProvider::class,
     App\Providers\Service\InstitutionServiceProvider::class,

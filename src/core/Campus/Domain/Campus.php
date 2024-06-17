@@ -20,6 +20,8 @@ use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
 
 class Campus
 {
+    public const TYPE = 'campus';
+
     private CampusId $id;
     private CampusInstitutionId $institutionId;
     private CampusName $name;

@@ -1,21 +1,25 @@
 <?php
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ * Date: 2024-06-17 12:56:02
+ */
 
-namespace Core\Employee\Domain;
+namespace Core\Campus\Domain;
 
 use Core\SharedContext\Model\ArrayIterator;
 
-class Employees extends ArrayIterator
+class CampusCollection extends ArrayIterator
 {
-    public const TYPE = 'employees';
+    public const TYPE = 'campus-collection';
 
-    public function __construct(Employee ...$employees)
+    public function __construct(Campus ...$campus)
     {
-        foreach ($employees as $employee) {
-            $this->addItem($employee);
+        foreach ($campus as $item) {
+            $this->addItem($item);
         }
     }
 
-    public function addItem(Employee $item): self
+    public function addItem(Campus $item): self
     {
         $this->items[] = $item;
         return $this;
@@ -26,7 +30,7 @@ class Employees extends ArrayIterator
         return $this->items;
     }
 
-    public function addId(int $id): self
+    public function addId(int $id): ArrayIterator
     {
         $this->aggregator[] = $id;
         return $this;
