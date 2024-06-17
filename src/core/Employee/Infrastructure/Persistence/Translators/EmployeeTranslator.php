@@ -12,9 +12,7 @@ use Exception;
 class EmployeeTranslator
 {
     private EmployeeFactoryContract $employeeFactory;
-
     private EmployeeModel $employee;
-
     private array $collection;
 
     public function __construct(
