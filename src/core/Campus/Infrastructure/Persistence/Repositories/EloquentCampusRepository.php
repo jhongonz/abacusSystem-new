@@ -10,6 +10,7 @@ use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
+use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
@@ -73,7 +74,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     /**
      * @throws CampusCollectionNotFoundException
      */
-    public function getAll(CampusId $id, array $filters = []): ?CampusCollection
+    public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
         $builder = $this->databaseManager->table($this->getTable());
         $builder->where('cam__inst_id', $id->value());

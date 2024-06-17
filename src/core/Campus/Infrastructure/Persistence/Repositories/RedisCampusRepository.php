@@ -12,6 +12,7 @@ use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
+use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Exceptions\CampusPersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
@@ -76,7 +77,7 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
         return null;
     }
 
-    public function getAll(CampusId $id, array $filters = []): ?CampusCollection
+    public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
         return null;
     }

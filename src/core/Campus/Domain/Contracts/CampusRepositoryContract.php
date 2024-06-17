@@ -9,12 +9,13 @@ namespace Core\Campus\Domain\Contracts;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\ValueObjects\CampusId;
+use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 
 interface CampusRepositoryContract
 {
     public function find(CampusId $id): ?Campus;
 
-    public function getAll(CampusId $id, array $filters = []): ?CampusCollection;
+    public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection;
 
     public function delete(CampusId $id): void;
 

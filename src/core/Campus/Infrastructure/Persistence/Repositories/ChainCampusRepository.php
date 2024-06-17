@@ -10,6 +10,7 @@ use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
+use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
@@ -46,7 +47,7 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      * @throws CampusCollectionNotFoundException
      * @throws Throwable
      */
-    public function getAll(CampusId $id, array $filters = []): ?CampusCollection
+    public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
         try {
             $this->read(__FUNCTION__, $id, $filters);
