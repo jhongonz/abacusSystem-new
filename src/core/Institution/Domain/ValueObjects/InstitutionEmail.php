@@ -1,10 +1,14 @@
 <?php
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ * Date: 2024-06-16 20:31:19
+ */
 
-namespace Core\Employee\Domain\ValueObjects;
+namespace Core\Institution\Domain\ValueObjects;
 
 use InvalidArgumentException;
 
-class EmployeeEmail
+class InstitutionEmail
 {
     private ?string $value;
 

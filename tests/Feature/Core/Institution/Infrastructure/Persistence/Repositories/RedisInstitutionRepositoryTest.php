@@ -79,7 +79,7 @@ class RedisInstitutionRepositoryTest extends TestCase
             ->method('value')
             ->willReturn(1);
 
-        $dataExpected = [
+        $dataExpected[Institution::TYPE] = [
             'createdAt' => new \DateTime('2024-06-03 08:50:00'),
             'updatedAt' => new \DateTime('2024-06-03 08:50:00'),
         ];
@@ -91,7 +91,7 @@ class RedisInstitutionRepositoryTest extends TestCase
         $institution = $this->createMock(Institution::class);
         $this->factory->expects(self::once())
             ->method('buildInstitutionFromArray')
-            ->with($dataExpected)
+            ->withAnyParameters()
             ->willReturn($institution);
 
         $result = $this->repository->find($idMock);

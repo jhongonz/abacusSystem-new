@@ -2,9 +2,7 @@
 
 namespace Core\Profile\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
-class ProfileSearch implements ValueObjectContract
+class ProfileSearch
 {
     private ?string $value;
 
@@ -18,10 +16,7 @@ class ProfileSearch implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  string  $value
-     */
-    public function setValue($value): self
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 

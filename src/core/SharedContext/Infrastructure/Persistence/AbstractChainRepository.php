@@ -47,10 +47,7 @@ abstract class AbstractChainRepository
     protected function read(string $functionName, ...$source)
     {
         $result = $this->readFromRepositories($functionName, ...$source);
-
-        if (! $this->functionNameDelete()) {
-            $this->persistence($this->functionNamePersist(), $result);
-        }
+        $this->persistence($this->functionNamePersist(), $result);
 
         return $result;
     }

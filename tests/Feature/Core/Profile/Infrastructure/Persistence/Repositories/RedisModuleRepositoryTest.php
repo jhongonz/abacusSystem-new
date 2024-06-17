@@ -83,7 +83,7 @@ class RedisModuleRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('module::1')
-            ->andReturn('{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"}}');
+            ->andReturn('{"module":{"createdAt":{"date":"2024-06-16 19:35:39.493232","timezone_type":3,"timezone":"UTC"},"updatedAt":{"date":"2024-06-16 19:35:39.493243","timezone_type":3,"timezone":"UTC"}}}');
 
         $module = $this->createMock(Module::class);
         $this->factory->expects(self::once())

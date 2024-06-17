@@ -127,7 +127,7 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
 
             axios.post("{{ route('panel.institution.change-state-institution') }}",{
-                id : $(this).data('id')
+                institutionId : $(this).data('id')
             })
             .then(function (response){
                 $('#content-data').DataTable().ajax.reload(null, false);

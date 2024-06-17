@@ -1,8 +1,12 @@
 <?php
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ * Date: 2024-06-16 19:26:00
+ */
 
-namespace Core\Employee\Domain\ValueObjects;
+namespace Core\Institution\Domain\ValueObjects;
 
-class EmployeeIdentificationType
+class InstitutionAddress
 {
     private ?string $value;
 
@@ -19,7 +23,6 @@ class EmployeeIdentificationType
     public function setValue(string $value): self
     {
         $this->value = $value;
-
         return $this;
     }
 }

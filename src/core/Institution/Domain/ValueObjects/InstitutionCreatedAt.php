@@ -6,10 +6,9 @@
 
 namespace Core\Institution\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
 use DateTime;
 
-class InstitutionCreatedAt implements ValueObjectContract
+class InstitutionCreatedAt
 {
     private DateTime $value;
 
@@ -23,11 +22,7 @@ class InstitutionCreatedAt implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param DateTime $value
-     * @return self
-     */
-    public function setValue($value): self
+    public function setValue(DateTime $value): self
     {
         $this->value = $value;
         return $this;

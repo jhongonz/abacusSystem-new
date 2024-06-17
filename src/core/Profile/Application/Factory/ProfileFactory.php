@@ -27,7 +27,7 @@ class ProfileFactory implements ProfileFactoryContract
             $this->buildProfileId($data['id']),
             $this->buildProfileName($data['name']),
             $this->buildProfileState($data['state']),
-            $this->buildProfileCreatedAt($data['createdAt'])
+            $this->buildProfileCreatedAt($this->getDateTime($data['createdAt']['date']))
         );
 
         $profile->setDescription(
@@ -37,7 +37,7 @@ class ProfileFactory implements ProfileFactoryContract
         $profile->setModulesAggregator($data['modulesAggregator']);
 
         if (isset($data['updatedAt'])) {
-            $profile->updatedAt()->setValue($data['updatedAt']);
+            $profile->updatedAt()->setValue($this->getDateTime($data['updatedAt']['date']));
         }
 
         return $profile;
@@ -99,5 +99,13 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfileDescription(?string $description = null): ProfileDescription
     {
         return new ProfileDescription($description);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

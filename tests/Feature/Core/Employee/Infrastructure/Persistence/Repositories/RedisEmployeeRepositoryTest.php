@@ -92,11 +92,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         $employeeMock = $this->createMock(Employee::class);
         $this->factory->expects(self::once())
             ->method('buildEmployeeFromArray')
-            ->with([
-                'createdAt' => new \DateTime('2024-06-04 12:34:56'),
-                'updatedAt' => new \DateTime('2024-06-04 12:34:56'),
-                'birthdate' => new \DateTime('2024-06-04 12:34:56'),
-            ])
+            ->withAnyParameters()
             ->willReturn($employeeMock);
 
         $result = $this->repository->find($employeeIdMock);

@@ -24,8 +24,11 @@ final class DataProviderInstitutionFactory
                         'search' => 'search',
                         'observations' => 'observations',
                         'state' => 1,
-                        'createdAt' => new DateTime,
-                        'updatedAt' => new DateTime,
+                        'address' => 'address',
+                        'phone' => 'phone',
+                        'email' => 'algo@algo.com',
+                        'createdAt' => json_decode(json_encode(new DateTime), true),
+                        'updatedAt' => json_decode(json_encode(new DateTime), true),
                     ]
                 ]
             ]

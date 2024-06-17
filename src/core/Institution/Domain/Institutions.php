@@ -19,11 +19,7 @@ class Institutions extends ArrayIterator
         }
     }
 
-    /**
-     * @param Institution $item
-     * @return $this
-     */
-    public function addItem($item): self
+    public function addItem(Institution $item): self
     {
         $this->items[] = $item;
         return $this;

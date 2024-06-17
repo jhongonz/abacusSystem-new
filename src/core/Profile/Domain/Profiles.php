@@ -15,10 +15,7 @@ class Profiles extends ArrayIterator
         }
     }
 
-    /**
-     * @param  Profile  $item
-     */
-    public function addItem($item): self
+    public function addItem(Profile $item): self
     {
         $this->items[] = $item;
 

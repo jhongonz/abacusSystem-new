@@ -9,12 +9,15 @@ namespace Core\Institution\Application\Factory;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -52,7 +55,19 @@ class InstitutionFactory implements InstitutionFactoryContract
         );
 
         $institution->setCreatedAt(
-            $this->buildInstitutionCreatedAt($data['createdAt'])
+            $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']['date']))
+        );
+
+        $institution->setAddress(
+            $this->buildInstitutionAddress($data['address'])
+        );
+
+        $institution->setPhone(
+            $this->buildInstitutionPhone($data['phone'])
+        );
+
+        $institution->setEmail(
+            $this->buildInstitutionEmail($data['email'])
         );
 
         if (isset($data['logo'])) {
@@ -63,7 +78,7 @@ class InstitutionFactory implements InstitutionFactoryContract
 
         if (isset($data['updatedAt'])) {
             $institution->setUpdatedAt(
-                $this->buildInstitutionUpdatedAt($data['updatedAt'])
+                $this->buildInstitutionUpdatedAt($this->getDateTime($data['updatedAt']['date']))
             );
         }
 
@@ -131,5 +146,28 @@ class InstitutionFactory implements InstitutionFactoryContract
     public function buildInstitutions(Institution ...$institutions): Institutions
     {
         return new Institutions(... $institutions);
+    }
+
+    public function buildInstitutionAddress(?string $address = null): InstitutionAddress
+    {
+        return new InstitutionAddress($address);
+    }
+
+    public function buildInstitutionPhone(string $phone): InstitutionPhone
+    {
+        return new InstitutionPhone($phone);
+    }
+
+    public function buildInstitutionEmail(?string $email = null): InstitutionEmail
+    {
+        return new InstitutionEmail($email);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

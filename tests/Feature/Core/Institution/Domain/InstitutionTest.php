@@ -3,12 +3,15 @@
 namespace Tests\Feature\Core\Institution\Domain;
 
 use Core\Institution\Domain\Institution;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -281,10 +284,28 @@ class InstitutionTest extends TestCase
             ->willReturn('observations');
         $this->institution->setObservations($observations);
 
+        $address = $this->createMock(InstitutionAddress::class);
+        $address->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $this->institution->setAddress($address);
+
+        $phone = $this->createMock(InstitutionPhone::class);
+        $phone->expects(self::once())
+            ->method('value')
+            ->willReturn('phone');
+        $this->institution->setPhone($phone);
+
+        $email = $this->createMock(InstitutionEmail::class);
+        $email->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $this->institution->setEmail($email);
+
         $searchMock = $this->createMock(InstitutionSearch::class);
         $searchMock->expects(self::once())
             ->method('setValue')
-            ->with('code name shortname observations')
+            ->with('code name shortname observations address phone email')
             ->willReturnSelf();
         $this->institution->setSearch($searchMock);
 

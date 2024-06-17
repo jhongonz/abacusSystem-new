@@ -20,7 +20,7 @@ class InstitutionTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->model);
+        unset($this->model, $this->modelMock);
         parent::tearDown();
     }
 

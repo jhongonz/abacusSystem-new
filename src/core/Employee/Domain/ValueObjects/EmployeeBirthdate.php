@@ -2,10 +2,9 @@
 
 namespace Core\Employee\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
 use DateTime;
 
-class EmployeeBirthdate implements ValueObjectContract
+class EmployeeBirthdate
 {
     private ?DateTime $value;
 
@@ -24,11 +23,7 @@ class EmployeeBirthdate implements ValueObjectContract
         return ($this->value) ? $this->value->format('d/m/Y') : null;
     }
 
-    /**
-     * @param  null|DateTime  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(?DateTime $value): self
     {
         $this->value = $value;
 

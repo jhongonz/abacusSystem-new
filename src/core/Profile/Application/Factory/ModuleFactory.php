@@ -39,10 +39,10 @@ class ModuleFactory implements ModuleFactoryContract
             $module->position()->setValue($data['position']);
         }
 
-        $module->createdAt()->setValue($data['createdAt']);
+        $module->createdAt()->setValue($this->getDateTime($data['createdAt']['date']));
 
         if (isset($data['updatedAt'])) {
-            $module->updatedAt()->setValue($data['updatedAt']);
+            $module->updatedAt()->setValue($this->getDateTime($data['updatedAt']['date']));
         }
 
         return $module;
@@ -142,5 +142,13 @@ class ModuleFactory implements ModuleFactoryContract
     public function buildModulePosition(int $position = 1): ModulePosition
     {
         return new ModulePosition($position);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

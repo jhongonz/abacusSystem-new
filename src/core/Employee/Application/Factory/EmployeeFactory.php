@@ -38,7 +38,7 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeName($data['name']),
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
-            $this->buildEmployeeCreatedAt($data['createdAt']),
+            $this->buildEmployeeCreatedAt($this->getDateTime($data['createdAt']['date'])),
         );
 
         $employee->setIdentificationType($this->buildEmployeeIdentificationType($data['identification_type']));
@@ -49,12 +49,12 @@ class EmployeeFactory implements EmployeeFactoryContract
 
         if (isset($data['updatedAt'])) {
             $employee->setUpdatedAt(
-                $this->buildEmployeeUpdatedAt($data['updatedAt'])
+                $this->buildEmployeeUpdatedAt($this->getDateTime($data['updatedAt']['date']))
             );
         }
 
         if (isset($data['birthdate'])) {
-            $employee->setBirthdate($this->buildEmployeeBirthdate($data['birthdate']));
+            $employee->setBirthdate($this->buildEmployeeBirthdate($this->getDateTime($data['birthdate']['date'])));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
@@ -181,5 +181,13 @@ class EmployeeFactory implements EmployeeFactoryContract
     public function buildEmployees(Employee ...$employees): Employees
     {
         return new Employees(... $employees);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

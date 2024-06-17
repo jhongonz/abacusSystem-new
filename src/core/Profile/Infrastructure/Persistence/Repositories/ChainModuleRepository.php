@@ -71,9 +71,4 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     {
         $this->write(__FUNCTION__, $id);
     }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
-    }
 }

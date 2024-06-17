@@ -6,9 +6,7 @@
 
 namespace Core\User\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
-class UserId implements ValueObjectContract
+class UserId
 {
     private ?int $value;
 
@@ -25,11 +23,7 @@ class UserId implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  int  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(int $value): self
     {
         $this->validate($value);
         $this->value = $value;

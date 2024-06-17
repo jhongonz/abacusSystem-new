@@ -7,7 +7,7 @@ use Exception;
 /**
  * @codeCoverageIgnore
  */
-class ValueObjectStatus implements ValueObjectContract
+class ValueObjectStatus
 {
     public const STATE_NEW = 1;
 
@@ -62,11 +62,9 @@ class ValueObjectStatus implements ValueObjectContract
     }
 
     /**
-     * @param  int  $value
-     *
      * @throws Exception
      */
-    public function setValue($value): self
+    public function setValue(int $value): self
     {
         $this->validateState($value);
         $this->value = $value;

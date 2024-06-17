@@ -62,12 +62,14 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);
 
         $data = $builder->first();
+
         if (is_null($data)) {
-            throw new InstitutionNotFoundException('Institution not found with id '.$id->value());
+            throw new InstitutionNotFoundException(
+                sprintf('Institution not found with id %s', $id->value())
+            );
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
-
         return $this->institutionTranslator->setModel($institutionModel)->toDomain();
     }
 
@@ -111,7 +113,9 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException('Institution not found with id '.$id->value());
+            throw new InstitutionNotFoundException(
+                sprintf('Institution not found with id %s', $id->value())
+            );
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
@@ -156,6 +160,9 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $model->changeCode($domain->code()->value());
         $model->changeLogo($domain->logo()->value());
         $model->changeObservations($domain->observations()->value());
+        $model->changeAddress($domain->address()->value());
+        $model->changePhone($domain->phone()->value());
+        $model->changeEmail($domain->email()->value());
         $model->changeSearch($domain->search()->value());
         $model->changeState($domain->state()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
