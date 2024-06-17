@@ -6,6 +6,10 @@
 
 namespace Core\Campus\Infrastructure\Management;
 
+use Core\Campus\Application\UseCases\CreateCampus\CreateCampus;
+use Core\Campus\Application\UseCases\CreateCampus\CreateCampusRequest;
+use Core\Campus\Application\UseCases\DeleteCampus\DeleteCampus;
+use Core\Campus\Application\UseCases\DeleteCampus\DeleteCampusRequest;
 use Core\Campus\Application\UseCases\SearchCampus\SearchCampusById;
 use Core\Campus\Application\UseCases\SearchCampus\SearchCampusByIdRequest;
 use Core\Campus\Application\UseCases\SearchCampus\SearchCampusCollection;
@@ -24,17 +28,22 @@ class CampusService implements CampusManagementContract
     private SearchCampusById $searchCampusById;
     private SearchCampusCollection $searchCampusCollection;
     private UpdateCampus $updateCampus;
+    private CreateCampus $createCampus;
+    private DeleteCampus $deleteCampus;
 
     public function __construct(
         CampusFactoryContract $campusFactory,
         SearchCampusById $searchCampusById,
         SearchCampusCollection $searchCampusCollection,
-        UpdateCampus $updateCampus
+        UpdateCampus $updateCampus,
+        CreateCampus $createCampus,
+        DeleteCampus $deleteCampus,
     ) {
         $this->campusFactory = $campusFactory;
         $this->searchCampusById = $searchCampusById;
         $this->searchCampusCollection = $searchCampusCollection;
         $this->updateCampus = $updateCampus;
+        $this->createCampus = $createCampus;
     }
 
     /**
@@ -81,13 +90,27 @@ class CampusService implements CampusManagementContract
         return $this->updateCampus->execute($request);
     }
 
+    /**
+     * @throws Exception
+     */
     public function createCampus(array $data): Campus
     {
-        // TODO: Implement createCampus() method.
+        $request = new CreateCampusRequest(
+            $this->campusFactory->buildCampusFromArray($data)
+        );
+
+        return $this->createCampus->execute($request);
     }
 
+    /**
+     * @throws Exception
+     */
     public function deleteCampus(int $id): void
     {
-        // TODO: Implement deleteCampus() method.
+        $request = new DeleteCampusRequest(
+            $this->campusFactory->buildCampusId($id)
+        );
+
+        $this->deleteCampus->execute($request);
     }
 }
