@@ -15,6 +15,7 @@ use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Exceptions\CampusPersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
+use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
@@ -61,7 +62,7 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
     {
         try {
             $data = Redis::get($this->campusKey($id));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new CampusNotFoundException(sprintf('Campus not found by id %s', $id->value()));
         }
@@ -95,7 +96,7 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
 
         try {
             Redis::set($campusKey, json_encode($campusData));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new CampusPersistException(sprintf('It could not persist Campus with key %s in redis', $campusKey));
         }

@@ -6,8 +6,6 @@
 
 namespace Core\Campus\Domain\ValueObjects;
 
-use InvalidArgumentException;
-
 class CampusInstitutionId
 {
     private int $value;

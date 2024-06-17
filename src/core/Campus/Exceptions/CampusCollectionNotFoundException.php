@@ -10,5 +10,4 @@ use Exception;
 
 class CampusCollectionNotFoundException extends Exception
 {
-
 }
