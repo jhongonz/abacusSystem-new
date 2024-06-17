@@ -498,10 +498,14 @@ class EmployeeControllerTest extends TestCase
 
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $fileMock->expects(self::once())
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $request->expects(self::once())
+        $request->expects(self::exactly(2))
             ->method('file')
             ->with('file')
             ->willReturn($fileMock);

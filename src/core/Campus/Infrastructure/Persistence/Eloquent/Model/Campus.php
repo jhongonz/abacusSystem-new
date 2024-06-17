@@ -1,16 +1,16 @@
 <?php
 
-namespace Core\Institution\Infrastructure\Persistence\Eloquent\Model;
+namespace Core\Campus\Infrastructure\Persistence\Eloquent\Model;
 
-use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus;
+use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Institution extends Model
+class Campus extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -20,14 +20,14 @@ class Institution extends Model
      *
      * @var string
      */
-    protected $table = 'institutions';
+    protected $table = 'campus';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'inst_id';
+    protected $primaryKey = 'cam_id';
 
     /**
      * The model's default values for attributes.
@@ -35,7 +35,7 @@ class Institution extends Model
      * @var array
      */
     protected $attributes = [
-        'inst_state' => 1,
+        'cam_state' => 1,
     ];
 
     /**
@@ -44,17 +44,15 @@ class Institution extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'inst_id',
-        'inst_code',
-        'inst_name',
-        'inst_shortname',
-        'inst_logo',
-        'inst_observations',
-        'inst_state',
-        'inst_search',
-        'inst_address',
-        'inst_phone',
-        'inst_email',
+        'cam_id',
+        'cam__inst_id',
+        'cam_name',
+        'cam_address',
+        'cam_phone',
+        'cam_email',
+        'cam_observations',
+        'cam_search',
+        'cam_state',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -63,7 +61,7 @@ class Institution extends Model
     /**
      * The search field associated with the table.
      */
-    protected string $mainSearchField = 'inst_search';
+    protected string $mainSearchField = 'cam_search';
 
     /**
      * The attributes that should be cast.
@@ -90,135 +88,112 @@ class Institution extends Model
         return $this->mainSearchField;
     }
 
-    public function relationWithCampus(): HasMany
+    public function relationWithInstitution(): BelongsTo
     {
-        return $this->hasMany(Campus::class, 'cam__inst_id', 'inst_id');
+        return $this->belongsTo(Institution::class, 'cam__inst_id', 'inst_id');
     }
 
-
-    public function campus(): Model
+    public function institution(): Model
     {
-        return $this->relationWithCampus()->getModel();
+        return $this->relationWithInstitution()->getModel();
     }
 
     public function id(): ?int
     {
-        return $this->getAttribute('inst_id');
+        return $this->getAttribute('cam_id');
     }
 
-    public function changeId(?int $id): self
+    public function changeId(int $id): self
     {
-        $this->setAttribute('inst_id', $id);
+        $this->setAttribute('cam_id', $id);
         return $this;
     }
 
-    public function code(): ?string
+    public function institutionId(): int
     {
-        return $this->getAttribute('inst_code');
+        return $this->getAttribute('cam__inst_id');
     }
 
-    public function changeCode(?string $code): self
+    public function changeInstitutionId(int $id): self
     {
-        $this->setAttribute('inst_code', $code);
+        $this->setAttribute('cam__inst_id', $id);
         return $this;
     }
 
-    public function name(): ?string
+    public function name(): string
     {
-        return $this->getAttribute('inst_name');
+        return $this->getAttribute('cam_name');
     }
 
-    public function changeName(?string $name): self
+    public function changeName(string $name): self
     {
-        $this->setAttribute('inst_name', $name);
-        return $this;
-    }
-
-    public function shortname(): ?string
-    {
-        return $this->getAttribute('inst_shortname');
-    }
-
-    public function changeShortname(?string $shortname): self
-    {
-        $this->setAttribute('inst_shortname', $shortname);
-        return $this;
-    }
-
-    public function logo(): ?string
-    {
-        return $this->getAttribute('inst_logo');
-    }
-
-    public function changeLogo(?string $logo): self
-    {
-        $this->setAttribute('inst_logo', $logo);
-        return $this;
-    }
-
-    public function observations(): ?string
-    {
-        return $this->getAttribute('inst_observations');
-    }
-
-    public function changeObservations(?string $observations): self
-    {
-        $this->setAttribute('inst_observations', $observations);
+        $this->setAttribute('cam_name', $name);
         return $this;
     }
 
     public function address(): ?string
     {
-        return $this->getAttribute('inst_address');
+        return $this->getAttribute('cam_address');
     }
 
-    public function changeAddress(?string $address): self
+    public function changeAddress(string $address): self
     {
-        $this->setAttribute('inst_address', $address);
+        $this->setAttribute('cam_address', $address);
         return $this;
     }
 
     public function phone(): ?string
     {
-        return $this->getAttribute('inst_phone');
+        return $this->getAttribute('cam_phone');
     }
 
-    public function changePhone(string $phone): self
+    public function changePhone(?string $phone): self
     {
-        $this->setAttribute('inst_phone', $phone);
+        $this->setAttribute('cam_phone', $phone);
         return $this;
     }
 
     public function email(): ?string
     {
-        return $this->getAttribute('inst_email');
+        return $this->getAttribute('cam_email');
     }
 
     public function changeEmail(?string $email): self
     {
-        $this->setAttribute('inst_email', $email);
+        $this->setAttribute('cam_email', $email);
+        return $this;
+    }
+
+    public function observations(): ?string
+    {
+        return $this->getAttribute('cam_observations');
+    }
+
+    public function changeObservations(?string $observations): self
+    {
+        $this->setAttribute('cam_observations', $observations);
         return $this;
     }
 
     public function search(): ?string
     {
-        return $this->getAttribute('inst_search');
+        return $this->getAttribute('cam_search');
     }
 
-    public function changeSearch(string $search): self
+    public function changeSearch(?string $search): self
     {
-        $this->setAttribute('inst_search', $search);
+        $this->setAttribute('cam_search', $search);
         return $this;
     }
 
     public function state(): int
     {
-        return $this->getAttribute('inst_state');
+        return $this->getAttribute('cam_state');
     }
 
     public function changeState(int $state): self
     {
-        $this->setAttribute('inst_state', $state);
+        $this->setAttribute('cam_state', $state);
         return $this;
     }
 
@@ -228,14 +203,12 @@ class Institution extends Model
     public function createdAt(): ?DateTime
     {
         $datetime = $this->getAttribute('created_at');
-
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeCreatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
-
         return $this;
     }
 
@@ -245,14 +218,12 @@ class Institution extends Model
     public function updatedAt(): ?DateTime
     {
         $datetime = $this->getAttribute('updated_at');
-
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
-
         return $this;
     }
 
@@ -262,14 +233,12 @@ class Institution extends Model
     public function deletedAt(): ?DateTime
     {
         $datetime = $this->getAttribute('deleted_at');
-
         return ($datetime) ? $this->getDateTime($datetime) : $datetime;
     }
 
     public function changeDeletedAt(?DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
-
         return $this;
     }
 

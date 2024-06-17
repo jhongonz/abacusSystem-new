@@ -124,10 +124,14 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function setImageEmployee(Request $request): JsonResponse
     {
-        $random = Str::random(10);
-        $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
+        if ($request->file('file')->isValid()) {
+            $random = Str::random(10);
+            $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
 
-        return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
+            return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
+        }
+
+        return new JsonResponse(['msg' => 'Could not upload file.'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function deleteEmployee(Request $request, int $employeeId): JsonResponse

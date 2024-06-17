@@ -307,10 +307,14 @@ class InstitutionControllerTest extends TestCase
 
         $uploadFileMock = $this->createMock(UploadedFile::class);
         $uploadFileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $uploadFileMock->expects(self::once())
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $requestMock->expects(self::once())
+        $requestMock->expects(self::exactly(2))
             ->method('file')
             ->with('file')
             ->willReturn($uploadFileMock);

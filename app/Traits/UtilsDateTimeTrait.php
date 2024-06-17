@@ -19,6 +19,11 @@ trait UtilsDateTimeTrait
         return new DateTime;
     }
 
+    public function getCurrentTimeToArray(): array
+    {
+        return json_decode(json_encode(new DateTime), true);
+    }
+
     /**
      * @throws Exception
      */
