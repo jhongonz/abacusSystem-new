@@ -44,6 +44,7 @@ class CampusService implements CampusManagementContract
         $this->searchCampusCollection = $searchCampusCollection;
         $this->updateCampus = $updateCampus;
         $this->createCampus = $createCampus;
+        $this->deleteCampus = $deleteCampus;
     }
 
     /**

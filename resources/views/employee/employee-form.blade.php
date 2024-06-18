@@ -81,6 +81,17 @@
                                     <input type="text" class="email form-control form-control form-control-sm" name="email" id="email" placeholder="E-mail" value="@isset($employee){{$employee->email()->value()}}@endisset">
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <div class="form-group typeDocument">
+                                    <label>Institución donde labora</label>
+                                    <select name="institution" id="institution" data-placeholder="Seleccione" class="form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
+                                        <option></option>
+                                        @foreach($institutions as $institution)
+                                            <option value="{{$institution->id()->value()}}" @isset($employee) @if($employee->institutionId()->value() == $institution->id()->value()) selected @endif @endisset>{{$institution->code()->value()}} - {{$institution->name()->value()}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -197,6 +208,7 @@ $('.save-data').click(function(e){
 
     axios.post("{{ route('panel.employee.store') }}",{
         employeeId: $('#employeeId').val(),
+        institutionId: $('#institution').val(),
         userId: $('#userId').val(),
         identifier: $('#identifier').val(),
         typeDocument: $('#typeDocument').val(),

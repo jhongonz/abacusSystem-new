@@ -7,6 +7,7 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
+use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Illuminate\Http\Request;
@@ -18,15 +19,18 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
 
     private UserManagementContract $userManagement;
     private ProfileManagementContract $profileManagement;
+    private InstitutionManagementContract $institutionManagement;
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
         UserManagementContract $userManagement,
-        ProfileManagementContract $profileManagement
+        ProfileManagementContract $profileManagement,
+        InstitutionManagementContract $institutionManagement
     ) {
         parent::__construct($employeeManagement);
         $this->userManagement = $userManagement;
         $this->profileManagement = $profileManagement;
+        $this->institutionManagement = $institutionManagement;
     }
 
     /**
@@ -45,6 +49,7 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
             $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
         }
 
+        $institutions = $this->institutionManagement->searchInstitutions();
         $profiles = $this->profileManagement->searchProfiles();
         $userId = (! is_null($employee)) ? $employee->userId()->value() : null;
 
@@ -54,6 +59,7 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
             'employee' => $employee,
             'user' => $user ?? null,
             'profiles' => $profiles,
+            'institutions' => $institutions,
             'image' => $urlFile ?? null,
         ];
     }

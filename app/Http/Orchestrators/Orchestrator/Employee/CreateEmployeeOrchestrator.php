@@ -30,6 +30,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
     /**
      * @param Request $request
      * @return Employee
+     * @throws \Exception
      */
     public function make(Request $request): Employee
     {
@@ -37,6 +38,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
         $dataEmployee = [
             'id' => $request->input('employeeId'),
             'userId' => null,
+            'institutionId' => $request->input('institutionId'),
             'identification' => $request->input('identifier'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
@@ -45,8 +47,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => $birthdate->format('Y-m-d'),
-            'createdAt' => $this->getCurrentTime(),
+            'birthdate' => $this->getDateTimeToArray($birthdate->format('Y-m-d')),
             'state' => ValueObjectStatus::STATE_NEW,
             'image' => null
         ];

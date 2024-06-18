@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Employee\DetailEmployeeOrchestrator;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
+use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profiles;
 use Core\User\Domain\Contracts\UserManagementContract;
@@ -22,6 +23,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
     private UserManagementContract|MockObject $userManagement;
     private ProfileManagementContract|MockObject $profileManagement;
     private EmployeeManagementContract|MockObject $employeeManagement;
+    private InstitutionManagementContract|MockObject $institutionManagement;
     private DetailEmployeeOrchestrator $orchestrator;
 
     /**
@@ -33,10 +35,12 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $this->userManagement = $this->createMock(UserManagementContract::class);
         $this->profileManagement = $this->createMock(ProfileManagementContract::class);
         $this->employeeManagement = $this->createMock(EmployeeManagementContract::class);
+        $this->institutionManagement = $this->createMock(InstitutionManagementContract::class);
         $this->orchestrator = new DetailEmployeeOrchestrator(
             $this->employeeManagement,
             $this->userManagement,
-            $this->profileManagement
+            $this->profileManagement,
+            $this->institutionManagement
         );
     }
 
@@ -46,7 +50,8 @@ class DetailEmployeeOrchestratorTest extends TestCase
             $this->orchestrator,
             $this->employeeManagement,
             $this->profileManagement,
-            $this->userManagement
+            $this->userManagement,
+            $this->institutionManagement
         );
         parent::tearDown();
     }

@@ -10,6 +10,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -24,35 +25,21 @@ class Employee
     public const TYPE = 'employee';
 
     private EmployeeId $id;
-
     private EmployeeUserId $userId;
-
+    private EmployeeInstitutionId $institutionId;
     private EmployeeIdentification $identification;
-
     private EmployeeIdentificationType $identificationType;
-
     private EmployeeName $name;
-
     private EmployeeLastname $lastname;
-
     private EmployeePhone $phone;
-
     private EmployeeEmail $email;
-
     private EmployeeAddress $address;
-
     private EmployeeState $state;
-
     private EmployeeSearch $search;
-
     private EmployeeCreatedAt $createdAt;
-
     private EmployeeUpdateAt $updateAt;
-
     private EmployeeBirthdate $birthdate;
-
     private EmployeeObservations $observations;
-
     private EmployeeImage $image;
 
     public function __construct(
@@ -79,6 +66,7 @@ class Employee
         $this->search = new EmployeeSearch;
         $this->updateAt = new EmployeeUpdateAt;
         $this->userId = new EmployeeUserId;
+        $this->institutionId = new EmployeeInstitutionId;
         $this->birthdate = new EmployeeBirthdate;
         $this->observations = new EmployeeObservations;
         $this->identificationType = new EmployeeIdentificationType;
@@ -294,6 +282,17 @@ class Employee
     {
         $this->image = $image;
 
+        return $this;
+    }
+
+    public function institutionId(): EmployeeInstitutionId
+    {
+        return $this->institutionId;
+    }
+
+    public function setInstitutionId(EmployeeInstitutionId $institutionId): self
+    {
+        $this->institutionId = $institutionId;
         return $this;
     }
 }

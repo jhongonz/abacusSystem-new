@@ -8,7 +8,6 @@ namespace Core\Campus\Application\UseCases\UpdateCampus;
 
 use Core\Campus\Application\UseCases\RequestService;
 use Core\Campus\Domain\ValueObjects\CampusId;
-use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 
 class UpdateCampusRequest implements RequestService
 {

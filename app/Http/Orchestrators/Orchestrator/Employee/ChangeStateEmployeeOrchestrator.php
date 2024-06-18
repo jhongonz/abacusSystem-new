@@ -6,15 +6,12 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
 
 class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(EmployeeManagementContract $employeeManagement)
     {
         parent::__construct($employeeManagement);
@@ -37,7 +34,6 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $dataUpdate['state'] = $employeeState->value();
-        $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
         return $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
     }

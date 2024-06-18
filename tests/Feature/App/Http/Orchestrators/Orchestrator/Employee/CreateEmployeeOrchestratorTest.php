@@ -51,10 +51,11 @@ class CreateEmployeeOrchestratorTest extends TestCase
     public function test_make_should_create_and_return_employee(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(10))
+        $requestMock->expects(self::exactly(11))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
+                1,
                 1,
                 'identification',
                 'name',

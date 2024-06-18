@@ -13,6 +13,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -61,6 +62,9 @@ class EmployeeFactoryTest extends TestCase
 
         $this->assertSame($data['id'], $result->id()->value());
         $this->assertInstanceOf(EmployeeId::class, $result->id());
+
+        $this->assertSame($data['institutionId'], $result->id()->value());
+        $this->assertInstanceOf(EmployeeInstitutionId::class, $result->institutionId());
 
         $this->assertSame($data['identification'], $result->identification()->value());
         $this->assertInstanceOf(EmployeeIdentification::class, $result->identification());

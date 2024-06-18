@@ -17,6 +17,7 @@ final class DataProviderEmployeeFactory
                 'dataObject' => [
                     'employee' => [
                         'id' => 1,
+                        'institutionId' => 1,
                         'identification' => '123456',
                         'name' => 'peter',
                         'lastname' => 'smith',

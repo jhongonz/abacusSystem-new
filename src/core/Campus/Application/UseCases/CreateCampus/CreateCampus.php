@@ -9,7 +9,6 @@ namespace Core\Campus\Application\UseCases\CreateCampus;
 use Core\Campus\Application\UseCases\RequestService;
 use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
-use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 
 class CreateCampus extends UseCasesService

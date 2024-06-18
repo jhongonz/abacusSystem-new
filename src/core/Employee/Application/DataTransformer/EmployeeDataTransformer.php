@@ -40,6 +40,7 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         return [
             'id' => $this->employee->id()->value(),
             'userId' => $this->employee->userId()->value(),
+            'institutionId' => $this->employee->institutionId()->value(),
             'identification' => $this->employee->identification()->value(),
             'identification_type' => $this->employee->identificationType()->value(),
             'name' => $this->employee->name()->value(),

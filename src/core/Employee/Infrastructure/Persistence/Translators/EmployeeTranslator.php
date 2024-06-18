@@ -53,6 +53,7 @@ class EmployeeTranslator
         $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
         $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
         $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
+        $employee->setInstitutionId($this->employeeFactory->buildEmployeeInstitutionId($this->employee->institutionId()));
 
         /** @var User $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);

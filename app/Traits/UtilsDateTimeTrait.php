@@ -31,4 +31,12 @@ trait UtilsDateTimeTrait
     {
         return new DateTime($datetime);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getDateTimeToArray(string $datetime): array
+    {
+        return json_decode(json_encode(new DateTime($datetime)), true);
+    }
 }

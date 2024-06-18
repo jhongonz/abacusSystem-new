@@ -37,7 +37,10 @@ class UserFactory implements UserFactoryContract
             $this->buildState($data['state']),
             $this->buildCreatedAt($data['createdAt'])
         );
-        $user->photo()->setValue($data['photo']);
+
+        if (isset($data['photo'])) {
+            $user->photo()->setValue($data['photo']);
+        }
 
         return $user;
     }
