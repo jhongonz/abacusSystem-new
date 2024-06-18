@@ -518,18 +518,6 @@ class EloquentModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @throws Exception
-     */
-    public function test_persistModules_should_return_object(): void
-    {
-        $modulesMock = $this->createMock(Modules::class);
-        $result = $this->repository->persistModules($modulesMock);
-
-        $this->assertInstanceOf(Modules::class, $result);
-        $this->assertSame($modulesMock, $result);
-    }
-
-    /**
      * @throws ModulesNotFoundException
      * @throws Exception
      */

@@ -159,18 +159,6 @@ class RedisModuleRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistModules_should_return_object(): void
-    {
-        $modules = $this->createMock(Modules::class);
-        $result = $this->repository->persistModules($modules);
-
-        $this->assertInstanceOf(Modules::class, $result);
-        $this->assertSame($modules, $result);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function test_deleteModule_should_return_void(): void
     {
         $moduleId = $this->createMock(ModuleId::class);

@@ -133,11 +133,6 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
         return $profile;
     }
 
-    public function persistProfiles(Profiles $profiles): Profiles
-    {
-        return $profiles;
-    }
-
     private function profileKey(ProfileId $id): string
     {
         return sprintf(self::PROFILE_KEY_FORMAT, $this->keyPrefix, $id->value());

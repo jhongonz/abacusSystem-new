@@ -19,7 +19,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
 {
     private const FUNCTION_NAMES = [
         Module::class => 'persistModule',
-        Modules::class => 'persistModules',
+        Modules::class => '',
     ];
 
     private string $domainToPersist;

@@ -79,18 +79,6 @@ class RedisProfileRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistProfiles_should_return_object(): void
-    {
-        $profiles = $this->createMock(Profiles::class);
-        $result = $this->repository->persistProfiles($profiles);
-
-        $this->assertInstanceOf(Profiles::class, $result);
-        $this->assertSame($profiles, $result);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function test_deleteProfile_should_return_void(): void
     {
         $profileId = $this->createMock(ProfileId::class);

@@ -100,11 +100,6 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
         return null;
     }
 
-    public function persistModules(Modules $modules): Modules
-    {
-        return $modules;
-    }
-
     public function deleteModule(ModuleId $id): void
     {
         Redis::delete($this->moduleKey($id));

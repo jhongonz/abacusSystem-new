@@ -2,6 +2,7 @@
 
 namespace App\Providers\Service;
 
+use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollection;
 use App\Http\Orchestrators\Orchestrator\Employee\CreateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DeleteEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DetailEmployeeOrchestrator;
@@ -175,6 +176,11 @@ class OrchestratorServiceProvider extends ServiceProvider
 
             $orchestratorHandler->addOrchestrator(
                 $app->make(GetModulesOrchestrator::class)
+            );
+
+            //Campus Orchestrators
+            $orchestratorHandler->addOrchestrator(
+                $app->make(GetCampusCollection::class)
             );
 
             return $orchestratorHandler;

@@ -117,7 +117,6 @@ class SecurityController extends Controller implements HasMiddleware
     private function getProfile(Request $request, User $user): Profile
     {
         $request->merge(['profileId' => $user->profileId()->value()]);
-
         $profile = $this->orchestratorHandler->handler('retrieve-profile', $request);
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {

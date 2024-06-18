@@ -63,4 +63,5 @@ Route::controller(InstitutionController::class)->prefix('institution')->group(fu
 
 Route::controller(CampusController::class)->prefix('campus')->group(function () {
     Route::get('', 'index')->name('campus.index');
+    Route::post('/get-list', 'getCampus')->name('campus.get-campus');
 });
