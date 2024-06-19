@@ -10,11 +10,13 @@ use Core\Employee\Domain\Employee;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class CampusController extends Controller
+class CampusController extends Controller implements HasMiddleware
 {
     private OrchestratorHandlerContract $orchestrators;
     private ActionExecutorHandler $actionExecutorHandler;
@@ -97,5 +99,33 @@ class CampusController extends Controller
         }
 
         return new JsonResponse(status:Response::HTTP_CREATED);
+    }
+
+    public function deleteCampus(Request $request, int $campusId): JsonResponse
+    {
+        $request->merge(['campusId' => $campusId]);
+
+        try {
+            $this->orchestrators->handler('delete-campus', $request);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage(), $exception->getTrace());
+
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(status: Response::HTTP_OK);
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus',
+            ]),
+        ];
     }
 }

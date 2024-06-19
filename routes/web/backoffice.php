@@ -67,4 +67,5 @@ Route::controller(CampusController::class)->prefix('campus')->group(function () 
     Route::get('/get/{id?}', 'getCampus')->whereNumber('id')->name('campus.get-campus');
     Route::post('/store', 'storeCampus')->name('campus.store');
     Route::post('/set-state', 'changeStateCampus')->name('campus.change-state-campus');
+    Route::get('/delete/{id?}', 'deleteCampus')->whereNumber('id')->name('campus.delete-campus');
 });

@@ -4,6 +4,7 @@ namespace App\Providers\Service;
 
 use App\Http\Orchestrators\Orchestrator\Campus\ChangeStateCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\CreateCampusOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Campus\DeleteCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\DetailCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\UpdateCampusOrchestrator;
@@ -201,6 +202,10 @@ class OrchestratorServiceProvider extends ServiceProvider
 
             $orchestratorHandler->addOrchestrator(
                 $app->make(ChangeStateCampusOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(DeleteCampusOrchestrator::class)
             );
 
             return $orchestratorHandler;

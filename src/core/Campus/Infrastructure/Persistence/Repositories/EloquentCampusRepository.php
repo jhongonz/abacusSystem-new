@@ -108,7 +108,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     public function delete(CampusId $id): void
     {
         $builder = $this->databaseManager->table($this->getTable());
-        $builder->where('cam_if', $id->value());
+        $builder->where('cam_id', $id->value());
         $data = $builder->first();
 
         if (is_null($data)) {
