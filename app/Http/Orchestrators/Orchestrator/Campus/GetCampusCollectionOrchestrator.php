@@ -17,7 +17,7 @@ use Illuminate\View\Factory as ViewFactory;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Exceptions\Exception;
 
-class GetCampusCollection extends CampusOrchestrator
+class GetCampusCollectionOrchestrator extends CampusOrchestrator
 {
     use DataTablesTrait;
 

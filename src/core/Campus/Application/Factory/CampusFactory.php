@@ -57,11 +57,13 @@ class CampusFactory implements CampusFactoryContract
         $campus->observations()->setValue($data['observations']);
         $campus->state()->setValue($data['state']);
 
-        $campus->createdAt()->setValue($this->getDateTime($data['createdAt']['date']));
+        if (isset($data['createdAt'])) {
+            $campus->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        }
 
         if (isset($data['updatedAt'])) {
             $campus->updatedAt()->setValue(
-                $this->getDateTime($data['updatedAt']['date'])
+                $this->getDateTime($data['updatedAt'])
             );
         }
 

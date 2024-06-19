@@ -63,5 +63,8 @@ Route::controller(InstitutionController::class)->prefix('institution')->group(fu
 
 Route::controller(CampusController::class)->prefix('campus')->group(function () {
     Route::get('', 'index')->name('campus.index');
-    Route::post('/get-list', 'getCampus')->name('campus.get-campus');
+    Route::post('/get-list', 'getCampusCollection')->name('campus.get-campus-collection');
+    Route::get('/get/{id?}', 'getCampus')->whereNumber('id')->name('campus.get-campus');
+    Route::post('/store', 'storeCampus')->name('campus.store');
+    Route::post('/set-state', 'changeStateCampus')->name('campus.change-state-campus');
 });

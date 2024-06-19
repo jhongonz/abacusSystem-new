@@ -68,7 +68,7 @@ class ValueObjectStatus
     {
         $this->validateState($value);
         $this->value = $value;
-
+        $this->changeValueLiteral($value);
 
         return $this;
     }

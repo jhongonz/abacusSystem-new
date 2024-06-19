@@ -49,18 +49,18 @@ class EmployeeFactory implements EmployeeFactoryContract
 
         if (isset($data['createdAt'])) {
             $employee->setCreatedAt(
-                $this->buildEmployeeCreatedAt($this->getDateTime($data['createdAt']['date']))
+                $this->buildEmployeeCreatedAt($this->getDateTime($data['createdAt']))
             );
         }
 
         if (isset($data['updatedAt'])) {
             $employee->setUpdatedAt(
-                $this->buildEmployeeUpdatedAt($this->getDateTime($data['updatedAt']['date']))
+                $this->buildEmployeeUpdatedAt($this->getDateTime($data['updatedAt']))
             );
         }
 
         if (isset($data['birthdate'])) {
-            $employee->setBirthdate($this->buildEmployeeBirthdate($this->getDateTime($data['birthdate']['date'])));
+            $employee->setBirthdate($this->buildEmployeeBirthdate($this->getDateTime($data['birthdate'])));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));

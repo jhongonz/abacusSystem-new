@@ -55,7 +55,7 @@ class InstitutionFactory implements InstitutionFactoryContract
         );
 
         $institution->setCreatedAt(
-            $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']['date']))
+            $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']))
         );
 
         $institution->setAddress(
@@ -78,7 +78,7 @@ class InstitutionFactory implements InstitutionFactoryContract
 
         if (isset($data['updatedAt'])) {
             $institution->setUpdatedAt(
-                $this->buildInstitutionUpdatedAt($this->getDateTime($data['updatedAt']['date']))
+                $this->buildInstitutionUpdatedAt($this->getDateTime($data['updatedAt']))
             );
         }
 

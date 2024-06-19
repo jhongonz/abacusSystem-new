@@ -2,7 +2,11 @@
 
 namespace App\Providers\Service;
 
-use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollection;
+use App\Http\Orchestrators\Orchestrator\Campus\ChangeStateCampusOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Campus\CreateCampusOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Campus\DetailCampusOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Campus\UpdateCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\CreateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DeleteEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DetailEmployeeOrchestrator;
@@ -180,7 +184,23 @@ class OrchestratorServiceProvider extends ServiceProvider
 
             //Campus Orchestrators
             $orchestratorHandler->addOrchestrator(
-                $app->make(GetCampusCollection::class)
+                $app->make(GetCampusCollectionOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(DetailCampusOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(CreateCampusOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(UpdateCampusOrchestrator::class)
+            );
+
+            $orchestratorHandler->addOrchestrator(
+                $app->make(ChangeStateCampusOrchestrator::class)
             );
 
             return $orchestratorHandler;

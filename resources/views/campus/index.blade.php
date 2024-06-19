@@ -7,7 +7,7 @@
         <div class="d-flex">
             <div class="breadcrumb mr-4 text-blue-800">
                 <a href="" class="home breadcrumb-item"><i class="fas fa-th-large mr-1"></i>Inicio</a>
-                <span class="breadcrumb-item active">Centros</span>
+                <span class="breadcrumb-item active">Centros Educativos</span>
             </div>
 
             <div class="breadcrumb">
@@ -38,7 +38,6 @@
         <tr class="bg-grey">
             <th>Id</th>
             <th>Nombre</th>
-            <th>Apellidos</th>
             <th>Telefono</th>
             <th>Email</th>
             <th>Estado</th>
@@ -78,7 +77,7 @@ var table = $('#content-data').DataTable({
     serverSide: true,
     displayStart: _start,
     ajax: {
-        url: "{{ route('panel.campus.get-campus') }}",
+        url: "{{ route('panel.campus.get-campus-collection') }}",
         type: 'POST',
         data: function(d) {
             d.filters = {
@@ -98,7 +97,6 @@ var table = $('#content-data').DataTable({
     columns: [
         {data: 'id', className: 'onclick-row', width: 100},
         {data: 'name', className: 'onclick-row'},
-        {data: 'lastname', className: 'onclick-row'},
         {data: 'phone', className: 'onclick-row'},
         {data: 'email', className: 'onclick-row'},
         {data: 'state_literal', name: 'state', orderable: false, searchable:false, width: 50},
@@ -110,10 +108,9 @@ var table = $('#content-data').DataTable({
             e.preventDefault();
             var _id = $(this).data('id');
 
-            axios.get("{{ route('panel.employee.get-employee') }}/" + _id)
+            axios.get("{{ route('panel.campus.get-campus') }}/" + _id)
             .then(function (response){
-                $('#content-body').html(response.data.html);
-                window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + _id);
+                $('#content-modal').html(response.data.html);
             })
             .catch(function(error){
                 toast.fire({
@@ -126,8 +123,8 @@ var table = $('#content-data').DataTable({
         $(".changeState").click(function(e){
             e.preventDefault();
 
-            axios.post("{{ route('panel.employee.change-state-employee') }}",{
-                id : $(this).data('id')
+            axios.post("{{ route('panel.campus.change-state-campus') }}",{
+                campusId : $(this).data('id')
             })
             .then(function (response){
                 $('#content-data').DataTable().ajax.reload(null, false);
@@ -194,10 +191,9 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
 $('.new-registry').click(function(e){
     e.preventDefault();
 
-    axios.get("{{ route('panel.employee.get-employee') }}/")
+    axios.get("{{ route('panel.campus.get-campus') }}/")
     .then(function (response){
-        $('#content-body').html(response.data.html);
-        window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/");
+        $('#content-modal').html(response.data.html);
     })
     .catch(function(error){
         toast.fire({

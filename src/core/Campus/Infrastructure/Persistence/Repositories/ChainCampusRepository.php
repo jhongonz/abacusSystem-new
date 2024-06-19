@@ -19,8 +19,8 @@ use Throwable;
 class ChainCampusRepository extends AbstractChainRepository implements CampusRepositoryContract
 {
     private const FUNCTION_NAMES = [
-        Campus::TYPE => 'persistCampus',
-        CampusCollection::TYPE => ''
+        Campus::class => 'persistCampus',
+        CampusCollection::class => ''
     ];
 
     private string $domainToPersist;
@@ -50,7 +50,7 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
-        $this->domainToPersist = CampusCollection::TYPE;
+        $this->domainToPersist = CampusCollection::class;
 
         try {
             return $this->read(__FUNCTION__, $id, $filters);

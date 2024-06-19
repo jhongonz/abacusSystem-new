@@ -103,7 +103,7 @@ class Campus extends Model
         return $this->getAttribute('cam_id');
     }
 
-    public function changeId(int $id): self
+    public function changeId(?int $id): self
     {
         $this->setAttribute('cam_id', $id);
         return $this;

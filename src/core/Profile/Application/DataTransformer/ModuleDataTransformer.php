@@ -8,6 +8,7 @@ use Exception;
 
 class ModuleDataTransformer implements ModuleDataTransformerContract
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Module $module;
 
     public function write(Module $module): self
@@ -37,7 +38,7 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
 
     private function retrieveData(): array
     {
-        return [
+        $data = [
             'id' => $this->module->id()->value(),
             'key' => $this->module->menuKey()->value(),
             'name' => $this->module->name()->value(),
@@ -45,8 +46,12 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
             'icon' => $this->module->icon()->value(),
             'state' => $this->module->state()->value(),
             'position' => $this->module->position()->value(),
-            'createdAt' => $this->module->createdAt()->value(),
-            'updatedAt' => $this->module->updatedAt()->value(),
+            'createdAt' => $this->module->createdAt()->value()->format(self::DATE_FORMAT),
         ];
+
+        $updatedAt = $this->module->updatedAt()->value();
+        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+
+        return $data;
     }
 }

@@ -8,12 +8,12 @@ use Exception;
 
 class EmployeeDataTransformer implements EmployeeDataTransformerContract
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Employee $employee;
 
     public function write(Employee $employee): self
     {
         $this->employee = $employee;
-
         return $this;
     }
 
@@ -37,7 +37,7 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
 
     private function retrieveData(): array
     {
-        return [
+        $data = [
             'id' => $this->employee->id()->value(),
             'userId' => $this->employee->userId()->value(),
             'institutionId' => $this->employee->institutionId()->value(),
@@ -48,13 +48,19 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
             'phone' => $this->employee->phone()->value(),
             'email' => $this->employee->email()->value(),
             'address' => $this->employee->address()->value(),
-            'birthdate' => $this->employee->birthdate()->value(),
             'observations' => $this->employee->observations()->value(),
             'image' => $this->employee->image()->value(),
             'search' => $this->employee->search()->value(),
             'state' => $this->employee->state()->value(),
-            'createdAt' => $this->employee->createdAt()->value(),
-            'updatedAt' => $this->employee->updatedAt()->value(),
+            'createdAt' => $this->employee->createdAt()->value()->format(self::DATE_FORMAT),
         ];
+
+        $birthdate = $this->employee->birthdate()->value();
+        $data['birthdate'] = (! is_null($birthdate)) ? $birthdate->format(self::DATE_FORMAT) : null;
+
+        $updatedAt = $this->employee->updatedAt()->value();
+        $data['updated_at'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+
+        return $data;
     }
 }

@@ -11,6 +11,8 @@ use Exception;
 
 trait UtilsDateTimeTrait
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * @return DateTime
      */
@@ -19,24 +21,11 @@ trait UtilsDateTimeTrait
         return new DateTime;
     }
 
-    public function getCurrentTimeToArray(): array
-    {
-        return json_decode(json_encode(new DateTime), true);
-    }
-
     /**
      * @throws Exception
      */
     public function getDateTime(string $datetime): DateTime
     {
         return new DateTime($datetime);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getDateTimeToArray(string $datetime): array
-    {
-        return json_decode(json_encode(new DateTime($datetime)), true);
     }
 }

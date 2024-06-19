@@ -47,7 +47,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => $this->getDateTimeToArray($birthdate->format('Y-m-d')),
+            'birthdate' => $this->getDateTime($birthdate->format('Y-m-d'))->format(self::DATE_FORMAT),
             'state' => ValueObjectStatus::STATE_NEW,
             'image' => null
         ];

@@ -122,6 +122,9 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $builder->update($campusModel->toArray());
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistCampus(Campus $campus): Campus
     {
         $campusModel = $this->domainToModel($campus);
@@ -134,6 +137,8 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
             $campusId = $builder->insertGetId($dataModel);
             $campus->id()->setValue($campusId);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+
             $builder->where('cam_id', $campusId);
             $builder->update($dataModel);
         }
