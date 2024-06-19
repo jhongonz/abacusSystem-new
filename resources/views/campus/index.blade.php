@@ -175,10 +175,9 @@ $('#content-data tbody').on('dblclick', '.onclick-row', function (e) {
     e.preventDefault();
     var data = table.row($(this).closest('tr')).data();
 
-    axios.get("{{ route('panel.employee.get-employee') }}/" + data.id)
+    axios.get("{{ route('panel.campus.get-campus') }}/" + data.id)
     .then(function (response){
-        $('#content-body').html(response.data.html);
-        window.history.pushState("data","Title","{{ route('panel.employee.get-employee') }}/" + data.id);
+        $('#content-modal').html(response.data.html);
     })
     .catch(function(error){
         toast.fire({

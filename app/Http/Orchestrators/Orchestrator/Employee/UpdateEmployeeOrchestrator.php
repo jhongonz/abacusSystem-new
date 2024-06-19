@@ -28,7 +28,7 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
     public function make(Request $request): Employee
     {
         $dataUpdate = json_decode($request->input('dataUpdate'), true);
-        $dataUpdate['birthdate'] = $this->getDateTime($dataUpdate['birthdate'])->format(self::DATE_FORMAT);
+        $dataUpdate['birthdate'] = $this->getDateTime($dataUpdate['birthdate']);
 
         return $this->employeeManagement->updateEmployee($request->input('employeeId'), $dataUpdate);
     }

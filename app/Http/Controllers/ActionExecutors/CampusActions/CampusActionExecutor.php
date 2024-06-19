@@ -8,7 +8,6 @@ namespace App\Http\Controllers\ActionExecutors\CampusActions;
 
 use App\Http\Controllers\ActionExecutors\ActionExecutor;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
-use Illuminate\Http\Request;
 
 abstract class CampusActionExecutor implements ActionExecutor
 {
