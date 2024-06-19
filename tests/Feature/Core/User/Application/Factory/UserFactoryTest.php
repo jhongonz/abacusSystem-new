@@ -70,7 +70,7 @@ class UserFactoryTest extends TestCase
         $this->assertSame($result->state()->value(), $data['state']);
         $this->assertInstanceOf(UserState::class, $result->state());
 
-        $this->assertSame($result->createdAt()->value(), $data['createdAt']);
+        $this->assertSame($result->createdAt()->value()->format('Y-m-d H:i:s'), $data['createdAt']);
         $this->assertInstanceOf(UserCreatedAt::class, $result->createdAt());
 
         $this->assertNull($result->updatedAt()->value());

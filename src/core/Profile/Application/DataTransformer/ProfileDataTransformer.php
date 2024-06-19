@@ -43,12 +43,12 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
             'name' => $this->profile->name()->value(),
             'description' => $this->profile->description()->value(),
             'state' => $this->profile->state()->value(),
-            'modulesAggregator' => $this->profile->modulesAggregator(),
             'createdAt' => $this->profile->createdAt()->value()->format(self::DATE_FORMAT),
         ];
 
         $updatedAt = $this->profile->updatedAt()->value();
         $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $data['modulesAggregator'] = $this->profile->modulesAggregator();
 
         return $data;
     }

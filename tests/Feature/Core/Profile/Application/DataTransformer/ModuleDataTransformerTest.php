@@ -56,9 +56,10 @@ class ModuleDataTransformerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToRead')]
-    public function test_read_should_return_array(array $expected, \DateTime $datetime): void
+    public function test_read_should_return_array(array $expected, string $datetime): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -119,7 +120,7 @@ class ModuleDataTransformerTest extends TestCase
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->module->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -127,7 +128,7 @@ class ModuleDataTransformerTest extends TestCase
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $updatedAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->module->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);
@@ -145,7 +146,7 @@ class ModuleDataTransformerTest extends TestCase
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToReadToShare')]
-    public function test_readToShare_should_return_array(array $expected, \DateTime $datetime): void
+    public function test_readToShare_should_return_array(array $expected, string $datetime): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -210,7 +211,7 @@ class ModuleDataTransformerTest extends TestCase
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->module->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -218,7 +219,7 @@ class ModuleDataTransformerTest extends TestCase
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $updatedAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->module->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);

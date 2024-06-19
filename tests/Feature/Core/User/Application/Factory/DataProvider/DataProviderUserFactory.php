@@ -6,8 +6,6 @@
 
 namespace Tests\Feature\Core\User\Application\Factory\DataProvider;
 
-use DateTime;
-
 final class DataProviderUserFactory
 {
     public static function provider(): array
@@ -22,7 +20,7 @@ final class DataProviderUserFactory
                         'login' => 'login',
                         'password' => '12345',
                         'state' => 2,
-                        'createdAt' => new DateTime('2024-04-21 10:24:00'),
+                        'createdAt' => '2024-04-21 10:24:00',
                         'photo' => 'image.jpg',
                     ],
                 ],

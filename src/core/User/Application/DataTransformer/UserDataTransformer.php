@@ -24,21 +24,19 @@ class UserDataTransformer implements UserDataTransformerContract
     public function read(): array
     {
         $data = [
-            User::TYPE => [
-                'id' => $this->user->id()->value(),
-                'employeeId' => $this->user->employeeId()->value(),
-                'profileId' => $this->user->profileId()->value(),
-                'login' => $this->user->login()->value(),
-                'password' => $this->user->password()->value(),
-                'state' => $this->user->state()->value(),
-                'photo' => $this->user->photo()->value(),
-                'createdAt' => $this->user->createdAt()->value()->format(self::DATE_FORMAT),
-            ],
+            'id' => $this->user->id()->value(),
+            'employeeId' => $this->user->employeeId()->value(),
+            'profileId' => $this->user->profileId()->value(),
+            'login' => $this->user->login()->value(),
+            'password' => $this->user->password()->value(),
+            'state' => $this->user->state()->value(),
+            'photo' => $this->user->photo()->value(),
+            'createdAt' => $this->user->createdAt()->value()->format(self::DATE_FORMAT),
         ];
 
         $updatedAt = $this->user->updatedAt()->value();
         $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
 
-        return $data;
+        return [User::TYPE => $data];
     }
 }

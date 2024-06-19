@@ -6,8 +6,6 @@
 
 namespace Tests\Feature\Core\Employee\Application\Factory\DataProvider;
 
-use DateTime;
-
 final class DataProviderEmployeeFactory
 {
     public static function provider(): array
@@ -30,9 +28,9 @@ final class DataProviderEmployeeFactory
                         'observations' => 'testing',
                         'image' => 'photo.jpg',
                         'search' => 'testing object employee',
-                        'birthdate' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
-                        'createdAt' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
-                        'updatedAt' => json_decode(json_encode(new DateTime('2024-04-29 19:40:01')), true),
+                        'birthdate' => '2024-04-29 19:40:01',
+                        'createdAt' => '2024-04-29 19:40:01',
+                        'updatedAt' => '2024-04-29 19:40:01',
                     ],
                 ],
             ],
