@@ -341,6 +341,30 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
+    public function test_setLogoInstitution_should_return_internal_error(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $fileMock = $this->createMock(UploadedFile::class);
+        $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(false);
+
+        $request->expects(self::once())
+            ->method('file')
+            ->with('file')
+            ->willReturn($fileMock);
+
+        $result = $this->controller->setLogoInstitution($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
     public function test_storeInstitution_should_return_json_response_when_create_institution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);

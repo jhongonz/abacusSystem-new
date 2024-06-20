@@ -532,6 +532,30 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
+    public function test_setImageEmployee_should_return_internal_error(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $fileMock = $this->createMock(UploadedFile::class);
+        $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(false);
+
+        $request->expects(self::once())
+            ->method('file')
+            ->with('file')
+            ->willReturn($fileMock);
+
+        $result = $this->controller->setImageEmployee($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
     public function test_deleteEmployee_should_return_json_response(): void
     {
         $requestMock = $this->createMock(Request::class);

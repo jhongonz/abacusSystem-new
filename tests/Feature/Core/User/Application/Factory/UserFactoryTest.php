@@ -73,11 +73,22 @@ class UserFactoryTest extends TestCase
         $this->assertSame($result->createdAt()->value()->format('Y-m-d H:i:s'), $data['createdAt']);
         $this->assertInstanceOf(UserCreatedAt::class, $result->createdAt());
 
-        $this->assertNull($result->updatedAt()->value());
+        $this->assertSame($data['updatedAt'], $result->updatedAt()->value()->format('Y-m-d H:i:s'));
         $this->assertInstanceOf(UserUpdatedAt::class, $result->updatedAt());
 
         $this->assertSame($result->photo()->value(), $data['photo']);
         $this->assertInstanceOf(UserPhoto::class, $result->photo());
+    }
+
+    public function test_buildCreatedAt_should_return_value_object(): void
+    {
+        $datetime = new DateTime;
+
+        $result = $this->factory->buildCreatedAt($datetime);
+
+        $this->assertInstanceOf(UserCreatedAt::class, $result);
+        $this->assertInstanceOf(DateTime::class, $result->value());
+        $this->assertSame($datetime, $result->value());
     }
 
     public function test_buildUpdatedAt_should_return_value_object(): void

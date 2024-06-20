@@ -4,6 +4,8 @@ namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Eloquent\Mod
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -30,6 +32,21 @@ class InstitutionTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertSame('inst_search', $result);
+    }
+
+    public function test_relationWithCampus_should_return_hasMany(): void
+    {
+        $result = $this->model->relationWithCampus();
+
+        $this->assertInstanceOf(HasMany::class, $result);
+    }
+
+    public function test_campus_should_return_model(): void
+    {
+        $result = $this->model->campus();
+
+        $this->assertInstanceOf(Model::class, $result);
+        $this->assertSame('campus', $result->getTable());
     }
 
     public function test_id_should_return_null(): void

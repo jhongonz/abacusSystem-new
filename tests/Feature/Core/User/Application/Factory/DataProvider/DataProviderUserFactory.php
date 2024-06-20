@@ -21,6 +21,7 @@ final class DataProviderUserFactory
                         'password' => '12345',
                         'state' => 2,
                         'createdAt' => '2024-04-21 10:24:00',
+                        'updatedAt' => '2024-04-21 10:24:00',
                         'photo' => 'image.jpg',
                     ],
                 ],
