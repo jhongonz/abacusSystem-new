@@ -6,12 +6,15 @@
 
 namespace Core\Campus\Domain\ValueObjects;
 
+use InvalidArgumentException;
+
 class CampusInstitutionId
 {
     private int $value;
 
     public function __construct(int $value)
     {
+        $this->validate($value);
         $this->value = $value;
     }
 
@@ -22,7 +25,24 @@ class CampusInstitutionId
 
     public function setValue(int $value): self
     {
+        $this->validate($value);
         $this->value = $value;
+
         return $this;
+    }
+
+    private function validate(int $value): void
+    {
+        $options = [
+            'options' => [
+                'min_range' => 1,
+            ],
+        ];
+
+        if (! filter_var($value, FILTER_VALIDATE_INT, $options)) {
+            throw new InvalidArgumentException(
+                sprintf('<%s> does not allow the value <%s>.', static::class, $value)
+            );
+        }
     }
 }

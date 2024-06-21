@@ -10,6 +10,7 @@ use DateTime;
 
 class CampusCreatedAt
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private DateTime $value;
 
     public function __construct(DateTime $value = new DateTime)
@@ -26,5 +27,15 @@ class CampusCreatedAt
     {
         $this->value = $value;
         return $this;
+    }
+
+    public function toFormattedString(): string
+    {
+        return $this->value->format(self::DATE_FORMAT);
+    }
+
+    public function __toString(): string
+    {
+        return $this->toFormattedString();
     }
 }

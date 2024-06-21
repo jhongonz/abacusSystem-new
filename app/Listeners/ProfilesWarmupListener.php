@@ -9,7 +9,7 @@ use App\Jobs\ProcessCommandWarmup;
 /**
  * @codeCoverageIgnore
  */
-class ProfilesWarmup
+class ProfilesWarmupListener
 {
     /**
      * Create the event listener.

@@ -5,7 +5,7 @@ namespace App\Listeners;
 use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
 
-class CampusWarmup
+class CampusWarmupListener
 {
     /**
      * Create the event listener.

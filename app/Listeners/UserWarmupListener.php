@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
+use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Jobs\ProcessCommandWarmup;
 
 /**
  * @codeCoverageIgnore
  */
-class EmployeeWarmup
+class UserWarmupListener
 {
     /**
      * Create the event listener.
@@ -21,8 +21,8 @@ class EmployeeWarmup
     /**
      * Handle the event.
      */
-    public function handle(EmployeeUpdateOrDeletedEvent $event): void
+    public function handle(UserUpdateOrDeleteEvent $event): void
     {
-        ProcessCommandWarmup::dispatch(sprintf('employee:warmup %d', $event->employeeId()));
+        ProcessCommandWarmup::dispatch(sprintf('user:warmup %d', $event->userId()));
     }
 }

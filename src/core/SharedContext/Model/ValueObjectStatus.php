@@ -78,6 +78,11 @@ class ValueObjectStatus
         return $this->valueLiteral;
     }
 
+    public function __toString(): string
+    {
+        return $this->getValueLiteral();
+    }
+
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;

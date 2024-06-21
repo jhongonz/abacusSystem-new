@@ -7,7 +7,7 @@ use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Illuminate\Contracts\Session\Session;
 
-class UserRefreshSession
+class UserRefreshSessionListener
 {
     private ProfileManagementContract $profileService;
     private Session $session;

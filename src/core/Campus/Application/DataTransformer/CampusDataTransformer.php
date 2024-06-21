@@ -11,7 +11,6 @@ use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 
 class CampusDataTransformer implements CampusDataTransformerContract
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Campus $campus;
 
     public function write(Campus $campus): self
@@ -47,11 +46,11 @@ class CampusDataTransformer implements CampusDataTransformerContract
             'observations' => $this->campus->observations()->value(),
             'search' => $this->campus->search()->value(),
             'state' => $this->campus->state()->value(),
-            'createdAt' => $this->campus->createdAt()->value()->format(self::DATE_FORMAT),
+            'createdAt' => $this->campus->createdAt()->toFormattedString(),
         ];
 
-        $updatedAt = $this->campus->updatedAt()->value();
-        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $updatedAt = $this->campus->updatedAt()->toFormattedString();
+        $data['updatedAt'] = !empty($updatedAt) ? $updatedAt : null;
 
         return $data;
     }
