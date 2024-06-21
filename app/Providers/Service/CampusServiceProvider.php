@@ -8,12 +8,14 @@ use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
+use Core\Campus\Infrastructure\Commands\CampusWarmup;
 use Core\Campus\Infrastructure\Management\CampusService;
 use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\EloquentCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\RedisCampusRepository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Psr\Log\LoggerInterface;
 
 class CampusServiceProvider extends ServiceProvider
 {
@@ -43,6 +45,16 @@ class CampusServiceProvider extends ServiceProvider
             );
 
             return $chainRepository;
+        });
+
+        //Commands
+        $this->app->singletonIf(CampusWarmup::class, function (Application $app) {
+            return new CampusWarmup(
+                $app->make(LoggerInterface::class),
+                $app->make(CampusFactoryContract::class),
+                $app->make(EloquentCampusRepository::class),
+                $app->make(RedisCampusRepository::class)
+            );
         });
     }
 

@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSessionEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
+use App\Listeners\CampusWarmup;
 use App\Listeners\EmployeeWarmup;
 use App\Listeners\ProfilesWarmup;
 use App\Listeners\UserRefreshSession;
@@ -66,6 +68,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             UserUpdateOrDeleteEvent::class,
             UserWarmup::class
+        );
+
+        Event::listen(
+            CampusUpdatedOrDeletedEvent::class,
+            CampusWarmup::class
         );
     }
 }

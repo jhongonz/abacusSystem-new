@@ -124,7 +124,7 @@ class CampusController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth', 'verify-session']),
             new Middleware('only.ajax-request', only: [
-                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus',
+                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus','getCampus'
             ]),
         ];
     }
