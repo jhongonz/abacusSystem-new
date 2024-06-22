@@ -30,7 +30,7 @@ class CampusCollection extends ArrayIterator
         return $this->items;
     }
 
-    public function addId(int $id): ArrayIterator
+    public function addId(int $id): self
     {
         $this->aggregator[] = $id;
         return $this;
