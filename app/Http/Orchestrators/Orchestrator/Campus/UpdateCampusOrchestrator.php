@@ -23,7 +23,13 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
      */
     public function make(Request $request): Campus
     {
-        $dataUpdate = json_decode($request->input('dataUpdate'), true);
+        $dataUpdate = [
+            'name' => $request->input('name'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
+            'address' => $request->input('address'),
+            'observations' => $request->input('observations'),
+        ];
 
         return $this->campusManagement->updateCampus($request->input('campusId'), $dataUpdate);
     }

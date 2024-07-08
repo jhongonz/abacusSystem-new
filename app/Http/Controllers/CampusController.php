@@ -71,10 +71,10 @@ class CampusController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
         try {
-            $method = (! $request->filled('campusId')) ? 'create-campus-action' : 'update-campus-action';
+            $method = (! $request->filled('campusId')) ? 'create-campus' : 'update-campus';
 
             /** @var Campus $campus */
-            $campus = $this->actionExecutorHandler->invoke($method, $request);
+            $campus = $this->orchestrators->handler($method, $request);
 
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
