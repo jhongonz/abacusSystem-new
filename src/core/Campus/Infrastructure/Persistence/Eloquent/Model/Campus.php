@@ -147,7 +147,7 @@ class Campus extends Model
         return $this->getAttribute('cam_phone');
     }
 
-    public function changePhone(?string $phone): self
+    public function changePhone(?string $phone = null): self
     {
         $this->setAttribute('cam_phone', $phone);
         return $this;
@@ -158,7 +158,7 @@ class Campus extends Model
         return $this->getAttribute('cam_email');
     }
 
-    public function changeEmail(?string $email): self
+    public function changeEmail(?string $email = null): self
     {
         $this->setAttribute('cam_email', $email);
         return $this;
@@ -169,7 +169,7 @@ class Campus extends Model
         return $this->getAttribute('cam_observations');
     }
 
-    public function changeObservations(?string $observations): self
+    public function changeObservations(?string $observations = null): self
     {
         $this->setAttribute('cam_observations', $observations);
         return $this;
@@ -180,7 +180,7 @@ class Campus extends Model
         return $this->getAttribute('cam_search');
     }
 
-    public function changeSearch(?string $search): self
+    public function changeSearch(?string $search = null): self
     {
         $this->setAttribute('cam_search', $search);
         return $this;

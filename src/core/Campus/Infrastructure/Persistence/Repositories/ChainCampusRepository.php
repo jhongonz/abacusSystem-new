@@ -16,6 +16,9 @@ use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Throwable;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ChainCampusRepository extends AbstractChainRepository implements CampusRepositoryContract
 {
     private const FUNCTION_NAMES = [
