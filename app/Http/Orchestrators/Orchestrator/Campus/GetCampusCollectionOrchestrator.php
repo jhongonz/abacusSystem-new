@@ -21,21 +21,14 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
 {
     use DataTablesTrait;
 
-    private CampusDataTransformerContract $campusDataTransformer;
-    private DataTables $dataTables;
-    private ViewFactory $viewFactory;
-
     public function __construct(
         CampusManagementContract $campusManagement,
-        CampusDataTransformerContract $campusDataTransformer,
-        DataTables $dataTables,
-        ViewFactory $viewFactory
+        private readonly CampusDataTransformerContract $campusDataTransformer,
+        private readonly DataTables $dataTables,
+        protected ViewFactory $viewFactory
     ) {
         parent::__construct($campusManagement);
         $this->setViewFactory($viewFactory);
-
-        $this->campusDataTransformer = $campusDataTransformer;
-        $this->dataTables = $dataTables;
     }
 
     /**

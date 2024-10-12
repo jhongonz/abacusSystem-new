@@ -18,21 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CampusController extends Controller implements HasMiddleware
 {
-    private OrchestratorHandlerContract $orchestrators;
-    private ActionExecutorHandler $actionExecutorHandler;
-    private Session $session;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestrators,
-        ActionExecutorHandler $actionExecutorHandler,
-        Session $session,
+        private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly ActionExecutorHandler $actionExecutorHandler,
+        private readonly Session $session,
         LoggerInterface $logger,
         ViewFactory $viewFactory
     ) {
         parent::__construct($logger, $viewFactory);
-        $this->session = $session;
-        $this->orchestrators = $orchestrators;
-        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string

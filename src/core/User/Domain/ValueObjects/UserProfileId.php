@@ -14,7 +14,7 @@ class UserProfileId
 
     public function __construct(?int $id = null)
     {
-        if(! is_null($id)) {
+        if (! is_null($id)) {
             $this->validate($id);
         }
 

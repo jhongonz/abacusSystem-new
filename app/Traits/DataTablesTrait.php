@@ -10,8 +10,6 @@ use Illuminate\View\Factory as ViewFactory;
 
 trait DataTablesTrait
 {
-    private ViewFactory $viewFactory;
-
     public function setViewFactory(ViewFactory $viewFactory): void
     {
         $this->viewFactory = $viewFactory;

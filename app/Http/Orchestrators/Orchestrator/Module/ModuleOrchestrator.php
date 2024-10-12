@@ -14,11 +14,8 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
  */
 abstract class ModuleOrchestrator implements Orchestrator
 {
-    protected ModuleManagementContract $moduleManagement;
-
     public function __construct(
-        ModuleManagementContract $moduleManagement
+        protected readonly ModuleManagementContract $moduleManagement
     ) {
-        $this->moduleManagement = $moduleManagement;
     }
 }

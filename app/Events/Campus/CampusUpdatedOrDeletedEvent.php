@@ -14,14 +14,12 @@ class CampusUpdatedOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private int $campusId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(int $campusId)
-    {
-        $this->campusId = $campusId;
+    public function __construct(
+        private readonly int $campusId
+    ) {
     }
 
     public function campusId(): int

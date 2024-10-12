@@ -16,18 +16,12 @@ use Illuminate\Http\Request;
 
 class DetailProfileOrchestrator extends ProfileOrchestrator
 {
-    private ModuleManagementContract $moduleManagement;
-    private Config $config;
-
     public function __construct(
         ProfileManagementContract $profileManagement,
-        ModuleManagementContract $moduleManagement,
-        Config $config,
+        private readonly ModuleManagementContract $moduleManagement,
+        private readonly Config $config,
     ) {
         parent::__construct($profileManagement);
-
-        $this->moduleManagement = $moduleManagement;
-        $this->config = $config;
     }
 
     /**

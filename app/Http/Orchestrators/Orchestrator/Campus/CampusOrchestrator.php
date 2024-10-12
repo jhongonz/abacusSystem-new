@@ -14,11 +14,8 @@ use Core\Campus\Domain\Contracts\CampusManagementContract;
  */
 abstract class CampusOrchestrator implements Orchestrator
 {
-    protected CampusManagementContract $campusManagement;
-
     public function __construct(
-        CampusManagementContract $campusManagement
+        protected readonly CampusManagementContract $campusManagement
     ) {
-        $this->campusManagement = $campusManagement;
     }
 }

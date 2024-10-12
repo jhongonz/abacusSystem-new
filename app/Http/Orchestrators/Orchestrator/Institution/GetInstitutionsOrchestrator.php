@@ -21,21 +21,14 @@ class GetInstitutionsOrchestrator extends InstitutionOrchestrator
 {
     use DataTablesTrait;
 
-    private InstitutionDataTransformerContract $institutionDataTransformer;
-    private ViewFactory $viewFactory;
-    private DataTables $dataTables;
-
     public function __construct(
         InstitutionManagementContract $institutionManagement,
-        InstitutionDataTransformerContract $institutionDataTransformer,
-        DataTables $dataTables,
-        ViewFactory $viewFactory
+        private readonly InstitutionDataTransformerContract $institutionDataTransformer,
+        private readonly DataTables $dataTables,
+        protected ViewFactory $viewFactory
     ) {
         parent::__construct($institutionManagement);
         $this->setViewFactory($viewFactory);
-
-        $this->institutionDataTransformer = $institutionDataTransformer;
-        $this->dataTables = $dataTables;
     }
 
     /**

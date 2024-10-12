@@ -17,20 +17,13 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
 {
     private const IMAGE_PATH_FULL = '/images/full/';
 
-    private UserManagementContract $userManagement;
-    private ProfileManagementContract $profileManagement;
-    private InstitutionManagementContract $institutionManagement;
-
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        UserManagementContract $userManagement,
-        ProfileManagementContract $profileManagement,
-        InstitutionManagementContract $institutionManagement
+        private readonly UserManagementContract $userManagement,
+        private readonly ProfileManagementContract $profileManagement,
+        private readonly InstitutionManagementContract $institutionManagement
     ) {
         parent::__construct($employeeManagement);
-        $this->userManagement = $userManagement;
-        $this->profileManagement = $profileManagement;
-        $this->institutionManagement = $institutionManagement;
     }
 
     /**

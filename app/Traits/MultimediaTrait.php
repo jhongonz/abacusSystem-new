@@ -14,11 +14,10 @@ trait MultimediaTrait
     private const IMAGE_PATH_TMP = '/images/tmp/';
     private const IMAGE_PATH_FULL = '/images/full/';
     private const IMAGE_PATH_SMALL = '/images/small/';
-    private ImageManagerInterface $imageManager;
 
-    public function setImageManager(ImageManagerInterface $imageManager): void
+    public function setImageManager(ImageManagerInterface $multimediaImageManager): void
     {
-        $this->imageManager = $imageManager;
+        $this->imageManager = $multimediaImageManager;
     }
 
     private function saveImage(string $token): string

@@ -21,21 +21,14 @@ class GetModulesOrchestrator extends ModuleOrchestrator
 {
     use DataTablesTrait;
 
-    private ModuleDataTransformerContract $moduleDataTransformer;
-    private ViewFactory $viewFactory;
-    private DataTables $dataTables;
-
     public function __construct(
         ModuleManagementContract $moduleManagement,
-        ModuleDataTransformerContract $moduleDataTransformer,
-        DataTables $dataTables,
-        ViewFactory $viewFactory,
+        private readonly ModuleDataTransformerContract $moduleDataTransformer,
+        private readonly DataTables $dataTables,
+        protected ViewFactory $viewFactory,
     ) {
         parent::__construct($moduleManagement);
         $this->setViewFactory($viewFactory);
-
-        $this->dataTables = $dataTables;
-        $this->moduleDataTransformer = $moduleDataTransformer;
     }
 
     /**

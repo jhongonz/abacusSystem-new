@@ -22,22 +22,17 @@ class InstitutionController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
 
-    private OrchestratorHandlerContract $orchestratorHandler;
-    private ActionExecutorHandler $actionExecutorHandler;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
-        ActionExecutorHandler $actionExecutorHandler,
-        ImageManagerInterface $imageManager,
+        private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly ActionExecutorHandler $actionExecutorHandler,
+        private ImageManagerInterface $imageManager,
         LoggerInterface $logger,
         ViewFactory $viewFactory,
     ) {
         parent::__construct($logger, $viewFactory);
-
         $this->setImageManager($imageManager);
-        $this->orchestratorHandler = $orchestratorHandler;
-        $this->actionExecutorHandler = $actionExecutorHandler;
     }
+
     public function index(): JsonResponse|string
     {
         $view = $this->viewFactory->make('institution.index')
@@ -53,7 +48,7 @@ class InstitutionController extends Controller implements HasMiddleware
     public function changeStateInstitution(Request $request): JsonResponse
     {
         try {
-            $this->orchestratorHandler->handler('change-state-institution', $request);
+            $this->orchestrators->handler('change-state-institution', $request);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -65,13 +60,13 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function getInstitutions(Request $request): JsonResponse
     {
-        return $this->orchestratorHandler->handler('retrieve-institutions', $request);
+        return $this->orchestrators->handler('retrieve-institutions', $request);
     }
 
     public function getInstitution(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['institutionId' => $id]);
-        $dataInstitution = $this->orchestratorHandler->handler('detail-institution', $request);
+        $dataInstitution = $this->orchestrators->handler('detail-institution', $request);
 
         $view = $this->viewFactory->make('institution.institution-form', $dataInstitution)
             ->render();
@@ -118,7 +113,7 @@ class InstitutionController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $id]);
 
         try {
-            $this->orchestratorHandler->handler('delete-institution', $request);
+            $this->orchestrators->handler('delete-institution', $request);
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

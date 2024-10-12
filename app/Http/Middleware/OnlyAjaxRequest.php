@@ -12,12 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class OnlyAjaxRequest
 {
-    private Redirector $redirector;
-
     public function __construct(
-        Redirector $redirector
+        private readonly Redirector $redirector
     ) {
-        $this->redirector = $redirector;
     }
 
     /**
