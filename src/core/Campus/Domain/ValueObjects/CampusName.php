@@ -8,11 +8,9 @@ namespace Core\Campus\Domain\ValueObjects;
 
 class CampusName
 {
-    private string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
+    public function __construct(
+        private string $value = ''
+    ) {
     }
 
     public function value(): string

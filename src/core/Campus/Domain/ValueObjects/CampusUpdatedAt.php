@@ -11,11 +11,10 @@ use DateTime;
 class CampusUpdatedAt
 {
     private const DATE_FORMAT = 'Y-m-d H:i:s';
-    private ?DateTime $value;
 
-    public function __construct(?DateTime $value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private ?DateTime $value = null
+    ) {
     }
 
     public function value(): ?DateTime

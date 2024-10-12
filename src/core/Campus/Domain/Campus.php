@@ -22,31 +22,20 @@ class Campus
 {
     public const TYPE = 'campus';
 
-    private CampusId $id;
-    private CampusInstitutionId $institutionId;
-    private CampusName $name;
     private CampusAddress $address;
     private CampusPhone $phone;
     private CampusEmail $email;
     private CampusObservations $observations;
     private CampusSearch $search;
-    private CampusState $state;
-    private CampusCreatedAt $createdAt;
     private CampusUpdatedAt $updatedAt;
 
     public function __construct(
-        CampusId $id,
-        CampusInstitutionId $institutionId,
-        CampusName $name,
-        CampusState $state = new CampusState,
-        CampusCreatedAt $createdAt = new CampusCreatedAt
+        private CampusId $id,
+        private CampusInstitutionId $institutionId,
+        private CampusName $name,
+        private CampusState $state = new CampusState,
+        private CampusCreatedAt $createdAt = new CampusCreatedAt
     ) {
-        $this->id = $id;
-        $this->institutionId = $institutionId;
-        $this->name = $name;
-        $this->state = $state;
-        $this->createdAt = $createdAt;
-
         $this->address = new CampusAddress;
         $this->phone = new CampusPhone;
         $this->email = new CampusEmail;

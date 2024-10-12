@@ -146,6 +146,10 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         return $campus;
     }
 
+    /**
+     * @param Campus $domain
+     * @return CampusModel
+     */
     private function domainToModel(Campus $domain): CampusModel
     {
         $builder = $this->databaseManager->table($this->getTable());

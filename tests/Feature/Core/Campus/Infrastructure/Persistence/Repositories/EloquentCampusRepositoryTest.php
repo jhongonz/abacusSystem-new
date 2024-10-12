@@ -4,8 +4,16 @@ namespace Tests\Feature\Core\Campus\Infrastructure\Persistence\Repositories;
 
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
+use Core\Campus\Domain\ValueObjects\CampusAddress;
+use Core\Campus\Domain\ValueObjects\CampusCreatedAt;
+use Core\Campus\Domain\ValueObjects\CampusEmail;
 use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
+use Core\Campus\Domain\ValueObjects\CampusName;
+use Core\Campus\Domain\ValueObjects\CampusObservations;
+use Core\Campus\Domain\ValueObjects\CampusPhone;
+use Core\Campus\Domain\ValueObjects\CampusSearch;
+use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
@@ -396,5 +404,343 @@ class EloquentCampusRepositoryTest extends TestCase
         $this->expectExceptionMessage('Campus not found with id 1');
 
         $this->repository->delete($campusIdMock);
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     * @throws Exception
+     */
+    public function test_persistCampus_should_return_campus_object(): void
+    {
+        $campusMock = $this->createMock(Campus::class);
+
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(null);
+        $campusMock->expects(self::exactly(3))
+            ->method('id')
+            ->willReturn($campusIdMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeId')
+            ->with(null)
+            ->willReturnSelf();
+        $this->campusModel->expects(self::once())
+            ->method('id')
+            ->willReturn(null);
+
+        $institutionMock = $this->createMock(CampusInstitutionId::class);
+        $institutionMock->expects(self::once())
+            ->method('value')
+            ->willReturn(12345);
+        $campusMock->expects(self::once())
+            ->method('institutionId')
+            ->willReturn($institutionMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeInstitutionId')
+            ->with(12345)
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(CampusName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('name');
+        $campusMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeName')
+            ->with('name')
+            ->willReturnSelf();
+
+        $phoneMock = $this->createMock(CampusPhone::class);
+        $phoneMock->expects(self::once())
+            ->method('value')
+            ->willReturn('123456789');
+        $campusMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phoneMock);
+        $this->campusModel->expects(self::once())
+            ->method('changePhone')
+            ->with('123456789')
+        ->willReturnSelf();
+
+        $emailMock = $this->createMock(CampusEmail::class);
+        $emailMock->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $campusMock->expects(self::once())
+            ->method('email')
+            ->willReturn($emailMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeEmail')
+            ->with('email')
+            ->willReturnSelf();
+
+        $addressMock = $this->createMock(CampusAddress::class);
+        $addressMock->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $campusMock->expects(self::once())
+            ->method('address')
+            ->willReturn($addressMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeAddress')
+            ->with('address')
+            ->willReturnSelf();
+
+        $observationsMock = $this->createMock(CampusObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('value')
+            ->willReturn('observations');
+        $campusMock->expects(self::once())
+            ->method('observations')
+            ->willReturn($observationsMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeObservations')
+            ->with('observations')
+            ->willReturnSelf();
+
+        $searchMock = $this->createMock(CampusSearch::class);
+        $searchMock->expects(self::once())
+            ->method('value')
+            ->willReturn('testing');
+        $campusMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeSearch')
+            ->with('testing')
+            ->willReturnSelf();
+
+        $stateMock = $this->createMock(CampusState::class);
+        $stateMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $campusMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeState')
+            ->with(1)
+            ->willReturnSelf();
+
+        $createAt = new \DateTime;
+        $createAtMock = $this->createMock(CampusCreatedAt::class);
+        $createAtMock->expects(self::once())
+            ->method('value')
+            ->willReturn($createAt);
+        $campusMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createAtMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($createAt)
+            ->willReturnSelf();
+
+        $this->campusModel->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('cam_id', null)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn([]);
+
+        $builderMock->shouldReceive('insertGetId')
+            ->once()
+            ->with([])
+            ->andReturn(1);
+
+        $this->campusModel->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('campus');
+
+        $this->databaseManager->shouldReceive('table')
+            ->times(2)
+            ->with('campus')
+            ->andReturn($builderMock);
+
+        $result = $this->repository->persistCampus($campusMock);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function test_persistCampus_should_update_return_campus_object(): void
+    {
+        $campusMock = $this->createMock(Campus::class);
+
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusIdMock->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn(1);
+        $campusIdMock->expects(self::never())
+            ->method('setValue');
+        $campusMock->expects(self::exactly(2))
+            ->method('id')
+            ->willReturn($campusIdMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeId')
+            ->with(1)
+            ->willReturnSelf();
+        $this->campusModel->expects(self::once())
+            ->method('id')
+            ->willReturn(1);
+
+        $institutionMock = $this->createMock(CampusInstitutionId::class);
+        $institutionMock->expects(self::once())
+            ->method('value')
+            ->willReturn(12345);
+        $campusMock->expects(self::once())
+            ->method('institutionId')
+            ->willReturn($institutionMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeInstitutionId')
+            ->with(12345)
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(CampusName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('name');
+        $campusMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeName')
+            ->with('name')
+            ->willReturnSelf();
+
+        $phoneMock = $this->createMock(CampusPhone::class);
+        $phoneMock->expects(self::once())
+            ->method('value')
+            ->willReturn('123456789');
+        $campusMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phoneMock);
+        $this->campusModel->expects(self::once())
+            ->method('changePhone')
+            ->with('123456789')
+            ->willReturnSelf();
+
+        $emailMock = $this->createMock(CampusEmail::class);
+        $emailMock->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $campusMock->expects(self::once())
+            ->method('email')
+            ->willReturn($emailMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeEmail')
+            ->with('email')
+            ->willReturnSelf();
+
+        $addressMock = $this->createMock(CampusAddress::class);
+        $addressMock->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $campusMock->expects(self::once())
+            ->method('address')
+            ->willReturn($addressMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeAddress')
+            ->with('address')
+            ->willReturnSelf();
+
+        $observationsMock = $this->createMock(CampusObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('value')
+            ->willReturn('observations');
+        $campusMock->expects(self::once())
+            ->method('observations')
+            ->willReturn($observationsMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeObservations')
+            ->with('observations')
+            ->willReturnSelf();
+
+        $searchMock = $this->createMock(CampusSearch::class);
+        $searchMock->expects(self::once())
+            ->method('value')
+            ->willReturn('testing');
+        $campusMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeSearch')
+            ->with('testing')
+            ->willReturnSelf();
+
+        $stateMock = $this->createMock(CampusState::class);
+        $stateMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $campusMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeState')
+            ->with(1)
+            ->willReturnSelf();
+
+        $createAt = new \DateTime;
+        $createAtMock = $this->createMock(CampusCreatedAt::class);
+        $createAtMock->expects(self::once())
+            ->method('value')
+            ->willReturn($createAt);
+        $campusMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createAtMock);
+        $this->campusModel->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($createAt)
+            ->willReturnSelf();
+
+        $this->campusModel->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->twice()
+            ->with('cam_id', 1)
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn([]);
+
+        $builderMock->shouldReceive('insertGetId')
+            ->never();
+
+        $builderMock->shouldReceive('update')
+            ->withAnyArgs()
+            ->andReturn(1);
+
+        $this->campusModel->expects(self::exactly(2))
+            ->method('getTable')
+            ->willReturn('campus');
+
+        $this->databaseManager->shouldReceive('table')
+            ->times(2)
+            ->with('campus')
+            ->andReturn($builderMock);
+
+        $result = $this->repository->persistCampus($campusMock);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
     }
 }
