@@ -72,7 +72,7 @@ class GetInstitutionsOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $institutionMock = $this->createMock(Institution::class);
-        $institutions = new Institutions($institutionMock);
+        $institutions = new Institutions([$institutionMock]);
 
         $this->institutionManagement->expects(self::once())
             ->method('searchInstitutions')

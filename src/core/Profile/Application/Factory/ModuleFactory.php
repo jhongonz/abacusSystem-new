@@ -114,7 +114,7 @@ class ModuleFactory implements ModuleFactoryContract
 
     public function buildModules(Module ...$modules): Modules
     {
-        return new Modules(...$modules);
+        return new Modules($modules);
     }
 
     /**

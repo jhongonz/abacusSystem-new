@@ -145,7 +145,7 @@ class InstitutionFactory implements InstitutionFactoryContract
 
     public function buildInstitutions(Institution ...$institutions): Institutions
     {
-        return new Institutions(... $institutions);
+        return new Institutions($institutions);
     }
 
     public function buildInstitutionAddress(?string $address = null): InstitutionAddress

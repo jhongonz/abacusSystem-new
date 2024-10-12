@@ -8,22 +8,26 @@ class Employees extends ArrayIterator
 {
     public const TYPE = 'employees';
 
-    public function __construct(Employee ...$employees)
+    public function __construct(array $employees = [])
     {
         foreach ($employees as $employee) {
-            $this->addItem($employee);
+            $this->validateInstanceElement(Employee::class, $employee);
         }
+
+        parent::__construct($employees);
     }
 
     public function addItem(Employee $item): self
     {
-        $this->items[] = $item;
+        $this->validateInstanceElement(Employee::class, $item);
+
+        $this->append($item);
         return $this;
     }
 
     public function items(): array
     {
-        return $this->items;
+        return $this->getArrayCopy();
     }
 
     public function addId(int $id): self

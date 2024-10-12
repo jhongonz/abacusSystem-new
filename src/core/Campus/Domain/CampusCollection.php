@@ -6,16 +6,16 @@
 
 namespace Core\Campus\Domain;
 
-class CampusCollection extends \ArrayIterator
+use Core\SharedContext\Model\ArrayIterator;
+
+class CampusCollection extends ArrayIterator
 {
     public const TYPE = 'campus-collection';
-    private array $aggregator = [];
-    private array $filters = [];
 
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            $this->validateInstanceElement($item);
+            $this->validateInstanceElement(Campus::class, $item);
         }
 
         parent::__construct($items);
@@ -23,7 +23,7 @@ class CampusCollection extends \ArrayIterator
 
     public function addItem(Campus $item): self
     {
-        $this->validateInstanceElement($item);
+        $this->validateInstanceElement(Campus::class, $item);
 
         $this->append($item);
         return $this;
@@ -54,12 +54,5 @@ class CampusCollection extends \ArrayIterator
     {
         $this->filters = $filters;
         return $this;
-    }
-
-    private function validateInstanceElement($item): void
-    {
-        if (!$item instanceof Campus) {
-            throw new \InvalidArgumentException('Item is not valid to collection '.self::class);
-        }
     }
 }

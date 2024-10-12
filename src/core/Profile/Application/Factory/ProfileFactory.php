@@ -88,7 +88,7 @@ class ProfileFactory implements ProfileFactoryContract
 
     public function buildProfiles(Profile ...$profiles): Profiles
     {
-        return new Profiles(...$profiles);
+        return new Profiles($profiles);
     }
 
     public function buildProfileSearch(?string $search = null): ProfileSearch

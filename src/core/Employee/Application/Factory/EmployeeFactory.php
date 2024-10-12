@@ -181,7 +181,7 @@ class EmployeeFactory implements EmployeeFactoryContract
 
     public function buildEmployees(Employee ...$employees): Employees
     {
-        return new Employees(... $employees);
+        return new Employees($employees);
     }
 
     /**

@@ -71,7 +71,7 @@ class GetProfilesOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $profileMock = $this->createMock(Profile::class);
-        $profilesMock = new Profiles($profileMock);
+        $profilesMock = new Profiles([$profileMock]);
 
         $this->profileManagement->expects(self::once())
             ->method('searchProfiles')

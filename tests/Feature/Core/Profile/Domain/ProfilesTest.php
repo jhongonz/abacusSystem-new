@@ -23,7 +23,7 @@ class ProfilesTest extends TestCase
     {
         parent::setUp();
         $this->profile = $this->createMock(Profile::class);
-        $this->profiles = new Profiles($this->profile);
+        $this->profiles = new Profiles([$this->profile]);
     }
 
     public function tearDown(): void

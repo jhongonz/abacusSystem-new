@@ -4,12 +4,14 @@ namespace Tests\Feature\Core\Campus\Domain;
 
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
+use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(CampusCollection::class)]
+#[CoversClass(ArrayIterator::class)]
 class CampusCollectionTest extends TestCase
 {
     private Campus|MockObject $campus;
