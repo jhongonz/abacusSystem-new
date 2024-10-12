@@ -130,7 +130,7 @@ class CampusFactory implements CampusFactoryContract
 
     public function buildCampusCollection(Campus ...$campus): CampusCollection
     {
-        return new CampusCollection(... $campus);
+        return new CampusCollection($campus);
     }
 
     /**

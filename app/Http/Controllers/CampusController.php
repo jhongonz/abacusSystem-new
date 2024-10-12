@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Campus\StoreCampusRequest;
 use Core\Campus\Domain\Campus;
@@ -20,7 +19,6 @@ class CampusController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
         private readonly Session $session,
         LoggerInterface $logger,
         ViewFactory $viewFactory

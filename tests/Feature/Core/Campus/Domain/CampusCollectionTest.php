@@ -22,7 +22,7 @@ class CampusCollectionTest extends TestCase
     {
         parent::setUp();
         $this->campus = $this->createMock(Campus::class);
-        $this->campusCollection = new CampusCollection($this->campus);
+        $this->campusCollection = new CampusCollection([$this->campus]);
     }
 
     public function tearDown(): void
@@ -44,6 +44,17 @@ class CampusCollectionTest extends TestCase
 
         $this->assertInstanceOf(CampusCollection::class, $result);
         $this->assertSame($this->campusCollection, $result);
+    }
+
+    /**
+     * @return void
+     */
+    public function test_construct_should_return_exception(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Item is not valid to collection Core\Campus\Domain\CampusCollection');
+
+        $this->campusCollection = new CampusCollection(['testing']);
     }
 
     public function test_items_should_return_array(): void
