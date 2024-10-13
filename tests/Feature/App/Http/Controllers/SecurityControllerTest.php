@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\SecurityController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\User\LoginRequest;
@@ -30,6 +31,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(SecurityController::class)]
+#[CoversClass(Controller::class)]
 class SecurityControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;

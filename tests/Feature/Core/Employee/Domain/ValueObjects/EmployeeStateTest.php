@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 #[CoversClass(EmployeeState::class)]
+#[CoversClass(ValueObjectStatus::class)]
 class EmployeeStateTest extends TestCase
 {
     private EmployeeState $valueObject;
@@ -59,6 +60,14 @@ class EmployeeStateTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertSame('Nuevo', $result);
+    }
+
+    public function test_value_literal_should_return_with__string(): void
+    {
+        $result = $this->valueObject->__toString();
+
+        $this->assertSame('Nuevo', $result);
+        $this->assertIsString($result);
     }
 
     public function test_activate_should_change_activated_and_return_self(): void

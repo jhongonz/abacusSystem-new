@@ -14,11 +14,8 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
  */
 abstract class EmployeeOrchestrator implements Orchestrator
 {
-    protected EmployeeManagementContract $employeeManagement;
-
     public function __construct(
-        EmployeeManagementContract $employeeManagement,
+        protected readonly EmployeeManagementContract $employeeManagement,
     ) {
-        $this->employeeManagement = $employeeManagement;
     }
 }

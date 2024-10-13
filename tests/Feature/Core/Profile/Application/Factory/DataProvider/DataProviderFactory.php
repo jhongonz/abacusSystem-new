@@ -6,8 +6,6 @@
 
 namespace Tests\Feature\Core\Profile\Application\Factory\DataProvider;
 
-use DateTime;
-
 final class DataProviderFactory
 {
     public static function providerModule(): array
@@ -23,8 +21,8 @@ final class DataProviderFactory
                         'icon' => 'test',
                         'state' => 1,
                         'position' => 2,
-                        'createdAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
-                        'updatedAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
+                        'createdAt' => '2024-05-06 21:42:01',
+                        'updatedAt' => '2024-05-06 21:42:01',
                     ],
                 ],
             ],
@@ -46,8 +44,8 @@ final class DataProviderFactory
                                 'icon' => 'test',
                                 'state' => 1,
                                 'position' => 2,
-                                'createdAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
-                                'updatedAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
+                                'createdAt' => '2024-05-06 21:42:01',
+                                'updatedAt' => '2024-05-06 21:42:01',
                             ],
                         ],
                     ],
@@ -67,8 +65,8 @@ final class DataProviderFactory
                         'state' => 1,
                         'description' => 'test',
                         'modulesAggregator' => [1, 2, 3],
-                        'createdAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
-                        'updatedAt' => json_decode(json_encode(new DateTime('2024-05-06 21:42:01')), true),
+                        'createdAt' => '2024-05-06 21:42:01',
+                        'updatedAt' => '2024-05-06 21:42:01',
                     ],
                 ],
             ],

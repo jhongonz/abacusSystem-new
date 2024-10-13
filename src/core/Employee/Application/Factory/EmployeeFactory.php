@@ -13,6 +13,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -38,7 +39,6 @@ class EmployeeFactory implements EmployeeFactoryContract
             $this->buildEmployeeName($data['name']),
             $this->buildEmployeeLastname($data['lastname']),
             $this->buildEmployeeState($data['state']),
-            $this->buildEmployeeCreatedAt($this->getDateTime($data['createdAt']['date'])),
         );
 
         $employee->setIdentificationType($this->buildEmployeeIdentificationType($data['identification_type']));
@@ -47,18 +47,25 @@ class EmployeeFactory implements EmployeeFactoryContract
         $employee->setPhone($this->buildEmployeePhone($data['phone']));
         $employee->setEmail($this->buildEmployeeEmail($data['email']));
 
+        if (isset($data['createdAt'])) {
+            $employee->setCreatedAt(
+                $this->buildEmployeeCreatedAt($this->getDateTime($data['createdAt']))
+            );
+        }
+
         if (isset($data['updatedAt'])) {
             $employee->setUpdatedAt(
-                $this->buildEmployeeUpdatedAt($this->getDateTime($data['updatedAt']['date']))
+                $this->buildEmployeeUpdatedAt($this->getDateTime($data['updatedAt']))
             );
         }
 
         if (isset($data['birthdate'])) {
-            $employee->setBirthdate($this->buildEmployeeBirthdate($this->getDateTime($data['birthdate']['date'])));
+            $employee->setBirthdate($this->buildEmployeeBirthdate($this->getDateTime($data['birthdate'])));
         }
 
         $employee->setObservations($this->buildEmployeeObservations($data['observations']));
         $employee->setImage($this->buildEmployeeImage($data['image']));
+        $employee->setInstitutionId($this->buildEmployeeInstitutionId($data['institutionId']));
 
         if (isset($data['search'])) {
             $employee->setSearch($this->buildEmployeeSearch($data['search']));
@@ -82,15 +89,9 @@ class EmployeeFactory implements EmployeeFactoryContract
             $name
         );
 
-        if (! is_null($lastname)) {
-            $employee->setLastname($lastname);
-        }
-        if (! is_null($createdAt)) {
-            $employee->setCreatedAt($createdAt);
-        }
-        if (! is_null($state)) {
-            $employee->setState($state);
-        }
+        $employee->setLastname($lastname);
+        $employee->setCreatedAt($createdAt);
+        $employee->setState($state);
 
         return $employee;
     }
@@ -180,7 +181,7 @@ class EmployeeFactory implements EmployeeFactoryContract
 
     public function buildEmployees(Employee ...$employees): Employees
     {
-        return new Employees(... $employees);
+        return new Employees($employees);
     }
 
     /**
@@ -189,5 +190,10 @@ class EmployeeFactory implements EmployeeFactoryContract
     private function getDateTime(string $dateTime): DateTime
     {
         return new DateTime($dateTime);
+    }
+
+    public function buildEmployeeInstitutionId(?int $institutionId = null): EmployeeInstitutionId
+    {
+        return new EmployeeInstitutionId($institutionId);
     }
 }

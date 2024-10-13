@@ -2,14 +2,7 @@
 
 namespace Core\SharedContext\Model;
 
-use Countable;
-use Iterator;
-use ReturnTypeWillChange;
-
-/**
- * @codeCoverageIgnore
- */
-abstract class ArrayIterator implements Countable, Iterator
+abstract class ArrayIterator extends \ArrayIterator
 {
     protected array $items = [];
 
@@ -26,36 +19,10 @@ abstract class ArrayIterator implements Countable, Iterator
     abstract public function filters(): array;
     abstract public function setFilters(array $filters): ArrayIterator;
 
-    public function current(): mixed
+    protected function validateInstanceElement(string $class, $item): void
     {
-        return \current($this->items);
-    }
-
-    #[ReturnTypeWillChange]
-    public function next()
-    {
-        return \next($this->items);
-    }
-
-    #[ReturnTypeWillChange]
-    public function key()
-    {
-        return \key($this->items);
-    }
-
-    public function valid(): bool
-    {
-        return \current($this->items) !== false;
-    }
-
-    #[ReturnTypeWillChange]
-    public function rewind()
-    {
-        return \reset($this->items);
-    }
-
-    public function count(): int
-    {
-        return \count($this->items);
+        if (!$item instanceof $class) {
+            throw new \InvalidArgumentException('Item is not valid to collection '. get_class($this));
+        }
     }
 }

@@ -2,10 +2,12 @@
 
 namespace Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 
+use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus;
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Institution extends Model
@@ -86,6 +88,17 @@ class Institution extends Model
     public function getSearchField(): string
     {
         return $this->mainSearchField;
+    }
+
+    public function relationWithCampus(): HasMany
+    {
+        return $this->hasMany(Campus::class, 'cam__inst_id', 'inst_id');
+    }
+
+
+    public function campus(): Model
+    {
+        return $this->relationWithCampus()->getModel();
     }
 
     public function id(): ?int

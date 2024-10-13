@@ -5,12 +5,14 @@ namespace Tests\Feature\Core\Profile\Domain;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
+use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(Modules::class)]
+#[CoversClass(ArrayIterator::class)]
 class ModulesTest extends TestCase
 {
     private Module|MockObject $module;
@@ -24,7 +26,7 @@ class ModulesTest extends TestCase
     {
         parent::setUp();
         $this->module = $this->createMock(Module::class);
-        $this->modules = new Modules($this->module);
+        $this->modules = new Modules([$this->module]);
     }
 
     public function tearDown(): void

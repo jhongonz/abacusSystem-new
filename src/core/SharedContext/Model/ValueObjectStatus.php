@@ -4,9 +4,6 @@ namespace Core\SharedContext\Model;
 
 use Exception;
 
-/**
- * @codeCoverageIgnore
- */
 class ValueObjectStatus
 {
     public const STATE_NEW = 1;
@@ -68,7 +65,7 @@ class ValueObjectStatus
     {
         $this->validateState($value);
         $this->value = $value;
-
+        $this->changeValueLiteral($value);
 
         return $this;
     }
@@ -76,6 +73,11 @@ class ValueObjectStatus
     public function getValueLiteral(): string
     {
         return $this->valueLiteral;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getValueLiteral();
     }
 
     public function activate(): self

@@ -5,7 +5,6 @@ namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories;
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
-use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulePersistException;
@@ -154,18 +153,6 @@ class RedisModuleRepositoryTest extends TestCase
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test_persistModules_should_return_object(): void
-    {
-        $modules = $this->createMock(Modules::class);
-        $result = $this->repository->persistModules($modules);
-
-        $this->assertInstanceOf(Modules::class, $result);
-        $this->assertSame($modules, $result);
     }
 
     /**

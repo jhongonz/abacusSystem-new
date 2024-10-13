@@ -79,18 +79,6 @@ class EloquentProfileRepositoryTest extends TestCase
 
     /**
      * @throws Exception
-     */
-    public function test_persistProfiles_should_return_object(): void
-    {
-        $profiles = $this->createMock(Profiles::class);
-        $result = $this->repository->persistProfiles($profiles);
-
-        $this->assertInstanceOf(Profiles::class, $result);
-        $this->assertSame($profiles, $result);
-    }
-
-    /**
-     * @throws Exception
      * @throws ProfileNotFoundException
      */
     public function test_find_should_return_object(): void

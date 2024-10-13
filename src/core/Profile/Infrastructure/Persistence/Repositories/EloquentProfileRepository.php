@@ -163,11 +163,6 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         return $profile;
     }
 
-    public function persistProfiles(Profiles $profiles): Profiles
-    {
-        return $profiles;
-    }
-
     public function priority(): int
     {
         return $this->priority;

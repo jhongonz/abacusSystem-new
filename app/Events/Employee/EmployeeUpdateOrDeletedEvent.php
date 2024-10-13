@@ -14,14 +14,12 @@ class EmployeeUpdateOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private int $employeeId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(int $employeeId)
-    {
-        $this->employeeId = $employeeId;
+    public function __construct(
+        private readonly int $employeeId
+    ) {
     }
 
     public function employeeId(): int

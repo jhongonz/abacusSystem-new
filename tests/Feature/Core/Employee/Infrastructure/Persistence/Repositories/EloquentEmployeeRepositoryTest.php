@@ -12,6 +12,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
@@ -492,6 +493,18 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('image')
             ->willReturnSelf();
 
+        $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
+        $institutionIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $employeeMock->expects(self::once())
+            ->method('institutionId')
+            ->willReturn($institutionIdMock);
+        $this->model->expects(self::once())
+            ->method('changeInstitutionId')
+            ->with(1)
+            ->willReturnSelf();
+
         $stateMock = $this->createMock(EmployeeState::class);
         $stateMock->expects(self::once())
             ->method('value')
@@ -705,6 +718,18 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->model->expects(self::once())
             ->method('changeImage')
             ->with('image')
+            ->willReturnSelf();
+
+        $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
+        $institutionIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $employeeMock->expects(self::once())
+            ->method('institutionId')
+            ->willReturn($institutionIdMock);
+        $this->model->expects(self::once())
+            ->method('changeInstitutionId')
+            ->with(1)
             ->willReturnSelf();
 
         $stateMock = $this->createMock(EmployeeState::class);

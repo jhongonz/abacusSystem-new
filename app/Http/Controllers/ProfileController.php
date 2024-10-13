@@ -18,19 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller implements HasMiddleware
 {
-    private OrchestratorHandlerContract $orchestratorHandler;
-    private ActionExecutorHandler $actionExecutorHandler;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
-        ActionExecutorHandler $actionExecutorHandler,
+        private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
         parent::__construct($logger, $viewFactory);
-
-        $this->orchestratorHandler = $orchestratorHandler;
-        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -47,14 +41,14 @@ class ProfileController extends Controller implements HasMiddleware
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        return $this->orchestratorHandler->handler('retrieve-profiles', $request);
+        return $this->orchestrators->handler('retrieve-profiles', $request);
     }
 
     public function changeStateProfile(Request $request): JsonResponse
     {
         try {
             /** @var Profile $profile */
-            $profile = $this->orchestratorHandler->handler('change-state-profile', $request);
+            $profile = $this->orchestrators->handler('change-state-profile', $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
         } catch (Exception $exception) {
@@ -71,7 +65,7 @@ class ProfileController extends Controller implements HasMiddleware
         try {
             $request->merge(['profileId' => $id]);
 
-            $this->orchestratorHandler->handler('delete-profile', $request);
+            $this->orchestrators->handler('delete-profile', $request);
             ProfileUpdatedOrDeletedEvent::dispatch($id);
 
         } catch (Exception $exception) {
@@ -86,7 +80,7 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfile(Request $request, ?int $id = null): JsonResponse
     {
         $request->merge(['profileId' => $id]);
-        $dataProfile = $this->orchestratorHandler->handler('detail-profile', $request);
+        $dataProfile = $this->orchestrators->handler('detail-profile', $request);
 
         $view = $this->viewFactory->make('profile.profile-form', $dataProfile)
             ->render();

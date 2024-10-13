@@ -5,7 +5,6 @@ namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
@@ -74,18 +73,6 @@ class RedisProfileRepositoryTest extends TestCase
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test_persistProfiles_should_return_object(): void
-    {
-        $profiles = $this->createMock(Profiles::class);
-        $result = $this->repository->persistProfiles($profiles);
-
-        $this->assertInstanceOf(Profiles::class, $result);
-        $this->assertSame($profiles, $result);
     }
 
     /**

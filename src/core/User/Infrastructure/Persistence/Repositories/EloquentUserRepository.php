@@ -95,6 +95,8 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
             $userId = $builder->insertGetId($dataModel);
             $user->id()->setValue($userId);
         } else {
+            $dataModel['updated_at'] = new \DateTime;
+
             $builder->where('user_id', $userId);
             $builder->update($dataModel);
         }

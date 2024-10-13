@@ -12,9 +12,7 @@ use Exception;
 class EmployeeTranslator
 {
     private EmployeeFactoryContract $employeeFactory;
-
     private EmployeeModel $employee;
-
     private array $collection;
 
     public function __construct(
@@ -55,10 +53,12 @@ class EmployeeTranslator
         $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
         $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
         $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
+        $employee->setInstitutionId($this->employeeFactory->buildEmployeeInstitutionId($this->employee->institutionId()));
 
         /** @var User $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);
-        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($user->id()));
+        $userId = (! is_null($user)) ? $user->id() : null;
+        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($userId));
 
         return $employee;
     }

@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
@@ -22,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(ProfileController::class)]
+#[CoversClass(Controller::class)]
 class ProfileControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandler;

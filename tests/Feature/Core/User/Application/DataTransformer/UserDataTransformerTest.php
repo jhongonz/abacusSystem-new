@@ -57,9 +57,10 @@ class UserDataTransformerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'provider')]
-    public function test_read_should_return_array(array $expected, DateTime $datetime): void
+    public function test_read_should_return_array(array $expected, string $datetime): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
@@ -106,13 +107,13 @@ class UserDataTransformerTest extends TestCase
         $userCreatedAtMock = $this->createMock(UserCreatedAt::class);
         $userCreatedAtMock->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new DateTime($datetime));
         $this->user->method('createdAt')->willReturn($userCreatedAtMock);
 
         $userUpdatedAtMock = $this->createMock(UserUpdatedAt::class);
         $userUpdatedAtMock->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new DateTime($datetime));
         $this->user->method('updatedAt')->willReturn($userUpdatedAtMock);
 
         $this->dataTransformer->write($this->user);

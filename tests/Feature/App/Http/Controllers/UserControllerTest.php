@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\User\RecoveryAccountRequest;
@@ -26,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(UserController::class)]
+#[CoversClass(Controller::class)]
 class UserControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;

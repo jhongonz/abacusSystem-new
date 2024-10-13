@@ -130,11 +130,6 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
         return $employee;
     }
 
-    public function persistEmployees(Employees $employees): Employees
-    {
-        return $employees;
-    }
-
     public function getAll(array $filters = []): ?Employees
     {
         return null;

@@ -23,7 +23,7 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
 {
     private const FUNCTION_NAMES = [
         Institution::class => 'persistInstitution',
-        Institutions::class => 'persistInstitutions',
+        Institutions::class => '',
     ];
 
     private string $domainToPersist;

@@ -11,6 +11,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -365,6 +366,25 @@ class EmployeeTest extends TestCase
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertSame($result, $this->employee);
         $this->assertSame($observations, $this->employee->observations());
+    }
+
+    public function test_institutionId_should_return_value_object(): void
+    {
+        $result = $this->employee->institutionId();
+        $this->assertInstanceOf(EmployeeInstitutionId::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setInstitutionId_should_change_and_return_self(): void
+    {
+        $institutionId = $this->createMock(EmployeeInstitutionId::class);
+        $result = $this->employee->setInstitutionId($institutionId);
+
+        $this->assertInstanceOf(Employee::class, $result);
+        $this->assertSame($result, $this->employee);
+        $this->assertSame($institutionId, $this->employee->institutionId());
     }
 
     /**

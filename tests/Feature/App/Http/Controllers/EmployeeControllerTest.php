@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
@@ -29,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(EmployeeController::class)]
+#[CoversClass(Controller::class)]
 class EmployeeControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
@@ -498,10 +500,14 @@ class EmployeeControllerTest extends TestCase
 
         $fileMock = $this->createMock(UploadedFile::class);
         $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $fileMock->expects(self::once())
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $request->expects(self::once())
+        $request->expects(self::exactly(2))
             ->method('file')
             ->with('file')
             ->willReturn($fileMock);
@@ -523,6 +529,30 @@ class EmployeeControllerTest extends TestCase
         $this->assertSame(201, $result->getStatusCode());
         $this->assertArrayHasKey('token', $result->getData(true));
         $this->assertArrayHasKey('url', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setImageEmployee_should_return_internal_error(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $fileMock = $this->createMock(UploadedFile::class);
+        $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(false);
+
+        $request->expects(self::once())
+            ->method('file')
+            ->with('file')
+            ->willReturn($fileMock);
+
+        $result = $this->controller->setImageEmployee($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
     }
 
     /**

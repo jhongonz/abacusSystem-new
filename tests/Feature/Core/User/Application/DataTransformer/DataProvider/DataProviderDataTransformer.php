@@ -6,13 +6,11 @@
 
 namespace Tests\Feature\Core\User\Application\DataTransformer\DataProvider;
 
-use DateTime;
-
 final class DataProviderDataTransformer
 {
     public static function provider(): array
     {
-        $datetime = new DateTime('2024-04-20 22:08:42');
+        $datetime = '2024-04-20 22:08:42';
 
         return [
             [

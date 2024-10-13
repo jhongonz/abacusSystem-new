@@ -188,6 +188,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $model->changeAddress($domain->address()->value());
         $model->changeObservations($domain->observations()->value());
         $model->changeImage($domain->image()->value());
+        $model->changeInstitutionId($domain->institutionId()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
         $model->changeCreatedAt($domain->createdAt()->value());

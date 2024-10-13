@@ -4,6 +4,7 @@ namespace Tests\Feature\Core\Employee\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -35,6 +36,14 @@ class EmployeeTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertSame($result, 'emp_search');
+    }
+
+    public function test_relationWithInstitution_should_return_relation(): void
+    {
+        $result = $this->model->relationWithInstitution();
+
+        $this->assertInstanceOf(BelongsTo::class, $result);
+        $this->assertSame('institutions', $result->getModel()->getTable());
     }
 
     /**
@@ -127,6 +136,56 @@ class EmployeeTest extends TestCase
             ->willReturnSelf();
 
         $result = $this->modelMock->changeId(null);
+
+        $this->assertInstanceOf(Employee::class, $result);
+        $this->assertSame($result, $this->modelMock);
+    }
+
+    public function test_institutionId_should_return_null(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('emp__inst_id')
+            ->willReturn(null);
+
+        $result = $this->modelMock->institutionId();
+
+        $this->assertNull($result);
+    }
+
+    public function test_institutionId_should_return_int(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['getAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('getAttribute')
+            ->with('emp__inst_id')
+            ->willReturn(1);
+
+        $result = $this->modelMock->institutionId();
+
+        $this->assertIsInt($result);
+        $this->assertSame(1, $result);
+    }
+
+    public function test_changeInstitutionId_with_int_should_change_and_return_self(): void
+    {
+        $this->modelMock = $this->getMockBuilder(Employee::class)
+            ->onlyMethods(['setAttribute'])
+            ->getMock();
+
+        $this->modelMock->expects(self::once())
+            ->method('setAttribute')
+            ->with('emp__inst_id', 1)
+            ->willReturnSelf();
+
+        $result = $this->modelMock->changeInstitutionId(1);
 
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertSame($result, $this->modelMock);

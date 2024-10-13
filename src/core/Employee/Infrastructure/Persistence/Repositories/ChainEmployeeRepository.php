@@ -20,7 +20,7 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
 {
     private const FUNCTION_NAMES = [
         Employee::class => 'persistEmployee',
-        Employees::class => 'persistEmployees',
+        Employees::class => '',
     ];
 
     private string $domainToPersist;

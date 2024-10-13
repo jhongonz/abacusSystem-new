@@ -57,12 +57,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
     public function test_invoke_should_return_employee(): void
     {
         $requestMock = $this->createMock(Request::class);
-
         $carbonMock = $this->createMock(Carbon::class);
-        $carbonMock->expects(self::once())
-            ->method('format')
-            ->with('Y-m-d')
-            ->willReturn('2024-06-10');
 
         $requestMock->expects(self::once())
             ->method('date')

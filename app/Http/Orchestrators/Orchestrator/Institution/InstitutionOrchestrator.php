@@ -14,11 +14,8 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
  */
 abstract class InstitutionOrchestrator implements Orchestrator
 {
-    protected InstitutionManagementContract $institutionManagement;
-
     public function __construct(
-        InstitutionManagementContract $institutionManagement
+        protected readonly InstitutionManagementContract $institutionManagement
     ) {
-        $this->institutionManagement = $institutionManagement;
     }
 }

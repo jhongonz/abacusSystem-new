@@ -22,7 +22,7 @@ class InstitutionsTest extends TestCase
     {
         parent::setUp();
         $this->institution = $this->createMock(Institution::class);
-        $this->institutions = new Institutions($this->institution);
+        $this->institutions = new Institutions([$this->institution]);
     }
 
     public function tearDown(): void

@@ -12,22 +12,26 @@ class Institutions extends ArrayIterator
 {
     public const TYPE = 'institutions';
 
-    public function __construct(Institution ...$institutions)
+    public function __construct(array $institutions = [])
     {
         foreach ($institutions as $institution) {
-            $this->addItem($institution);
+            $this->validateInstanceElement(Institution::class, $institution);
         }
+
+        parent::__construct($institutions);
     }
 
     public function addItem(Institution $item): self
     {
-        $this->items[] = $item;
+        $this->validateInstanceElement(Institution::class, $item);
+
+        $this->append($item);
         return $this;
     }
 
     public function items(): array
     {
-        return $this->items;
+        return $this->getArrayCopy();
     }
 
     public function addId(int $id): self

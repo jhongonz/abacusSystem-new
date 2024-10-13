@@ -21,7 +21,7 @@ class CreateUserOrchestrator extends UserOrchestrator
 
     public function __construct(
         UserManagementContract $userManagement,
-        Hasher $hasher
+        private Hasher $hasher
     ) {
         parent::__construct($userManagement);
         $this->setHasher($hasher);

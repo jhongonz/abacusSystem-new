@@ -34,10 +34,18 @@ class UserFactory implements UserFactoryContract
             $this->buildProfileId($data['profileId']),
             $this->buildLogin($data['login']),
             $this->buildPassword($data['password']),
-            $this->buildState($data['state']),
-            $this->buildCreatedAt($data['createdAt'])
+            $this->buildState($data['state'])
         );
-        $user->photo()->setValue($data['photo']);
+
+        $user->createdAt()->setValue($this->getDateTime($data['createdAt']));
+
+        if (isset($data['updatedAt'])) {
+            $user->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        }
+
+        if (isset($data['photo'])) {
+            $user->photo()->setValue($data['photo']);
+        }
 
         return $user;
     }
@@ -108,5 +116,13 @@ class UserFactory implements UserFactoryContract
     public function buildUserPhoto(?string $photo = null): UserPhoto
     {
         return new UserPhoto($photo);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $dateTime): DateTime
+    {
+        return new DateTime($dateTime);
     }
 }

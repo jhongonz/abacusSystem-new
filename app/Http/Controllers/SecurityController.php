@@ -26,22 +26,14 @@ class SecurityController extends Controller implements HasMiddleware
 {
     use UserTrait;
 
-    private StatefulGuard $guard;
-    private OrchestratorHandlerContract $orchestratorHandler;
-    private Session $session;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
+        private readonly OrchestratorHandlerContract $orchestrators,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
-        StatefulGuard $guard,
-        Session $session
+        private readonly StatefulGuard $guard,
+        private readonly Session $session
     ) {
         parent::__construct($logger, $viewFactory);
-
-        $this->orchestratorHandler = $orchestratorHandler;
-        $this->guard = $guard;
-        $this->session = $session;
     }
 
     public function index(): Response
@@ -53,7 +45,7 @@ class SecurityController extends Controller implements HasMiddleware
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
         /** @var User $user */
-        $user = $this->orchestratorHandler->handler('retrieve-user', $request);
+        $user = $this->orchestrators->handler('retrieve-user', $request);
 
         try {
             $employee = $this->getEmployee($request, $user);
@@ -108,7 +100,7 @@ class SecurityController extends Controller implements HasMiddleware
     private function getEmployee(Request $request, User $user): Employee
     {
         $request->merge(['employeeId' => $user->employeeId()->value()]);
-        return $this->orchestratorHandler->handler('retrieve-employee', $request);
+        return $this->orchestrators->handler('retrieve-employee', $request);
     }
 
     /**
@@ -117,8 +109,7 @@ class SecurityController extends Controller implements HasMiddleware
     private function getProfile(Request $request, User $user): Profile
     {
         $request->merge(['profileId' => $user->profileId()->value()]);
-
-        $profile = $this->orchestratorHandler->handler('retrieve-profile', $request);
+        $profile = $this->orchestrators->handler('retrieve-profile', $request);
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {
             $this->logger->warning("User's profile with id: ".$profile->id()->value().' is not active');

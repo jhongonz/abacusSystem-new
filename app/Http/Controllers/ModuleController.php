@@ -18,19 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ModuleController extends Controller implements HasMiddleware
 {
-    private OrchestratorHandlerContract $orchestratorHandler;
-    private ActionExecutorHandler $actionExecutorHandler;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
-        ActionExecutorHandler $actionExecutorHandler,
+        private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
         parent::__construct($logger, $viewFactory);
-
-        $this->orchestratorHandler = $orchestratorHandler;
-        $this->actionExecutorHandler = $actionExecutorHandler;
     }
 
     public function index(): JsonResponse|string
@@ -44,14 +38,14 @@ class ModuleController extends Controller implements HasMiddleware
 
     public function getModules(Request $request): JsonResponse
     {
-        return $this->orchestratorHandler->handler('retrieve-modules', $request);
+        return $this->orchestrators->handler('retrieve-modules', $request);
     }
 
     public function changeStateModule(Request $request): JsonResponse
     {
         try {
             /** @var Module $module */
-            $module = $this->orchestratorHandler->handler('change-state-module', $request);
+            $module = $this->orchestrators->handler('change-state-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
         } catch (Exception $exception) {
@@ -66,7 +60,7 @@ class ModuleController extends Controller implements HasMiddleware
     public function getModule(Request $request, ?int $id = null): JsonResponse
     {
         $request->merge(['moduleId' => $id]);
-        $dataModule = $this->orchestratorHandler->handler('detail-module', $request);
+        $dataModule = $this->orchestrators->handler('detail-module', $request);
 
         $view = $this->viewFactory->make('module.module-form', $dataModule)
             ->render();
@@ -99,7 +93,7 @@ class ModuleController extends Controller implements HasMiddleware
     {
         try {
             $request->merge(['moduleId' => $id]);
-            $this->orchestratorHandler->handler('delete-module', $request);
+            $this->orchestrators->handler('delete-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($id);
         } catch (Exception $exception) {
