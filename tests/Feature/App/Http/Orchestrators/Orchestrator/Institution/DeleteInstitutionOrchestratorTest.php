@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Http\Orchestrators\Orchestrator\Institution\DeleteInstitutionOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -11,6 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(DeleteInstitutionOrchestrator::class)]
+#[CoversClass(InstitutionOrchestrator::class)]
 class DeleteInstitutionOrchestratorTest extends TestCase
 {
     private InstitutionManagementContract|MockObject $institutionManagement;

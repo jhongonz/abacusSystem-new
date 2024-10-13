@@ -3,18 +3,26 @@
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Module;
 
 use App\Http\Orchestrators\Orchestrator\Module\CreateModuleOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Module\ModuleOrchestrator;
+use App\Traits\RouterTrait;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(CreateModuleOrchestrator::class)]
+#[CoversClass(ModuleOrchestrator::class)]
+#[CoversClass(RouterTrait::class)]
 class CreateModuleOrchestratorTest extends TestCase
 {
     private ModuleManagementContract|MockObject $moduleManagement;
+    private Router|MockObject $routerMock;
+    private LoggerInterface|MockObject $loggerMock;
     private CreateModuleOrchestrator $orchestrator;
 
     /**
@@ -24,14 +32,23 @@ class CreateModuleOrchestratorTest extends TestCase
     {
         parent::setUp();
         $this->moduleManagement = $this->createMock(ModuleManagementContract::class);
-        $this->orchestrator = new CreateModuleOrchestrator($this->moduleManagement);
+        $this->routerMock = $this->createMock(Router::class);
+        $this->loggerMock = $this->createMock(LoggerInterface::class);
+
+        $this->orchestrator = new CreateModuleOrchestrator(
+            $this->moduleManagement,
+            $this->routerMock,
+            $this->loggerMock
+        );
     }
 
     public function tearDown(): void
     {
         unset(
             $this->orchestrator,
-            $this->moduleManagement
+            $this->moduleManagement,
+            $this->loggerMock,
+            $this->routerMock
         );
         parent::tearDown();
     }

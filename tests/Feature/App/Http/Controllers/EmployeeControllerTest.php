@@ -701,8 +701,6 @@ class EmployeeControllerTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
-        foreach ($result as $item) {
-            $this->assertInstanceOf(Middleware::class, $item);
-        }
+        $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
     }
 }

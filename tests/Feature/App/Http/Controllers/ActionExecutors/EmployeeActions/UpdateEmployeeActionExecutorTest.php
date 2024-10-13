@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers\ActionExecutors\EmployeeActions;
 
+use App\Http\Controllers\ActionExecutors\EmployeeActions\EmployeeActionExecutor;
 use App\Http\Controllers\ActionExecutors\EmployeeActions\UpdateEmployeeActionExecutor;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use Core\Employee\Domain\Employee;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployeeActionExecutor::class)]
+#[CoversClass(EmployeeActionExecutor::class)]
 class UpdateEmployeeActionExecutorTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandler;

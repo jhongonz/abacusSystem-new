@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Institution;
 
+use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Institution\UpdateInstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UpdateInstitutionOrchestrator::class)]
+#[CoversClass(InstitutionOrchestrator::class)]
 class UpdateInstitutionOrchestratorTest extends TestCase
 {
     private InstitutionManagementContract|MockObject $institutionManagement;

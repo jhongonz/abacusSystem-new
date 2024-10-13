@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit executionOrder="random" resolveDependencies="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+<phpunit executionOrder="random" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
         <testsuite name="PHP Unit Test Suite">
             <directory>tests/Unit</directory>
@@ -18,7 +18,7 @@
     <coverage>
         <report>
             <html outputDirectory="./var/coverage/report" lowUpperBound="35" highLowerBound="70"/>
-            <text outputFile="php://stdout" showUncoveredFiles="false"/>
+            <text outputFile="php://stdout"/>
         </report>
     </coverage>
     <php>
@@ -38,7 +38,7 @@
     </php>
     <logging>
         <junit outputFile="./var/coverage/logfile.xml"/>
-        <testdoxHtml outputFile="./var/coverage/testdox.html"/>
-        <testdoxText outputFile="./var/coverage/testdox.txt"/>
+        <testdoxHtml outputFile="./var/coverage/test-resume.html"/>
+        <testdoxText outputFile="./var/coverage/test-resume.txt"/>
     </logging>
 </phpunit>
