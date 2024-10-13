@@ -120,7 +120,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
         $institutionModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $institutionModel->changeDeletedAt(new \DateTime);
+        $institutionModel->changeDeletedAt($this->getDateTime());
 
         $builder->update($institutionModel->toArray());
     }
@@ -140,6 +140,8 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
             $institutionId = $builder->insertGetId($dataModel);
             $institution->id()->setValue($institutionId);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+
             $builder->where('inst_id', $institutionId);
             $builder->update($dataModel);
         }
@@ -184,5 +186,13 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

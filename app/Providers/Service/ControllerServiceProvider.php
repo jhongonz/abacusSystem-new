@@ -5,8 +5,6 @@ namespace App\Providers\Service;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\ActionExecutors\EmployeeActions\CreateEmployeeActionExecutor;
 use App\Http\Controllers\ActionExecutors\EmployeeActions\UpdateEmployeeActionExecutor;
-use App\Http\Controllers\ActionExecutors\InstitutionActions\CreateInstitutionActionExecutor;
-use App\Http\Controllers\ActionExecutors\InstitutionActions\UpdateInstitutionActionExecutor;
 use App\Http\Controllers\ActionExecutors\ModuleActions\CreateModuleActionExecutor;
 use App\Http\Controllers\ActionExecutors\ModuleActions\UpdateModuleActionExecutor;
 use App\Http\Controllers\ActionExecutors\ProfileActions\CreateProfileActionExecutor;
@@ -38,14 +36,6 @@ class ControllerServiceProvider extends ServiceProvider
 
             $actionExecutorHandler->addActionExecutor(
                 $app->make(UpdateModuleActionExecutor::class)
-            );
-
-            $actionExecutorHandler->addActionExecutor(
-                $app->make(CreateInstitutionActionExecutor::class)
-            );
-
-            $actionExecutorHandler->addActionExecutor(
-                $app->make(UpdateInstitutionActionExecutor::class)
             );
 
             $actionExecutorHandler->addActionExecutor(

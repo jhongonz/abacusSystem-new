@@ -385,9 +385,9 @@ class InstitutionControllerTest extends TestCase
             ->method('id')
             ->willReturn($institutionIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-institution-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('create-institution', $requestMock)
             ->willReturn($institutionMock);
 
         $result = $this->controller->storeInstitution($requestMock);
@@ -408,9 +408,9 @@ class InstitutionControllerTest extends TestCase
             ->with('institutionId')
             ->willReturn(null);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-institution-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('create-institution', $requestMock)
             ->willThrowException(new \Exception('Can not create new institution'));
 
         $this->logger->expects(self::once())
@@ -445,9 +445,9 @@ class InstitutionControllerTest extends TestCase
             ->method('id')
             ->willReturn($institutionIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('update-institution-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('update-institution', $requestMock)
             ->willReturn($institutionMock);
 
         $result = $this->controller->storeInstitution($requestMock);

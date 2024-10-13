@@ -89,10 +89,10 @@ class InstitutionController extends Controller implements HasMiddleware
     public function storeInstitution(StoreInstitutionRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('institutionId'))) ? 'create-institution-action' : 'update-institution-action';
+            $method = (is_null($request->input('institutionId'))) ? 'create-institution' : 'update-institution';
 
             /** @var Institution $institution */
-            $institution = $this->actionExecutorHandler->invoke($method, $request);
+            $institution = $this->orchestrators->handler($method, $request);
 
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
