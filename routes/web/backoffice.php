@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SecurityController;
@@ -16,12 +17,6 @@ Route::controller(SecurityController::class)->group(function () {
 });
 
 Route::controller(UserController::class)->prefix('user')->group(function () {
-    //    Route::get('','index')->name('user.index');
-    //    Route::post('/get-list','getUsers')->name('user.get-users');
-    //    Route::post('/set-state','changeStateUser')->name('user.change-state-user');
-    //    Route::get('/delete/{id}','deleteUser')->whereNumber('id')->name('user.delete-user');
-    //    Route::get('/get/{id?}','getUser')->whereNumber('id')->name('user.get-user');
-    //    Route::post('/store','storeUser')->name('user.store');
     Route::get('/recovery-account', 'recoveryAccount')->name('user.recovery');
     Route::post('/validate-account', 'validateAccount')->name('user.validate-account');
     Route::get('/reset-account/{id}', 'resetAccount')->whereNumber('id')->name('user.reset-account');
@@ -64,4 +59,13 @@ Route::controller(InstitutionController::class)->prefix('institution')->group(fu
     Route::post('/store', 'storeInstitution')->name('institution.store');
     Route::get('/delete/{id}', 'deleteInstitution')->whereNumber('id')->name('institution.delete-institution');
     Route::post('/set-state', 'changeStateInstitution')->name('institution.change-state-institution');
+});
+
+Route::controller(CampusController::class)->prefix('campus')->group(function () {
+    Route::get('', 'index')->name('campus.index');
+    Route::post('/get-list', 'getCampusCollection')->name('campus.get-campus-collection');
+    Route::get('/get/{id?}', 'getCampus')->whereNumber('id')->name('campus.get-campus');
+    Route::post('/store', 'storeCampus')->name('campus.store');
+    Route::post('/set-state', 'changeStateCampus')->name('campus.change-state-campus');
+    Route::get('/delete/{id?}', 'deleteCampus')->whereNumber('id')->name('campus.delete-campus');
 });

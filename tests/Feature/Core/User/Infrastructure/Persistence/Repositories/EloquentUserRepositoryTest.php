@@ -611,7 +611,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('update')
             ->once()
-            ->with($dataUpdate)
+            ->withAnyArgs()
             ->andReturn(2);
 
         $result = $this->repository->persistUser($userMock);

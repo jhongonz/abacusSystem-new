@@ -8,26 +8,26 @@ class Profiles extends ArrayIterator
 {
     public const TYPE = 'profiles';
 
-    public function __construct(Profile ...$profiles)
+    public function __construct(array $profiles = [])
     {
         foreach ($profiles as $profile) {
-            $this->addItem($profile);
+            $this->validateInstanceElement(Profile::class, $profile);
         }
+
+        parent::__construct($profiles);
     }
 
-    /**
-     * @param  Profile  $item
-     */
-    public function addItem($item): self
+    public function addItem(Profile $item): self
     {
-        $this->items[] = $item;
+        $this->validateInstanceElement(Profile::class, $item);
+        $this->append($item);
 
         return $this;
     }
 
     public function items(): array
     {
-        return $this->items;
+        return $this->getArrayCopy();
     }
 
     public function filters(): array

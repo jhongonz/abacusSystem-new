@@ -34,6 +34,7 @@ $application->withCommands([
     \Core\Employee\Infrastructure\Commands\EmployeeWarmup::class,
     \Core\User\Infrastructure\Commands\UserWarmup::class,
     \Core\Institution\Infrastructure\Commands\InstitutionWarmup::class,
+    \Core\Campus\Infrastructure\Commands\CampusWarmup::class
 ]);
 
 return $application->create();

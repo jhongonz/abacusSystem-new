@@ -5,7 +5,6 @@ namespace Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
@@ -79,18 +78,6 @@ class RedisProfileRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistProfiles_should_return_object(): void
-    {
-        $profiles = $this->createMock(Profiles::class);
-        $result = $this->repository->persistProfiles($profiles);
-
-        $this->assertInstanceOf(Profiles::class, $result);
-        $this->assertSame($profiles, $result);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function test_deleteProfile_should_return_void(): void
     {
         $profileId = $this->createMock(ProfileId::class);
@@ -121,7 +108,7 @@ class RedisProfileRepositoryTest extends TestCase
         Redis::shouldReceive('get')
             ->once()
             ->with('profile::1')
-            ->andReturn('{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"}}');
+            ->andReturn('{"profile":{"createdAt":{"date":"2024-06-04 12:34:56"},"updatedAt":{"date":"2024-06-04 12:34:56"}}}');
 
         $profile = $this->createMock(Profile::class);
         $this->factory->expects(self::once())

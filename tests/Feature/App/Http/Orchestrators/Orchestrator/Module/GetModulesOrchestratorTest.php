@@ -71,7 +71,7 @@ class GetModulesOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $moduleMock = $this->createMock(Module::class);
-        $modulesMock = new Modules($moduleMock);
+        $modulesMock = new Modules([$moduleMock]);
 
         $this->moduleManagement->expects(self::once())
             ->method('searchModules')

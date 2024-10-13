@@ -19,7 +19,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
 {
     private const FUNCTION_NAMES = [
         Module::class => 'persistModule',
-        Modules::class => 'persistModules',
+        Modules::class => '',
     ];
 
     private string $domainToPersist;
@@ -70,10 +70,5 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     public function deleteModule(ModuleId $id): void
     {
         $this->write(__FUNCTION__, $id);
-    }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
     }
 }

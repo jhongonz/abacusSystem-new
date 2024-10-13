@@ -6,8 +6,6 @@
 
 namespace Tests\Feature\Core\Institution\Application\Factory\DataProvider;
 
-use DateTime;
-
 final class DataProviderInstitutionFactory
 {
     public static function provider(): array
@@ -24,8 +22,11 @@ final class DataProviderInstitutionFactory
                         'search' => 'search',
                         'observations' => 'observations',
                         'state' => 1,
-                        'createdAt' => new DateTime,
-                        'updatedAt' => new DateTime,
+                        'address' => 'address',
+                        'phone' => 'phone',
+                        'email' => 'algo@algo.com',
+                        'createdAt' => '2024-04-21 10:24:00',
+                        'updatedAt' => '2024-04-21 10:24:00',
                     ]
                 ]
             ]

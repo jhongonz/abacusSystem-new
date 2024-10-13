@@ -67,13 +67,8 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (! is_null($data)) {
+        if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new \DateTime($dataArray['createdAt']['date']);
-
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new \DateTime($dataArray['updatedAt']['date']);
-            }
 
             /** @var Module */
             return $this->moduleFactory->buildModuleFromArray($dataArray);
@@ -103,11 +98,6 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     public function getAll(array $filters = []): ?Modules
     {
         return null;
-    }
-
-    public function persistModules(Modules $modules): Modules
-    {
-        return $modules;
     }
 
     public function deleteModule(ModuleId $id): void

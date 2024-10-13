@@ -11,6 +11,8 @@ use Exception;
 
 trait UtilsDateTimeTrait
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
+
     /**
      * @return DateTime
      */

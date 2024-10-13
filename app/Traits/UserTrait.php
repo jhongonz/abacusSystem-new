@@ -6,8 +6,6 @@ use Illuminate\Contracts\Hashing\Hasher;
 
 trait UserTrait
 {
-    private Hasher $hasher;
-
     public function setHasher(Hasher $hasher): void
     {
         $this->hasher = $hasher;

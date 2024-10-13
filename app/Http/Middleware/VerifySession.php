@@ -14,15 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class VerifySession
 {
-    private Redirector $redirector;
-    private Session $session;
-
     public function __construct(
-        Redirector $redirector,
-        Session $session
+        private readonly Redirector $redirector,
+        private readonly Session $session
     ) {
-        $this->redirector = $redirector;
-        $this->session = $session;
     }
 
     /**

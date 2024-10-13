@@ -13,6 +13,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -62,6 +63,9 @@ class EmployeeFactoryTest extends TestCase
         $this->assertSame($data['id'], $result->id()->value());
         $this->assertInstanceOf(EmployeeId::class, $result->id());
 
+        $this->assertSame($data['institutionId'], $result->id()->value());
+        $this->assertInstanceOf(EmployeeInstitutionId::class, $result->institutionId());
+
         $this->assertSame($data['identification'], $result->identification()->value());
         $this->assertInstanceOf(EmployeeIdentification::class, $result->identification());
 
@@ -98,13 +102,13 @@ class EmployeeFactoryTest extends TestCase
         $this->assertSame($data['search'], $result->search()->value());
         $this->assertInstanceOf(EmployeeSearch::class, $result->search());
 
-        $this->assertSame($data['birthdate'], $result->birthdate()->value());
+        $this->assertSame($data['birthdate'], $result->birthdate()->value()->format('Y-m-d H:i:s'));
         $this->assertInstanceOf(EmployeeBirthdate::class, $result->birthdate());
 
-        $this->assertSame($data['createdAt'], $result->createdAt()->value());
+        $this->assertSame($data['createdAt'], $result->createdAt()->value()->format('Y-m-d H:i:s'));
         $this->assertInstanceOf(EmployeeCreatedAt::class, $result->createdAt());
 
-        $this->assertSame($data['updatedAt'], $result->updatedAt()->value());
+        $this->assertSame($data['updatedAt'], $result->updatedAt()->value()->format('Y-m-d H:i:s'));
         $this->assertInstanceOf(EmployeeUpdateAt::class, $result->updatedAt());
     }
 

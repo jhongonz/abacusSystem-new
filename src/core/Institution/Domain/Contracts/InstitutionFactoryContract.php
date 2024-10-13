@@ -8,12 +8,15 @@ namespace Core\Institution\Domain\Contracts;
 
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -36,6 +39,12 @@ interface InstitutionFactoryContract
     public function buildInstitutionLogo(?string $logo = null): InstitutionLogo;
 
     public function buildInstitutionObservations(?string $observations = null): InstitutionObservations;
+
+    public function buildInstitutionAddress(?string $address = null): InstitutionAddress;
+
+    public function buildInstitutionPhone(string $phone): InstitutionPhone;
+
+    public function buildInstitutionEmail(?string $email = null): InstitutionEmail;
 
     public function buildInstitutionState(int $state = null): InstitutionState;
 

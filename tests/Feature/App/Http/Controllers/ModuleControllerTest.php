@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
@@ -22,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(ModuleController::class)]
+#[CoversClass(Controller::class)]
 class ModuleControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;

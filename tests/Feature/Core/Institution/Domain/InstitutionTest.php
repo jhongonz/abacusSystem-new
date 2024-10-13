@@ -3,12 +3,15 @@
 namespace Tests\Feature\Core\Institution\Domain;
 
 use Core\Institution\Domain\Institution;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -171,6 +174,26 @@ class InstitutionTest extends TestCase
         $this->assertSame($observations, $result->observations());
     }
 
+    public function test_address_should_return_value_object(): void
+    {
+        $result = $this->institution->address();
+
+        $this->assertInstanceOf(InstitutionAddress::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setAddress_should_return_self(): void
+    {
+        $address = $this->createMock(InstitutionAddress::class);
+        $result = $this->institution->setAddress($address);
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->institution, $result);
+        $this->assertSame($address, $result->address());
+    }
+
     public function test_state_should_return_value_object(): void
     {
         $result = $this->institution->state();
@@ -281,10 +304,28 @@ class InstitutionTest extends TestCase
             ->willReturn('observations');
         $this->institution->setObservations($observations);
 
+        $address = $this->createMock(InstitutionAddress::class);
+        $address->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $this->institution->setAddress($address);
+
+        $phone = $this->createMock(InstitutionPhone::class);
+        $phone->expects(self::once())
+            ->method('value')
+            ->willReturn('phone');
+        $this->institution->setPhone($phone);
+
+        $email = $this->createMock(InstitutionEmail::class);
+        $email->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $this->institution->setEmail($email);
+
         $searchMock = $this->createMock(InstitutionSearch::class);
         $searchMock->expects(self::once())
             ->method('setValue')
-            ->with('code name shortname observations')
+            ->with('code name shortname observations address phone email')
             ->willReturnSelf();
         $this->institution->setSearch($searchMock);
 
@@ -292,5 +333,45 @@ class InstitutionTest extends TestCase
 
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($this->institution, $result);
+    }
+
+    public function test_phone_should_return_value_object(): void
+    {
+        $result = $this->institution->phone();
+
+        $this->assertInstanceOf(InstitutionPhone::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setPhone_should_return_self(): void
+    {
+        $phone = $this->createMock(InstitutionPhone::class);
+        $result = $this->institution->setPhone($phone);
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->institution, $result);
+        $this->assertSame($phone, $result->phone());
+    }
+
+    public function test_email_should_return_value_object(): void
+    {
+        $result = $this->institution->email();
+
+        $this->assertInstanceOf(InstitutionEmail::class, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setEmail_should_return_self(): void
+    {
+        $email = $this->createMock(InstitutionEmail::class);
+        $result = $this->institution->setEmail($email);
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->institution, $result);
+        $this->assertSame($email, $result->email());
     }
 }

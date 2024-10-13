@@ -73,9 +73,4 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
 
         return $this->write(__FUNCTION__, $user);
     }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
-    }
 }

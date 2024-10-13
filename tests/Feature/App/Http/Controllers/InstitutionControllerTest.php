@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
@@ -25,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(InstitutionController::class)]
+#[CoversClass(Controller::class)]
 class InstitutionControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
@@ -307,10 +309,14 @@ class InstitutionControllerTest extends TestCase
 
         $uploadFileMock = $this->createMock(UploadedFile::class);
         $uploadFileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(true);
+
+        $uploadFileMock->expects(self::once())
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $requestMock->expects(self::once())
+        $requestMock->expects(self::exactly(2))
             ->method('file')
             ->with('file')
             ->willReturn($uploadFileMock);
@@ -332,6 +338,30 @@ class InstitutionControllerTest extends TestCase
         $this->assertSame(201, $result->getStatusCode());
         $this->assertArrayHasKey('token', $result->getData(true));
         $this->assertArrayHasKey('url', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_setLogoInstitution_should_return_internal_error(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $fileMock = $this->createMock(UploadedFile::class);
+        $fileMock->expects(self::once())
+            ->method('isValid')
+            ->willReturn(false);
+
+        $request->expects(self::once())
+            ->method('file')
+            ->with('file')
+            ->willReturn($fileMock);
+
+        $result = $this->controller->setLogoInstitution($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
     }
 
     /**

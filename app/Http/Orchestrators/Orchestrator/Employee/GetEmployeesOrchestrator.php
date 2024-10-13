@@ -21,21 +21,14 @@ class GetEmployeesOrchestrator extends EmployeeOrchestrator
 {
     use DataTablesTrait;
 
-    private EmployeeDataTransformerContract $employeeDataTransformer;
-    private DataTables $dataTables;
-    private ViewFactory $viewFactory;
-
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        EmployeeDataTransformerContract $employeeDataTransformer,
-        DataTables $dataTables,
-        ViewFactory $viewFactory,
+        private readonly EmployeeDataTransformerContract $employeeDataTransformer,
+        private readonly DataTables $dataTables,
+        protected ViewFactory $viewFactory,
     ) {
         parent::__construct($employeeManagement);
         $this->setViewFactory($viewFactory);
-
-        $this->employeeDataTransformer = $employeeDataTransformer;
-        $this->dataTables = $dataTables;
     }
 
     /**

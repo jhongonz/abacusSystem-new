@@ -23,7 +23,7 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
 {
     private const FUNCTION_NAMES = [
         Institution::class => 'persistInstitution',
-        Institutions::class => 'persistInstitutions',
+        Institutions::class => '',
     ];
 
     private string $domainToPersist;
@@ -69,10 +69,5 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
     public function persistInstitution(Institution $institution): Institution
     {
         return $this->write(__FUNCTION__, $institution);
-    }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
     }
 }

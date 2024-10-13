@@ -20,7 +20,7 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
 {
     private const FUNCTION_NAMES = [
         Employee::class => 'persistEmployee',
-        Employees::class => 'persistEmployees',
+        Employees::class => '',
     ];
 
     private string $domainToPersist;
@@ -91,10 +91,5 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         } catch (Exception $exception) {
             throw new EmployeesNotFoundException('Employees not found');
         }
-    }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
     }
 }

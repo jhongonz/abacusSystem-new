@@ -101,7 +101,7 @@ class MenuComposerTest extends TestCase
             ->method('route')
             ->willReturn($moduleRouteMock);
 
-        $modulesMock = new Modules($moduleMock);
+        $modulesMock = new Modules([$moduleMock]);
 
         $configExpected = [
             'managers' => [

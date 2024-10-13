@@ -3,10 +3,12 @@
 namespace Tests\Feature\Core\Profile\Domain\ValueObjects;
 
 use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\SharedContext\Model\ValueObjectStatus;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 #[CoversClass(ProfileState::class)]
+#[CoversClass(ValueObjectStatus::class)]
 class ProfileStateTest extends TestCase
 {
     private ProfileState $valueObject;
@@ -47,5 +49,13 @@ class ProfileStateTest extends TestCase
         $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ProfileState> does not allow the invalid state: <10>.');
 
         $this->valueObject->setValue(10);
+    }
+
+    public function test_value_literal_should_return_with__string(): void
+    {
+        $result = $this->valueObject->__toString();
+
+        $this->assertSame('Nuevo', $result);
+        $this->assertIsString($result);
     }
 }

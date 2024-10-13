@@ -101,7 +101,7 @@ class DetailProfileOrchestratorTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $modulesMock = new Modules($moduleMock);
+        $modulesMock = new Modules([$moduleMock]);
 
         $this->moduleManagement->expects(self::once())
             ->method('searchModules')
@@ -144,7 +144,7 @@ class DetailProfileOrchestratorTest extends TestCase
 
         $moduleMock = $this->createMock(Module::class);
 
-        $modulesMock = new Modules($moduleMock);
+        $modulesMock = new Modules([$moduleMock]);
         $this->moduleManagement->expects(self::once())
             ->method('searchModules')
             ->willReturn($modulesMock);

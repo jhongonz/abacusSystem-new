@@ -4,6 +4,8 @@ namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Eloquent\Mod
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -20,7 +22,7 @@ class InstitutionTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->model);
+        unset($this->model, $this->modelMock);
         parent::tearDown();
     }
 
@@ -30,6 +32,21 @@ class InstitutionTest extends TestCase
 
         $this->assertIsString($result);
         $this->assertSame('inst_search', $result);
+    }
+
+    public function test_relationWithCampus_should_return_hasMany(): void
+    {
+        $result = $this->model->relationWithCampus();
+
+        $this->assertInstanceOf(HasMany::class, $result);
+    }
+
+    public function test_campus_should_return_model(): void
+    {
+        $result = $this->model->campus();
+
+        $this->assertInstanceOf(Model::class, $result);
+        $this->assertSame('campus', $result->getTable());
     }
 
     public function test_id_should_return_null(): void
@@ -120,6 +137,51 @@ class InstitutionTest extends TestCase
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($this->model, $result);
         $this->assertSame('test', $result->observations());
+    }
+
+    public function test_address_should_return_null(): void
+    {
+        $result = $this->model->address();
+        $this->assertNull($result);
+    }
+
+    public function test_address_should_change_and_return_string(): void
+    {
+        $result = $this->model->changeAddress('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->address());
+    }
+
+    public function test_phone_should_return_null(): void
+    {
+        $result = $this->model->phone();
+        $this->assertNull($result);
+    }
+
+    public function test_phone_should_change_and_return_string(): void
+    {
+        $result = $this->model->changePhone('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->phone());
+    }
+
+    public function test_email_should_return_null(): void
+    {
+        $result = $this->model->email();
+        $this->assertNull($result);
+    }
+
+    public function test_email_should_change_and_return_string(): void
+    {
+        $result = $this->model->changeEmail('test');
+
+        $this->assertInstanceOf(Institution::class, $result);
+        $this->assertSame($this->model, $result);
+        $this->assertSame('test', $result->email());
     }
 
     public function test_state_should_return_int(): void

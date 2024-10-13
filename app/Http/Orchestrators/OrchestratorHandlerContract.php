@@ -18,5 +18,9 @@ interface OrchestratorHandlerContract
      */
     public function handler(string $actionType, Request $request): mixed;
 
+    /**
+     * @param Orchestrator $orchestrator
+     * @return OrchestratorHandlerContract
+     */
     public function addOrchestrator(Orchestrator $orchestrator): OrchestratorHandlerContract;
 }

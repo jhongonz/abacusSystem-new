@@ -8,26 +8,26 @@ class Modules extends ArrayIterator
 {
     public const TYPE = 'modules';
 
-    public function __construct(Module ...$modules)
+    public function __construct(array $modules = [])
     {
         foreach ($modules as $module) {
-            $this->addItem($module);
+            $this->validateInstanceElement(Module::class, $module);
         }
+
+        parent::__construct($modules);
     }
 
-    /**
-     * @param  Module  $item
-     */
-    public function addItem($item): self
+    public function addItem(Module $item): self
     {
-        $this->items[] = $item;
+        $this->validateInstanceElement(Module::class, $item);
+        $this->append($item);
 
         return $this;
     }
 
     public function items(): array
     {
-        return $this->items;
+        return $this->getArrayCopy();
     }
 
     public function filters(): array

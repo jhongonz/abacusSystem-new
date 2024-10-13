@@ -14,10 +14,8 @@ use Core\Profile\Domain\Contracts\ProfileManagementContract;
  */
 abstract class ProfileOrchestrator implements Orchestrator
 {
-    protected ProfileManagementContract $profileManagement;
     public function __construct(
-        ProfileManagementContract $profileManagement
+        protected readonly ProfileManagementContract $profileManagement
     ) {
-        $this->profileManagement = $profileManagement;
     }
 }

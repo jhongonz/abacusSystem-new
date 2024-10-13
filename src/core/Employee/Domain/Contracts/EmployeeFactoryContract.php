@@ -12,6 +12,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
@@ -66,6 +67,8 @@ interface EmployeeFactoryContract
     public function buildEmployeeIdentificationType(?string $type = null): EmployeeIdentificationType;
 
     public function buildEmployeeImage(?string $image = null): EmployeeImage;
+
+    public function buildEmployeeInstitutionId(?int $institutionId = null): EmployeeInstitutionId;
 
     public function buildEmployees(Employee ...$employees): Employees;
 }

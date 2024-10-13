@@ -73,17 +73,8 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
             throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
 
-        if (! is_null($data)) {
+        if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new \DateTime($dataArray['createdAt']['date']);
-
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new \DateTime($dataArray['updatedAt']['date']);
-            }
-
-            if (! is_null($dataArray['birthdate'])) {
-                $dataArray['birthdate'] = new \DateTime($dataArray['birthdate']['date']);
-            }
 
             /** @var Employee */
             return $this->employeeFactory->buildEmployeeFromArray($dataArray);
@@ -137,11 +128,6 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
         }
 
         return $employee;
-    }
-
-    public function persistEmployees(Employees $employees): Employees
-    {
-        return $employees;
     }
 
     public function getAll(array $filters = []): ?Employees

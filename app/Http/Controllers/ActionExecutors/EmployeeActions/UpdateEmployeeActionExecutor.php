@@ -45,7 +45,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'birthdate' => $birthdate->format('Y-m-d'),
+            'birthdate' => $birthdate,
         ];
 
         if ($request->filled('token')) {

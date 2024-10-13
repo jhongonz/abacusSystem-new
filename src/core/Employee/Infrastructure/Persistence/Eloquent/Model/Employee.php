@@ -2,11 +2,13 @@
 
 namespace Core\Employee\Infrastructure\Persistence\Eloquent\Model;
 
+use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use DateTime;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -48,6 +50,7 @@ class Employee extends Model
      */
     protected $fillable = [
         'emp_id',
+        'emp__inst_id',
         'emp_identification',
         'emp_identification_type',
         'emp_name',
@@ -97,6 +100,11 @@ class Employee extends Model
         return $this->mainSearchField;
     }
 
+    public function relationWithInstitution(): BelongsTo
+    {
+        return $this->belongsTo(Institution::class, 'emp__inst_id', 'inst_id');
+    }
+
     public function relationWithUser(): HasOne
     {
         return $this->hasOne(User::class, 'user__emp_id', 'emp_id');
@@ -116,6 +124,17 @@ class Employee extends Model
     {
         $this->setAttribute('emp_id', $id);
 
+        return $this;
+    }
+
+    public function institutionId(): ?int
+    {
+        return $this->getAttribute('emp__inst_id');
+    }
+
+    public function changeInstitutionId(int $institutionId): self
+    {
+        $this->setAttribute('emp__inst_id', $institutionId);
         return $this;
     }
 

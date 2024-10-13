@@ -125,12 +125,6 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         return $modules;
     }
 
-    public function persistModules(Modules $modules): Modules
-    {
-        return $modules;
-    }
-
-
     /**
      * @throws ModuleNotFoundException
      */

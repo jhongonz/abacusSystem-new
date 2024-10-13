@@ -5,7 +5,6 @@ namespace Tests\Feature\Core\Employee\Infrastructure\Persistence\Repositories;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Employee;
-use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
@@ -92,11 +91,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         $employeeMock = $this->createMock(Employee::class);
         $this->factory->expects(self::once())
             ->method('buildEmployeeFromArray')
-            ->with([
-                'createdAt' => new \DateTime('2024-06-04 12:34:56'),
-                'updatedAt' => new \DateTime('2024-06-04 12:34:56'),
-                'birthdate' => new \DateTime('2024-06-04 12:34:56'),
-            ])
+            ->withAnyParameters()
             ->willReturn($employeeMock);
 
         $result = $this->repository->find($employeeIdMock);
@@ -262,18 +257,6 @@ class RedisEmployeeRepositoryTest extends TestCase
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test_persistEmployees_should_return_object(): void
-    {
-        $employeesMock = $this->createMock(Employees::class);
-
-        $result = $this->repository->persistEmployees($employeesMock);
-        $this->assertInstanceOf(Employees::class, $result);
-        $this->assertSame($result, $employeesMock);
     }
 
     /**

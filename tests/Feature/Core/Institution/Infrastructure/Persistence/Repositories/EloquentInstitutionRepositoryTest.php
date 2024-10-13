@@ -4,12 +4,15 @@ namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Repositories
 
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
 use Core\Institution\Domain\ValueObjects\InstitutionCreatedAt;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
@@ -506,6 +509,42 @@ class EloquentInstitutionRepositoryTest extends TestCase
             ->with('observations')
             ->willReturnSelf();
 
+        $address = $this->createMock(InstitutionAddress::class);
+        $address->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $institutionMock->expects(self::once())
+            ->method('address')
+            ->willReturn($address);
+        $this->model->expects(self::once())
+            ->method('changeAddress')
+            ->with('address')
+            ->willReturnSelf();
+
+        $phone = $this->createMock(InstitutionPhone::class);
+        $phone->expects(self::once())
+            ->method('value')
+            ->willReturn('phone');
+        $institutionMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phone);
+        $this->model->expects(self::once())
+            ->method('changePhone')
+            ->with('phone')
+            ->willReturnSelf();
+
+        $email = $this->createMock(InstitutionEmail::class);
+        $email->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $institutionMock->expects(self::once())
+            ->method('email')
+            ->willReturn($email);
+        $this->model->expects(self::once())
+            ->method('changeEmail')
+            ->with('email')
+            ->willReturnSelf();
+
         $search = $this->createMock(InstitutionSearch::class);
         $search->expects(self::once())
             ->method('value')
@@ -678,6 +717,42 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $this->model->expects(self::once())
             ->method('changeObservations')
             ->with('observations')
+            ->willReturnSelf();
+
+        $address = $this->createMock(InstitutionAddress::class);
+        $address->expects(self::once())
+            ->method('value')
+            ->willReturn('address');
+        $institutionMock->expects(self::once())
+            ->method('address')
+            ->willReturn($address);
+        $this->model->expects(self::once())
+            ->method('changeAddress')
+            ->with('address')
+            ->willReturnSelf();
+
+        $phone = $this->createMock(InstitutionPhone::class);
+        $phone->expects(self::once())
+            ->method('value')
+            ->willReturn('phone');
+        $institutionMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phone);
+        $this->model->expects(self::once())
+            ->method('changePhone')
+            ->with('phone')
+            ->willReturnSelf();
+
+        $email = $this->createMock(InstitutionEmail::class);
+        $email->expects(self::once())
+            ->method('value')
+            ->willReturn('email');
+        $institutionMock->expects(self::once())
+            ->method('email')
+            ->willReturn($email);
+        $this->model->expects(self::once())
+            ->method('changeEmail')
+            ->with('email')
             ->willReturnSelf();
 
         $search = $this->createMock(InstitutionSearch::class);

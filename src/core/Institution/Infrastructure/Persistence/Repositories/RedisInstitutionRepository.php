@@ -15,7 +15,6 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionPersistException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
@@ -71,13 +70,8 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
             throw new InstitutionsNotFoundException('Institution not found by id '. $id->value());
         }
 
-        if (!is_null($data)) {
+        if (isset($data)) {
             $dataArray = json_decode($data, true);
-            $dataArray['createdAt'] = new DateTime($dataArray['createdAt']['date']);
-
-            if (! is_null($dataArray['updatedAt'])) {
-                $dataArray['updatedAt'] = new DateTime($dataArray['updatedAt']['date']);
-            }
 
             /**@var Institution*/
             return $this->institutionFactory->buildInstitutionFromArray($dataArray);
@@ -108,7 +102,9 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
             Redis::set($institutionKey, json_encode($institutionData));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new InstitutionPersistException('It could not persist Institution with key '.$institutionKey.' in redis');
+            throw new InstitutionPersistException(
+                sprintf('It could not persist Institution with key %s in redis', $institutionKey)
+            );
         }
 
         return $institution;

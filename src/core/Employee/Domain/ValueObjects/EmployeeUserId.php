@@ -2,9 +2,7 @@
 
 namespace Core\Employee\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
-
-class EmployeeUserId implements ValueObjectContract
+class EmployeeUserId
 {
     private ?int $value;
 
@@ -18,11 +16,7 @@ class EmployeeUserId implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  int  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(int $value): self
     {
         $this->value = $value;
 

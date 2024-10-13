@@ -2,15 +2,17 @@
 
 namespace App\Providers;
 
+use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSessionEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
-use App\Listeners\EmployeeWarmup;
-use App\Listeners\ProfilesWarmup;
-use App\Listeners\UserRefreshSession;
-use App\Listeners\UserWarmup;
+use App\Listeners\CampusWarmupListener;
+use App\Listeners\EmployeeWarmupListener;
+use App\Listeners\ProfilesWarmupListener;
+use App\Listeners\UserRefreshSessionListener;
+use App\Listeners\UserWarmupListener;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Application;
@@ -45,27 +47,32 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(
             ModuleUpdatedOrDeletedEvent::class,
-            ProfilesWarmup::class
+            ProfilesWarmupListener::class
         );
 
         Event::listen(
             ProfileUpdatedOrDeletedEvent::class,
-            ProfilesWarmup::class
+            ProfilesWarmupListener::class
         );
 
         Event::listen(
             RefreshModulesSessionEvent::class,
-            UserRefreshSession::class
+            UserRefreshSessionListener::class
         );
 
         Event::listen(
             EmployeeUpdateOrDeletedEvent::class,
-            EmployeeWarmup::class
+            EmployeeWarmupListener::class
         );
 
         Event::listen(
             UserUpdateOrDeleteEvent::class,
-            UserWarmup::class
+            UserWarmupListener::class
+        );
+
+        Event::listen(
+            CampusUpdatedOrDeletedEvent::class,
+            CampusWarmupListener::class
         );
     }
 }

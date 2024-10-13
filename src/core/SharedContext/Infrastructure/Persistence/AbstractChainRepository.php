@@ -5,6 +5,8 @@ namespace Core\SharedContext\Infrastructure\Persistence;
 use Closure;
 use Core\Employee\Exceptions\SourceNotFoundException;
 use Exception;
+use Matrix\Enum\TaskStatus;
+use Matrix\Task;
 use Throwable;
 
 /**
@@ -26,19 +28,32 @@ abstract class AbstractChainRepository
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function write(string $functionName, ...$source)
     {
-        $result = null;
-        $repository = end($this->repositories);
+        $task = new Task(function () use ($functionName, $source) {
 
-        do {
-            $callable = [$repository, $functionName];
-            if (is_callable($callable)) {
-                $result = call_user_func_array($callable, $source);
-            }
-        } while (false !== ($repository = prev($this->repositories)));
+            $result = null;
+            $repository = end($this->repositories);
 
-        return $result;
+            do {
+                $callable = [$repository, $functionName];
+                if (is_callable($callable)) {
+                    $result = call_user_func_array($callable, $source);
+                }
+            } while (false !== ($repository = prev($this->repositories)));
+
+            return $result;
+        });
+
+        $task->start();
+        if ($task->getStatus() === TaskStatus::FAILED) {
+            $task->retry();
+        }
+
+        return $task->getResult();
     }
 
     /**
@@ -47,10 +62,7 @@ abstract class AbstractChainRepository
     protected function read(string $functionName, ...$source)
     {
         $result = $this->readFromRepositories($functionName, ...$source);
-
-        if (! $this->functionNameDelete()) {
-            $this->persistence($this->functionNamePersist(), $result);
-        }
+        $this->persistence($this->functionNamePersist(), $result);
 
         return $result;
     }
@@ -60,26 +72,35 @@ abstract class AbstractChainRepository
      */
     protected function readFromRepositories(string $functionName, ...$source)
     {
-        $result = null;
-        $lastThrowable = new SourceNotFoundException('Source not found');
+        $task = new Task(function () use ($functionName, $source) {
+            $result = null;
+            $lastThrowable = new SourceNotFoundException('Source not found');
 
-        $repository = reset($this->repositories);
-        do {
-            try {
-                $callable = [$repository, $functionName];
-                if (is_callable($callable)) {
-                    $result = call_user_func_array($callable, $source);
+            $repository = reset($this->repositories);
+            do {
+                try {
+                    $callable = [$repository, $functionName];
+                    if (is_callable($callable)) {
+                        $result = call_user_func_array($callable, $source);
+                    }
+                } catch (Throwable $throwable) {
+                    $lastThrowable = $throwable;
                 }
-            } catch (Throwable $throwable) {
-                $lastThrowable = $throwable;
-            }
-        } while ((null === $result) and (false !== ($repository = next($this->repositories))));
+            } while ((null === $result) and (false !== ($repository = next($this->repositories))));
 
-        if (is_null($result)) {
-            throw $lastThrowable;
+            if (is_null($result)) {
+                throw $lastThrowable;
+            }
+
+            return $result;
+        });
+
+        $task->start();
+        if ($task->getStatus() === TaskStatus::FAILED) {
+            $task->retry();
         }
 
-        return $result;
+        return $task->getResult();
     }
 
     protected function persistence(string $functionName, ...$sources): void

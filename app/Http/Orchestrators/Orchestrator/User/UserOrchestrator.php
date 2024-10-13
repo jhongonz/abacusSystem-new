@@ -14,11 +14,8 @@ use Core\User\Domain\Contracts\UserManagementContract;
  */
 abstract class UserOrchestrator implements Orchestrator
 {
-    protected UserManagementContract $userManagement;
-
     public function __construct(
-        UserManagementContract $userManagement
+        protected readonly UserManagementContract $userManagement
     ) {
-        $this->userManagement = $userManagement;
     }
 }

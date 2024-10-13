@@ -14,14 +14,12 @@ class ProfileUpdatedOrDeletedEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private int $profileId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(int $id)
-    {
-        $this->profileId = $id;
+    public function __construct(
+        private readonly int $profileId
+    ) {
     }
 
     public function profileId(): int

@@ -53,9 +53,10 @@ class ProfileDataTransformerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerProfileToRead')]
-    public function test_read_should_return_array(array $expected, \DateTime $datetime): void
+    public function test_read_should_return_array(array $expected, string $datetime): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -92,7 +93,7 @@ class ProfileDataTransformerTest extends TestCase
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->profile->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -100,7 +101,7 @@ class ProfileDataTransformerTest extends TestCase
         $updateAt = $this->createMock(ProfileUpdatedAt::class);
         $updateAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->profile->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updateAt);
@@ -118,7 +119,7 @@ class ProfileDataTransformerTest extends TestCase
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerProfileToReadToShare')]
-    public function test_readToShare_should_return_array(array $expected, \DateTime $datetime): void
+    public function test_readToShare_should_return_array(array $expected, string $datetime): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -159,7 +160,7 @@ class ProfileDataTransformerTest extends TestCase
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->profile->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -167,7 +168,7 @@ class ProfileDataTransformerTest extends TestCase
         $updateAt = $this->createMock(ProfileUpdatedAt::class);
         $updateAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn(new \DateTime($datetime));
         $this->profile->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updateAt);

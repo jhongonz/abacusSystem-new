@@ -20,7 +20,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
 {
     private const FUNCTION_NAMES = [
         Profile::class => 'persistProfile',
-        Profiles::class => 'persistProfiles',
+        Profiles::class => '',
     ];
 
     private string $domainToPersist;
@@ -100,10 +100,5 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
     public function persistProfiles(Profiles $profiles): Profiles
     {
         return $this->write(__FUNCTION__, $profiles);
-    }
-
-    public function functionNameDelete(): bool
-    {
-        return false;
     }
 }

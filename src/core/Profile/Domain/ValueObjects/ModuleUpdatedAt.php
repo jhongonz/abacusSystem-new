@@ -2,10 +2,9 @@
 
 namespace Core\Profile\Domain\ValueObjects;
 
-use Core\SharedContext\Model\ValueObjectContract;
 use DateTime;
 
-class ModuleUpdatedAt implements ValueObjectContract
+class ModuleUpdatedAt
 {
     private ?DateTime $value;
 
@@ -19,11 +18,7 @@ class ModuleUpdatedAt implements ValueObjectContract
         return $this->value;
     }
 
-    /**
-     * @param  DateTime  $value
-     * @return $this
-     */
-    public function setValue($value): self
+    public function setValue(DateTime $value): self
     {
         $this->value = $value;
 

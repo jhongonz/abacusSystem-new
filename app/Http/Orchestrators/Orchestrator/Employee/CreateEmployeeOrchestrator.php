@@ -21,7 +21,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        ImageManagerInterface $imageManager,
+        protected ImageManagerInterface $imageManager,
     ) {
         parent::__construct($employeeManagement);
         $this->setImageManager($imageManager);
@@ -30,6 +30,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
     /**
      * @param Request $request
      * @return Employee
+     * @throws \Exception
      */
     public function make(Request $request): Employee
     {
@@ -37,6 +38,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
         $dataEmployee = [
             'id' => $request->input('employeeId'),
             'userId' => null,
+            'institutionId' => $request->input('institutionId'),
             'identification' => $request->input('identifier'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
@@ -45,8 +47,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => $birthdate->format('Y-m-d'),
-            'createdAt' => $this->getCurrentTime(),
+            'birthdate' => $this->getDateTime($birthdate->format('Y-m-d'))->format(self::DATE_FORMAT),
             'state' => ValueObjectStatus::STATE_NEW,
             'image' => null
         ];

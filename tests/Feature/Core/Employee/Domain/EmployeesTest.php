@@ -23,7 +23,7 @@ class EmployeesTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employee::class);
-        $this->employees = new Employees($this->employee);
+        $this->employees = new Employees([$this->employee]);
     }
 
     public function tearDown(): void

@@ -10,22 +10,14 @@ use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class Controller
 {
     use UtilsDateTimeTrait;
 
-    protected LoggerInterface $logger;
-    protected ViewFactory $viewFactory;
-
     public function __construct(
-        LoggerInterface $logger,
-        ViewFactory $viewFactory,
+        protected readonly LoggerInterface $logger,
+        protected readonly ViewFactory $viewFactory,
     ) {
-        $this->logger = $logger;
-        $this->viewFactory = $viewFactory;
     }
 
     public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
@@ -58,13 +50,5 @@ abstract class Controller
             'filters' => [],
             'uri' => $route
         ]);
-    }
-
-    protected function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
-    {
-        return $this->viewFactory->make('components.menu-options-datatable')
-            ->with('item', $item)
-            ->with('permission', $permission)
-            ->render();
     }
 }

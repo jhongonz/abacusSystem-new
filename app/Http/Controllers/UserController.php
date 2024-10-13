@@ -22,21 +22,15 @@ class UserController extends Controller implements HasMiddleware
 {
     use UserTrait;
 
-    private OrchestratorHandlerContract $orchestratorHandler;
-    private UrlGenerator $urlGenerator;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
-        Hasher $hasher,
+        private readonly OrchestratorHandlerContract $orchestrators,
+        private Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
-        UrlGenerator $urlGenerator
+        private readonly UrlGenerator $urlGenerator
     ) {
         parent::__construct($logger, $viewFactory);
         $this->setHasher($hasher);
-
-        $this->orchestratorHandler = $orchestratorHandler;
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function index(): JsonResponse|string
@@ -58,7 +52,7 @@ class UserController extends Controller implements HasMiddleware
     public function validateAccount(RecoveryAccountRequest $request): JsonResponse
     {
         /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('retrieve-employee', $request);
+        $employee = $this->orchestrators->handler('retrieve-employee', $request);
 
         $link = $this->urlGenerator->route('user.reset-account', ['id' => $employee->userId()->value()]);
 
@@ -84,7 +78,7 @@ class UserController extends Controller implements HasMiddleware
         ];
 
         $request->merge(['dataUpdate' => $dataUpdate]);
-        $this->orchestratorHandler->handler('update-user', $request);
+        $this->orchestrators->handler('update-user', $request);
         return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }
 

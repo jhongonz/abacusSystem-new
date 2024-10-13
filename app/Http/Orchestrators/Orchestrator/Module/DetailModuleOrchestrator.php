@@ -13,14 +13,11 @@ use Illuminate\Http\Request;
 
 class DetailModuleOrchestrator extends ModuleOrchestrator
 {
-    private Config $config;
-
     public function __construct(
         ModuleManagementContract $moduleManagement,
-        Config $config
+        private readonly Config $config
     ) {
         parent::__construct($moduleManagement);
-        $this->config = $config;
     }
 
     /**

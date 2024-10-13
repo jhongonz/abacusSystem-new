@@ -6,10 +6,9 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
-use Core\SharedContext\Infrastructure\Translators\TranslatorDomainContract;
 use Exception;
 
-class ModuleTranslator implements TranslatorDomainContract
+class ModuleTranslator
 {
     private ModuleModel $model;
 
@@ -24,10 +23,7 @@ class ModuleTranslator implements TranslatorDomainContract
         $this->collection = [];
     }
 
-    /**
-     * @param  ModuleModel  $model
-     */
-    public function setModel($model): self
+    public function setModel(ModuleModel $model): self
     {
         $this->model = $model;
 

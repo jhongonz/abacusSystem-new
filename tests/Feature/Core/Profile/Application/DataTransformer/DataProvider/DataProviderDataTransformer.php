@@ -10,7 +10,7 @@ final class DataProviderDataTransformer
 {
     public static function providerModuleToReadToShare(): array
     {
-        $datetime = new \DateTime('2024-05-06 20:12:00');
+        $datetime = '2024-05-06 20:12:00';
 
         return [
             [
@@ -22,7 +22,7 @@ final class DataProviderDataTransformer
                     'icon' => 'test',
                     'state' => 1,
                     'position' => 2,
-                    'createdAt' => $datetime,
+                    'createdAt' => '2024-05-06 20:12:00',
                     'updatedAt' => $datetime,
                     'state_literal' => 'test',
                 ],
@@ -33,7 +33,7 @@ final class DataProviderDataTransformer
 
     public static function providerModuleToRead(): array
     {
-        $datetime = new \DateTime('2024-05-06 20:12:00');
+        $datetime = '2024-05-06 20:12:00';
 
         return [
             [
@@ -57,7 +57,7 @@ final class DataProviderDataTransformer
 
     public static function providerProfileToRead(): array
     {
-        $datetime = new \DateTime('2024-05-06 20:12:00');
+        $datetime = '2024-05-06 20:12:00';
 
         return [
             [
@@ -79,7 +79,7 @@ final class DataProviderDataTransformer
 
     public static function providerProfileToReadToShare(): array
     {
-        $datetime = new \DateTime('2024-05-06 20:12:00');
+        $datetime = '2024-05-06 20:12:00';
 
         return [
             [
