@@ -14,15 +14,12 @@ use Exception;
 
 class CampusTranslator
 {
-    private CampusFactoryContract $campusFactory;
     private CampusModel $model;
-    private array $collection;
+    private array $collection = [];
 
     public function __construct(
-        CampusFactoryContract $campusFactory
+        private readonly CampusFactoryContract $campusFactory
     ) {
-        $this->campusFactory = $campusFactory;
-        $this->collection = [];
     }
 
     public function setModel(CampusModel $model): self

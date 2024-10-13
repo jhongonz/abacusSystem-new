@@ -24,21 +24,12 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private CampusModel $campusModel;
-    private CampusTranslator $campusTranslator;
-    private DatabaseManager $databaseManager;
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $databaseManager,
-        CampusTranslator $campusTranslator,
-        CampusModel $campusModel,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly DatabaseManager $databaseManager,
+        private readonly CampusTranslator $campusTranslator,
+        private readonly CampusModel $campusModel,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->databaseManager = $databaseManager;
-        $this->campusTranslator = $campusTranslator;
-        $this->campusModel = $campusModel;
-        $this->priority = $priority;
     }
 
     public function priority(): int

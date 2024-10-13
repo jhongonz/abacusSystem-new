@@ -10,9 +10,6 @@ use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class Controller
 {
     use UtilsDateTimeTrait;
@@ -53,13 +50,5 @@ abstract class Controller
             'filters' => [],
             'uri' => $route
         ]);
-    }
-
-    protected function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
-    {
-        return $this->viewFactory->make('components.menu-options-datatable')
-            ->with('item', $item)
-            ->with('permission', $permission)
-            ->render();
     }
 }

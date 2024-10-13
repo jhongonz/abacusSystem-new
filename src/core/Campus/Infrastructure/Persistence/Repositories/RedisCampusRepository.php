@@ -25,24 +25,13 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
     private const PRIORITY_DEFAULT = 100;
     private const CAMPUS_KEY_FORMAT = '%s::%s';
 
-    private int $priority;
-    private string $keyPrefix;
-    private CampusFactoryContract $campusFactory;
-    private CampusDataTransformerContract $campusDataTransformer;
-    private LoggerInterface $logger;
-
     public function __construct(
-        CampusFactoryContract $campusFactory,
-        CampusDataTransformerContract $campusDataTransformer,
-        LoggerInterface $logger,
-        string $keyPrefix = 'campus',
-        int $priority = self::PRIORITY_DEFAULT,
+        private readonly CampusFactoryContract $campusFactory,
+        private readonly CampusDataTransformerContract $campusDataTransformer,
+        private readonly LoggerInterface $logger,
+        private readonly string $keyPrefix = 'campus',
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->campusFactory = $campusFactory;
-        $this->campusDataTransformer = $campusDataTransformer;
-        $this->logger = $logger;
-        $this->keyPrefix = $keyPrefix;
-        $this->priority = $priority;
     }
 
     public function priority(): int

@@ -4,9 +4,6 @@ namespace Core\SharedContext\Model;
 
 use Exception;
 
-/**
- * @codeCoverageIgnore
- */
 class ValueObjectStatus
 {
     public const STATE_NEW = 1;

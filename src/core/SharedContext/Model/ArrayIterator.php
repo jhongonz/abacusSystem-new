@@ -2,10 +2,6 @@
 
 namespace Core\SharedContext\Model;
 
-use Countable;
-use Iterator;
-use ReturnTypeWillChange;
-
 abstract class ArrayIterator extends \ArrayIterator
 {
     protected array $items = [];

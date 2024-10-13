@@ -3,10 +3,12 @@
 namespace Tests\Feature\Core\Campus\Domain\ValueObjects;
 
 use Core\Campus\Domain\ValueObjects\CampusState;
+use Core\SharedContext\Model\ValueObjectStatus;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 #[CoversClass(CampusState::class)]
+#[CoversClass(ValueObjectStatus::class)]
 class CampusStateTest extends TestCase
 {
     private CampusState $valueObject;
