@@ -9,9 +9,6 @@ namespace App\Http\Orchestrators\Orchestrator\Campus;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class CampusOrchestrator implements Orchestrator
 {
     public function __construct(

@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 #[CoversClass(UserState::class)]
+#[CoversClass(ValueObjectStatus::class)]
 class UserStateTest extends TestCase
 {
     private UserState $valueObject;
@@ -46,6 +47,14 @@ class UserStateTest extends TestCase
     public function test_value_literal_should_return_string(): void
     {
         $result = $this->valueObject->getValueLiteral();
+
+        $this->assertSame('Activo', $result);
+        $this->assertIsString($result);
+    }
+
+    public function test_value_literal_should_return_with__string(): void
+    {
+        $result = $this->valueObject->__toString();
 
         $this->assertSame('Activo', $result);
         $this->assertIsString($result);

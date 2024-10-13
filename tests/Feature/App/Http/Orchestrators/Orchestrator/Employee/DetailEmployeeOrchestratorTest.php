@@ -64,6 +64,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
             ->method('input')
+            ->with('employeeId')
             ->willReturn(1);
 
         $employeeMock = $this->createMock(Employee::class);
@@ -111,6 +112,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
             ->method('input')
+            ->with('employeeId')
             ->willReturn(null);
 
         $this->employeeManagement->expects(self::never())
