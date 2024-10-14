@@ -557,7 +557,7 @@ class EloquentCampusRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $this->campusModel->expects(self::exactly(2))

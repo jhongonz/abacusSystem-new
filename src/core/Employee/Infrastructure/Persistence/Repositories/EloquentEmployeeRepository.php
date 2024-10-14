@@ -127,6 +127,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $builder = $this->database->table($this->getTable());
 
         if (is_null($employeeId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $employeeId = $builder->insertGetId($dataModel);
             $employee->id()->setValue($employeeId);
         } else {

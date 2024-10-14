@@ -6,15 +6,12 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Illuminate\Http\Request;
 
 class ChangeStateProfileOrchestrator extends ProfileOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement
     ) {
@@ -38,7 +35,6 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
-        $dataUpdate['updateAt'] = $this->getCurrentTime();
 
         return $this->profileManagement->updateProfile($profileId, $dataUpdate);
     }

@@ -131,7 +131,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
         $profileModel = $this->updateAttributesModelProfile((array) $data);
         $profileModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $profileModel->changeDeletedAt(new \DateTime);
+        $profileModel->changeDeletedAt($this->getDateTime());
 
         $dataModel = $profileModel->toArray();
         $builder->update($dataModel);
@@ -141,6 +141,9 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $this->syncPrivileges($profileDomain, $profileModel);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistProfile(Profile $profile): Profile
     {
         $profileModel = $this->domainToModel($profile);
@@ -150,10 +153,13 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $builder = $this->database->table($this->getTable());
 
         if (is_null($profileId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $profileId = $builder->insertGetId($dataModel);
             $profile->id()->setValue($profileId);
-            $profileModel->changeId($profileId);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+
             $builder->where('pro_id', $profileId);
             $builder->update($dataModel);
         }
@@ -223,5 +229,13 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
                 'pri__mod_id' => $item
             ]);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Exceptions;
 
-use Exception;
-
-class RouteNotFoundException extends Exception
+class RouteNotFoundException extends \InvalidArgumentException
 {
 }

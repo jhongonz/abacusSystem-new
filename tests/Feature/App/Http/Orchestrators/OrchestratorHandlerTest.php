@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\App\Http\Orchestrators;
 
-use App\Http\Orchestrators\Exceptions\DuplicateOrchestratorException;
+use App\Http\Orchestrators\DuplicateOrchestratorException;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use App\Http\Orchestrators\OrchestratorHandler;
 use Illuminate\Http\Request;

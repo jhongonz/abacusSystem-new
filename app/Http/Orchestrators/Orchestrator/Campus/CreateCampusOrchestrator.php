@@ -32,7 +32,7 @@ class CreateCampusOrchestrator extends CampusOrchestrator
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'state' => ValueObjectStatus::STATE_NEW,
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);

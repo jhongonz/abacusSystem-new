@@ -89,13 +89,15 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         $dataModel = $userModel->toArray();
 
         $builder = $this->database->table($this->getTable());
-
         $userId = $userModel->id();
+
         if (is_null($userId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $userId = $builder->insertGetId($dataModel);
             $user->id()->setValue($userId);
         } else {
-            $dataModel['updated_at'] = new \DateTime;
+            $dataModel['updated_at'] = $this->getDateTime();
 
             $builder->where('user_id', $userId);
             $builder->update($dataModel);
@@ -118,6 +120,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
 
     /**
      * @throws UserNotFoundException
+     * @throws Exception
      */
     public function delete(UserId $id): void
     {
@@ -131,7 +134,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
 
         $userModel = $this->updateAttributesModelUser((array) $dataUser);
         $userModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $userModel->changeDeletedAt(new \DateTime);
+        $userModel->changeDeletedAt($this->getDateTime());
 
         $builder->update($userModel->toArray());
     }
@@ -172,5 +175,13 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

@@ -21,11 +21,9 @@ class GetProfilesOrchestrator extends ProfileOrchestrator
 {
     use DataTablesTrait;
 
-    private ViewFactory $viewFactory;
-
     public function __construct(
         ProfileManagementContract $profileManagement,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
         private readonly DataTables $dataTables,
         private readonly ProfileDataTransformerContract $profileDataTransformer
     ) {

@@ -73,6 +73,9 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistModule(Module $module): Module
     {
         $moduleModel = $this->domainToModel($module);
@@ -82,9 +85,13 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $builder = $this->database->table($this->getTable());
 
         if (is_null($moduleId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $moduleId = $builder->insertGetId($dataModel);
             $module->id()->setValue($moduleId);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+
             $builder->where('mod_id', $moduleId);
             $builder->update($dataModel);
         }
@@ -127,6 +134,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @throws ModuleNotFoundException
+     * @throws Exception
      */
     public function deleteModule(ModuleId $id): void
     {
@@ -140,7 +148,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
         $moduleModel = $this->updateAttributesModelModule((array) $data);
         $moduleModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $moduleModel->changeDeletedAt(new \DateTime);
+        $moduleModel->changeDeletedAt($this->getDateTime());
         $dataModel = $moduleModel->toArray();
 
         $builder->update($dataModel);
@@ -180,5 +188,13 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

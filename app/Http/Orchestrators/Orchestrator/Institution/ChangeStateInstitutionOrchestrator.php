@@ -6,15 +6,12 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Institution;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
 
 class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         InstitutionManagementContract $institutionManagement
     ) {
@@ -40,7 +37,6 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $dataUpdate['state'] = $institutionState->value();
-        $dataUpdate['updatedAt'] = $this->getCurrentTime();
 
         return $this->institutionManagement->updateInstitution($institutionId, $dataUpdate);
     }

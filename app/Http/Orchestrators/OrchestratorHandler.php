@@ -6,7 +6,6 @@
 
 namespace App\Http\Orchestrators;
 
-use App\Http\Orchestrators\Exceptions\DuplicateOrchestratorException;
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Illuminate\Http\Request;
 

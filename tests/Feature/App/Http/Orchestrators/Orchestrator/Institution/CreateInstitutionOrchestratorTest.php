@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Http\Orchestrators\Orchestrator\Institution\CreateInstitutionOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(CreateInstitutionOrchestrator::class)]
+#[CoversClass(InstitutionOrchestrator::class)]
 class CreateInstitutionOrchestratorTest extends TestCase
 {
     private InstitutionManagementContract|MockObject $institutionManagement;
