@@ -17,7 +17,6 @@
             <directory>app/Providers</directory>
             <directory>app/Listeners</directory>
             <directory>app/Jobs</directory>
-            <directory>app/Middleware</directory>
         </exclude>
     </source>
     <coverage>
