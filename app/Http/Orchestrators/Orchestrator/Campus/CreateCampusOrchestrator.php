@@ -14,8 +14,6 @@ use Illuminate\Http\Request;
 
 class CreateCampusOrchestrator extends CampusOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(CampusManagementContract $campusManagement)
     {
         parent::__construct($campusManagement);
@@ -35,8 +33,7 @@ class CreateCampusOrchestrator extends CampusOrchestrator
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'state' => ValueObjectStatus::STATE_NEW,
-            'createdAt' => $this->getCurrentTime()->format(self::DATE_FORMAT)
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);

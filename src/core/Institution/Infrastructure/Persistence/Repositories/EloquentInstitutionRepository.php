@@ -137,6 +137,8 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $builder = $this->databaseManager->table($this->getTable());
 
         if (is_null($institutionId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+            
             $institutionId = $builder->insertGetId($dataModel);
             $institution->id()->setValue($institutionId);
         } else {

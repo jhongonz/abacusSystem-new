@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UpdateModuleOrchestrator extends ModuleOrchestrator
 {
-    use UtilsDateTimeTrait;
     use RouterTrait;
 
     public function __construct(
@@ -54,7 +53,6 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
             'position' => $request->input('position'),
             'key' => $request->input('key'),
         ];
-        $dataUpdate['updateAt'] = $this->getCurrentTime();
 
         return $this->moduleManagement->updateModule($request->input('moduleId'), $dataUpdate);
     }

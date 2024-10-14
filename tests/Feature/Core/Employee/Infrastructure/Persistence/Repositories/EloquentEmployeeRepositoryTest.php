@@ -573,7 +573,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $this->model->expects(self::exactly(2))

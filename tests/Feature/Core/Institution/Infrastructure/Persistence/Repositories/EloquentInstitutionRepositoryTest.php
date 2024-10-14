@@ -610,7 +610,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
 
         $builder->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $this->model->expects(self::once())

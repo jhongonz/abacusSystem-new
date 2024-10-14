@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 
 class UpdateProfileOrchestrator extends ProfileOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement
     ) {
@@ -30,8 +28,7 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
         $dataUpdate = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'modules' => $this->getModulesAggregator($request),
-            'updatedAt' => $this->getCurrentTime()
+            'modules' => $this->getModulesAggregator($request)
         ];
 
         return $this->profileManagement->updateProfile($request->input('profileId'), $dataUpdate);

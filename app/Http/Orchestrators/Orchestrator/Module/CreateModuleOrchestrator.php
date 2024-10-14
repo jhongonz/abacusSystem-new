@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CreateModuleOrchestrator extends ModuleOrchestrator
 {
-    use UtilsDateTimeTrait;
     use RouterTrait;
 
     public function __construct(
@@ -56,7 +55,6 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'icon' => $request->input('icon'),
             'position' => $request->input('position'),
             'state' => ValueObjectStatus::STATE_NEW,
-            'createdAt' => $this->getCurrentTime()->format(self::DATE_FORMAT),
         ];
 
         return $this->moduleManagement->createModule([Module::TYPE => $dataModule]);

@@ -17,7 +17,6 @@ use Intervention\Image\Interfaces\ImageManagerInterface;
 class CreateInstitutionOrchestrator extends InstitutionOrchestrator
 {
     use MultimediaTrait;
-    use UtilsDateTimeTrait;
 
     public function __construct(
         InstitutionManagementContract $institutionManagement,
@@ -39,7 +38,6 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
             'observations' => $request->input('observations'),
-            'createdAt' => $this->getCurrentTime(),
             'state' => ValueObjectStatus::STATE_NEW
         ];
 

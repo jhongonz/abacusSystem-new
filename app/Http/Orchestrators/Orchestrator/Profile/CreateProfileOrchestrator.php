@@ -14,8 +14,6 @@ use Illuminate\Http\Request;
 
 class CreateProfileOrchestrator extends ProfileOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement
     ) {
@@ -33,8 +31,7 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'modulesAggregator' => $this->getModulesAggregator($request),
-            'state' => ValueObjectStatus::STATE_NEW,
-            'createdAt' => $this->getCurrentTime()
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->profileManagement->createProfile([Profile::TYPE => $dataProfile]);

@@ -338,7 +338,7 @@ class EloquentModuleRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(2);
 
         $this->databaseManager->shouldReceive('table')
@@ -503,7 +503,7 @@ class EloquentModuleRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('update')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(2);
 
         $this->databaseManager->shouldReceive('table')

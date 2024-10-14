@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 
 class UpdateUserOrchestrator extends UserOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         UserManagementContract $userManagement,
     ) {
@@ -28,8 +26,6 @@ class UpdateUserOrchestrator extends UserOrchestrator
     public function make(Request $request): User
     {
         $dataUpdateUser = json_decode($request->input('dataUpdate'), true);
-        $dataUpdateUser['updatedAt'] = $this->getCurrentTime();
-
         return $this->userManagement->updateUser($request->input('userId'), $dataUpdateUser);
     }
 
