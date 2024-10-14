@@ -11,11 +11,8 @@ use App\Http\Orchestrators\OrchestratorHandlerContract;
 
 abstract class EmployeeActionExecutor implements ActionExecutor
 {
-    protected OrchestratorHandlerContract $orchestratorHandler;
-
     public function __construct(
-        OrchestratorHandlerContract $orchestratorHandler,
+        protected readonly OrchestratorHandlerContract $orchestratorHandler,
     ) {
-        $this->orchestratorHandler = $orchestratorHandler;
     }
 }

@@ -21,8 +21,8 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
 
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
-        ImageManagerInterface $imageManager,
-        Hasher $hasher
+        protected ImageManagerInterface $imageManager,
+        protected Hasher $hasher
     ) {
         parent::__construct($orchestratorHandler);
         $this->setImageManager($imageManager);

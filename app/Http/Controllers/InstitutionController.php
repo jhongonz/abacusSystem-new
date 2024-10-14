@@ -25,7 +25,7 @@ class InstitutionController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly ActionExecutorHandler $actionExecutorHandler,
-        private ImageManagerInterface $imageManager,
+        protected ImageManagerInterface $imageManager,
         LoggerInterface $logger,
         ViewFactory $viewFactory,
     ) {

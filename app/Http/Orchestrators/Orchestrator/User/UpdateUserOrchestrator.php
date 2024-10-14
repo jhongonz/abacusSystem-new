@@ -6,7 +6,6 @@
 
 namespace App\Http\Orchestrators\Orchestrator\User;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Illuminate\Http\Request;
