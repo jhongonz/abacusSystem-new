@@ -52,7 +52,7 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'id' => null,
             'key' => $request->input('key'),
             'name' => $request->input('name'),
-            'route' => $request->input('route'),
+            'route' => $route,
             'icon' => $request->input('icon'),
             'position' => $request->input('position'),
             'state' => ValueObjectStatus::STATE_NEW,

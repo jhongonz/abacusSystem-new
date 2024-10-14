@@ -32,7 +32,7 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
             'id' => null,
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'modulesAggregator' => json_decode($request->input('modulesAggregator'), true),
+            'modulesAggregator' => $this->getModulesAggregator($request),
             'state' => ValueObjectStatus::STATE_NEW,
             'createdAt' => $this->getCurrentTime()
         ];

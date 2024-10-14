@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Profile;
 
+use App\Http\Orchestrators\Orchestrator\Profile\ProfileOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\UpdateProfileOrchestrator;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
@@ -12,6 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UpdateProfileOrchestrator::class)]
+#[CoversClass(ProfileOrchestrator::class)]
 class UpdateProfileOrchestratorTest extends TestCase
 {
     private ProfileManagementContract|MockObject $profileManagement;
@@ -41,12 +43,18 @@ class UpdateProfileOrchestratorTest extends TestCase
      */
     public function test_make_should_update_and_return_profile(): void
     {
+        $modulesExpected = [
+            ['id' => 1]
+        ];
+
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::exactly(4))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                '{}',
+                'name',
+                'description',
+                $modulesExpected,
                 1
             );
 

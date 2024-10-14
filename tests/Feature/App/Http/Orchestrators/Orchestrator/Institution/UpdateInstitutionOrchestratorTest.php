@@ -7,6 +7,7 @@ use App\Http\Orchestrators\Orchestrator\Institution\UpdateInstitutionOrchestrato
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
+use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -58,10 +59,31 @@ class UpdateInstitutionOrchestratorTest extends TestCase
                 'phone',
                 'email',
                 'address',
-                'osbservations',
-                null,
+                'observations',
+                'token',
                 1
             );
+
+        $requestMock->expects(self::once())
+            ->method('filled')
+            ->with('token')
+            ->willReturn(true);
+
+        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock->expects(self::exactly(2))
+            ->method('save')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $imageMock->expects(self::once())
+            ->method('resize')
+            ->with(150, 150)
+            ->willReturnSelf();
+
+        $this->imageManagerMock->expects(self::once())
+            ->method('read')
+            ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
+            ->willReturn($imageMock);
 
         $institutionMock = $this->createMock(Institution::class);
         $this->institutionManagement->expects(self::once())

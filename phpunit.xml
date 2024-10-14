@@ -13,7 +13,11 @@
             <directory>app</directory>
             <directory>src</directory>
         </include>
-        <exclude/>
+        <exclude>
+            <directory>app/Providers</directory>
+            <directory>app/Listeners</directory>
+            <directory>app/Jobs</directory>
+        </exclude>
     </source>
     <coverage>
         <report>

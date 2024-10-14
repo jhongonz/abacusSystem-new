@@ -5,9 +5,6 @@ namespace App\Listeners;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Jobs\ProcessCommandWarmup;
 
-/**
- * @codeCoverageIgnore
- */
 class EmployeeWarmupListener
 {
     /**

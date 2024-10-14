@@ -40,9 +40,8 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
             'observations' => $request->input('observations'),
         ];
 
-        $token = $request->input('token');
-        if (isset($token)) {
-            $filename = $this->saveImage($token);
+        if ($request->filled('token')) {
+            $filename = $this->saveImage($request->input('token'));
             $dataUpdate['logo'] = $filename;
         }
 

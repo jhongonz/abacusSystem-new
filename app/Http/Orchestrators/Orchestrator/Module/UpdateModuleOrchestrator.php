@@ -56,8 +56,7 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
         ];
         $dataUpdate['updateAt'] = $this->getCurrentTime();
 
-        $moduleId = $request->input('moduleId');
-        return $this->moduleManagement->updateModule($moduleId, $dataUpdate);
+        return $this->moduleManagement->updateModule($request->input('moduleId'), $dataUpdate);
     }
 
     /**

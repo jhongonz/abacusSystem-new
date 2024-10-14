@@ -10,9 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
 
-/**
- * @codeCoverageIgnore
- */
 class ProcessCommandWarmup implements ShouldQueue
 {
     use Dispatchable;

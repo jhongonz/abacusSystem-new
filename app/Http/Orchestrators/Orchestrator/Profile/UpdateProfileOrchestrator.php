@@ -27,8 +27,12 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): Profile
     {
-        $dataUpdate = json_decode($request->input('dataUpdate'), true);
-        $dataUpdate['updatedAt'] = $this->getCurrentTime();
+        $dataUpdate = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'modules' => $this->getModulesAggregator($request),
+            'updatedAt' => $this->getCurrentTime()
+        ];
 
         return $this->profileManagement->updateProfile($request->input('profileId'), $dataUpdate);
     }

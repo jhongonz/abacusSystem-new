@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use Core\Profile\Domain\Profile;
@@ -20,7 +19,6 @@ class ProfileController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
@@ -91,10 +89,10 @@ class ProfileController extends Controller implements HasMiddleware
     public function storeProfile(StoreProfileRequest $request): JsonResponse
     {
         try {
-            $method = (is_null($request->input('profileId'))) ? 'create-profile-action' : 'update-profile-action';
+            $method = (is_null($request->input('profileId'))) ? 'create-profile' : 'update-profile';
 
             /** @var Profile $profile */
-            $profile = $this->actionExecutorHandler->invoke($method, $request);
+            $profile = $this->orchestrators->handler($method, $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
         } catch (Exception $exception) {
