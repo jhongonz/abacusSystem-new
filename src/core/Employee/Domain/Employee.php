@@ -24,45 +24,26 @@ class Employee
 {
     public const TYPE = 'employee';
 
-    private EmployeeId $id;
     private EmployeeUserId $userId;
     private EmployeeInstitutionId $institutionId;
-    private EmployeeIdentification $identification;
     private EmployeeIdentificationType $identificationType;
-    private EmployeeName $name;
-    private EmployeeLastname $lastname;
-    private EmployeePhone $phone;
-    private EmployeeEmail $email;
-    private EmployeeAddress $address;
-    private EmployeeState $state;
     private EmployeeSearch $search;
-    private EmployeeCreatedAt $createdAt;
     private EmployeeUpdateAt $updateAt;
     private EmployeeBirthdate $birthdate;
     private EmployeeObservations $observations;
     private EmployeeImage $image;
 
     public function __construct(
-        EmployeeId $id,
-        EmployeeIdentification $identification,
-        EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname,
-        EmployeeState $state = new EmployeeState,
-        EmployeePhone $phone = new EmployeePhone,
-        EmployeeEmail $email = new EmployeeEmail,
-        EmployeeAddress $address = new EmployeeAddress,
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        private EmployeeId $id,
+        private EmployeeIdentification $identification,
+        private EmployeeName $name,
+        private EmployeeLastname $lastname = new EmployeeLastname,
+        private EmployeeState $state = new EmployeeState,
+        private EmployeePhone $phone = new EmployeePhone,
+        private EmployeeEmail $email = new EmployeeEmail,
+        private EmployeeAddress $address = new EmployeeAddress,
+        private EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ) {
-        $this->id = $id;
-        $this->identification = $identification;
-        $this->name = $name;
-        $this->lastname = $lastname;
-        $this->state = $state;
-        $this->phone = $phone;
-        $this->email = $email;
-        $this->address = $address;
-        $this->createdAt = $createdAt;
-
         $this->search = new EmployeeSearch;
         $this->updateAt = new EmployeeUpdateAt;
         $this->userId = new EmployeeUserId;

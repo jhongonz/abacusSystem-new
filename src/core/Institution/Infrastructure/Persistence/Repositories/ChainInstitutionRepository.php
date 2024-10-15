@@ -21,16 +21,11 @@ use Throwable;
  */
 class ChainInstitutionRepository extends AbstractChainRepository implements InstitutionRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Institution::class => 'persistInstitution',
-        Institutions::class => '',
-    ];
-
-    private string $domainToPersist;
+    private const FUNCTION_NAME = 'persistInstitution';
 
     public function functionNamePersist(): string
     {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
+        return self::FUNCTION_NAME;
     }
 
     /**
@@ -38,8 +33,6 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function find(InstitutionId $id): ?Institution
     {
-        $this->domainToPersist = Institution::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -52,8 +45,6 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function getAll(array $filters = []): Institutions
     {
-        $this->domainToPersist = Institutions::class;
-
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
@@ -61,11 +52,17 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(InstitutionId $id): void
     {
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistInstitution(Institution $institution): Institution
     {
         return $this->write(__FUNCTION__, $institution);

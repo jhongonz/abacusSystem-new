@@ -22,24 +22,12 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private DatabaseManager $database;
-
-    private UserTranslator $userTranslator;
-
-    private UserModel $model;
-
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $database,
-        UserTranslator $userTranslator,
-        UserModel $model,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly DatabaseManager $database,
+        private readonly UserTranslator $userTranslator,
+        private readonly UserModel $model,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->database = $database;
-        $this->userTranslator = $userTranslator;
-        $this->priority = $priority;
-        $this->model = $model;
     }
 
     /**

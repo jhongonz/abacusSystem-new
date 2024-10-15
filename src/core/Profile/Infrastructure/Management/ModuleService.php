@@ -20,27 +20,14 @@ use Exception;
 
 class ModuleService implements ModuleManagementContract
 {
-    private ModuleFactoryContract $moduleFactory;
-    private SearchModuleById $searchModuleById;
-    private SearchModules $searchModules;
-    private UpdateModule $updateModule;
-    private DeleteModule $deleteModule;
-    private CreateModule $createModule;
-
     public function __construct(
-        ModuleFactoryContract $moduleFactory,
-        SearchModuleById $searchModuleById,
-        SearchModules $searchModules,
-        UpdateModule $updateModule,
-        DeleteModule $deleteModule,
-        CreateModule $createModule,
+        private readonly ModuleFactoryContract $moduleFactory,
+        private readonly SearchModuleById $searchModuleById,
+        private readonly SearchModules $searchModules,
+        private readonly UpdateModule $updateModule,
+        private readonly DeleteModule $deleteModule,
+        private readonly CreateModule $createModule,
     ) {
-        $this->moduleFactory = $moduleFactory;
-        $this->searchModuleById = $searchModuleById;
-        $this->searchModules = $searchModules;
-        $this->updateModule = $updateModule;
-        $this->deleteModule = $deleteModule;
-        $this->createModule = $createModule;
     }
 
     /**

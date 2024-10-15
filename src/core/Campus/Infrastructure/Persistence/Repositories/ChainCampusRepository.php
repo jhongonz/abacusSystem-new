@@ -21,16 +21,11 @@ use Throwable;
  */
 class ChainCampusRepository extends AbstractChainRepository implements CampusRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Campus::class => 'persistCampus',
-        CampusCollection::class => ''
-    ];
-
-    private string $domainToPersist;
+    private const FUNCTION_NAME = 'persistCampus';
 
     public function functionNamePersist(): string
     {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
+        return self::FUNCTION_NAME;
     }
 
     /**
@@ -38,8 +33,6 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function find(CampusId $id): ?Campus
     {
-        $this->domainToPersist = Campus::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (\Exception $exception) {
@@ -53,8 +46,6 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
-        $this->domainToPersist = CampusCollection::class;
-
         try {
             return $this->read(__FUNCTION__, $id, $filters);
         } catch (\Exception $exception) {
@@ -62,11 +53,17 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function delete(CampusId $id): void
     {
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function persistCampus(Campus $campus): Campus
     {
         return $this->write(__FUNCTION__, $campus);

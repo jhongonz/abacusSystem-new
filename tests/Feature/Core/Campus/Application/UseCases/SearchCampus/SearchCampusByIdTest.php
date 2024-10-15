@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Campus\Application\UseCases\SearchCampus;
 use Core\Campus\Application\UseCases\CreateCampus\CreateCampusRequest;
 use Core\Campus\Application\UseCases\SearchCampus\SearchCampusById;
 use Core\Campus\Application\UseCases\SearchCampus\SearchCampusByIdRequest;
+use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
@@ -14,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(SearchCampusById::class)]
+#[CoversClass(UseCasesService::class)]
 class SearchCampusByIdTest extends TestCase
 {
     private CampusRepositoryContract|MockObject $campusRepository;

@@ -11,26 +11,17 @@ use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class ProfileWarmup extends Command
 {
-    private ProfileRepositoryContract $readRepository;
-
     /** @var ProfileRepositoryContract[] */
     private array $repositories;
 
-    private LoggerInterface $logger;
-
-    private ProfileFactoryContract $profileFactory;
-
     public function __construct(
-        LoggerInterface $logger,
-        ProfileFactoryContract $profileFactory,
-        ProfileRepositoryContract $readRepository,
+        private readonly LoggerInterface $logger,
+        private readonly ProfileFactoryContract $profileFactory,
+        private readonly ProfileRepositoryContract $readRepository,
         ProfileRepositoryContract ...$repositories,
     ) {
 
         parent::__construct();
-        $this->logger = $logger;
-        $this->profileFactory = $profileFactory;
-        $this->readRepository = $readRepository;
 
         foreach ($repositories as $repository) {
             $this->repositories[] = $repository;

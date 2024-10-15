@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Campus\Application\UseCases\CreateCampus;
 use Core\Campus\Application\UseCases\CreateCampus\CreateCampus;
 use Core\Campus\Application\UseCases\CreateCampus\CreateCampusRequest;
 use Core\Campus\Application\UseCases\UpdateCampus\UpdateCampusRequest;
+use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(CreateCampus::class)]
+#[CoversClass(UseCasesService::class)]
 class CreateCampusTest extends TestCase
 {
     private CampusRepositoryContract|MockObject $campusRepository;

@@ -21,24 +21,12 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private ProfileModel $model;
-
-    private ProfileTranslator $profileTranslator;
-
-    private DatabaseManager $database;
-
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $database,
-        ProfileTranslator $translator,
-        ProfileModel $model,
-        int $priority = self::PRIORITY_DEFAULT,
+        private readonly DatabaseManager $database,
+        private readonly ProfileTranslator $profileTranslator,
+        private readonly ProfileModel $model,
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->database = $database;
-        $this->profileTranslator = $translator;
-        $this->model = $model;
-        $this->priority = $priority;
     }
 
     /**

@@ -22,30 +22,15 @@ use Exception;
 
 class EmployeeService implements EmployeeManagementContract
 {
-    private EmployeeFactoryContract $employeeFactory;
-    private SearchEmployeeById $searchEmployeeById;
-    private SearchEmployeeByIdentification $searchEmployeeByIdentification;
-    private SearchEmployees $searchEmployees;
-    private UpdateEmployee $updateEmployee;
-    private CreateEmployee $createEmployee;
-    private DeleteEmployee $deleteEmployee;
-
     public function __construct(
-        EmployeeFactoryContract $employeeFactory,
-        SearchEmployeeById $searchEmployeeById,
-        SearchEmployeeByIdentification $searchEmployeeByIdentification,
-        SearchEmployees $searchEmployees,
-        UpdateEmployee $updateEmployee,
-        CreateEmployee $createEmployee,
-        DeleteEmployee $deleteEmployee,
+        private readonly EmployeeFactoryContract $employeeFactory,
+        private readonly SearchEmployeeById $searchEmployeeById,
+        private readonly SearchEmployeeByIdentification $searchEmployeeByIdentification,
+        private readonly SearchEmployees $searchEmployees,
+        private readonly UpdateEmployee $updateEmployee,
+        private readonly CreateEmployee $createEmployee,
+        private readonly DeleteEmployee $deleteEmployee,
     ) {
-        $this->employeeFactory = $employeeFactory;
-        $this->searchEmployeeById = $searchEmployeeById;
-        $this->searchEmployeeByIdentification = $searchEmployeeByIdentification;
-        $this->searchEmployees = $searchEmployees;
-        $this->updateEmployee = $updateEmployee;
-        $this->createEmployee = $createEmployee;
-        $this->deleteEmployee = $deleteEmployee;
     }
 
     /**

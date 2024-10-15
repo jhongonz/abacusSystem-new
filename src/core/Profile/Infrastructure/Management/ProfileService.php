@@ -12,7 +12,6 @@ use Core\Profile\Application\UseCases\SearchProfile\SearchProfiles;
 use Core\Profile\Application\UseCases\SearchProfile\SearchProfilesRequest;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfile;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfileRequest;
-use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Modules;
@@ -23,36 +22,16 @@ use Psr\Log\LoggerInterface;
 
 class ProfileService implements ProfileManagementContract
 {
-    private ProfileFactoryContract $profileFactory;
-    private ModuleService $moduleService;
-    private ModuleFactoryContract $moduleFactory;
-    private SearchProfileById $searchProfileById;
-    private SearchProfiles $searchProfiles;
-    private UpdateProfile $updateProfile;
-    private DeleteProfile $deleteProfile;
-    private CreateProfile $createProfile;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ProfileFactoryContract $profileFactory,
-        ModuleService $moduleService,
-        ModuleFactoryContract $moduleFactory,
-        SearchProfileById $searchProfileById,
-        SearchProfiles $searchProfiles,
-        UpdateProfile $updateProfile,
-        DeleteProfile $deleteProfile,
-        CreateProfile $createProfile,
-        LoggerInterface $logger,
+        private readonly ProfileFactoryContract $profileFactory,
+        private readonly ModuleService $moduleService,
+        private readonly SearchProfileById $searchProfileById,
+        private readonly SearchProfiles $searchProfiles,
+        private readonly UpdateProfile $updateProfile,
+        private readonly DeleteProfile $deleteProfile,
+        private readonly CreateProfile $createProfile,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->profileFactory = $profileFactory;
-        $this->moduleService = $moduleService;
-        $this->moduleFactory = $moduleFactory;
-        $this->searchProfileById = $searchProfileById;
-        $this->searchProfiles = $searchProfiles;
-        $this->updateProfile = $updateProfile;
-        $this->deleteProfile = $deleteProfile;
-        $this->createProfile = $createProfile;
-        $this->logger = $logger;
     }
 
     /**

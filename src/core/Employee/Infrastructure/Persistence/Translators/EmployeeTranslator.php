@@ -11,15 +11,12 @@ use Exception;
 
 class EmployeeTranslator
 {
-    private EmployeeFactoryContract $employeeFactory;
     private EmployeeModel $employee;
-    private array $collection;
+    private array $collection = [];
 
     public function __construct(
-        EmployeeFactoryContract $employeeFactory,
+        private readonly EmployeeFactoryContract $employeeFactory,
     ) {
-        $this->employeeFactory = $employeeFactory;
-        $this->collection = [];
     }
 
     public function setModel(EmployeeModel $model): self

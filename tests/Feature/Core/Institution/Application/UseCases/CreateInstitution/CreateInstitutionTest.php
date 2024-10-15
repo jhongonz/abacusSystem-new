@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Institution\Application\UseCases\CreateInstitution;
 use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitution;
 use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitutionRequest;
 use Core\Institution\Application\UseCases\SearchInstitution\SearchInstitutionByIdRequest;
+use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(CreateInstitution::class)]
+#[CoversClass(UseCasesService::class)]
 class CreateInstitutionTest extends TestCase
 {
     private InstitutionRepositoryContract|MockObject $repository;

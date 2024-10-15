@@ -10,14 +10,12 @@ use InvalidArgumentException;
 
 class InstitutionEmail
 {
-    private ?string $value;
-
-    public function __construct(?string $value = null)
-    {
+    public function __construct(
+        private ?string $value = null
+    ) {
         if (! is_null($value)) {
             $this->validate($value);
         }
-        $this->value = $value;
     }
 
     public function value(): ?string

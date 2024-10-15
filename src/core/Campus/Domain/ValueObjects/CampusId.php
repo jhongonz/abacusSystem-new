@@ -10,15 +10,14 @@ use InvalidArgumentException;
 
 class CampusId
 {
-    private ?int $value;
-
-    public function __construct(?int $value = null)
-    {
+    public function __construct(
+        private ?int $value = null
+    ) {
         if (! is_null($value)) {
             $this->validate($value);
-        }
 
-        $this->value = $value;
+            $this->setValue($value);
+        }
     }
 
     public function value(): ?int

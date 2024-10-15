@@ -12,7 +12,6 @@ use Core\Profile\Application\UseCases\SearchProfile\SearchProfiles;
 use Core\Profile\Application\UseCases\SearchProfile\SearchProfilesRequest;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfile;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfileRequest;
-use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Profile;
@@ -33,7 +32,6 @@ class ProfileServiceTest extends TestCase
 {
     private ProfileFactoryContract|MockObject $factory;
     private ModuleService|MockObject $moduleService;
-    private ModuleFactoryContract|MockObject $moduleFactory;
     private SearchProfileById|MockObject $searchProfileById;
     private SearchProfiles|MockObject $searchProfiles;
     private UpdateProfile|MockObject $updateProfile;
@@ -50,7 +48,6 @@ class ProfileServiceTest extends TestCase
         parent::setUp();
         $this->factory = $this->createMock(ProfileFactoryContract::class);
         $this->moduleService = $this->createMock(ModuleService::class);
-        $this->moduleFactory = $this->createMock(ModuleFactoryContract::class);
         $this->searchProfileById = $this->createMock(SearchProfileById::class);
         $this->searchProfiles = $this->createMock(SearchProfiles::class);
         $this->updateProfile = $this->createMock(UpdateProfile::class);
@@ -60,7 +57,6 @@ class ProfileServiceTest extends TestCase
         $this->service = new ProfileService(
             $this->factory,
             $this->moduleService,
-            $this->moduleFactory,
             $this->searchProfileById,
             $this->searchProfiles,
             $this->updateProfile,
@@ -75,7 +71,6 @@ class ProfileServiceTest extends TestCase
         unset(
             $this->factory,
             $this->moduleService,
-            $this->moduleFactory,
             $this->searchProfileById,
             $this->searchProfiles,
             $this->updateProfile,

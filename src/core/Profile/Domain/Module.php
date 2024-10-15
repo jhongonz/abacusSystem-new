@@ -17,46 +17,21 @@ class Module
 {
     public const TYPE = 'module';
 
-    private ModuleId $id;
-
-    private ModuleMenuKey $menuKey;
-
-    private ModuleName $name;
-
-    private ModuleRoute $route;
-
-    private ModuleIcon $icon;
-
-    private ModuleState $state;
-
-    private ModuleCreatedAt $createdAt;
-
     private ModuleUpdatedAt $updatedAt;
-
     private ModuleSearch $search;
     private ModulePosition $position;
-
     private array $options = [];
-
     private bool $expanded = false;
 
     public function __construct(
-        ModuleId $id,
-        ModuleMenuKey $menuKey,
-        ModuleName $name,
-        ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon,
-        ModuleState $state = new ModuleState,
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt,
+        private ModuleId $id,
+        private ModuleMenuKey $menuKey,
+        private ModuleName $name,
+        private ModuleRoute $route,
+        private ModuleIcon $icon = new ModuleIcon,
+        private ModuleState $state = new ModuleState,
+        private ModuleCreatedAt $createdAt = new ModuleCreatedAt,
     ) {
-        $this->id = $id;
-        $this->menuKey = $menuKey;
-        $this->name = $name;
-        $this->route = $route;
-        $this->icon = $icon;
-        $this->state = $state;
-        $this->createdAt = $createdAt;
-
         $this->search = new ModuleSearch;
         $this->updatedAt = new ModuleUpdatedAt;
         $this->position = new ModulePosition;

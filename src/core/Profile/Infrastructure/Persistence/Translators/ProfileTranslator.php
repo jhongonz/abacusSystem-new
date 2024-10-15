@@ -12,15 +12,12 @@ use Exception;
 
 class ProfileTranslator
 {
-    private ProfileFactoryContract $profileFactory;
     private ProfileModel $model;
-    private array $collection;
+    private array $collection = [];
 
     public function __construct(
-        ProfileFactoryContract $profileFactory,
+        private readonly ProfileFactoryContract $profileFactory,
     ) {
-        $this->profileFactory = $profileFactory;
-        $this->collection = [];
     }
 
     public function setModel(ProfileModel $model): self

@@ -7,11 +7,9 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 
 class SearchModuleByIdRequest implements RequestService
 {
-    private ModuleId $id;
-
-    public function __construct(ModuleId $id)
-    {
-        $this->id = $id;
+    public function __construct(
+        private readonly ModuleId $id
+    ) {
     }
 
     public function moduleId(): ModuleId

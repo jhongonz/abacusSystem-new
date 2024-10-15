@@ -8,6 +8,7 @@ namespace Tests\Feature\Core\User\Application\UseCases\DeleteUser;
 
 use Core\User\Application\UseCases\DeleteUser\DeleteUser;
 use Core\User\Application\UseCases\DeleteUser\DeleteUserRequest;
+use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\ValueObjects\UserId;
 use Mockery\Mock;
@@ -16,6 +17,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use Tests\TestCase;
 
 #[CoversClass(DeleteUser::class)]
+#[CoversClass(UseCasesService::class)]
 class DeleteUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;
