@@ -11,6 +11,7 @@ class ProfileId
     ) {
         if (! is_null($value)) {
             $this->validate($value);
+            $this->setValue($value);
         }
     }
 
