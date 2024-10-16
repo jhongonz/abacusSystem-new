@@ -10,11 +10,9 @@ use DateTime;
 
 class InstitutionUpdatedAt
 {
-    private ?DateTime $value;
-
-    public function __construct(DateTime $value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private ?DateTime $value = null
+    ) {
     }
 
     public function value(): ?DateTime

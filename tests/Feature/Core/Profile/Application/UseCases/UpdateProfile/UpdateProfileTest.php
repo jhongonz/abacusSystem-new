@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Profile\Application\UseCases\UpdateProfile;
 use Core\Profile\Application\UseCases\CreateProfile\CreateProfileRequest;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfile;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfileRequest;
+use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileDescription;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UpdateProfile::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateProfileTest extends TestCase
 {
     private ProfileRepositoryContract|MockObject $repository;

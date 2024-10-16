@@ -6,11 +6,9 @@ use Core\Profile\Application\UseCasesModule\RequestService;
 
 class SearchModulesRequest implements RequestService
 {
-    private array $filters;
-
-    public function __construct(array $filters = [])
-    {
-        $this->filters = $filters;
+    public function __construct(
+        private readonly array $filters = []
+    ) {
     }
 
     public function filters(): array

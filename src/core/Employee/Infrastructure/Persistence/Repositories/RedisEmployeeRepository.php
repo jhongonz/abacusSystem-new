@@ -24,28 +24,13 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
     /** @var string */
     private const EMPLOYEE_KEY_FORMAT = '%s::%s';
 
-    private int $priority;
-
-    private string $keyPrefix;
-
-    private EmployeeFactoryContract $employeeFactory;
-
-    private EmployeeDataTransformerContract $dataTransformer;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        EmployeeFactoryContract $employeeFactory,
-        EmployeeDataTransformerContract $dataTransformer,
-        LoggerInterface $logger,
-        string $keyPrefix = 'employee',
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly EmployeeFactoryContract $employeeFactory,
+        private readonly EmployeeDataTransformerContract $dataTransformer,
+        private readonly LoggerInterface $logger,
+        private readonly string $keyPrefix = 'employee',
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->employeeFactory = $employeeFactory;
-        $this->dataTransformer = $dataTransformer;
-        $this->logger = $logger;
-        $this->keyPrefix = $keyPrefix;
-        $this->priority = $priority;
     }
 
     public function priority(): int

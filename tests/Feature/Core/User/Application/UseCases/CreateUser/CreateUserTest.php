@@ -9,6 +9,7 @@ namespace Tests\Feature\Core\User\Application\UseCases\CreateUser;
 use Core\User\Application\UseCases\CreateUser\CreateUser;
 use Core\User\Application\UseCases\CreateUser\CreateUserRequest;
 use Core\User\Application\UseCases\DeleteUser\DeleteUserRequest;
+use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Mockery\Mock;
@@ -17,6 +18,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use Tests\TestCase;
 
 #[CoversClass(CreateUser::class)]
+#[CoversClass(UseCasesService::class)]
 class CreateUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repositoryMock;

@@ -24,20 +24,12 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     /** @var int */
     private const PRIORITY_DEFAULT = 50;
 
-    private InstitutionModel $model;
-    private InstitutionTranslator $institutionTranslator;
-    private DatabaseManager $databaseManager;
-    private int $priority;
     public function __construct(
-        InstitutionModel $model,
-        InstitutionTranslator $translator,
-        DatabaseManager $databaseManager,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly InstitutionModel $model,
+        private readonly InstitutionTranslator $institutionTranslator,
+        private readonly DatabaseManager $databaseManager,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->model = $model;
-        $this->institutionTranslator = $translator;
-        $this->databaseManager = $databaseManager;
-        $this->priority = $priority;
     }
 
     public function priority(): int

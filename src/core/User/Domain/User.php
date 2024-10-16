@@ -20,42 +20,18 @@ class User
 {
     public const TYPE = 'user';
 
-    private UserId $id;
-
-    private UserEmployeeId $employeeId;
-
-    private UserProfileId $profileId;
-
-    private UserLogin $login;
-
-    private UserPassword $password;
-
-    private UserState $state;
-
-    private UserCreatedAt $createdAt;
-
     private UserUpdatedAt $updatedAt;
-
     private UserPhoto $photo;
 
     public function __construct(
-        UserId $id,
-        UserEmployeeId $employeeId,
-        UserProfileId $profileId,
-        UserLogin $login,
-        UserPassword $password,
-        UserState $state = new UserState,
-        UserCreatedAt $createdAt = new UserCreatedAt,
+        private UserId $id,
+        private UserEmployeeId $employeeId,
+        private UserProfileId $profileId,
+        private UserLogin $login,
+        private UserPassword $password,
+        private UserState $state = new UserState,
+        private UserCreatedAt $createdAt = new UserCreatedAt,
     ) {
-        $this->id = $id;
-        $this->employeeId = $employeeId;
-        $this->profileId = $profileId;
-        $this->login = $login;
-        $this->password = $password;
-
-        $this->state = $state;
-        $this->createdAt = $createdAt;
-
         $this->updatedAt = new UserUpdatedAt;
         $this->photo = new UserPhoto;
     }

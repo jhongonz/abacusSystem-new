@@ -18,16 +18,11 @@ use Throwable;
  */
 class ChainProfileRepository extends AbstractChainRepository implements ProfileRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Profile::class => 'persistProfile',
-        Profiles::class => '',
-    ];
-
-    private string $domainToPersist;
+    private const FUNCTION_NAME = 'persistProfile';
 
     public function functionNamePersist(): string
     {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
+        return self::FUNCTION_NAME;
     }
 
     /**
@@ -36,8 +31,6 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      */
     public function find(ProfileId $id): ?Profile
     {
-        $this->domainToPersist = Profile::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -50,8 +43,6 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      */
     public function findCriteria(ProfileName $name): ?Profile
     {
-        $this->domainToPersist = Profile::class;
-
         try {
             return $this->read(__FUNCTION__, $name);
         } catch (Exception $exception) {
@@ -65,8 +56,6 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      */
     public function getAll(array $filters = []): Profiles
     {
-        $this->domainToPersist = Profiles::class;
-
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
@@ -92,11 +81,17 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistProfile(Profile $profile): Profile
     {
         return $this->write(__FUNCTION__, $profile);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistProfiles(Profiles $profiles): Profiles
     {
         return $this->write(__FUNCTION__, $profiles);

@@ -8,14 +8,13 @@ namespace Core\User\Domain\ValueObjects;
 
 class UserId
 {
-    private ?int $value;
-
-    public function __construct(?int $value = null)
-    {
+    public function __construct(
+        private ?int $value = null
+    ) {
         if (! is_null($value)) {
             $this->validate($value);
+            $this->setValue($value);
         }
-        $this->value = $value;
     }
 
     public function value(): ?int

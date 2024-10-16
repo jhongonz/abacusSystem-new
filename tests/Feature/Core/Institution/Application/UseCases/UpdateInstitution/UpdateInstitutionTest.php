@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Institution\Application\UseCases\UpdateInstitution;
 use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitutionRequest;
 use Core\Institution\Application\UseCases\UpdateInstitution\UpdateInstitution;
 use Core\Institution\Application\UseCases\UpdateInstitution\UpdateInstitutionRequest;
+use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
@@ -23,6 +24,7 @@ use Tests\Feature\Core\Institution\Application\UseCases\UpdateInstitution\DataPr
 use Tests\TestCase;
 
 #[CoversClass(UpdateInstitution::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateInstitutionTest extends TestCase
 {
     private InstitutionRepositoryContract|MockObject $repository;

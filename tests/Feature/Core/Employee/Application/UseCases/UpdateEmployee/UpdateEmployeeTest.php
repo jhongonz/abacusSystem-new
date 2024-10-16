@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee;
 use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployeeRequest;
 use Core\Employee\Application\UseCases\UpdateEmployee\UpdateEmployee;
 use Core\Employee\Application\UseCases\UpdateEmployee\UpdateEmployeeRequest;
+use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeAddress;
@@ -27,6 +28,7 @@ use Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataProvider
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployee::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateEmployeeTest extends TestCase
 {
     private UpdateEmployeeRequest|MockObject $request;

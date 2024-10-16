@@ -7,11 +7,9 @@ use Core\Profile\Domain\Profile;
 
 class CreateProfileRequest implements RequestService
 {
-    private Profile $profile;
-
-    public function __construct(Profile $profile)
-    {
-        $this->profile = $profile;
+    public function __construct(
+        private readonly Profile $profile
+    ) {
     }
 
     public function profile(): Profile

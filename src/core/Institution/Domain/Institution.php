@@ -23,14 +23,9 @@ use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 class Institution
 {
     public const TYPE = 'institution';
-    private InstitutionId $id;
-    private InstitutionCode $code;
-    private InstitutionName $name;
-    private InstitutionShortname $shortname;
     private InstitutionLogo $logo;
     private InstitutionObservations $observations;
     private InstitutionAddress $address;
-    private InstitutionState $state;
     private InstitutionSearch $search;
     private InstitutionPhone $phone;
     private InstitutionEmail $email;
@@ -38,18 +33,12 @@ class Institution
     private InstitutionUpdatedAt $updatedAt;
 
     public function __construct(
-        InstitutionId $id,
-        InstitutionName $name,
-        InstitutionShortname $shortname = new InstitutionShortname,
-        InstitutionCode $code = new InstitutionCode,
-        InstitutionState $state = new InstitutionState,
+        private InstitutionId $id,
+        private InstitutionName $name,
+        private InstitutionShortname $shortname = new InstitutionShortname,
+        private InstitutionCode $code = new InstitutionCode,
+        private InstitutionState $state = new InstitutionState,
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->shortname = $shortname;
-        $this->code = $code;
-        $this->state = $state;
-
         $this->logo = new InstitutionLogo;
         $this->search = new InstitutionSearch;
         $this->observations = new InstitutionObservations;

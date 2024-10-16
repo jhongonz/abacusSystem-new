@@ -7,11 +7,9 @@ use Core\Employee\Domain\Employee;
 
 class CreateEmployeeRequest implements RequestService
 {
-    private Employee $employee;
-
-    public function __construct(Employee $employee)
-    {
-        $this->employee = $employee;
+    public function __construct(
+        private readonly Employee $employee
+    ) {
     }
 
     public function employee(): Employee

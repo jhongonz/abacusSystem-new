@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Profile\Application\UseCasesModule\SearchModule;
 use Core\Profile\Application\UseCasesModule\DeleteModule\DeleteModuleRequest;
 use Core\Profile\Application\UseCasesModule\SearchModule\SearchModuleById;
 use Core\Profile\Application\UseCasesModule\SearchModule\SearchModuleByIdRequest;
+use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\ValueObjects\ModuleId;
@@ -14,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(SearchModuleById::class)]
+#[CoversClass(UseCasesService::class)]
 class SearchModuleByIdTest extends TestCase
 {
     private ModuleRepositoryContract|MockObject $repository;

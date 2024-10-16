@@ -21,24 +21,12 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private EmployeeModel $model;
-
-    private EmployeeTranslator $employeeTranslator;
-
-    private DatabaseManager $database;
-
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $database,
-        EmployeeTranslator $translator,
-        EmployeeModel $model,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly DatabaseManager $database,
+        private readonly EmployeeTranslator $employeeTranslator,
+        private readonly EmployeeModel $model,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->database = $database;
-        $this->employeeTranslator = $translator;
-        $this->priority = $priority;
-        $this->model = $model;
     }
 
     public function priority(): int

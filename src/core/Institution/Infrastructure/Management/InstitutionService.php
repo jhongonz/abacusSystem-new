@@ -24,27 +24,14 @@ use Exception;
 
 class InstitutionService implements InstitutionManagementContract
 {
-    private InstitutionFactoryContract $institutionFactory;
-    private SearchInstitutionById $searchInstitutionById;
-    private SearchInstitutions $searchInstitutions;
-    private UpdateInstitution $updateInstitution;
-    private CreateInstitution $createInstitution;
-    private DeleteInstitution $deleteInstitution;
-
     public function __construct(
-        InstitutionFactoryContract $institutionFactory,
-        SearchInstitutionById $searchInstitutionById,
-        SearchInstitutions $searchInstitutions,
-        UpdateInstitution $updateInstitution,
-        CreateInstitution $createInstitution,
-        DeleteInstitution $deleteInstitution
+        private readonly InstitutionFactoryContract $institutionFactory,
+        private readonly SearchInstitutionById $searchInstitutionById,
+        private readonly SearchInstitutions $searchInstitutions,
+        private readonly UpdateInstitution $updateInstitution,
+        private readonly CreateInstitution $createInstitution,
+        private readonly DeleteInstitution $deleteInstitution
     ) {
-        $this->institutionFactory = $institutionFactory;
-        $this->searchInstitutionById = $searchInstitutionById;
-        $this->searchInstitutions = $searchInstitutions;
-        $this->updateInstitution = $updateInstitution;
-        $this->createInstitution = $createInstitution;
-        $this->deleteInstitution = $deleteInstitution;
     }
 
     /**

@@ -4,11 +4,9 @@ namespace Core\Employee\Domain\ValueObjects;
 
 class EmployeeUserId
 {
-    private ?int $value;
-
-    public function __construct(?int $value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private ?int $value = null
+    ) {
     }
 
     public function value(): ?int

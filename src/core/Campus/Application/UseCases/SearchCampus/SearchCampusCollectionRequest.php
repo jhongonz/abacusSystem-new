@@ -11,15 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 
 class SearchCampusCollectionRequest implements RequestService
 {
-    private CampusInstitutionId $institutionId;
-    private array $filters;
-
     public function __construct(
-        CampusInstitutionId $institutionId,
-        array $filters = []
+        private readonly CampusInstitutionId $institutionId,
+        private readonly array $filters = []
     ) {
-        $this->institutionId = $institutionId;
-        $this->filters = $filters;
     }
 
     public function institutionId(): CampusInstitutionId

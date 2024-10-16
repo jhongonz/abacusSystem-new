@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Profile\Application\UseCases\DeleteProfile;
 use Core\Profile\Application\UseCases\CreateProfile\CreateProfileRequest;
 use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfile;
 use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfileRequest;
+use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(DeleteProfile::class)]
+#[CoversClass(UseCasesService::class)]
 class DeleteProfileTest extends TestCase
 {
     private ProfileRepositoryContract|MockObject $repository;

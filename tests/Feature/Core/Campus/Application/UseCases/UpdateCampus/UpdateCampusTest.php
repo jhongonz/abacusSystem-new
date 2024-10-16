@@ -4,6 +4,7 @@ namespace Tests\Feature\Core\Campus\Application\UseCases\UpdateCampus;
 
 use Core\Campus\Application\UseCases\UpdateCampus\UpdateCampus;
 use Core\Campus\Application\UseCases\UpdateCampus\UpdateCampusRequest;
+use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
@@ -15,6 +16,7 @@ use Tests\Feature\Core\Campus\Application\DataProvider\UpdateCampusDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(UpdateCampus::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateCampusTest extends TestCase
 {
     private CampusRepositoryContract|MockObject $campusRepository;

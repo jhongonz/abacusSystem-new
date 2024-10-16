@@ -11,24 +11,16 @@ use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class InstitutionWarmup extends Command
 {
-    private InstitutionFactoryContract $institutionFactory;
-    private LoggerInterface $logger;
-
     /** @var InstitutionRepositoryContract[] */
     private array $repositories;
 
-    private InstitutionRepositoryContract $readRepository;
-
     public function __construct(
-        LoggerInterface $logger,
-        InstitutionFactoryContract $institutionFactory,
-        InstitutionRepositoryContract $readRepository,
+        private readonly LoggerInterface $logger,
+        private readonly InstitutionFactoryContract $institutionFactory,
+        private readonly InstitutionRepositoryContract $readRepository,
         InstitutionRepositoryContract ...$repositories,
     ) {
         parent::__construct();
-        $this->logger = $logger;
-        $this->institutionFactory = $institutionFactory;
-        $this->readRepository = $readRepository;
 
         foreach ($repositories as $repository) {
             $this->repositories[] = $repository;

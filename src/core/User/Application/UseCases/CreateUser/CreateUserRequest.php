@@ -11,11 +11,9 @@ use Core\User\Domain\User;
 
 class CreateUserRequest implements RequestService
 {
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
+    public function __construct(
+        private readonly User $user
+    ) {
     }
 
     public function user(): User

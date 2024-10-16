@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Employee\Application\UseCases\SearchEmployee;
 use Core\Employee\Application\UseCases\DeleteEmployee\DeleteEmployeeRequest;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployees;
 use Core\Employee\Application\UseCases\SearchEmployee\SearchEmployeesRequest;
+use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employees;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(SearchEmployees::class)]
+#[CoversClass(UseCasesService::class)]
 class SearchEmployeesTest extends TestCase
 {
     private SearchEmployeesRequest|MockObject $request;

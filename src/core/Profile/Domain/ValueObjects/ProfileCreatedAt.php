@@ -6,11 +6,9 @@ use DateTime;
 
 class ProfileCreatedAt
 {
-    private DateTime $value;
-
-    public function __construct(DateTime $value = new DateTime)
-    {
-        $this->value = $value;
+    public function __construct(
+        private DateTime $value = new DateTime
+    ) {
     }
 
     public function value(): DateTime

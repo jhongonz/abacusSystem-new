@@ -6,12 +6,9 @@ use DateTime;
 
 class ModuleCreatedAt
 {
-    private DateTime $value;
-
     public function __construct(
-        DateTime $value = new DateTime
+        private DateTime $value = new DateTime
     ) {
-        $this->value = $value;
     }
 
     public function value(): DateTime

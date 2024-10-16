@@ -9,6 +9,7 @@ namespace Tests\Feature\Core\User\Application\UseCases\UpdateUser;
 use Core\User\Application\UseCases\CreateUser\CreateUserRequest;
 use Core\User\Application\UseCases\UpdateUser\UpdateUser;
 use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
+use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
@@ -28,6 +29,7 @@ use Tests\Feature\Core\User\Application\UseCases\UpdateUser\DataProvider\DataPro
 use Tests\TestCase;
 
 #[CoversClass(UpdateUser::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateUserTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;

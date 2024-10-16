@@ -22,24 +22,13 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     /** @var string */
     private const MODULE_KEY_FORMAT = '%s::%s';
 
-    private ModuleFactoryContract $moduleFactory;
-    private ModuleDataTransformerContract $moduleDataTransformer;
-    private LoggerInterface $logger;
-    private int $priority;
-    private string $keyPrefix;
-
     public function __construct(
-        ModuleFactoryContract $moduleFactory,
-        ModuleDataTransformerContract $moduleDataTransformer,
-        LoggerInterface $logger,
-        int $priority = self::PRIORITY_DEFAULT,
-        string $keyPrefix = 'module',
+        private readonly ModuleFactoryContract $moduleFactory,
+        private readonly ModuleDataTransformerContract $moduleDataTransformer,
+        private readonly LoggerInterface $logger,
+        private int $priority = self::PRIORITY_DEFAULT,
+        private readonly string $keyPrefix = 'module',
     ) {
-        $this->moduleFactory = $moduleFactory;
-        $this->moduleDataTransformer = $moduleDataTransformer;
-        $this->logger = $logger;
-        $this->priority = $priority;
-        $this->keyPrefix = $keyPrefix;
     }
 
     public function priority(): int

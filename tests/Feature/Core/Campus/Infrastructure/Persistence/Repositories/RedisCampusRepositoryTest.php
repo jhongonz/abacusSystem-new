@@ -9,7 +9,6 @@ use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Exceptions\CampusPersistException;
-use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\RedisCampusRepository;
 use Illuminate\Support\Facades\Redis;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,7 +18,6 @@ use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(RedisCampusRepository::class)]
-#[CoversClass(ChainCampusRepository::class)]
 class RedisCampusRepositoryTest extends TestCase
 {
     private RedisCampusRepository $repository;

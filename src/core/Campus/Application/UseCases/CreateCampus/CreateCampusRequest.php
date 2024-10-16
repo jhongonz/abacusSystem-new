@@ -11,11 +11,9 @@ use Core\Campus\Domain\Campus;
 
 class CreateCampusRequest implements RequestService
 {
-    private Campus $campus;
-
-    public function __construct(Campus $campus)
-    {
-        $this->campus = $campus;
+    public function __construct(
+        private readonly Campus $campus
+    ) {
     }
 
     public function campus(): Campus

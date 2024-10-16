@@ -11,15 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusId;
 
 class UpdateCampusRequest implements RequestService
 {
-    private CampusId $id;
-    private array $data;
-
     public function __construct(
-        CampusId $id,
-        array $data
+        private readonly CampusId $id,
+        private readonly array $data
     ) {
-        $this->id = $id;
-        $this->data = $data;
     }
 
     public function id(): CampusId

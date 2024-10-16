@@ -20,24 +20,12 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private ModuleModel $model;
-
-    private ModuleTranslator $moduleTranslator;
-
-    private DatabaseManager $database;
-
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $database,
-        ModuleTranslator $moduleTranslator,
-        ModuleModel $model,
-        int $priority = self::PRIORITY_DEFAULT,
+        private readonly DatabaseManager $database,
+        private readonly ModuleTranslator $moduleTranslator,
+        private readonly ModuleModel $model,
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->database = $database;
-        $this->moduleTranslator = $moduleTranslator;
-        $this->model = $model;
-        $this->priority = $priority;
     }
 
     public function priority(): int

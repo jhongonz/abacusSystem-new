@@ -23,27 +23,14 @@ use Exception;
 
 class UserService implements UserManagementContract
 {
-    private UserFactoryContract $userFactory;
-    private SearchUserByLogin $searchUserByLogin;
-    private SearchUserById $searchUserById;
-    private UpdateUser $updateUser;
-    private CreateUser $createUser;
-    private DeleteUser $deleteUser;
-
     public function __construct(
-        UserFactoryContract $userFactory,
-        SearchUserByLogin $searchUserByLogin,
-        SearchUserById $searchUserById,
-        UpdateUser $updateUser,
-        CreateUser $createUser,
-        DeleteUser $deleteUser,
+        private readonly UserFactoryContract $userFactory,
+        private readonly SearchUserByLogin $searchUserByLogin,
+        private readonly SearchUserById $searchUserById,
+        private readonly UpdateUser $updateUser,
+        private readonly CreateUser $createUser,
+        private readonly DeleteUser $deleteUser,
     ) {
-        $this->userFactory = $userFactory;
-        $this->searchUserByLogin = $searchUserByLogin;
-        $this->searchUserById = $searchUserById;
-        $this->updateUser = $updateUser;
-        $this->createUser = $createUser;
-        $this->deleteUser = $deleteUser;
     }
 
     /**

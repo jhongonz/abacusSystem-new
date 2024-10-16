@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Institution\Application\UseCases\DeleteInstitution;
 use Core\Institution\Application\UseCases\CreateInstitution\CreateInstitutionRequest;
 use Core\Institution\Application\UseCases\DeleteInstitution\DeleteInstitution;
 use Core\Institution\Application\UseCases\DeleteInstitution\DeleteInstitutionRequest;
+use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(DeleteInstitution::class)]
+#[CoversClass(UseCasesService::class)]
 class DeleteInstitutionTest extends TestCase
 {
     private InstitutionRepositoryContract|MockObject $repository;

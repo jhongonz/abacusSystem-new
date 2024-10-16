@@ -10,12 +10,9 @@ use Core\Institution\Application\UseCases\RequestService;
 
 class SearchInstitutionsRequest implements RequestService
 {
-    private array $filters;
-
     public function __construct(
-        array $filters
+        private readonly array $filters
     ) {
-        $this->filters = $filters;
     }
 
     public function filters(): array

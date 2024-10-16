@@ -10,15 +10,13 @@ use InvalidArgumentException;
 
 class UserProfileId
 {
-    private ?int $value;
-
-    public function __construct(?int $id = null)
-    {
-        if (! is_null($id)) {
-            $this->validate($id);
+    public function __construct(
+        private ?int $value = null
+    ) {
+        if (! is_null($value)) {
+            $this->validate($value);
+            $this->setValue($value);
         }
-
-        $this->value = $id;
     }
 
     public function value(): ?int

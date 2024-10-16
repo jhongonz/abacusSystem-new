@@ -23,32 +23,16 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
 {
     /** @var int */
     private const PRIORITY_DEFAULT = 100;
-
     /** @var string */
     private const USER_KEY_FORMAT = '%s::%s';
 
-    private int $priority;
-
-    private string $keyPrefix;
-
-    private UserFactoryContract $userFactory;
-
-    private UserDataTransformerContract $dataTransformer;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        UserFactoryContract $userFactory,
-        UserDataTransformerContract $dataTransformer,
-        LoggerInterface $logger,
-        string $keyPrefix = 'user',
-        int $priority = self::PRIORITY_DEFAULT,
+        private readonly UserFactoryContract $userFactory,
+        private readonly UserDataTransformerContract $dataTransformer,
+        private readonly LoggerInterface $logger,
+        private readonly string $keyPrefix = 'user',
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->userFactory = $userFactory;
-        $this->dataTransformer = $dataTransformer;
-        $this->logger = $logger;
-        $this->keyPrefix = $keyPrefix;
-        $this->priority = $priority;
     }
 
     /**

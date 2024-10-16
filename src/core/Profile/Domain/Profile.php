@@ -14,35 +14,18 @@ class Profile
 {
     public const TYPE = 'profile';
 
-    private ProfileId $id;
-
-    private ProfileName $name;
-
-    private ProfileState $state;
-
-    private ProfileCreatedAt $createdAt;
-
     private ProfileUpdatedAt $updatedAt;
-
     private ProfileSearch $search;
-
     private ProfileDescription $description;
-
     private Modules $modules;
-
     private array $modulesAggregator = [];
 
     public function __construct(
-        ProfileId $id,
-        ProfileName $name,
-        ProfileState $state = new ProfileState,
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt
+        private ProfileId $id,
+        private ProfileName $name,
+        private ProfileState $state = new ProfileState,
+        private ProfileCreatedAt $createdAt = new ProfileCreatedAt
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->state = $state;
-        $this->createdAt = $createdAt;
-
         $this->search = new ProfileSearch;
         $this->updatedAt = new ProfileUpdatedAt;
         $this->modules = new Modules;
