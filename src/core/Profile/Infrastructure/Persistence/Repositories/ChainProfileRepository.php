@@ -13,9 +13,6 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainProfileRepository extends AbstractChainRepository implements ProfileRepositoryContract
 {
     private const FUNCTION_NAME = 'persistProfile';
@@ -34,7 +31,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException($exception->getMessage());
+            throw new ProfileNotFoundException('Profile not found by id '. $id->value());
         }
     }
 
@@ -46,7 +43,7 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
         try {
             return $this->read(__FUNCTION__, $name);
         } catch (Exception $exception) {
-            throw new ProfileNotFoundException($exception->getMessage());
+            throw new ProfileNotFoundException('Profile not found by name '. $name->value());
         }
     }
 
@@ -54,23 +51,13 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      * @throws ProfilesNotFoundException
      * @throws Throwable
      */
-    public function getAll(array $filters = []): Profiles
+    public function getAll(array $filters = []): ?Profiles
     {
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
-            throw new ProfilesNotFoundException($exception->getMessage());
+            throw new ProfilesNotFoundException('Profiles not found');
         }
-    }
-
-    public function save(Profile $profile): void
-    {
-        $this->persistence(__FUNCTION__, $profile);
-    }
-
-    public function update(ProfileId $id, Profile $profile): void
-    {
-        $this->persistence(__FUNCTION__, $id, $profile);
     }
 
     /**
@@ -87,13 +74,5 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
     public function persistProfile(Profile $profile): Profile
     {
         return $this->write(__FUNCTION__, $profile);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function persistProfiles(Profiles $profiles): Profiles
-    {
-        return $this->write(__FUNCTION__, $profiles);
     }
 }

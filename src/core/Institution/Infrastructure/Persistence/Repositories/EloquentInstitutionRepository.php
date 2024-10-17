@@ -68,7 +68,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     /**
      * @throws InstitutionsNotFoundException
      */
-    public function getAll(array $filters = []): Institutions
+    public function getAll(array $filters = []): ?Institutions
     {
         $builder = $this->databaseManager->table($this->getTable())
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);

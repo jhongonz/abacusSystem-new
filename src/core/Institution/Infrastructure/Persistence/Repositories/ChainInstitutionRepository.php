@@ -16,9 +16,6 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainInstitutionRepository extends AbstractChainRepository implements InstitutionRepositoryContract
 {
     private const FUNCTION_NAME = 'persistInstitution';
@@ -43,7 +40,7 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
     /**
      * @throws Throwable
      */
-    public function getAll(array $filters = []): Institutions
+    public function getAll(array $filters = []): ?Institutions
     {
         try {
             return $this->read(__FUNCTION__, $filters);

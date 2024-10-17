@@ -15,9 +15,6 @@ use Core\User\Exceptions\UserNotFoundException;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainUserRepository extends AbstractChainRepository implements UserRepositoryContract
 {
     private const FUNCTION_NAME = 'persistUser';
@@ -59,10 +56,11 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistUser(User $user): User
     {
-        $this->domainToPersist = User::class;
-
         return $this->write(__FUNCTION__, $user);
     }
 }

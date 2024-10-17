@@ -13,9 +13,6 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
     private const FUNCTION_NAME = 'persistEmployee';
@@ -65,14 +62,6 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     public function persistEmployee(Employee $employee): Employee
     {
         return $this->write(__FUNCTION__, $employee);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function persistEmployees(Employees $employees): Employees
-    {
-        return $this->write(__FUNCTION__, $employees);
     }
 
     /**

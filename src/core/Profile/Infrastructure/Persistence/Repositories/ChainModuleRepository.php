@@ -12,9 +12,6 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainModuleRepository extends AbstractChainRepository implements ModuleRepositoryContract
 {
     private const FUNCTION_NAME = 'persistModule';
@@ -51,7 +48,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
-            throw new ModulesNotFoundException('Modules no found');
+            throw new ModulesNotFoundException('Modules not found');
         }
     }
 
