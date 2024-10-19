@@ -635,7 +635,11 @@ class EloquentProfileRepositoryTest extends TestCase
         $createdAt->expects(self::once())
             ->method('value')
             ->willReturn($datetime);
-        $profileMock->expects(self::once())
+        $createdAt->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $profileMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createdAt);
         $this->model->expects(self::once())
@@ -817,7 +821,11 @@ class EloquentProfileRepositoryTest extends TestCase
         $updatedAt->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);
-        $profileMock->expects(self::exactly(2))
+        $updatedAt->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $profileMock->expects(self::exactly(3))
             ->method('updatedAt')
             ->willReturn($updatedAt);
         $this->model->expects(self::once())

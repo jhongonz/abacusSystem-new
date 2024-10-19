@@ -119,8 +119,10 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
             $employeeId = $builder->insertGetId($dataModel);
             $employee->id()->setValue($employeeId);
+            $employee->createdAt()->setValue($dataModel['created_at']);
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $employee->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('emp_id', $employeeId);
             $builder->update($dataModel);

@@ -77,8 +77,10 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
             $moduleId = $builder->insertGetId($dataModel);
             $module->id()->setValue($moduleId);
+            $module->createdAt()->setValue($dataModel['created_at']);
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $module->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('mod_id', $moduleId);
             $builder->update($dataModel);

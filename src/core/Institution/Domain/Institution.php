@@ -182,7 +182,8 @@ class Institution
             $this->email->value(),
         ];
 
-        $this->search->setValue(implode(' ', $data));
+        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $this->search->setValue($dataSearch);
         return $this;
     }
 

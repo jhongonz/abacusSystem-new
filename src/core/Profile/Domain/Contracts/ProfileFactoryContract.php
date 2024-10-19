@@ -34,7 +34,7 @@ interface ProfileFactoryContract
 
     public function buildProfileDescription(?string $description = null): ProfileDescription;
 
-    public function buildProfileCreatedAt(?DateTime $datetime): ProfileCreatedAt;
+    public function buildProfileCreatedAt(DateTime $datetime): ProfileCreatedAt;
 
     public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt;
 

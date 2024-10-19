@@ -213,7 +213,8 @@ class Employee
             $this->observations->value(),
         ];
 
-        $this->search->setValue(implode(' ', $data));
+        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $this->search->setValue($dataSearch);
 
         return $this;
     }

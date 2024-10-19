@@ -83,6 +83,15 @@ class ProfileFactoryTest extends TestCase
         $this->assertSame($datetime, $result->value());
     }
 
+    public function test_buildProfileCreatedAt_should_return_value_object(): void
+    {
+        $datetime = new \DateTime;
+        $result = $this->factory->buildProfileCreatedAt($datetime);
+
+        $this->assertInstanceOf(ProfileCreatedAt::class, $result);
+        $this->assertSame($datetime, $result->value());
+    }
+
     public function test_buildProfileSearch_should_return_value_object_with_null(): void
     {
         $result = $this->factory->buildProfileSearch();

@@ -187,14 +187,15 @@ class Module
 
     public function refreshSearch(): self
     {
-        $dataSearch = [
+        $data = [
             $this->menuKey->value(),
             $this->name->value(),
             $this->route->value(),
             $this->icon->value(),
         ];
 
-        $this->search->setValue(implode(' ', $dataSearch));
+        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $this->search->setValue($dataSearch);
 
         return $this;
     }

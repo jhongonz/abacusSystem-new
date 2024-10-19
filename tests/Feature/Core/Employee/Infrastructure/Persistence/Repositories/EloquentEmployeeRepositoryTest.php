@@ -533,7 +533,11 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $createAtMock->expects(self::once())
             ->method('value')
             ->willReturn($datetime);
-        $employeeMock->expects(self::once())
+        $createAtMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $employeeMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createAtMock);
         $this->model->expects(self::once())
@@ -772,7 +776,11 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $updateAtMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);
-        $employeeMock->expects(self::exactly(2))
+        $updateAtMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $employeeMock->expects(self::exactly(3))
             ->method('updatedAt')
             ->willReturn($updateAtMock);
         $this->model->expects(self::once())

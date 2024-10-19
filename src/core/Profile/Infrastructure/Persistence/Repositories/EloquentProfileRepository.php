@@ -145,8 +145,10 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
             $profileId = $builder->insertGetId($dataModel);
             $profile->id()->setValue($profileId);
+            $profile->createdAt()->setValue($dataModel['created_at']);
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $profile->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('pro_id', $profileId);
             $builder->update($dataModel);

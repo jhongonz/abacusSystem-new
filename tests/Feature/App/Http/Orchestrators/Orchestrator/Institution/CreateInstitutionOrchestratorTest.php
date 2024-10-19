@@ -52,7 +52,7 @@ class CreateInstitutionOrchestratorTest extends TestCase
     public function test_make_should_return_institution(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(6))
+        $requestMock->expects(self::exactly(9))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
@@ -61,6 +61,9 @@ class CreateInstitutionOrchestratorTest extends TestCase
                 'code',
                 'shortname',
                 'observations',
+                'address',
+                'phone',
+                'email',
                 'token'
             );
 

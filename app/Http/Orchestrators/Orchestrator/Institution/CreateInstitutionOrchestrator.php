@@ -37,6 +37,9 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
             'observations' => $request->input('observations'),
+            'address' => $request->input('address'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
             'state' => ValueObjectStatus::STATE_NEW
         ];
 

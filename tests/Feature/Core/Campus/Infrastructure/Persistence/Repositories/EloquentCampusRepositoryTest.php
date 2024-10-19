@@ -531,7 +531,11 @@ class EloquentCampusRepositoryTest extends TestCase
         $createAtMock->expects(self::once())
             ->method('value')
             ->willReturn($createAt);
-        $campusMock->expects(self::once())
+        $createAtMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $campusMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createAtMock);
         $this->campusModel->expects(self::once())

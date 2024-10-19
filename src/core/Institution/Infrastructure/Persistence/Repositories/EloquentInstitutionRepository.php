@@ -133,8 +133,10 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
             $institutionId = $builder->insertGetId($dataModel);
             $institution->id()->setValue($institutionId);
+            $institution->createdAt()->setValue($dataModel['created_at']);
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $institution->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('inst_id', $institutionId);
             $builder->update($dataModel);
