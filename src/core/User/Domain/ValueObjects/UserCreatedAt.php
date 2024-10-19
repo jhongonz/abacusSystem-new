@@ -6,9 +6,10 @@
 
 namespace Core\User\Domain\ValueObjects;
 
+use Core\SharedContext\Model\dateTimeModel;
 use DateTime;
 
-class UserCreatedAt
+class UserCreatedAt implements dateTimeModel
 {
     public function __construct(
         private DateTime $value = new DateTime
@@ -25,5 +26,15 @@ class UserCreatedAt
         $this->value = $value;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toFormattedString();
+    }
+
+    public function toFormattedString(): string
+    {
+        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
     }
 }

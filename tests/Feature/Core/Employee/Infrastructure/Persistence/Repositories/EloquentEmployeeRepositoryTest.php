@@ -18,7 +18,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
@@ -545,7 +545,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with($datetime)
             ->willReturnSelf();
 
-        $updateAtMock = $this->createMock(EmployeeUpdateAt::class);
+        $updateAtMock = $this->createMock(EmployeeUpdatedAt::class);
         $updateAtMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);
@@ -772,7 +772,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with($datetime)
             ->willReturnSelf();
 
-        $updateAtMock = $this->createMock(EmployeeUpdateAt::class);
+        $updateAtMock = $this->createMock(EmployeeUpdatedAt::class);
         $updateAtMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);

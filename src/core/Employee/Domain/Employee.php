@@ -17,7 +17,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 
 class Employee
@@ -28,7 +28,7 @@ class Employee
     private EmployeeInstitutionId $institutionId;
     private EmployeeIdentificationType $identificationType;
     private EmployeeSearch $search;
-    private EmployeeUpdateAt $updateAt;
+    private EmployeeUpdatedAt $updateAt;
     private EmployeeBirthdate $birthdate;
     private EmployeeObservations $observations;
     private EmployeeImage $image;
@@ -45,7 +45,7 @@ class Employee
         private EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ) {
         $this->search = new EmployeeSearch;
-        $this->updateAt = new EmployeeUpdateAt;
+        $this->updateAt = new EmployeeUpdatedAt;
         $this->userId = new EmployeeUserId;
         $this->institutionId = new EmployeeInstitutionId;
         $this->birthdate = new EmployeeBirthdate;
@@ -162,12 +162,12 @@ class Employee
         return $this;
     }
 
-    public function updatedAt(): EmployeeUpdateAt
+    public function updatedAt(): EmployeeUpdatedAt
     {
         return $this->updateAt;
     }
 
-    public function setUpdatedAt(EmployeeUpdateAt $updateAt): self
+    public function setUpdatedAt(EmployeeUpdatedAt $updateAt): self
     {
         $this->updateAt = $updateAt;
 

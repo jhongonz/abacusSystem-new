@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileState;
 use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
+use Core\SharedContext\Model\dateTimeModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
@@ -92,16 +93,16 @@ class ProfileDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->profile->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updateAt = $this->createMock(ProfileUpdatedAt::class);
         $updateAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->profile->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updateAt);
@@ -159,16 +160,16 @@ class ProfileDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->profile->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updateAt = $this->createMock(ProfileUpdatedAt::class);
         $updateAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->profile->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updateAt);

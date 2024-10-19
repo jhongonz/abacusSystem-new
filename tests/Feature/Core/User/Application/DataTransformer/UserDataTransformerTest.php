@@ -6,6 +6,7 @@
 
 namespace Tests\Feature\Core\User\Application\DataTransformer;
 
+use Core\SharedContext\Model\dateTimeModel;
 use Core\User\Application\DataTransformer\UserDataTransformer;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
@@ -106,14 +107,14 @@ class UserDataTransformerTest extends TestCase
 
         $userCreatedAtMock = $this->createMock(UserCreatedAt::class);
         $userCreatedAtMock->expects(self::once())
-            ->method('value')
-            ->willReturn(new DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->user->method('createdAt')->willReturn($userCreatedAtMock);
 
         $userUpdatedAtMock = $this->createMock(UserUpdatedAt::class);
         $userUpdatedAtMock->expects(self::once())
-            ->method('value')
-            ->willReturn(new DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->user->method('updatedAt')->willReturn($userUpdatedAtMock);
 
         $this->dataTransformer->write($this->user);

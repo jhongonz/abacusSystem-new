@@ -19,7 +19,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
@@ -157,7 +157,7 @@ class EmployeeTranslatorTest extends TestCase
             ->method('updatedAt')
             ->willReturn($dateTime);
 
-        $updatedAtMock = $this->createMock(EmployeeUpdateAt::class);
+        $updatedAtMock = $this->createMock(EmployeeUpdatedAt::class);
         $this->factory->expects(self::once())
             ->method('buildEmployeeUpdatedAt')
             ->with($dateTime)

@@ -2,20 +2,20 @@
 
 namespace Tests\Feature\Core\Employee\Domain\ValueObjects;
 
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-#[CoversClass(EmployeeUpdateAt::class)]
+#[CoversClass(EmployeeUpdatedAt::class)]
 class EmployeeUpdateAtTest extends TestCase
 {
-    private EmployeeUpdateAt $valueObject;
+    private EmployeeUpdatedAt $valueObject;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeUpdateAt;
+        $this->valueObject = new EmployeeUpdatedAt;
     }
 
     public function tearDown(): void
@@ -45,7 +45,7 @@ class EmployeeUpdateAtTest extends TestCase
         $datetime = new DateTime;
         $result = $this->valueObject->setValue($datetime);
 
-        $this->assertInstanceOf(EmployeeUpdateAt::class, $result);
+        $this->assertInstanceOf(EmployeeUpdatedAt::class, $result);
         $this->assertSame($result, $this->valueObject);
         $this->assertSame($datetime, $this->valueObject->value());
     }

@@ -18,7 +18,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -238,7 +238,7 @@ class EmployeeTest extends TestCase
     public function test_updateAt_should_return_value_object(): void
     {
         $result = $this->employee->updatedAt();
-        $this->assertInstanceOf(EmployeeUpdateAt::class, $result);
+        $this->assertInstanceOf(EmployeeUpdatedAt::class, $result);
     }
 
     /**
@@ -246,7 +246,7 @@ class EmployeeTest extends TestCase
      */
     public function test_setUpdatedAt_should_change_and_return_self(): void
     {
-        $updatedAt = $this->createMock(EmployeeUpdateAt::class);
+        $updatedAt = $this->createMock(EmployeeUpdatedAt::class);
         $result = $this->employee->setUpdatedAt($updatedAt);
 
         $this->assertInstanceOf(Employee::class, $result);

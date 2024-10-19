@@ -45,7 +45,7 @@ class EmployeeBirthdateTest extends TestCase
     {
         $datetime = new DateTime('2024-04-26');
         $this->valueObject = new EmployeeBirthdate($datetime);
-        $result = $this->valueObject->toString();
+        $result = $this->valueObject->toFormattedString();
 
         $this->assertNotNull($result);
         $this->assertIsString($result);
@@ -60,5 +60,15 @@ class EmployeeBirthdateTest extends TestCase
         $this->assertSame($result, $this->valueObject);
         $this->assertSame($datetime, $result->value());
         $this->assertInstanceOf(DateTime::class, $this->valueObject->value());
+    }
+
+    public function test___toString_should_return_string(): void
+    {
+        $dateTime = new \DateTime('2024-04-26');
+        $result = $this->valueObject->setValue($dateTime);
+
+        $this->assertInstanceOf(EmployeeBirthdate::class, $result);
+        $this->assertSame($this->valueObject, $result);
+        $this->assertSame('26/04/2024', (string)$result);
     }
 }

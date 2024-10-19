@@ -13,6 +13,7 @@ use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
+use Core\SharedContext\Model\dateTimeModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
@@ -119,16 +120,16 @@ class ModuleDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->module->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $updatedAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->module->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);
@@ -210,16 +211,16 @@ class ModuleDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->module->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $updatedAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime($datetime));
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->module->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);

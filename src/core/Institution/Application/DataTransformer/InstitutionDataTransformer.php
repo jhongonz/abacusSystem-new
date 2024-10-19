@@ -11,7 +11,6 @@ use Core\Institution\Domain\Institution;
 
 class InstitutionDataTransformer implements InstitutionDataTransformerContract
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Institution $institution;
 
     public function write(Institution $institution): self
@@ -50,11 +49,11 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
             'email' => $this->institution->email()->value(),
             'state' => $this->institution->state()->value(),
             'search' => $this->institution->search()->value(),
-            'createdAt' => $this->institution->createdAt()->value()->format(self::DATE_FORMAT)
+            'createdAt' => $this->institution->createdAt()->toFormattedString()
         ];
 
-        $updatedAt = $this->institution->updatedAt()->value();
-        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $updatedAt = $this->institution->updatedAt()->toFormattedString();
+        $data['updatedAt'] = (empty($updatedAt)) ? $updatedAt : null;
 
         return $data;
     }

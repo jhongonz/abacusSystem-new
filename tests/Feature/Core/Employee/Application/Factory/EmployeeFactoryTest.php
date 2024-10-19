@@ -20,7 +20,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
@@ -109,7 +109,7 @@ class EmployeeFactoryTest extends TestCase
         $this->assertInstanceOf(EmployeeCreatedAt::class, $result->createdAt());
 
         $this->assertSame($data['updatedAt'], $result->updatedAt()->value()->format('Y-m-d H:i:s'));
-        $this->assertInstanceOf(EmployeeUpdateAt::class, $result->updatedAt());
+        $this->assertInstanceOf(EmployeeUpdatedAt::class, $result->updatedAt());
     }
 
     /**
