@@ -42,6 +42,8 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function getAll(array $filters = []): ?Institutions
     {
+        $this->canPersist = false;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {

@@ -43,6 +43,8 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
+        $this->canPersist = false;
+
         try {
             return $this->read(__FUNCTION__, $id, $filters);
         } catch (\Exception $exception) {

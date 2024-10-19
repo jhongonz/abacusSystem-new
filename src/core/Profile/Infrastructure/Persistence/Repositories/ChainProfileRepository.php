@@ -53,6 +53,8 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
      */
     public function getAll(array $filters = []): ?Profiles
     {
+        $this->canPersist = false;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {

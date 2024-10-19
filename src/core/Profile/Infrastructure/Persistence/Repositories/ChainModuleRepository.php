@@ -34,6 +34,9 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistModule(Module $module): Module
     {
         return $this->write(__FUNCTION__, $module);
@@ -45,6 +48,8 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function getAll(array $filters = []): ?Modules
     {
+        $this->canPersist = false;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {

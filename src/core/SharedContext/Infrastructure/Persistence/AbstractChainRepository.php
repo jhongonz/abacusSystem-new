@@ -16,8 +16,14 @@ abstract class AbstractChainRepository
 {
     /** @var ChainPriority[] */
     private array $repositories;
+    protected bool $canPersist = true;
 
     abstract public function functionNamePersist(): string;
+
+    protected function canPersist(): bool
+    {
+        return $this->canPersist;
+    }
 
     public function addRepository(ChainPriority $repository): self
     {
@@ -62,7 +68,10 @@ abstract class AbstractChainRepository
     protected function read(string $functionName, ...$source)
     {
         $result = $this->readFromRepositories($functionName, ...$source);
-        $this->persistence($this->functionNamePersist(), $result);
+
+        if ($this->canPersist()) {
+            $this->persistence($this->functionNamePersist(), $result);
+        }
 
         return $result;
     }

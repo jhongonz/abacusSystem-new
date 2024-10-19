@@ -70,6 +70,8 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      */
     public function getAll(array $filters = []): ?Employees
     {
+        $this->canPersist = false;
+
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
