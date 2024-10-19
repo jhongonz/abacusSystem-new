@@ -6,7 +6,9 @@ use App\Http\Controllers\ActionExecutors\EmployeeActions\EmployeeActionExecutor;
 use App\Http\Controllers\ActionExecutors\EmployeeActions\UpdateEmployeeActionExecutor;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\User\Domain\User;
+use Core\User\Domain\ValueObjects\UserId;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -84,7 +86,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
                 'password'
             );
 
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::exactly(3))
             ->method('filled')
             ->withAnyParameters()
             ->willReturn(true);
@@ -115,8 +117,26 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->with('password')
             ->willReturn('password');
 
+        $employeeUserIdMock = $this->createMock(EmployeeUserId::class);
+        $employeeUserIdMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+
         $employeeMock = $this->createMock(Employee::class);
+        $employeeMock->expects(self::once())
+            ->method('userId')
+            ->willReturn($employeeUserIdMock);
+
+        $userIdMock = $this->createMock(UserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
         $userMock = $this->createMock(User::class);
+        $userMock->expects(self::once())
+            ->method('id')
+            ->willReturn($userIdMock);
 
         $this->orchestratorHandler->expects(self::exactly(2))
             ->method('handler')

@@ -37,17 +37,20 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
 
         if (! is_null($employeeId)) {
             $employee = $this->employeeManagement->searchEmployeeById($employeeId);
-            $user = $this->userManagement->searchUserById($employee->userId()->value());
+            $userId = $employee->userId()->value();
+
+            if (!is_null($userId)) {
+                $user = $this->userManagement->searchUserById($userId);
+            }
 
             $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
         }
 
         $institutions = $this->institutionManagement->searchInstitutions();
         $profiles = $this->profileManagement->searchProfiles();
-        $userId = (! is_null($employee)) ? $employee->userId()->value() : null;
 
         return [
-            'userId' => $userId,
+            'userId' => $userId ?? null,
             'employeeId' => $employeeId,
             'employee' => $employee,
             'user' => $user ?? null,

@@ -10,6 +10,7 @@ use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
+use Core\User\Domain\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -71,7 +72,12 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         }
 
         $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);
-        $this->orchestratorHandler->handler('update-user', $request);
+
+        $actionUser = ($request->filled('userId')) ? 'update-user' : 'create-user';
+
+        /** @var User $user */
+        $user = $this->orchestratorHandler->handler($actionUser, $request);
+        $employee->userId()->setValue($user->id()->value());
 
         return $employee;
     }
