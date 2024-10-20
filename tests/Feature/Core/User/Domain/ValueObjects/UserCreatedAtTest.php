@@ -51,4 +51,14 @@ class UserCreatedAtTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $return);
         $this->assertNotEquals($expected, $original);
     }
+
+    public function test___toString_should_return_string(): void
+    {
+        $dateTime = new \DateTime('2024-04-20 21:27:00');
+        $result = $this->valueObject->setValue($dateTime);
+
+        $this->assertInstanceOf(UserCreatedAt::class, $result);
+        $this->assertSame($this->valueObject, $result);
+        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+    }
 }
