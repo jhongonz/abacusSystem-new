@@ -70,10 +70,10 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $employeeMock = $this->createMock(Employee::class);
 
         $employeeUserIdMock = $this->createMock(EmployeeUserId::class);
-        $employeeUserIdMock->expects(self::exactly(2))
+        $employeeUserIdMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
-        $employeeMock->expects(self::exactly(2))
+        $employeeMock->expects(self::once())
             ->method('userId')
             ->willReturn($employeeUserIdMock);
 

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -27,7 +26,6 @@ use Tests\TestCase;
 class ModuleControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
-    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
     private ModuleController $controller;
@@ -41,11 +39,9 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
 
         $this->controller = new ModuleController(
             $this->orchestrator,
-            $this->actionExecutorHandler,
             $this->viewFactory,
             $this->logger,
         );
@@ -285,9 +281,9 @@ class ModuleControllerTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-module-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('create-module', $requestMock)
             ->willReturn($moduleMock);
 
         $result = $this->controller->storeModule($requestMock);
@@ -307,9 +303,9 @@ class ModuleControllerTest extends TestCase
             ->with('moduleId')
             ->willReturn(false);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-module-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('create-module', $requestMock)
             ->willThrowException(new \Exception('Can not create module'));
 
         $this->logger->expects(self::once())
@@ -344,9 +340,9 @@ class ModuleControllerTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('update-module-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('update-module', $requestMock)
             ->willReturn($moduleMock);
 
         $result = $this->controller->storeModule($requestMock);
@@ -366,9 +362,9 @@ class ModuleControllerTest extends TestCase
             ->with('moduleId')
             ->willReturn(true);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('update-module-action', $requestMock)
+        $this->orchestrator->expects(self::once())
+            ->method('handler')
+            ->with('update-module', $requestMock)
             ->willThrowException(new \Exception('Can not update module'));
 
         $this->logger->expects(self::once())
@@ -436,8 +432,6 @@ class ModuleControllerTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
-        foreach ($result as $item) {
-            $this->assertInstanceOf(Middleware::class, $item);
-        }
+        $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
     }
 }

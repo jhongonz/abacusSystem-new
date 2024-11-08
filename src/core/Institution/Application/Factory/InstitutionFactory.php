@@ -54,9 +54,11 @@ class InstitutionFactory implements InstitutionFactoryContract
             $this->buildInstitutionState($data['state'])
         );
 
-        $institution->setCreatedAt(
-            $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']))
-        );
+        if (isset($data['createdAt'])) {
+            $institution->setCreatedAt(
+                $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']))
+            );
+        }
 
         $institution->setAddress(
             $this->buildInstitutionAddress($data['address'])

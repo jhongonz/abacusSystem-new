@@ -8,12 +8,11 @@ namespace Core\Institution\Domain\ValueObjects;
 
 class InstitutionName
 {
-    private string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
+    public function __construct(
+        private string $value
+    ) {
     }
+
     public function value(): string
     {
         return $this->value;

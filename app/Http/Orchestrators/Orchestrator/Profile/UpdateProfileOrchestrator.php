@@ -6,15 +6,12 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Illuminate\Http\Request;
 
 class UpdateProfileOrchestrator extends ProfileOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement
     ) {
@@ -27,8 +24,11 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): Profile
     {
-        $dataUpdate = json_decode($request->input('dataUpdate'), true);
-        $dataUpdate['updatedAt'] = $this->getCurrentTime();
+        $dataUpdate = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'modules' => $this->getModulesAggregator($request)
+        ];
 
         return $this->profileManagement->updateProfile($request->input('profileId'), $dataUpdate);
     }

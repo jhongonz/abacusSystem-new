@@ -13,6 +13,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionObservations;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
+use Core\SharedContext\Model\dateTimeModel;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -114,16 +115,16 @@ class InstitutionDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(InstitutionCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime);
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updatedAt = $this->createMock(InstitutionUpdatedAt::class);
         $updatedAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime);
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);
@@ -201,16 +202,16 @@ class InstitutionDataTransformerTest extends TestCase
 
         $createdAt = $this->createMock(InstitutionCreatedAt::class);
         $createdAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime);
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
 
         $updatedAt = $this->createMock(InstitutionUpdatedAt::class);
         $updatedAt->expects(self::once())
-            ->method('value')
-            ->willReturn(new \DateTime);
+            ->method('toFormattedString')
+            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);

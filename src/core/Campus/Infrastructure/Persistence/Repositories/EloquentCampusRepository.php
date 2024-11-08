@@ -125,10 +125,15 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $builder = $this->databaseManager->table($this->getTable());
 
         if (is_null($campusId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $campusId = $builder->insertGetId($dataModel);
             $campus->id()->setValue($campusId);
+            $campus->createdAt()->setValue($dataModel['created_at']);
+
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $campus->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('cam_id', $campusId);
             $builder->update($dataModel);

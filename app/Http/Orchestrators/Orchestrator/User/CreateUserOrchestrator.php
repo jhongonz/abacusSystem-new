@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\User;
 
 use App\Traits\UserTrait;
-use App\Traits\UtilsDateTimeTrait;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
@@ -17,11 +16,10 @@ use Illuminate\Http\Request;
 class CreateUserOrchestrator extends UserOrchestrator
 {
     use UserTrait;
-    use UtilsDateTimeTrait;
 
     public function __construct(
         UserManagementContract $userManagement,
-        private Hasher $hasher
+        protected Hasher $hasher
     ) {
         parent::__construct($userManagement);
         $this->setHasher($hasher);
@@ -40,8 +38,7 @@ class CreateUserOrchestrator extends UserOrchestrator
             'login' => $request->input('login'),
             'password' => $this->makeHashPassword($request->input('password')),
             'photo' => $request->input('image') ?? null,
-            'state' => ValueObjectStatus::STATE_NEW,
-            'createdAt' => $this->getCurrentTime(),
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->userManagement->createUser([User::TYPE => $dataUser]);

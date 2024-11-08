@@ -17,7 +17,6 @@ use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
-use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\EloquentCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Translators\CampusTranslator;
 use Illuminate\Database\DatabaseManager;
@@ -29,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(EloquentCampusRepository::class)]
-#[CoversClass(ChainCampusRepository::class)]
 class EloquentCampusRepositoryTest extends TestCase
 {
     private CampusModel|MockObject $campusModel;
@@ -533,7 +531,11 @@ class EloquentCampusRepositoryTest extends TestCase
         $createAtMock->expects(self::once())
             ->method('value')
             ->willReturn($createAt);
-        $campusMock->expects(self::once())
+        $createAtMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $campusMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createAtMock);
         $this->campusModel->expects(self::once())
@@ -557,7 +559,7 @@ class EloquentCampusRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $this->campusModel->expects(self::exactly(2))

@@ -13,21 +13,13 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Employee::class => 'persistEmployee',
-        Employees::class => '',
-    ];
-
-    private string $domainToPersist;
+    private const FUNCTION_NAME = 'persistEmployee';
 
     public function functionNamePersist(): string
     {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
+        return self::FUNCTION_NAME;
     }
 
     /**
@@ -36,8 +28,6 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      */
     public function find(EmployeeId $id): ?Employee
     {
-        $this->domainToPersist = Employee::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -51,8 +41,6 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      */
     public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
-        $this->domainToPersist = Employee::class;
-
         try {
             return $this->read(__FUNCTION__, $identification);
         } catch (Exception $exception) {
@@ -68,14 +56,12 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistEmployee(Employee $employee): Employee
     {
         return $this->write(__FUNCTION__, $employee);
-    }
-
-    public function persistEmployees(Employees $employees): Employees
-    {
-        return $this->write(__FUNCTION__, $employees);
     }
 
     /**
@@ -84,7 +70,7 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      */
     public function getAll(array $filters = []): ?Employees
     {
-        $this->domainToPersist = Employees::class;
+        $this->canPersist = false;
 
         try {
             return $this->read(__FUNCTION__, $filters);

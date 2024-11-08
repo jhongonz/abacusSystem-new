@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Profile\Application\UseCasesModule\UpdateModule;
 use Core\Profile\Application\UseCasesModule\DeleteModule\DeleteModuleRequest;
 use Core\Profile\Application\UseCasesModule\UpdateModule\UpdateModule;
 use Core\Profile\Application\UseCasesModule\UpdateModule\UpdateModuleRequest;
+use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\ValueObjects\ModuleIcon;
@@ -21,6 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(UpdateModule::class)]
+#[CoversClass(UseCasesService::class)]
 class UpdateModuleTest extends TestCase
 {
     private ModuleRepositoryContract|MockObject $repository;

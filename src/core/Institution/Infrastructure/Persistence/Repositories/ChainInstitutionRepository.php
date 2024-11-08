@@ -16,21 +16,13 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainInstitutionRepository extends AbstractChainRepository implements InstitutionRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Institution::class => 'persistInstitution',
-        Institutions::class => '',
-    ];
-
-    private string $domainToPersist;
+    private const FUNCTION_NAME = 'persistInstitution';
 
     public function functionNamePersist(): string
     {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
+        return self::FUNCTION_NAME;
     }
 
     /**
@@ -38,8 +30,6 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function find(InstitutionId $id): ?Institution
     {
-        $this->domainToPersist = Institution::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -50,9 +40,9 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
     /**
      * @throws Throwable
      */
-    public function getAll(array $filters = []): Institutions
+    public function getAll(array $filters = []): ?Institutions
     {
-        $this->domainToPersist = Institutions::class;
+        $this->canPersist = false;
 
         try {
             return $this->read(__FUNCTION__, $filters);
@@ -61,11 +51,17 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(InstitutionId $id): void
     {
         $this->write(__FUNCTION__, $id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistInstitution(Institution $institution): Institution
     {
         return $this->write(__FUNCTION__, $institution);

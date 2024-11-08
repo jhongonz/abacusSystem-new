@@ -4,11 +4,9 @@ namespace Core\Profile\Domain\ValueObjects;
 
 class ModuleRoute
 {
-    private string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
+    public function __construct(
+        private string $value
+    ) {
     }
 
     public function value(): string

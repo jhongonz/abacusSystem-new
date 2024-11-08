@@ -12,17 +12,14 @@ use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use Exception;
 use Throwable;
 
-/**
- * @codeCoverageIgnore
- */
 class ChainModuleRepository extends AbstractChainRepository implements ModuleRepositoryContract
 {
-    private const FUNCTION_NAMES = [
-        Module::class => 'persistModule',
-        Modules::class => '',
-    ];
+    private const FUNCTION_NAME = 'persistModule';
 
-    private string $domainToPersist;
+    public function functionNamePersist(): string
+    {
+        return self::FUNCTION_NAME;
+    }
 
     /**
      * @throws Throwable
@@ -30,8 +27,6 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function find(ModuleId $id): ?Module
     {
-        $this->domainToPersist = Module::class;
-
         try {
             return $this->read(__FUNCTION__, $id);
         } catch (Exception $exception) {
@@ -39,14 +34,12 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function persistModule(Module $module): Module
     {
         return $this->write(__FUNCTION__, $module);
-    }
-
-    public function functionNamePersist(): string
-    {
-        return self::FUNCTION_NAMES[$this->domainToPersist];
     }
 
     /**
@@ -55,12 +48,12 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function getAll(array $filters = []): ?Modules
     {
-        $this->domainToPersist = Modules::class;
+        $this->canPersist = false;
 
         try {
             return $this->read(__FUNCTION__, $filters);
         } catch (Exception $exception) {
-            throw new ModulesNotFoundException('Modules no found');
+            throw new ModulesNotFoundException('Modules not found');
         }
     }
 

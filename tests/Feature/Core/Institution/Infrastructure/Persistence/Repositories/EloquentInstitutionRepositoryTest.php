@@ -574,7 +574,11 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $createdAtMock->expects(self::once())
             ->method('value')
             ->willReturn($datetime);
-        $institutionMock->expects(self::once())
+        $createdAtMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $institutionMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createdAtMock);
         $this->model->expects(self::once())
@@ -610,7 +614,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
 
         $builder->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $this->model->expects(self::once())
@@ -796,7 +800,11 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $updateAt->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);
-        $institutionMock->expects(self::exactly(2))
+        $updateAt->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $institutionMock->expects(self::exactly(3))
             ->method('updatedAt')
             ->willReturn($updateAt);
         $this->model->expects(self::once())

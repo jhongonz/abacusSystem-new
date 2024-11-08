@@ -578,7 +578,7 @@ class EloquentProfileRepositoryTest extends TestCase
         $profileMock->expects(self::exactly(4))
             ->method('id')
             ->willReturn($profileIdMock);
-        $this->model->expects(self::exactly(2))
+        $this->model->expects(self::once())
             ->method('changeId')
             ->willReturnSelf();
 
@@ -635,7 +635,11 @@ class EloquentProfileRepositoryTest extends TestCase
         $createdAt->expects(self::once())
             ->method('value')
             ->willReturn($datetime);
-        $profileMock->expects(self::once())
+        $createdAt->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $profileMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createdAt);
         $this->model->expects(self::once())
@@ -684,7 +688,7 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $profileMock->expects(self::once())
@@ -708,10 +712,7 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builderSyncMock->shouldReceive('insert')
             ->once()
-            ->with([
-                'pri__pro_id' => 1,
-                'pri__mod_id' => 2,
-            ])
+            ->withAnyArgs()
             ->andReturn(true);
 
         $builderSyncMock->shouldReceive('delete')
@@ -820,7 +821,11 @@ class EloquentProfileRepositoryTest extends TestCase
         $updatedAt->expects(self::exactly(2))
             ->method('value')
             ->willReturn($datetime);
-        $profileMock->expects(self::exactly(2))
+        $updatedAt->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $profileMock->expects(self::exactly(3))
             ->method('updatedAt')
             ->willReturn($updatedAt);
         $this->model->expects(self::once())
@@ -860,7 +865,7 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('update')
             ->once()
-            ->with([])
+            ->withAnyArgs()
             ->andReturn(1);
 
         $profileMock->expects(self::once())

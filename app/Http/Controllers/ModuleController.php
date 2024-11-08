@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
 use Core\Profile\Domain\Module;
@@ -20,7 +19,6 @@ class ModuleController extends Controller implements HasMiddleware
 {
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
@@ -71,10 +69,10 @@ class ModuleController extends Controller implements HasMiddleware
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
         try {
-            $method = (! $request->filled('moduleId')) ? 'create-module-action' : 'update-module-action';
+            $method = (! $request->filled('moduleId')) ? 'create-module' : 'update-module';
 
             /** @var Module $module */
-            $module = $this->actionExecutorHandler->invoke($method, $request);
+            $module = $this->orchestrators->handler($method, $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
         } catch (Exception $exception) {

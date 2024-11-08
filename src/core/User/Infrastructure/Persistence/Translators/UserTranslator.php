@@ -13,14 +13,11 @@ use Exception;
 
 class UserTranslator
 {
-    private UserFactoryContract $factory;
-
     private UserModel $model;
 
     public function __construct(
-        UserFactoryContract $factory,
+        private readonly UserFactoryContract $factory,
     ) {
-        $this->factory = $factory;
     }
 
     public function setModel(UserModel $model): self

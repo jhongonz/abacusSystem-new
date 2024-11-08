@@ -8,7 +8,6 @@ use Exception;
 
 class ProfileDataTransformer implements ProfileDataTransformerContract
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Profile $profile;
 
     public function write(Profile $profile): self
@@ -43,11 +42,11 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
             'name' => $this->profile->name()->value(),
             'description' => $this->profile->description()->value(),
             'state' => $this->profile->state()->value(),
-            'createdAt' => $this->profile->createdAt()->value()->format(self::DATE_FORMAT),
+            'createdAt' => $this->profile->createdAt()->toFormattedString(),
         ];
 
-        $updatedAt = $this->profile->updatedAt()->value();
-        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $updatedAt = $this->profile->updatedAt()->toFormattedString();
+        $data['updatedAt'] = (!empty($updatedAt)) ? $updatedAt : null;
         $data['modulesAggregator'] = $this->profile->modulesAggregator();
 
         return $data;

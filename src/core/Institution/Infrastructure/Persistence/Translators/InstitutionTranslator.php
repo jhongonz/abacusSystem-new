@@ -14,15 +14,12 @@ use Exception;
 
 class InstitutionTranslator
 {
-    private InstitutionFactoryContract $institutionFactory;
     private InstitutionModel $institution;
-    private array $collection;
+    private array $collection = [];
 
     public function __construct(
-        InstitutionFactoryContract $institutionFactory
+        private readonly InstitutionFactoryContract $institutionFactory
     ) {
-        $this->institutionFactory = $institutionFactory;
-        $this->collection = [];
     }
 
     public function setModel(InstitutionModel $model): self

@@ -11,7 +11,6 @@ use Core\User\Domain\User;
 
 class UserDataTransformer implements UserDataTransformerContract
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private User $user;
 
     public function write(User $user): self
@@ -31,11 +30,11 @@ class UserDataTransformer implements UserDataTransformerContract
             'password' => $this->user->password()->value(),
             'state' => $this->user->state()->value(),
             'photo' => $this->user->photo()->value(),
-            'createdAt' => $this->user->createdAt()->value()->format(self::DATE_FORMAT),
+            'createdAt' => $this->user->createdAt()->toFormattedString(),
         ];
 
-        $updatedAt = $this->user->updatedAt()->value();
-        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $updatedAt = $this->user->updatedAt()->toFormattedString();
+        $data['updatedAt'] = (!empty($updatedAt)) ? $updatedAt : null;
 
         return [User::TYPE => $data];
     }

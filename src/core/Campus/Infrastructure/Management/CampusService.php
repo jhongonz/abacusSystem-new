@@ -24,27 +24,14 @@ use Exception;
 
 class CampusService implements CampusManagementContract
 {
-    private CampusFactoryContract $campusFactory;
-    private SearchCampusById $searchCampusById;
-    private SearchCampusCollection $searchCampusCollection;
-    private UpdateCampus $updateCampus;
-    private CreateCampus $createCampus;
-    private DeleteCampus $deleteCampus;
-
     public function __construct(
-        CampusFactoryContract $campusFactory,
-        SearchCampusById $searchCampusById,
-        SearchCampusCollection $searchCampusCollection,
-        UpdateCampus $updateCampus,
-        CreateCampus $createCampus,
-        DeleteCampus $deleteCampus,
+        private readonly CampusFactoryContract $campusFactory,
+        private readonly SearchCampusById $searchCampusById,
+        private readonly SearchCampusCollection $searchCampusCollection,
+        private readonly UpdateCampus $updateCampus,
+        private readonly CreateCampus $createCampus,
+        private readonly DeleteCampus $deleteCampus,
     ) {
-        $this->campusFactory = $campusFactory;
-        $this->searchCampusById = $searchCampusById;
-        $this->searchCampusCollection = $searchCampusCollection;
-        $this->updateCampus = $updateCampus;
-        $this->createCampus = $createCampus;
-        $this->deleteCampus = $deleteCampus;
     }
 
     /**

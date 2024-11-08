@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\UtilsDateTimeTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -12,8 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class Controller
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         protected readonly LoggerInterface $logger,
         protected readonly ViewFactory $viewFactory,

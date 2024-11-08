@@ -11,16 +11,10 @@ use Core\User\Domain\ValueObjects\UserId;
 
 class UpdateUserRequest implements RequestService
 {
-    private UserId $id;
-
-    private array $data;
-
     public function __construct(
-        UserId $id,
-        array $data,
+        private readonly UserId $id,
+        private readonly array $data,
     ) {
-        $this->id = $id;
-        $this->data = $data;
     }
 
     public function userId(): UserId

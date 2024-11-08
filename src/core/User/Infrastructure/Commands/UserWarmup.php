@@ -15,25 +15,16 @@ use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class UserWarmup extends Command
 {
-    private LoggerInterface $logger;
-
-    private UserFactoryContract $userFactory;
-
     /** @var UserRepositoryContract[] */
     private array $repositories;
 
-    private UserRepositoryContract $readRepository;
-
     public function __construct(
-        LoggerInterface $logger,
-        UserFactoryContract $userFactory,
-        UserRepositoryContract $readRepository,
+        private readonly LoggerInterface $logger,
+        private readonly UserFactoryContract $userFactory,
+        private readonly UserRepositoryContract $readRepository,
         UserRepositoryContract ...$repositories,
     ) {
         parent::__construct();
-        $this->logger = $logger;
-        $this->userFactory = $userFactory;
-        $this->readRepository = $readRepository;
 
         foreach ($repositories as $repository) {
             $this->repositories[] = $repository;

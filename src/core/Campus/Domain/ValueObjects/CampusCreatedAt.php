@@ -6,12 +6,11 @@
 
 namespace Core\Campus\Domain\ValueObjects;
 
+use Core\SharedContext\Model\dateTimeModel;
 use DateTime;
 
-class CampusCreatedAt
+class CampusCreatedAt implements dateTimeModel
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
-
     public function __construct(
         private DateTime $value = new DateTime
     ) {

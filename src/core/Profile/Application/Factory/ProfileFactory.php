@@ -26,8 +26,7 @@ class ProfileFactory implements ProfileFactoryContract
         $profile = $this->buildProfile(
             $this->buildProfileId($data['id']),
             $this->buildProfileName($data['name']),
-            $this->buildProfileState($data['state']),
-            $this->buildProfileCreatedAt($this->getDateTime($data['createdAt']))
+            $this->buildProfileState($data['state'])
         );
 
         $profile->setDescription(
@@ -38,6 +37,10 @@ class ProfileFactory implements ProfileFactoryContract
 
         if (isset($data['updatedAt'])) {
             $profile->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        }
+
+        if (isset($data['createdAt'])) {
+            $profile->createdAt()->setValue($this->getDateTime($data['createdAt']));
         }
 
         return $profile;
@@ -76,7 +79,7 @@ class ProfileFactory implements ProfileFactoryContract
         return new ProfileState($state);
     }
 
-    public function buildProfileCreatedAt(?DateTime $datetime): ProfileCreatedAt
+    public function buildProfileCreatedAt(DateTime $datetime): ProfileCreatedAt
     {
         return new ProfileCreatedAt($datetime);
     }

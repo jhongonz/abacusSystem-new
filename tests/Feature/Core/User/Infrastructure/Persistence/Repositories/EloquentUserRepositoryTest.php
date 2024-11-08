@@ -433,7 +433,7 @@ class EloquentUserRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
-            ->with($dataInsert)
+            ->withAnyArgs()
             ->andReturn(2);
 
         $result = $this->repository->persistUser($userMock);

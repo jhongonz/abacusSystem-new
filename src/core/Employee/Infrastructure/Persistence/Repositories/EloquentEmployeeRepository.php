@@ -21,24 +21,12 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 {
     private const PRIORITY_DEFAULT = 50;
 
-    private EmployeeModel $model;
-
-    private EmployeeTranslator $employeeTranslator;
-
-    private DatabaseManager $database;
-
-    private int $priority;
-
     public function __construct(
-        DatabaseManager $database,
-        EmployeeTranslator $translator,
-        EmployeeModel $model,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly DatabaseManager $database,
+        private readonly EmployeeTranslator $employeeTranslator,
+        private readonly EmployeeModel $model,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->database = $database;
-        $this->employeeTranslator = $translator;
-        $this->priority = $priority;
-        $this->model = $model;
     }
 
     public function priority(): int
@@ -127,10 +115,14 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $builder = $this->database->table($this->getTable());
 
         if (is_null($employeeId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $employeeId = $builder->insertGetId($dataModel);
             $employee->id()->setValue($employeeId);
+            $employee->createdAt()->setValue($dataModel['created_at']);
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
+            $employee->updatedAt()->setValue($dataModel['updated_at']);
 
             $builder->where('emp_id', $employeeId);
             $builder->update($dataModel);

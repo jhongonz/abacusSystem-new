@@ -11,24 +11,17 @@ use Symfony\Component\Console\Command\Command as CommandSymfony;
 
 class CampusWarmup extends Command
 {
-    private CampusFactoryContract $campusFactory;
-    private LoggerInterface $logger;
-
     /** @var CampusRepositoryContract[] */
     private array $repositories;
-    private CampusRepositoryContract $readRepository;
 
     public function __construct(
-        LoggerInterface $logger,
-        CampusFactoryContract $campusFactory,
-        CampusRepositoryContract $readRepository,
+        private readonly LoggerInterface $logger,
+        private readonly CampusFactoryContract $campusFactory,
+        private readonly CampusRepositoryContract $readRepository,
         CampusRepositoryContract ...$repositories
     ) {
-        parent::__construct();
-        $this->logger = $logger;
-        $this->campusFactory = $campusFactory;
-        $this->readRepository = $readRepository;
         $this->repositories = $repositories;
+        parent::__construct();
     }
 
     /**

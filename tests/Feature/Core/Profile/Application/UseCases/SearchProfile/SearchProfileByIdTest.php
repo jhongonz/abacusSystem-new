@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Profile\Application\UseCases\SearchProfile;
 use Core\Profile\Application\UseCases\DeleteProfile\DeleteProfileRequest;
 use Core\Profile\Application\UseCases\SearchProfile\SearchProfileById;
 use Core\Profile\Application\UseCases\SearchProfile\SearchProfileByIdRequest;
+use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileId;
@@ -14,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(SearchProfileById::class)]
+#[CoversClass(UseCasesService::class)]
 class SearchProfileByIdTest extends TestCase
 {
     private ProfileRepositoryContract|MockObject $repository;

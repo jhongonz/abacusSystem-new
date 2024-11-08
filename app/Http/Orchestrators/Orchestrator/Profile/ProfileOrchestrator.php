@@ -8,14 +8,22 @@ namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use App\Http\Orchestrators\Orchestrator\Orchestrator;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
+use Illuminate\Http\Request;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class ProfileOrchestrator implements Orchestrator
 {
     public function __construct(
         protected readonly ProfileManagementContract $profileManagement
     ) {
+    }
+
+    protected function getModulesAggregator(Request $request): array
+    {
+        $modulesAggregator = [];
+        foreach ($request->input('modules') as $item) {
+            $modulesAggregator[] = $item['id'];
+        }
+
+        return $modulesAggregator;
     }
 }

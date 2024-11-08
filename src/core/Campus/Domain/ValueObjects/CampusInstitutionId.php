@@ -10,12 +10,11 @@ use InvalidArgumentException;
 
 class CampusInstitutionId
 {
-    private int $value;
-
-    public function __construct(int $value)
-    {
+    public function __construct(
+        private int $value
+    ) {
         $this->validate($value);
-        $this->value = $value;
+        $this->setValue($value);
     }
 
     public function value(): int

@@ -4,11 +4,9 @@ namespace Core\Profile\Domain\ValueObjects;
 
 class ModulePosition
 {
-    private int $value;
-
-    public function __construct(?int $value = 1)
-    {
-        $this->value = $value;
+    public function __construct(
+        private int $value = 1
+    ) {
     }
 
     public function value(): int

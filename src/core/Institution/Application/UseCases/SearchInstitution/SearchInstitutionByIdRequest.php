@@ -11,12 +11,9 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 
 class SearchInstitutionByIdRequest implements RequestService
 {
-    private InstitutionId $id;
-
     public function __construct(
-        InstitutionId $id
+        private readonly InstitutionId $id
     ) {
-        $this->id = $id;
     }
 
     public function institutionId(): InstitutionId

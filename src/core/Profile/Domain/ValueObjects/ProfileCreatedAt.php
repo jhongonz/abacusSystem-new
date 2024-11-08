@@ -2,15 +2,14 @@
 
 namespace Core\Profile\Domain\ValueObjects;
 
+use Core\SharedContext\Model\dateTimeModel;
 use DateTime;
 
-class ProfileCreatedAt
+class ProfileCreatedAt implements dateTimeModel
 {
-    private DateTime $value;
-
-    public function __construct(DateTime $value = new DateTime)
-    {
-        $this->value = $value;
+    public function __construct(
+        private DateTime $value = new DateTime
+    ) {
     }
 
     public function value(): DateTime
@@ -23,5 +22,15 @@ class ProfileCreatedAt
         $this->value = $value;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toFormattedString();
+    }
+
+    public function toFormattedString(): string
+    {
+        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
     }
 }

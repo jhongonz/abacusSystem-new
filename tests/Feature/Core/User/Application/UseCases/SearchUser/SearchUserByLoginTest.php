@@ -9,6 +9,7 @@ namespace Tests\Feature\Core\User\Application\UseCases\SearchUser;
 use Core\User\Application\UseCases\SearchUser\SearchUserByIdRequest;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLogin;
 use Core\User\Application\UseCases\SearchUser\SearchUserByLoginRequest;
+use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserLogin;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use Tests\TestCase;
 
 #[CoversClass(SearchUserByLogin::class)]
+#[CoversClass(UseCasesService::class)]
 class SearchUserByLoginTest extends TestCase
 {
     private UserRepositoryContract|Mock $repository;

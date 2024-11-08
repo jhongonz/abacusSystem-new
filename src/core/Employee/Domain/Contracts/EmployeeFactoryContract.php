@@ -19,7 +19,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use DateTime;
 
@@ -58,7 +58,7 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeCreatedAt(?DateTime $datetime = null): EmployeeCreatedAt;
 
-    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdateAt;
+    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt;
 
     public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate;
 

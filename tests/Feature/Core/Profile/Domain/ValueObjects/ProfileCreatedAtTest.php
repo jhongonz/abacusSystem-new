@@ -38,4 +38,14 @@ class ProfileCreatedAtTest extends TestCase
         $this->assertSame($result, $this->valueObject);
         $this->assertSame($datetime, $result->value());
     }
+
+    public function test___toString_should_return_string(): void
+    {
+        $dateTime = new \DateTime('2024-04-20 21:27:00');
+        $result = $this->valueObject->setValue($dateTime);
+
+        $this->assertInstanceOf(ProfileCreatedAt::class, $result);
+        $this->assertSame($this->valueObject, $result);
+        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+    }
 }

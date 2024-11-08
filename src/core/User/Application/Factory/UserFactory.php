@@ -37,7 +37,9 @@ class UserFactory implements UserFactoryContract
             $this->buildState($data['state'])
         );
 
-        $user->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($data['createdAt'])) {
+            $user->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        }
 
         if (isset($data['updatedAt'])) {
             $user->updatedAt()->setValue($this->getDateTime($data['updatedAt']));

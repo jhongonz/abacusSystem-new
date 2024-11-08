@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Traits\MultimediaTrait;
-use App\Traits\UtilsDateTimeTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\SharedContext\Model\ValueObjectStatus;
@@ -17,7 +16,6 @@ use Intervention\Image\Interfaces\ImageManagerInterface;
 class CreateInstitutionOrchestrator extends InstitutionOrchestrator
 {
     use MultimediaTrait;
-    use UtilsDateTimeTrait;
 
     public function __construct(
         InstitutionManagementContract $institutionManagement,
@@ -39,7 +37,9 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
             'observations' => $request->input('observations'),
-            'createdAt' => $this->getCurrentTime(),
+            'address' => $request->input('address'),
+            'phone' => $request->input('phone'),
+            'email' => $request->input('email'),
             'state' => ValueObjectStatus::STATE_NEW
         ];
 

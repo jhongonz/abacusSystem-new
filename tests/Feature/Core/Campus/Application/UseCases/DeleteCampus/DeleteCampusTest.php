@@ -5,6 +5,7 @@ namespace Tests\Feature\Core\Campus\Application\UseCases\DeleteCampus;
 use Core\Campus\Application\UseCases\CreateCampus\CreateCampusRequest;
 use Core\Campus\Application\UseCases\DeleteCampus\DeleteCampus;
 use Core\Campus\Application\UseCases\DeleteCampus\DeleteCampusRequest;
+use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,6 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(DeleteCampus::class)]
+#[CoversClass(UseCasesService::class)]
 class DeleteCampusTest extends TestCase
 {
     private CampusRepositoryContract|MockObject $campusRepository;

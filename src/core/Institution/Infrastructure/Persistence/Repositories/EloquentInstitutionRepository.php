@@ -24,20 +24,12 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     /** @var int */
     private const PRIORITY_DEFAULT = 50;
 
-    private InstitutionModel $model;
-    private InstitutionTranslator $institutionTranslator;
-    private DatabaseManager $databaseManager;
-    private int $priority;
     public function __construct(
-        InstitutionModel $model,
-        InstitutionTranslator $translator,
-        DatabaseManager $databaseManager,
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly InstitutionModel $model,
+        private readonly InstitutionTranslator $institutionTranslator,
+        private readonly DatabaseManager $databaseManager,
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->model = $model;
-        $this->institutionTranslator = $translator;
-        $this->databaseManager = $databaseManager;
-        $this->priority = $priority;
     }
 
     public function priority(): int
@@ -76,7 +68,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     /**
      * @throws InstitutionsNotFoundException
      */
-    public function getAll(array $filters = []): Institutions
+    public function getAll(array $filters = []): ?Institutions
     {
         $builder = $this->databaseManager->table($this->getTable())
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);
@@ -120,7 +112,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
         $institutionModel->changeState(ValueObjectStatus::STATE_DELETE);
-        $institutionModel->changeDeletedAt(new \DateTime);
+        $institutionModel->changeDeletedAt($this->getDateTime());
 
         $builder->update($institutionModel->toArray());
     }
@@ -137,9 +129,15 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $builder = $this->databaseManager->table($this->getTable());
 
         if (is_null($institutionId)) {
+            $dataModel['created_at'] = $this->getDateTime();
+
             $institutionId = $builder->insertGetId($dataModel);
             $institution->id()->setValue($institutionId);
+            $institution->createdAt()->setValue($dataModel['created_at']);
         } else {
+            $dataModel['updated_at'] = $this->getDateTime();
+            $institution->updatedAt()->setValue($dataModel['updated_at']);
+
             $builder->where('inst_id', $institutionId);
             $builder->update($dataModel);
         }
@@ -184,5 +182,13 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     private function getTable(): string
     {
         return $this->model->getTable();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getDateTime(string $datetime = 'now'): \DateTime
+    {
+        return new \DateTime($datetime);
     }
 }

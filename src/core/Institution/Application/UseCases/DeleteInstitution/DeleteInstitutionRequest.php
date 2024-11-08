@@ -11,11 +11,9 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 
 class DeleteInstitutionRequest implements RequestService
 {
-    private InstitutionId $id;
-
-    public function __construct(InstitutionId $id)
-    {
-        $this->id = $id;
+    public function __construct(
+        private readonly InstitutionId $id
+    ) {
     }
 
     public function id(): InstitutionId

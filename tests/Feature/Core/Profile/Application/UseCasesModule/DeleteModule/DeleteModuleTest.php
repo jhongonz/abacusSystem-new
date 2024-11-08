@@ -5,12 +5,16 @@ namespace Tests\Feature\Core\Profile\Application\UseCasesModule\DeleteModule;
 use Core\Profile\Application\UseCasesModule\CreateModule\CreateModuleRequest;
 use Core\Profile\Application\UseCasesModule\DeleteModule\DeleteModule;
 use Core\Profile\Application\UseCasesModule\DeleteModule\DeleteModuleRequest;
+use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\ValueObjects\ModuleId;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
+#[CoversClass(DeleteModule::class)]
+#[CoversClass(UseCasesService::class)]
 class DeleteModuleTest extends TestCase
 {
     private ModuleRepositoryContract|MockObject $repository;

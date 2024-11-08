@@ -6,7 +6,6 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Core\SharedContext\Model\ValueObjectStatus;
@@ -14,8 +13,6 @@ use Illuminate\Http\Request;
 
 class CreateProfileOrchestrator extends ProfileOrchestrator
 {
-    use UtilsDateTimeTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement
     ) {
@@ -32,9 +29,8 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
             'id' => null,
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'modulesAggregator' => json_decode($request->input('modulesAggregator'), true),
-            'state' => ValueObjectStatus::STATE_NEW,
-            'createdAt' => $this->getCurrentTime()
+            'modulesAggregator' => $this->getModulesAggregator($request),
+            'state' => ValueObjectStatus::STATE_NEW
         ];
 
         return $this->profileManagement->createProfile([Profile::TYPE => $dataProfile]);

@@ -62,9 +62,7 @@ class CampusFactory implements CampusFactoryContract
         }
 
         if (isset($data['updatedAt'])) {
-            $campus->updatedAt()->setValue(
-                $this->getDateTime($data['updatedAt'])
-            );
+            $campus->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
         }
 
         return $campus;

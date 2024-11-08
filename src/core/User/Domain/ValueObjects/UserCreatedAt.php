@@ -6,16 +6,14 @@
 
 namespace Core\User\Domain\ValueObjects;
 
+use Core\SharedContext\Model\dateTimeModel;
 use DateTime;
 
-class UserCreatedAt
+class UserCreatedAt implements dateTimeModel
 {
-    private DateTime $value;
-
     public function __construct(
-        DateTime $value = new DateTime
+        private DateTime $value = new DateTime
     ) {
-        $this->value = $value;
     }
 
     public function value(): DateTime
@@ -28,5 +26,15 @@ class UserCreatedAt
         $this->value = $value;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->toFormattedString();
+    }
+
+    public function toFormattedString(): string
+    {
+        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
     }
 }

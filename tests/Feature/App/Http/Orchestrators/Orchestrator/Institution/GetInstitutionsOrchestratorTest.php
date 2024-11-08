@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Http\Orchestrators\Orchestrator\Institution\GetInstitutionsOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
@@ -20,6 +21,7 @@ use Yajra\DataTables\CollectionDataTable;
 use Yajra\DataTables\DataTables;
 
 #[CoversClass(GetInstitutionsOrchestrator::class)]
+#[CoversClass(InstitutionOrchestrator::class)]
 class GetInstitutionsOrchestratorTest extends TestCase
 {
     private InstitutionDataTransformerContract|MockObject $institutionDataTransformer;

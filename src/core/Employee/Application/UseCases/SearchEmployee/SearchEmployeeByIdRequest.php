@@ -7,11 +7,9 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 
 class SearchEmployeeByIdRequest implements RequestService
 {
-    private EmployeeId $id;
-
-    public function __construct(EmployeeId $id)
-    {
-        $this->id = $id;
+    public function __construct(
+        private readonly EmployeeId $id
+    ) {
     }
 
     public function employeeId(): EmployeeId

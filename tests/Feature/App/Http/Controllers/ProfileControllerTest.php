@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -27,7 +26,6 @@ use Tests\TestCase;
 class ProfileControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandler;
-    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
     private ProfileController $controller;
@@ -39,12 +37,10 @@ class ProfileControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestratorHandler = $this->createMock(OrchestratorHandlerContract::class);
-        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->controller = new ProfileController(
             $this->orchestratorHandler,
-            $this->actionExecutorHandler,
             $this->viewFactory,
             $this->logger
         );
@@ -55,7 +51,6 @@ class ProfileControllerTest extends TestCase
         unset(
             $this->controller,
             $this->orchestratorHandler,
-            $this->actionExecutorHandler,
             $this->viewFactory,
             $this->logger
         );
@@ -333,9 +328,9 @@ class ProfileControllerTest extends TestCase
             ->method('id')
             ->willReturn($profileIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-profile-action')
+        $this->orchestratorHandler->expects(self::once())
+            ->method('handler')
+            ->with('create-profile')
             ->willReturn($profileMock);
 
         $result = $this->controller->storeProfile($requestMock);
@@ -365,9 +360,9 @@ class ProfileControllerTest extends TestCase
             ->method('id')
             ->willReturn($profileIdMock);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('update-profile-action')
+        $this->orchestratorHandler->expects(self::once())
+            ->method('handler')
+            ->with('update-profile')
             ->willReturn($profileMock);
 
         $result = $this->controller->storeProfile($requestMock);
@@ -387,9 +382,9 @@ class ProfileControllerTest extends TestCase
             ->with('profileId')
             ->willReturn(null);
 
-        $this->actionExecutorHandler->expects(self::once())
-            ->method('invoke')
-            ->with('create-profile-action')
+        $this->orchestratorHandler->expects(self::once())
+            ->method('handler')
+            ->with('create-profile')
             ->willThrowException(new \Exception('Can not create new profile'));
 
         $this->logger->expects(self::once())
@@ -409,8 +404,6 @@ class ProfileControllerTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
-        foreach ($result as $item) {
-            $this->assertInstanceOf(Middleware::class, $item);
-        }
+        $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
     }
 }

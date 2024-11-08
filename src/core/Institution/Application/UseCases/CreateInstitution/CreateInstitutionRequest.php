@@ -11,12 +11,9 @@ use Core\Institution\Domain\Institution;
 
 class CreateInstitutionRequest implements RequestService
 {
-    private Institution $institution;
-
     public function __construct(
-        Institution $institution
+        private readonly Institution $institution
     ) {
-        $this->institution = $institution;
     }
 
     public function institution(): Institution

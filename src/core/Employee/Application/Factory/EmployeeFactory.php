@@ -20,7 +20,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use DateTime;
 use Exception;
@@ -144,9 +144,9 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeeCreatedAt($datetime);
     }
 
-    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdateAt
+    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt
     {
-        return new EmployeeUpdateAt($datetime);
+        return new EmployeeUpdatedAt($datetime);
     }
 
     public function buildEmployeeUserId(?int $id = null): EmployeeUserId

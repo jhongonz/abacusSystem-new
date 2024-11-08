@@ -7,16 +7,10 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 
 class UpdateEmployeeRequest implements RequestService
 {
-    private EmployeeId $id;
-
-    private array $data;
-
     public function __construct(
-        EmployeeId $id,
-        array $data,
+        private readonly EmployeeId $id,
+        private readonly array $data,
     ) {
-        $this->id = $id;
-        $this->data = $data;
     }
 
     public function employeeId(): EmployeeId

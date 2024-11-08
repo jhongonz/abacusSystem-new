@@ -68,7 +68,7 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>Fecha de nacimiento</label>
-                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{$employee->birthdate()->toString()}}@endisset">
+                                    <input type="text" class="birthdate form-control form-control-sm pickadate" id="birthdate" name="birthdate" placeholder="Fecha de nacimiento" value="@isset($employee){{(string) $employee->birthdate()}}@endisset">
                                 </div>
                             </div>
                             <div class="col-sm-3">

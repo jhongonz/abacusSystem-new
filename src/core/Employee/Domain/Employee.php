@@ -17,54 +17,35 @@ use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
-use Core\Employee\Domain\ValueObjects\EmployeeUpdateAt;
+use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 
 class Employee
 {
     public const TYPE = 'employee';
 
-    private EmployeeId $id;
     private EmployeeUserId $userId;
     private EmployeeInstitutionId $institutionId;
-    private EmployeeIdentification $identification;
     private EmployeeIdentificationType $identificationType;
-    private EmployeeName $name;
-    private EmployeeLastname $lastname;
-    private EmployeePhone $phone;
-    private EmployeeEmail $email;
-    private EmployeeAddress $address;
-    private EmployeeState $state;
     private EmployeeSearch $search;
-    private EmployeeCreatedAt $createdAt;
-    private EmployeeUpdateAt $updateAt;
+    private EmployeeUpdatedAt $updateAt;
     private EmployeeBirthdate $birthdate;
     private EmployeeObservations $observations;
     private EmployeeImage $image;
 
     public function __construct(
-        EmployeeId $id,
-        EmployeeIdentification $identification,
-        EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname,
-        EmployeeState $state = new EmployeeState,
-        EmployeePhone $phone = new EmployeePhone,
-        EmployeeEmail $email = new EmployeeEmail,
-        EmployeeAddress $address = new EmployeeAddress,
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        private EmployeeId $id,
+        private EmployeeIdentification $identification,
+        private EmployeeName $name,
+        private EmployeeLastname $lastname = new EmployeeLastname,
+        private EmployeeState $state = new EmployeeState,
+        private EmployeePhone $phone = new EmployeePhone,
+        private EmployeeEmail $email = new EmployeeEmail,
+        private EmployeeAddress $address = new EmployeeAddress,
+        private EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
     ) {
-        $this->id = $id;
-        $this->identification = $identification;
-        $this->name = $name;
-        $this->lastname = $lastname;
-        $this->state = $state;
-        $this->phone = $phone;
-        $this->email = $email;
-        $this->address = $address;
-        $this->createdAt = $createdAt;
-
         $this->search = new EmployeeSearch;
-        $this->updateAt = new EmployeeUpdateAt;
+        $this->updateAt = new EmployeeUpdatedAt;
         $this->userId = new EmployeeUserId;
         $this->institutionId = new EmployeeInstitutionId;
         $this->birthdate = new EmployeeBirthdate;
@@ -181,12 +162,12 @@ class Employee
         return $this;
     }
 
-    public function updatedAt(): EmployeeUpdateAt
+    public function updatedAt(): EmployeeUpdatedAt
     {
         return $this->updateAt;
     }
 
-    public function setUpdatedAt(EmployeeUpdateAt $updateAt): self
+    public function setUpdatedAt(EmployeeUpdatedAt $updateAt): self
     {
         $this->updateAt = $updateAt;
 
@@ -232,7 +213,8 @@ class Employee
             $this->observations->value(),
         ];
 
-        $this->search->setValue(implode(' ', $data));
+        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $this->search->setValue($dataSearch);
 
         return $this;
     }

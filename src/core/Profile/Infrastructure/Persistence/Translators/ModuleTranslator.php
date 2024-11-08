@@ -11,16 +11,11 @@ use Exception;
 class ModuleTranslator
 {
     private ModuleModel $model;
-
-    private ModuleFactoryContract $moduleFactory;
-
-    private array $collection;
+    private array $collection = [];
 
     public function __construct(
-        ModuleFactoryContract $factoryContract,
+        private readonly ModuleFactoryContract $moduleFactory,
     ) {
-        $this->moduleFactory = $factoryContract;
-        $this->collection = [];
     }
 
     public function setModel(ModuleModel $model): self

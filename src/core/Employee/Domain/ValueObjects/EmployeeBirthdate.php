@@ -2,15 +2,16 @@
 
 namespace Core\Employee\Domain\ValueObjects;
 
+use Core\SharedContext\Model\dateTimeModel;
 use DateTime;
 
-class EmployeeBirthdate
+class EmployeeBirthdate implements dateTimeModel
 {
-    private ?DateTime $value;
+    public const DATE_FORMAT = 'd/m/Y';
 
-    public function __construct(?DateTime $value = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private ?DateTime $value = null
+    ) {
     }
 
     public function value(): ?DateTime
@@ -18,15 +19,20 @@ class EmployeeBirthdate
         return $this->value;
     }
 
-    public function toString(): ?string
-    {
-        return ($this->value) ? $this->value->format('d/m/Y') : null;
-    }
-
     public function setValue(?DateTime $value): self
     {
         $this->value = $value;
 
         return $this;
+    }
+
+    public function toFormattedString(): string
+    {
+        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
+    }
+
+    public function __toString(): string
+    {
+        return $this->toFormattedString();
     }
 }

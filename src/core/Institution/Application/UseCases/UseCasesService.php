@@ -5,17 +5,11 @@ namespace Core\Institution\Application\UseCases;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Exception;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class UseCasesService implements ServiceContract
 {
-    protected InstitutionRepositoryContract $institutionRepository;
-
     public function __construct(
-        InstitutionRepositoryContract $institutionRepository
+        protected readonly InstitutionRepositoryContract $institutionRepository
     ) {
-        $this->institutionRepository = $institutionRepository;
     }
 
     /**

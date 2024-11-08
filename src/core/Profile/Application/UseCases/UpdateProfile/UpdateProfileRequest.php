@@ -7,16 +7,10 @@ use Core\Profile\Domain\ValueObjects\ProfileId;
 
 class UpdateProfileRequest implements RequestService
 {
-    private ProfileId $profileId;
-
-    private array $data;
-
     public function __construct(
-        ProfileId $id,
-        array $data,
+        private readonly ProfileId $profileId,
+        private readonly array $data,
     ) {
-        $this->profileId = $id;
-        $this->data = $data;
     }
 
     public function profileId(): ProfileId

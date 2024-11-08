@@ -9,9 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @codeCoverageIgnore
- */
 class VerifySession
 {
     public function __construct(

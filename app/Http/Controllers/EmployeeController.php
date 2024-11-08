@@ -29,7 +29,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly ActionExecutorHandler $actionExecutorHandler,
-        private ImageManagerInterface $imageManager,
+        protected ImageManagerInterface $imageManager,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
@@ -136,9 +136,12 @@ class EmployeeController extends Controller implements HasMiddleware
         $employee = $this->orchestrators->handler('retrieve-employee', $request);
 
         try {
-
             $this->orchestrators->handler('delete-employee', $request);
-            $this->deleteImage($employee->image()->value());
+
+            $image = $employee->image()->value();
+            if (!is_null($image)) {
+                $this->deleteImage($image);
+            }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

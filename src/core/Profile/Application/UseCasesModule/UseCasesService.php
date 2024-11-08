@@ -5,17 +5,11 @@ namespace Core\Profile\Application\UseCasesModule;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Exception;
 
-/**
- * @codeCoverageIgnore
- */
 abstract class UseCasesService implements ServiceContract
 {
-    protected ModuleRepositoryContract $moduleRepository;
-
     public function __construct(
-        ModuleRepositoryContract $moduleRepository,
+        protected readonly ModuleRepositoryContract $moduleRepository,
     ) {
-        $this->moduleRepository = $moduleRepository;
     }
 
     /**

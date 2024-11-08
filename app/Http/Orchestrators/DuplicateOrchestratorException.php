@@ -4,7 +4,7 @@
  * Date: 2024-06-04 12:26:14
  */
 
-namespace App\Http\Orchestrators\Exceptions;
+namespace App\Http\Orchestrators;
 
 class DuplicateOrchestratorException extends \Exception
 {

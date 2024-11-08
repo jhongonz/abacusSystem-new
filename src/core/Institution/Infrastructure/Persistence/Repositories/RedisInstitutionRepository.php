@@ -26,24 +26,14 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
     /** @var string */
     private const INSTITUTION_KEY_FORMAT = '%s::%s';
-    private int $priority;
-    private string $keyPrefix;
-    private InstitutionFactoryContract $institutionFactory;
-    private InstitutionDataTransformerContract $dataTransformer;
-    private LoggerInterface $logger;
 
     public function __construct(
-        InstitutionFactoryContract $factory,
-        InstitutionDataTransformerContract $dataTransformer,
-        LoggerInterface $logger,
-        string $keyPrefix = 'institution',
-        int $priority = self::PRIORITY_DEFAULT
+        private readonly InstitutionFactoryContract $institutionFactory,
+        private readonly InstitutionDataTransformerContract $dataTransformer,
+        private readonly LoggerInterface $logger,
+        private readonly string $keyPrefix = 'institution',
+        private int $priority = self::PRIORITY_DEFAULT
     ) {
-        $this->institutionFactory = $factory;
-        $this->dataTransformer = $dataTransformer;
-        $this->logger = $logger;
-        $this->keyPrefix = $keyPrefix;
-        $this->priority = $priority;
     }
 
     public function priority(): int

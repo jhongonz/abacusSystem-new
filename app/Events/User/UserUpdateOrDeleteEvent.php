@@ -13,14 +13,12 @@ class UserUpdateOrDeleteEvent
     use InteractsWithSockets;
     use SerializesModels;
 
-    private int $userId;
-
     /**
      * Create a new event instance.
      */
-    public function __construct(int $id)
-    {
-        $this->userId = $id;
+    public function __construct(
+        private readonly int $userId
+    ) {
     }
 
     public function userId(): int

@@ -7,11 +7,9 @@ use Core\Profile\Domain\Module;
 
 class CreateModuleRequest implements RequestService
 {
-    private Module $module;
-
-    public function __construct(Module $module)
-    {
-        $this->module = $module;
+    public function __construct(
+        private readonly Module $module
+    ) {
     }
 
     public function module(): Module

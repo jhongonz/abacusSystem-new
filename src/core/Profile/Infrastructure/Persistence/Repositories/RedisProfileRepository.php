@@ -24,27 +24,13 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
     /** @var string */
     private const PROFILE_KEY_FORMAT = '%s::%s';
 
-    private int $priority;
-
-    private string $keyPrefix;
-
-    private ProfileFactoryContract $profileFactory;
-
-    private ProfileDataTransformerContract $dataTransformer;
-    private LoggerInterface $logger;
-
     public function __construct(
-        ProfileFactoryContract $profileFactory,
-        ProfileDataTransformerContract $dataTransformer,
-        LoggerInterface $logger,
-        string $keyPrefix = 'profile',
-        int $priority = self::PRIORITY_DEFAULT,
+        private readonly ProfileFactoryContract $profileFactory,
+        private readonly ProfileDataTransformerContract $dataTransformer,
+        private readonly LoggerInterface $logger,
+        private readonly string $keyPrefix = 'profile',
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
-        $this->profileFactory = $profileFactory;
-        $this->dataTransformer = $dataTransformer;
-        $this->logger = $logger;
-        $this->keyPrefix = $keyPrefix;
-        $this->priority = $priority;
     }
 
     public function priority(): int

@@ -8,7 +8,6 @@ use Exception;
 
 class ModuleDataTransformer implements ModuleDataTransformerContract
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
     private Module $module;
 
     public function write(Module $module): self
@@ -46,11 +45,11 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
             'icon' => $this->module->icon()->value(),
             'state' => $this->module->state()->value(),
             'position' => $this->module->position()->value(),
-            'createdAt' => $this->module->createdAt()->value()->format(self::DATE_FORMAT),
+            'createdAt' => $this->module->createdAt()->toFormattedString(),
         ];
 
-        $updatedAt = $this->module->updatedAt()->value();
-        $data['updatedAt'] = (! is_null($updatedAt)) ? $updatedAt->format(self::DATE_FORMAT) : null;
+        $updatedAt = $this->module->updatedAt()->toFormattedString();
+        $data['updatedAt'] = (!empty($updatedAt)) ? $updatedAt : null;
 
         return $data;
     }
