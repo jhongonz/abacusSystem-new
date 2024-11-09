@@ -30,7 +30,6 @@ use Tests\TestCase;
 class InstitutionControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
-    private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private LoggerInterface|MockObject $logger;
     private ViewFactory|MockObject $viewFactory;
     private ImageManagerInterface|MockObject $imageManager;
@@ -46,11 +45,9 @@ class InstitutionControllerTest extends TestCase
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
-        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
 
         $this->controller = new InstitutionController(
             $this->orchestrator,
-            $this->actionExecutorHandler,
             $this->imageManager,
             $this->logger,
             $this->viewFactory
@@ -61,7 +58,6 @@ class InstitutionControllerTest extends TestCase
     {
         unset(
             $this->orchestrator,
-            $this->actionExecutorHandler,
             $this->controller,
             $this->logger,
             $this->viewFactory,

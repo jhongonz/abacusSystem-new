@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Module;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreModuleRequest extends FormRequest

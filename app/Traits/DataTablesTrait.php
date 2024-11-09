@@ -15,6 +15,11 @@ trait DataTablesTrait
         $this->viewFactory = $viewFactory;
     }
 
+    /**
+     * @param array<string, mixed> $item
+     * @param string|null $permission
+     * @return string
+     */
     private function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
     {
         return $this->viewFactory->make('components.menu-options-datatable')

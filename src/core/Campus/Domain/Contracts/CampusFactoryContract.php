@@ -29,6 +29,10 @@ interface CampusFactoryContract
         CampusName $name
     ): Campus;
 
+    /**
+     * @param array<string, mixed> $data
+     * @return Campus
+     */
     public function buildCampusFromArray(array $data): Campus;
 
     public function buildCampusId(?int $id = null): CampusId;

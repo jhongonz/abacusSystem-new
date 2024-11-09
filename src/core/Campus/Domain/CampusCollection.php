@@ -12,6 +12,9 @@ class CampusCollection extends ArrayIterator
 {
     public const TYPE = 'campus-collection';
 
+    /**
+     * @param array<string, mixed> $items
+     */
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
@@ -29,6 +32,9 @@ class CampusCollection extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function items(): array
     {
         return $this->getArrayCopy();
@@ -40,16 +46,26 @@ class CampusCollection extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function aggregator(): array
     {
         return $this->aggregator;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return $this
+     */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;

@@ -11,6 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusId;
 
 class UpdateCampusRequest implements RequestService
 {
+    /**
+     * @param CampusId $id
+     * @param array<string, mixed> $data
+     */
     public function __construct(
         private readonly CampusId $id,
         private readonly array $data
@@ -22,6 +26,9 @@ class UpdateCampusRequest implements RequestService
         return $this->id;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function data(): array
     {
         return $this->data;

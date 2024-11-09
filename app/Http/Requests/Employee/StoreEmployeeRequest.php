@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Employee;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 

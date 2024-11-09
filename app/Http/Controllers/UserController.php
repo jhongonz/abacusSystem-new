@@ -24,7 +24,7 @@ class UserController extends Controller implements HasMiddleware
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        protected Hasher $hasher,
+        Hasher $hasher,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
         private readonly UrlGenerator $urlGenerator

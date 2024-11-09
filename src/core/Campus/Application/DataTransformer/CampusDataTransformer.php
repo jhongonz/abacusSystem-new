@@ -19,6 +19,9 @@ class CampusDataTransformer implements CampusDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -26,6 +29,9 @@ class CampusDataTransformer implements CampusDataTransformerContract
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array
     {
         $data = $this->retrieveData();
@@ -34,6 +40,9 @@ class CampusDataTransformer implements CampusDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

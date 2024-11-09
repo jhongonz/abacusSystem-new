@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Campus;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCampusRequest extends FormRequest

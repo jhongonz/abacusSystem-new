@@ -12,7 +12,13 @@ interface CampusDataTransformerContract
 {
     public function write(Campus $campus): CampusDataTransformerContract;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array;
 }

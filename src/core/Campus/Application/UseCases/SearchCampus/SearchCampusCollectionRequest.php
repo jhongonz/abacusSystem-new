@@ -11,6 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 
 class SearchCampusCollectionRequest implements RequestService
 {
+    /**
+     * @param CampusInstitutionId $institutionId
+     * @param array<string, mixed> $filters
+     */
     public function __construct(
         private readonly CampusInstitutionId $institutionId,
         private readonly array $filters = []
@@ -22,6 +26,9 @@ class SearchCampusCollectionRequest implements RequestService
         return $this->institutionId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;

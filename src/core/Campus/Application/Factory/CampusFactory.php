@@ -39,6 +39,8 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
+     * @param array<string, mixed> $data
+     * @return Campus
      * @throws Exception
      */
     public function buildCampusFromArray(array $data): Campus

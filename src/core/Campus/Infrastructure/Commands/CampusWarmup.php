@@ -44,7 +44,8 @@ class CampusWarmup extends Command
      */
     public function handle(): int
     {
-        $campusId = $this->campusFactory->buildCampusId($this->argument('id'));
+        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        $campusId = $this->campusFactory->buildCampusId($id);
 
         try {
             $campus = $this->readRepository->find($campusId);

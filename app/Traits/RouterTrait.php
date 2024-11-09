@@ -25,10 +25,10 @@ trait RouterTrait
      */
     protected function validateRoute(string $route): void
     {
-        $routes = $this->router->getRoutes();
-        $slugs = [];
+        $routesCollection = $this->router->getRoutes();
+        $routes = $routesCollection->getRoutes();
 
-        /** @var Route $item */
+        $slugs = [];
         foreach ($routes as $item) {
             $method = $item->methods();
 
