@@ -64,6 +64,10 @@ class MenuComposer
         $view->with('image', $image);
     }
 
+    /**
+     * @param Modules $modules
+     * @return array<int, mixed>
+     */
     private function prepareMenu(Modules $modules): array
     {
         $menuWithChildren = [];
@@ -71,7 +75,7 @@ class MenuComposer
         foreach ($this->config->get('menu.options') as $index => $item) {
             $item['id'] = 0;
             $item['state'] = ValueObjectStatus::STATE_ACTIVE;
-            $item['createdAt'] = $this->getCurrentTime()->format(self::DATE_FORMAT);
+            $item['createdAt'] = $this->getCurrentTime()->format('Y-m-d H:i:s');
 
             if (empty($item['route'])) {
                 $options = $modules->moduleElementsOfKey($index);
@@ -92,6 +96,10 @@ class MenuComposer
         return array_merge($menuWithChildren, $menuUnique);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return Module
+     */
     private function getModuleMenu(array $data): Module
     {
         return $this->moduleFactory->buildModuleFromArray([Module::TYPE => $data]);

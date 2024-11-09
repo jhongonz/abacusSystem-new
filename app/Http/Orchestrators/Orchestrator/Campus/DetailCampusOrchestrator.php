@@ -19,7 +19,7 @@ class DetailCampusOrchestrator extends CampusOrchestrator
 
     /**
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {

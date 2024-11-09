@@ -20,6 +20,7 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
     ) {
         parent::__construct($employeeManagement);
     }
+
     /**
      * @param Request $request
      * @return Employee

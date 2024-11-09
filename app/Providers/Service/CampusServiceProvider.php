@@ -21,6 +21,7 @@ class CampusServiceProvider extends ServiceProvider
 {
     /**
      * All the container bindings that should be registered
+     * @var array<string, string> $singletons
      */
     public array $singletons = [
         CampusFactoryContract::class => CampusFactory::class,

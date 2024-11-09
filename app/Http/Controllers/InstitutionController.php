@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
 use App\Traits\MultimediaTrait;
@@ -24,7 +23,6 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
         protected ImageManagerInterface $imageManager,
         LoggerInterface $logger,
         ViewFactory $viewFactory,

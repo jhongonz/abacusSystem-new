@@ -22,6 +22,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container bindings that should be registered
+     * @var array<string, string> $singletons
      */
     public array $singletons = [
         UserFactoryContract::class => UserFactory::class,

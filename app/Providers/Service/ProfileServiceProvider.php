@@ -33,6 +33,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
 {
     /**
      * All the container bindings that should be registered
+     * @var array<string, string> $singletons
      */
     public array $singletons = [
         ProfileFactoryContract::class => ProfileFactory::class,

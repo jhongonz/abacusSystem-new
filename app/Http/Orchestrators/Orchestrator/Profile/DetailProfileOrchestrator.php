@@ -26,7 +26,7 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {
@@ -58,6 +58,11 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         return 'detail-profile';
     }
 
+    /**
+     * @param Modules $modules
+     * @param Profile|null $profile
+     * @return array<string, mixed>
+     */
     private function retrievePrivilegesProfile(Modules $modules, ?Profile $profile): array
     {
         $modulesToProfile = (isset($profile)) ? $profile->modulesAggregator() : [];

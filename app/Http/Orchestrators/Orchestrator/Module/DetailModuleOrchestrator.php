@@ -21,7 +21,8 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
     }
 
     /**
-     * @inheritDoc
+     * @param Request $request
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {

@@ -28,7 +28,7 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
 
     /**
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {

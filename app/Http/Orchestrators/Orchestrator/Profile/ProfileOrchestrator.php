@@ -17,6 +17,10 @@ abstract class ProfileOrchestrator implements Orchestrator
     ) {
     }
 
+    /**
+     * @param Request $request
+     * @return array<int<0, max>, mixed>
+     */
     protected function getModulesAggregator(Request $request): array
     {
         $modulesAggregator = [];

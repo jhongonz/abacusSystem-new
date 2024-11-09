@@ -1,14 +1,17 @@
 # Variables
 PHP_BIN := php
 COMPOSER := composer
-PHPUNIT := vendor/bin/phpunit
-PHPSTAN := vendor/bin/phpstan
-PINT := vendor/bin/pint
-INFECTION := vendor/bin/infection
+PHPUNIT := ./vendor/bin/phpunit
+PHPSTAN := ./vendor/bin/phpstan
+PINT := ./vendor/bin/pint
+INFECTION := ./vendor/bin/infection
 export XDEBUG_MODE=coverage
 
-install:
+c-install:
 	$(COMPOSER) install
+
+update:
+	$(COMPOSER) update
 
 test:
 	$(PHPUNIT)
@@ -29,6 +32,8 @@ clean:
 infection:
 	$(INFECTION)
 
-all: install pint analyse test infection
+install: c-install pint test-coverage
+
+all: c-install pint analyse test infection
 
 tests: pint analyse test infection
