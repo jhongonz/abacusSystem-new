@@ -8,7 +8,13 @@ interface ModuleDataTransformerContract
 {
     public function write(Module $module): ModuleDataTransformerContract;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array;
 }

@@ -47,7 +47,8 @@ class ModuleWarmup extends Command
      */
     public function handle(): int
     {
-        if ($this->option('id') == 0) {
+        $id = ($this->option('id')) ? (int) $this->option('id') : null;
+        if ($id == 0) {
             $modules = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
@@ -65,8 +66,8 @@ class ModuleWarmup extends Command
                 }
             }
         } else {
-            $moduleId = $this->moduleFactory->buildModuleId($this->option('id'));
-
+            
+            $moduleId = $this->moduleFactory->buildModuleId($id);
             foreach ($this->repositories as $repository) {
                 try {
                     $module = $this->readRepository->find($moduleId);

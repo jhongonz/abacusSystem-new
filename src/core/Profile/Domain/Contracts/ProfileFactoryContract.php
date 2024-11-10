@@ -15,6 +15,10 @@ use DateTime;
 
 interface ProfileFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return Profile
+     */
     public function buildProfileFromArray(array $data): Profile;
 
     public function buildProfile(

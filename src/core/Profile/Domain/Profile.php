@@ -18,6 +18,10 @@ class Profile
     private ProfileSearch $search;
     private ProfileDescription $description;
     private Modules $modules;
+
+    /**
+     * @var array<string, mixed>
+     */
     private array $modulesAggregator = [];
 
     public function __construct(
@@ -104,11 +108,18 @@ class Profile
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function modulesAggregator(): array
     {
         return $this->modulesAggregator;
     }
 
+    /**
+     * @param array<string, mixed> $ids
+     * @return $this
+     */
     public function setModulesAggregator(array $ids): self
     {
         $this->modulesAggregator = $ids;

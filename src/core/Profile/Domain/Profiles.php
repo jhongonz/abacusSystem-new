@@ -8,6 +8,9 @@ class Profiles extends ArrayIterator
 {
     public const TYPE = 'profiles';
 
+    /**
+     * @param array<string, mixed> $profiles
+     */
     public function __construct(array $profiles = [])
     {
         foreach ($profiles as $profile) {
@@ -25,16 +28,26 @@ class Profiles extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function items(): array
     {
         return $this->getArrayCopy();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return $this
+     */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
@@ -49,6 +62,9 @@ class Profiles extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function aggregator(): array
     {
         return $this->aggregator;

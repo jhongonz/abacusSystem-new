@@ -21,6 +21,8 @@ use Exception;
 class ModuleFactory implements ModuleFactoryContract
 {
     /**
+     * @param array<string, mixed> $data
+     * @return Module
      * @throws Exception
      */
     public function buildModuleFromArray(array $data): Module
@@ -120,6 +122,8 @@ class ModuleFactory implements ModuleFactoryContract
     }
 
     /**
+     * @param array<string, mixed> $data
+     * @return Modules
      * @throws Exception
      */
     public function buildModulesFromArray(array $data): Modules

@@ -18,6 +18,10 @@ use DateTime;
 
 interface ModuleFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return Module
+     */
     public function buildModuleFromArray(array $data): Module;
 
     public function buildModule(
@@ -50,6 +54,10 @@ interface ModuleFactoryContract
 
     public function buildModules(Module ...$modules): Modules;
 
+    /**
+     * @param array<string, mixed> $data
+     * @return Modules
+     */
     public function buildModulesFromArray(array $data): Modules;
 
     public function buildModulePosition(int $position = 1): ModulePosition;

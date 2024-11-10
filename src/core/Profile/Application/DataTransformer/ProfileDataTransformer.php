@@ -17,6 +17,9 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -25,7 +28,7 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
     }
 
     /**
-     * @throws Exception
+     * @return array<string, mixed>
      */
     public function readToShare(): array
     {
@@ -35,6 +38,9 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

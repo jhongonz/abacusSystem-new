@@ -18,6 +18,8 @@ use Exception;
 class ProfileFactory implements ProfileFactoryContract
 {
     /**
+     * @param array<string, mixed> $data
+     * @return Profile
      * @throws Exception
      */
     public function buildProfileFromArray(array $data): Profile

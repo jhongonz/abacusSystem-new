@@ -10,6 +10,10 @@ interface ModuleRepositoryContract
 {
     public function find(ModuleId $id): ?Module;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return Modules|null
+     */
     public function getAll(array $filters = []): ?Modules;
 
     public function persistModule(Module $module): Module;

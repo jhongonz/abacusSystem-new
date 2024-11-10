@@ -20,6 +20,8 @@ class Module
     private ModuleUpdatedAt $updatedAt;
     private ModuleSearch $search;
     private ModulePosition $position;
+
+    /** @var array<string, mixed>  */
     private array $options = [];
     private bool $expanded = false;
 
@@ -145,11 +147,18 @@ class Module
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function options(): array
     {
         return $this->options;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return $this
+     */
     public function setOptions(array $data): self
     {
         $this->options = $data;

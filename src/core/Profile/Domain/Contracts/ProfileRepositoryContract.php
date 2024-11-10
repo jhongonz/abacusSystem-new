@@ -13,6 +13,10 @@ interface ProfileRepositoryContract
 
     public function findCriteria(ProfileName $name): ?Profile;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return Profiles|null
+     */
     public function getAll(array $filters = []): ?Profiles;
 
     public function deleteProfile(ProfileId $id): void;

@@ -48,7 +48,8 @@ class ProfileWarmup extends Command
      */
     public function handle(): int
     {
-        if ($this->option('id') == 0) {
+        $id = ($this->option('id')) ? (int) $this->option('id') : null;
+        if ($id == 0) {
             $profiles = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
@@ -63,8 +64,8 @@ class ProfileWarmup extends Command
                 }
             }
         } else {
-            $profileId = $this->profileFactory->buildProfileId($this->option('id'));
-
+            
+            $profileId = $this->profileFactory->buildProfileId($id);
             foreach ($this->repositories as $repository) {
                 try {
                     $profile = $this->readRepository->find($profileId);
