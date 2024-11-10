@@ -16,6 +16,9 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -25,6 +28,7 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
 
     /**
      * @throws Exception
+     * @return array<string, mixed>
      */
     public function readToShare(): array
     {
@@ -34,6 +38,9 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

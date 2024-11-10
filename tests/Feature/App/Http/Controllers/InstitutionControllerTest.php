@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;

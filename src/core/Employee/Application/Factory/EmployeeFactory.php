@@ -28,6 +28,8 @@ use Exception;
 class EmployeeFactory implements EmployeeFactoryContract
 {
     /**
+     * @param array<string, mixed> $data
+     * @return Employee
      * @throws Exception
      */
     public function buildEmployeeFromArray(array $data): Employee

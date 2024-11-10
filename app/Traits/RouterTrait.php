@@ -9,7 +9,6 @@ namespace App\Traits;
 use App\Http\Exceptions\RouteNotFoundException;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
-use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 
 trait RouterTrait

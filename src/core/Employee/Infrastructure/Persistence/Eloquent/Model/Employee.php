@@ -37,7 +37,7 @@ class Employee extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, int>
      */
     protected $attributes = [
         'emp_state' => 1,
@@ -68,6 +68,7 @@ class Employee extends Model
         'deleted_at',
     ];
 
+    /** @var string[] */
     protected $touches = ['relationWithUser'];
 
     /**
@@ -86,6 +87,9 @@ class Employee extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [

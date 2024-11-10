@@ -192,6 +192,10 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return EmployeeModel
+     */
     private function updateAttributesModelEmployee(array $data = []): EmployeeModel
     {
         $this->model->fill($data);

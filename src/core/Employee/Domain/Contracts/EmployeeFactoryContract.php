@@ -25,6 +25,10 @@ use DateTime;
 
 interface EmployeeFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return Employee
+     */
     public function buildEmployeeFromArray(array $data): Employee;
 
     public function buildEmployee(

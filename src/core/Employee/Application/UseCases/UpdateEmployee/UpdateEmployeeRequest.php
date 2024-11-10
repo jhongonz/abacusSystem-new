@@ -7,6 +7,10 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 
 class UpdateEmployeeRequest implements RequestService
 {
+    /**
+     * @param EmployeeId $id
+     * @param array<string, mixed> $data
+     */
     public function __construct(
         private readonly EmployeeId $id,
         private readonly array $data,
@@ -18,6 +22,9 @@ class UpdateEmployeeRequest implements RequestService
         return $this->id;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function data(): array
     {
         return $this->data;

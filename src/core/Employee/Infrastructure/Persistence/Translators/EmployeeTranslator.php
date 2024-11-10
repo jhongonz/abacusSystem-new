@@ -12,6 +12,8 @@ use Exception;
 class EmployeeTranslator
 {
     private EmployeeModel $employee;
+
+    /** @var array<int<0, max>, int|null> */
     private array $collection = [];
 
     public function __construct(
@@ -52,14 +54,18 @@ class EmployeeTranslator
         $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
         $employee->setInstitutionId($this->employeeFactory->buildEmployeeInstitutionId($this->employee->institutionId()));
 
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);
-        $userId = (! is_null($user)) ? $user->id() : null;
+        $userId = $user ? $user->id() : null;
         $employee->setUserId($this->employeeFactory->buildEmployeeUserId($userId));
 
         return $employee;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $collection
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;

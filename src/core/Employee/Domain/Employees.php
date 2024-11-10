@@ -8,6 +8,9 @@ class Employees extends ArrayIterator
 {
     public const TYPE = 'employees';
 
+    /**
+     * @param array<string, mixed> $employees
+     */
     public function __construct(array $employees = [])
     {
         foreach ($employees as $employee) {
@@ -25,6 +28,9 @@ class Employees extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function items(): array
     {
         return $this->getArrayCopy();
@@ -36,16 +42,26 @@ class Employees extends ArrayIterator
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function aggregator(): array
     {
         return $this->aggregator;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return $this
+     */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;

@@ -15,6 +15,10 @@ use Exception;
 class CampusTranslator
 {
     private CampusModel $model;
+
+    /**
+     * @var array<int<0, max>, int|null>
+     */
     private array $collection = [];
 
     public function __construct(
@@ -51,6 +55,10 @@ class CampusTranslator
         return $campus;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $collection
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;

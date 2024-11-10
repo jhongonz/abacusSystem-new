@@ -76,7 +76,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         }
         $campusCollectionResult = $builder->get(['cam_id']);
 
-        if (empty($campusCollectionResult)) {
+        if (count($campusCollectionResult) === 0) {
             throw new CampusCollectionNotFoundException('Campus collection not found');
         }
 
@@ -169,6 +169,10 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return CampusModel
+     */
     private function updateAttributesModel(array $data = []): CampusModel
     {
         $this->campusModel->fill($data);

@@ -115,6 +115,10 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
         return $employee;
     }
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return Employees|null
+     */
     public function getAll(array $filters = []): ?Employees
     {
         return null;

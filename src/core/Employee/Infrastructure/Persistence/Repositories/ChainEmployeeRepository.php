@@ -65,8 +65,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     }
 
     /**
+     * @param array<string, mixed> $filters
+     * @return Employees|null
+     * @throws EmployeesNotFoundException
      * @throws Throwable
-     * @throws EmployeeNotFoundException
      */
     public function getAll(array $filters = []): ?Employees
     {
