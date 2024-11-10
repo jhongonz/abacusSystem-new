@@ -51,7 +51,8 @@ class UserWarmup extends Command
      */
     public function handle(): int
     {
-        $userId = $this->userFactory->buildId($this->argument('id'));
+        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        $userId = $this->userFactory->buildId($id);
 
         try {
             $user = $this->readRepository->find($userId);

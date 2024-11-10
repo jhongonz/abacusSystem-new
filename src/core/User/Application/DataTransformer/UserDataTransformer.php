@@ -20,6 +20,9 @@ class UserDataTransformer implements UserDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         $data = [

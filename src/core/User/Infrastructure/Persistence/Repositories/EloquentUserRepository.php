@@ -153,6 +153,10 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return UserModel
+     */
     private function updateAttributesModelUser(array $data = []): UserModel
     {
         $this->model->fill($data);
@@ -168,8 +172,8 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     /**
      * @throws Exception
      */
-    private function getDateTime(string $datetime = 'now'): \DateTime
+    private function getDateTime(): \DateTime
     {
-        return new \DateTime($datetime);
+        return new \DateTime('now');
     }
 }

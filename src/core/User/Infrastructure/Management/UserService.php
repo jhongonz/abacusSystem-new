@@ -58,6 +58,9 @@ class UserService implements UserManagementContract
     }
 
     /**
+     * @param int $id
+     * @param array<string, mixed> $data
+     * @return User
      * @throws Exception
      */
     public function updateUser(int $id, array $data): User
@@ -69,6 +72,8 @@ class UserService implements UserManagementContract
     }
 
     /**
+     * @param array<string, mixed> $data
+     * @return User
      * @throws Exception
      */
     public function createUser(array $data): User

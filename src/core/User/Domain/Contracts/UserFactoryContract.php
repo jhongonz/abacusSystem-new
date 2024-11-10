@@ -20,6 +20,10 @@ use DateTime;
 
 interface UserFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return User
+     */
     public function buildUserFromArray(array $data): User;
 
     public function buildUser(

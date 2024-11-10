@@ -2,7 +2,6 @@
 
 namespace Core\User\Infrastructure\Persistence\Eloquent\Model;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
 use DateTime;
@@ -37,7 +36,7 @@ class User extends Authenticatable
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, int>
      */
     protected $attributes = [
         'user_state' => 1,
@@ -83,6 +82,9 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $touches = ['relationWithEmployee', 'relationWithProfile'];
 
     /**
@@ -90,6 +92,9 @@ class User extends Authenticatable
      */
     protected string $mainSearchField = 'user_login';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [

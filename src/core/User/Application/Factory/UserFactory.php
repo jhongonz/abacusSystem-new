@@ -23,6 +23,8 @@ use Exception;
 class UserFactory implements UserFactoryContract
 {
     /**
+     * @param array<string, mixed> $data
+     * @return User
      * @throws Exception
      */
     public function buildUserFromArray(array $data): User
