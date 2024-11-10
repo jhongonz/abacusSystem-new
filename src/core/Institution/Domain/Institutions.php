@@ -13,7 +13,7 @@ class Institutions extends ArrayIterator
     public const TYPE = 'institutions';
 
     /**
-     * @param array<string, mixed> $institutions
+     * @param array<int, mixed> $institutions
      */
     public function __construct(array $institutions = [])
     {
@@ -33,7 +33,7 @@ class Institutions extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, mixed>
      */
     public function items(): array
     {

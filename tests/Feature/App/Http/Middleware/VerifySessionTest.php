@@ -57,7 +57,9 @@ class VerifySessionTest extends TestCase
             ->method('ajax')
             ->willReturn(true);
 
-        $result = $this->middleware->handle($requestMock, function () {});
+        $result = $this->middleware->handle($requestMock, function ($request) {
+            return new Response;
+        });
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, $result->getStatusCode());
@@ -87,7 +89,9 @@ class VerifySessionTest extends TestCase
             ->with('/')
             ->willReturn($responseMock);
 
-        $result = $this->middleware->handle($requestMock, function () {});
+        $result = $this->middleware->handle($requestMock, function ($request) {
+            return new Response;
+        });
 
         $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame($responseMock, $result);

@@ -59,7 +59,8 @@ class UpdateEmployeeTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @param array<string, mixed> $dataUpdate
+     * @return void
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderUpdateEmployee::class, 'provider')]

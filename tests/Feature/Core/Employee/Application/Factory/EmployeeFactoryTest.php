@@ -25,6 +25,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Employee\Application\Factory\DataProvider\DataProviderEmployeeFactory;
 use Tests\TestCase;
 
@@ -32,6 +33,7 @@ use Tests\TestCase;
 class EmployeeFactoryTest extends TestCase
 {
     private EmployeeFactory $factory;
+    private Employee|MockObject $employee;
 
     /**
      * @throws Exception
@@ -45,11 +47,13 @@ class EmployeeFactoryTest extends TestCase
 
     public function tearDown(): void
     {
-        unset($this->factory);
+        unset($this->factory, $this->employee);
         parent::tearDown();
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderEmployeeFactory::class, 'provider')]

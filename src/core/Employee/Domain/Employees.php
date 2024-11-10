@@ -9,7 +9,7 @@ class Employees extends ArrayIterator
     public const TYPE = 'employees';
 
     /**
-     * @param array<string, mixed> $employees
+     * @param array<int, mixed> $employees
      */
     public function __construct(array $employees = [])
     {
@@ -51,7 +51,7 @@ class Employees extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function filters(): array
     {
@@ -59,7 +59,7 @@ class Employees extends ArrayIterator
     }
 
     /**
-     * @param array<string, mixed> $filters
+     * @param array<int|string, mixed> $filters
      * @return $this
      */
     public function setFilters(array $filters): self

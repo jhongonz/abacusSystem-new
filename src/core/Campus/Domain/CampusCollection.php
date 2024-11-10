@@ -13,7 +13,7 @@ class CampusCollection extends ArrayIterator
     public const TYPE = 'campus-collection';
 
     /**
-     * @param array<string, mixed> $items
+     * @param array<int, mixed> $items
      */
     public function __construct(array $items = [])
     {
@@ -33,7 +33,7 @@ class CampusCollection extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, mixed>
      */
     public function items(): array
     {
@@ -47,7 +47,7 @@ class CampusCollection extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, int|null>
      */
     public function aggregator(): array
     {
@@ -55,7 +55,7 @@ class CampusCollection extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function filters(): array
     {
@@ -63,7 +63,7 @@ class CampusCollection extends ArrayIterator
     }
 
     /**
-     * @param array<string, mixed> $filters
+     * @param array<int|string, mixed> $filters
      * @return $this
      */
     public function setFilters(array $filters): self

@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Campus\Application\DataProvider;
 
 final class UpdateCampusDataProvider
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider_update_campus(): array
     {
         return [

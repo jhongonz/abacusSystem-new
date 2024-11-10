@@ -10,6 +10,9 @@ use Core\Campus\Domain\Campus;
 
 final class CampusFactoryDataProvider
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider_dataArray(): array
     {
         return [

@@ -30,7 +30,7 @@ class MenuComposerTest extends TestCase
     private Config|MockObject $config;
     private Router|MockObject $router;
     private Session|MockObject $session;
-    private UrlGenerator $urlGenerator;
+    private UrlGenerator|MockObject $urlGenerator;
     private MenuComposer $composer;
 
     /**

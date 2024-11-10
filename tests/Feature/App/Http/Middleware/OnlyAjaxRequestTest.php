@@ -53,7 +53,9 @@ class OnlyAjaxRequestTest extends TestCase
             ->with('index')
             ->willReturn($responseMock);
 
-        $result = $this->middleware->handle($requestMock, function () {});
+        $result = $this->middleware->handle($requestMock, function ($request) {
+            return new Response;
+        });
 
         $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame($responseMock, $result);

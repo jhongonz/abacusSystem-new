@@ -42,6 +42,8 @@ class UpdateCampusTest extends TestCase
     }
 
     /**
+     * @param array<string|int, mixed> $dataTest
+     * @return void
      * @throws Exception
      * @throws \Exception
      */

@@ -60,6 +60,8 @@ class CampusDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string|int, mixed> $dataTest
+     * @return void
      * @throws Exception
      */
     #[DataProviderExternal(CampusDataTransformerDataProvider::class, 'provider_read')]
@@ -83,6 +85,8 @@ class CampusDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string|int, mixed> $dataExpected
+     * @return void
      * @throws Exception
      */
     #[DataProviderExternal(CampusDataTransformerDataProvider::class, 'provider_readToShare')]
@@ -108,6 +112,8 @@ class CampusDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string|int, mixed> $data
+     * @return void
      * @throws Exception
      */
     private function prepareCampusMock(array $data): void

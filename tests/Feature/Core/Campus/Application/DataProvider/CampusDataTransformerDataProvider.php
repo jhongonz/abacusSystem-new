@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Campus\Application\DataProvider;
 
 final class CampusDataTransformerDataProvider
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider_read(): array
     {
         return [
@@ -17,6 +20,9 @@ final class CampusDataTransformerDataProvider
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider_readToShare(): array
     {
         $dataExpected = self::retrieveGenericDataTest();
@@ -29,6 +35,9 @@ final class CampusDataTransformerDataProvider
         ];
     }
 
+    /**
+     * @return array<string, int|string>
+     */
     private static function retrieveGenericDataTest(): array
     {
         return [

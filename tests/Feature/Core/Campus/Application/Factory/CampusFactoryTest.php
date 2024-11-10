@@ -57,6 +57,8 @@ class CampusFactoryTest extends TestCase
     }
 
     /**
+     * @param array<int|string, mixed> $dataTest
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(CampusFactoryDataProvider::class, 'provider_dataArray')]

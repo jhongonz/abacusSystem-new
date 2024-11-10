@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataPr
 
 final class DataProviderUpdateEmployee
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
         return [
