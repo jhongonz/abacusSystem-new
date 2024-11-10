@@ -106,7 +106,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
 
-        if (empty($moduleCollection)) {
+        if (count($moduleCollection) === 0) {
             throw new ModulesNotFoundException('Modules not found');
         }
 
@@ -168,6 +168,10 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return ModuleModel
+     */
     private function updateAttributesModelModule(array $data = []): ModuleModel
     {
         $this->model->fill($data);

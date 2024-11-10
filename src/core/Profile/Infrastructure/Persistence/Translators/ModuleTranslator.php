@@ -11,6 +11,10 @@ use Exception;
 class ModuleTranslator
 {
     private ModuleModel $model;
+
+    /**
+     * @var array<int<0, max>, int|null>
+     */
     private array $collection = [];
 
     public function __construct(
@@ -51,6 +55,10 @@ class ModuleTranslator
         return $module;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $collection
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;

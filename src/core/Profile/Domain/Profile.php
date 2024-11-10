@@ -20,7 +20,7 @@ class Profile
     private Modules $modules;
 
     /**
-     * @var array<string, mixed>
+     * @var array<int<0, max>, int|null>
      */
     private array $modulesAggregator = [];
 
@@ -109,7 +109,7 @@ class Profile
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int<0, max>, int|null>
      */
     public function modulesAggregator(): array
     {
@@ -117,7 +117,7 @@ class Profile
     }
 
     /**
-     * @param array<string, mixed> $ids
+     * @param array<int<0, max>, int|null> $ids
      * @return $this
      */
     public function setModulesAggregator(array $ids): self

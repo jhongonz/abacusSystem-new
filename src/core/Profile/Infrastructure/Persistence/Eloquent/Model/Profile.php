@@ -33,7 +33,7 @@ class Profile extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, int>
      */
     protected $attributes = [
         'pro_state' => 1,
@@ -66,6 +66,7 @@ class Profile extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /** @var string[] */
     protected $touches = ['user','pivotModules','modules'];
 
     /**
@@ -73,6 +74,9 @@ class Profile extends Model
      */
     protected string $mainSearchField = 'pro_search';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [

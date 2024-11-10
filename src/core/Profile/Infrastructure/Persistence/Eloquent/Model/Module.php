@@ -31,7 +31,7 @@ class Module extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, int>
      */
     protected $attributes = [
         'mod_state' => 1,
@@ -68,6 +68,9 @@ class Module extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $touches = ['profiles'];
 
     /**
@@ -75,6 +78,9 @@ class Module extends Model
      */
     protected string $mainSearchField = 'mod_search';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [

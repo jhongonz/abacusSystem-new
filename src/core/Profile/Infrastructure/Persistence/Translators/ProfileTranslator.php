@@ -13,6 +13,10 @@ use Exception;
 class ProfileTranslator
 {
     private ProfileModel $model;
+
+    /**
+     * @var array<int<0, max>, int|null>
+     */
     private array $collection = [];
 
     public function __construct(
@@ -64,6 +68,10 @@ class ProfileTranslator
         return $profile;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $collection
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;

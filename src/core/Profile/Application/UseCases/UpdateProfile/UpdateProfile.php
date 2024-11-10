@@ -63,7 +63,7 @@ class UpdateProfile extends UseCasesService
 
     /**
      * @param Profile $profile
-     * @param array<string, mixed> $modules
+     * @param array<int<0, max>, int|null> $modules
      * @return Profile
      */
     private function changeModules(Profile $profile, array $modules): Profile

@@ -87,7 +87,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
         $profileCollection = $builder->get(['pro_id']);
 
-        if (is_null($profileCollection)) {
+        if (count($profileCollection) === 0) {
             throw new ProfilesNotFoundException('Profiles not found');
         }
 
@@ -192,6 +192,10 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return ProfileModel
+     */
     private function updateAttributesModelProfile(array $data = []): ProfileModel
     {
         $this->model->fill($data);

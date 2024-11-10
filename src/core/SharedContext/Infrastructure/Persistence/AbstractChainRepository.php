@@ -35,9 +35,12 @@ abstract class AbstractChainRepository
     }
 
     /**
+     * @param string $functionName
+     * @param mixed ...$source
+     * @return mixed
      * @throws Exception
      */
-    protected function write(string $functionName, ...$source)
+    protected function write(string $functionName, ...$source): mixed
     {
         $task = new Task(function () use ($functionName, $source) {
 
@@ -63,9 +66,12 @@ abstract class AbstractChainRepository
     }
 
     /**
+     * @param string $functionName
+     * @param mixed ...$source
+     * @return mixed
      * @throws Throwable
      */
-    protected function read(string $functionName, ...$source)
+    protected function read(string $functionName, ...$source): mixed
     {
         $result = $this->readFromRepositories($functionName, ...$source);
 
@@ -77,9 +83,12 @@ abstract class AbstractChainRepository
     }
 
     /**
-     * @throws Throwable
+     * @param string $functionName
+     * @param mixed ...$source
+     * @return mixed
+     * @throws Exception
      */
-    protected function readFromRepositories(string $functionName, ...$source)
+    protected function readFromRepositories(string $functionName, ...$source): mixed
     {
         $task = new Task(function () use ($functionName, $source) {
             $result = null;
@@ -112,6 +121,11 @@ abstract class AbstractChainRepository
         return $task->getResult();
     }
 
+    /**
+     * @param string $functionName
+     * @param mixed ...$sources
+     * @return void
+     */
     protected function persistence(string $functionName, ...$sources): void
     {
         while (false !== ($repository = prev($this->repositories))) {
