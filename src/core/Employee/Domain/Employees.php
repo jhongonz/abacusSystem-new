@@ -43,7 +43,7 @@ class Employees extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, int|null>
      */
     public function aggregator(): array
     {
