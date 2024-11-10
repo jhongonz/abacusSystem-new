@@ -24,6 +24,10 @@ use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 
 interface InstitutionFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return Institution
+     */
     public function buildInstitutionFromArray(array $data): Institution;
 
     public function buildInstitution(InstitutionId $id, InstitutionName $name): Institution;

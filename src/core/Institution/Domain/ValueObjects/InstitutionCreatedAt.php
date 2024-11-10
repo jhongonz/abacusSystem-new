@@ -34,6 +34,6 @@ class InstitutionCreatedAt implements dateTimeModel
 
     public function toFormattedString(): string
     {
-        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
+        return $this->value->format(self::DATE_FORMAT);
     }
 }

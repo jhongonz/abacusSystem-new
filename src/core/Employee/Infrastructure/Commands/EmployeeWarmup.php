@@ -47,7 +47,7 @@ class EmployeeWarmup extends Command
      */
     public function handle(): int
     {
-        $id = (int) $this->argument('id');
+        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
 
         try {

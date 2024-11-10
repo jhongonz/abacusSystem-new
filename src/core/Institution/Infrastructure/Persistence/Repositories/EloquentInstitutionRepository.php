@@ -78,7 +78,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         }
 
         $institutionCollection = $builder->get(['inst_id']);
-        if (is_null($institutionCollection)) {
+        if (count($institutionCollection) === 0) {
             throw new InstitutionsNotFoundException('Institutions not found');
         }
 
@@ -172,6 +172,10 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return InstitutionModel
+     */
     private function updateAttributesModelInstitution(array $data = []): InstitutionModel
     {
         $this->model->fill($data);

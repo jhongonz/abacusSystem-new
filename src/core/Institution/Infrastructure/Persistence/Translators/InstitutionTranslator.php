@@ -15,6 +15,8 @@ use Exception;
 class InstitutionTranslator
 {
     private InstitutionModel $institution;
+
+    /** @var array<int<0, max>, int|null>  */
     private array $collection = [];
 
     public function __construct(
@@ -53,6 +55,10 @@ class InstitutionTranslator
         return $institution;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $collection
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;

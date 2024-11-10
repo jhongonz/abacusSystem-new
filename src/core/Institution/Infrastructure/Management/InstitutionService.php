@@ -47,6 +47,8 @@ class InstitutionService implements InstitutionManagementContract
     }
 
     /**
+     * @param array<string, mixed> $filters
+     * @return Institutions
      * @throws Exception
      */
     public function searchInstitutions(array $filters = []): Institutions
@@ -74,7 +76,7 @@ class InstitutionService implements InstitutionManagementContract
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return Institution
      * @throws Exception
      */

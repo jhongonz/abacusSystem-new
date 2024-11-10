@@ -47,7 +47,8 @@ class InstitutionWarmup extends Command
      */
     public function handle(): int
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($this->argument('id'));
+        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        $institutionId = $this->institutionFactory->buildInstitutionId($id);
 
         try {
             $institution = $this->readRepository->find($institutionId);

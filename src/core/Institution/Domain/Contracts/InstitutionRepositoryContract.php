@@ -14,6 +14,10 @@ interface InstitutionRepositoryContract
 {
     public function find(InstitutionId $id): ?Institution;
 
+    /**
+     * @param array<string, mixed> $filters
+     * @return Institutions|null
+     */
     public function getAll(array $filters = []): ?Institutions;
 
     public function delete(InstitutionId $id): void;

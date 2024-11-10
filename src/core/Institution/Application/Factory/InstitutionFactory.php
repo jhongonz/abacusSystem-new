@@ -28,6 +28,8 @@ use Exception;
 class InstitutionFactory implements InstitutionFactoryContract
 {
     /**
+     * @param array<string, mixed> $data
+     * @return Institution
      * @throws Exception
      */
     public function buildInstitutionFromArray(array $data): Institution

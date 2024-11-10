@@ -20,6 +20,9 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -27,6 +30,9 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array
     {
         $data = $this->retrieveData();
@@ -35,6 +41,9 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

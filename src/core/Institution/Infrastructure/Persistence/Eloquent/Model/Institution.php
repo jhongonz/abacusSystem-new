@@ -32,7 +32,7 @@ class Institution extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, int>
      */
     protected $attributes = [
         'inst_state' => 1,
@@ -76,6 +76,9 @@ class Institution extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [

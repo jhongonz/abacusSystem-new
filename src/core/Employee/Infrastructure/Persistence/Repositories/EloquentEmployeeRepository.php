@@ -145,7 +145,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
         $employeeCollection = $builder->get(['emp_id']);
 
-        if (empty($employeeCollection)) {
+        if (count($employeeCollection) === 0) {
             throw new EmployeesNotFoundException('Employees not found');
         }
 

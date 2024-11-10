@@ -12,7 +12,13 @@ interface InstitutionDataTransformerContract
 {
     public function write(Institution $institution): InstitutionDataTransformerContract;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array;
 }
