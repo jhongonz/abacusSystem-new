@@ -169,7 +169,7 @@ class ProfileTranslatorTest extends TestCase
 
     public function test_setCollection_should_return_self(): void
     {
-        $result = $this->translator->setCollection(['testing']);
+        $result = $this->translator->setCollection([1]);
 
         $this->assertInstanceOf(ProfileTranslator::class, $result);
         $this->assertSame($this->translator, $result);

@@ -14,6 +14,8 @@ class UpdateModuleRequestTest extends TestCase
 {
     private ModuleId|MockObject $moduleId;
     private UpdateModuleRequest $request;
+
+    /** @var array<string, mixed>  */
     private array $data = [];
 
     /**

@@ -13,6 +13,8 @@ use Tests\TestCase;
 class UpdateProfileRequestTest extends TestCase
 {
     private ProfileId|MockObject $profileId;
+
+    /** @var array<string, mixed> */
     private array $data = [];
     private UpdateProfileRequest $request;
 

@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Profile\Application\Factory\DataProvider;
 
 final class DataProviderFactory
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModule(): array
     {
         return [
@@ -29,6 +32,9 @@ final class DataProviderFactory
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModules(): array
     {
         return [
@@ -54,6 +60,9 @@ final class DataProviderFactory
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerProfile(): array
     {
         return [

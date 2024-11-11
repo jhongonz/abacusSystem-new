@@ -21,7 +21,7 @@ class Module
     private ModuleSearch $search;
     private ModulePosition $position;
 
-    /** @var array<string, mixed>  */
+    /** @var array<int, int>  */
     private array $options = [];
     private bool $expanded = false;
 
@@ -148,7 +148,7 @@ class Module
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, int>
      */
     public function options(): array
     {
@@ -156,7 +156,7 @@ class Module
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param array<int, int> $data
      * @return $this
      */
     public function setOptions(array $data): self

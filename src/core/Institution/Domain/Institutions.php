@@ -55,7 +55,7 @@ class Institutions extends ArrayIterator
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function filters(): array
     {
@@ -63,7 +63,7 @@ class Institutions extends ArrayIterator
     }
 
     /**
-     * @param array<string, mixed> $filters
+     * @param array<int|string, mixed> $filters
      * @return $this
      */
     public function setFilters(array $filters): self

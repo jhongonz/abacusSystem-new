@@ -7,7 +7,7 @@ use Core\Profile\Application\UseCases\RequestService;
 class SearchProfilesRequest implements RequestService
 {
     /**
-     * @param array<string, mixed> $filters
+     * @param array<int|string, mixed> $filters
      */
     public function __construct(
         private readonly array $filters = []
@@ -15,7 +15,7 @@ class SearchProfilesRequest implements RequestService
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     public function filters(): array
     {

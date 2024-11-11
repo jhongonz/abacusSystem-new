@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Institution\Application\UseCases\UpdateInstitution\
 
 final class DataProviderUpdateInstitution
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
         return [

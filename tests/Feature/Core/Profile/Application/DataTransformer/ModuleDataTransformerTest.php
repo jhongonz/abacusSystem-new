@@ -56,8 +56,11 @@ class ModuleDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $expected
+     * @param string $datetime
+     * @return void
      * @throws Exception
-     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToRead')]
     public function test_read_should_return_array(array $expected, string $datetime): void
@@ -143,8 +146,11 @@ class ModuleDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $expected
+     * @param string $datetime
+     * @return void
      * @throws Exception
-     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToReadToShare')]
     public function test_readToShare_should_return_array(array $expected, string $datetime): void

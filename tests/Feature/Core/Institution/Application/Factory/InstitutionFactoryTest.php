@@ -38,6 +38,8 @@ class InstitutionFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $data
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderInstitutionFactory::class, 'provider')]

@@ -39,6 +39,8 @@ class ModuleFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(DataProvider\DataProviderFactory::class, 'providerModule')]
@@ -112,6 +114,8 @@ class ModuleFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerModules')]

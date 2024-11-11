@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\Profile\Application\DataTransformer\DataProvider;
 
 final class DataProviderDataTransformer
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModuleToReadToShare(): array
     {
         $datetime = '2024-05-06 20:12:00';
@@ -31,6 +34,9 @@ final class DataProviderDataTransformer
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModuleToRead(): array
     {
         $datetime = '2024-05-06 20:12:00';
@@ -55,6 +61,9 @@ final class DataProviderDataTransformer
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerProfileToRead(): array
     {
         $datetime = '2024-05-06 20:12:00';
@@ -77,6 +86,9 @@ final class DataProviderDataTransformer
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerProfileToReadToShare(): array
     {
         $datetime = '2024-05-06 20:12:00';

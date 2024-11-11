@@ -36,6 +36,8 @@ class ProfileFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     * @return void
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerProfile')]
