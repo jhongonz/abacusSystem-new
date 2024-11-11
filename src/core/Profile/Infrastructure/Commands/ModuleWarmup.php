@@ -66,7 +66,7 @@ class ModuleWarmup extends Command
                 }
             }
         } else {
-            
+
             $moduleId = $this->moduleFactory->buildModuleId($id);
             foreach ($this->repositories as $repository) {
                 try {

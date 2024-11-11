@@ -6,7 +6,6 @@ use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,7 +14,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
     use Notifiable;
     use SoftDeletes;
 
@@ -110,6 +108,9 @@ class User extends Authenticatable
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function relationWithEmployee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'user__emp_id', 'emp_id');
@@ -120,6 +121,9 @@ class User extends Authenticatable
         return $this->relationWithEmployee()->getModel();
     }
 
+    /**
+     * @return BelongsTo<Profile, $this>
+     */
     public function relationWithProfile(): BelongsTo
     {
         return $this->belongsTo(Profile::class, 'user__pro_id', 'pro_id');

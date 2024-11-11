@@ -64,7 +64,7 @@ class ProfileWarmup extends Command
                 }
             }
         } else {
-            
+
             $profileId = $this->profileFactory->buildProfileId($id);
             foreach ($this->repositories as $repository) {
                 try {

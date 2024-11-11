@@ -4,14 +4,12 @@ namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -95,6 +93,9 @@ class Module extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsToMany<Profile, $this>
+     */
     public function profiles(): BelongsToMany
     {
         $relation = $this->belongsToMany(

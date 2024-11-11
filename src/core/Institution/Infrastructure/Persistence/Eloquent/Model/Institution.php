@@ -5,14 +5,12 @@ namespace Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Institution extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -93,6 +91,9 @@ class Institution extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return HasMany<Campus, $this>
+     */
     public function relationWithCampus(): HasMany
     {
         return $this->hasMany(Campus::class, 'cam__inst_id', 'inst_id');

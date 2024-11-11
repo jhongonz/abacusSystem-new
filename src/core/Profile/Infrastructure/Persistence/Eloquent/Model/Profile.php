@@ -5,7 +5,6 @@ namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Profile extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -91,11 +89,17 @@ class Profile extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return HasMany<User, $this>
+     */
     public function user(): HasMany
     {
         return $this->hasMany(User::class, 'user__pro_id', 'pro_id');
     }
 
+    /**
+     * @return BelongsToMany<Module, $this>
+     */
     public function pivotModules(): BelongsToMany
     {
         $relation = $this->belongsToMany(

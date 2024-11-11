@@ -6,7 +6,6 @@ use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,7 +16,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Employee extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -104,11 +102,17 @@ class Employee extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Institution, $this>
+     */
     public function relationWithInstitution(): BelongsTo
     {
         return $this->belongsTo(Institution::class, 'emp__inst_id', 'inst_id');
     }
 
+    /**
+     * @return HasOne<User, $this>
+     */
     public function relationWithUser(): HasOne
     {
         return $this->hasOne(User::class, 'user__emp_id', 'emp_id');

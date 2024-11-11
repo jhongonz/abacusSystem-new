@@ -5,14 +5,12 @@ namespace Core\Campus\Infrastructure\Persistence\Eloquent\Model;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use DateTime;
 use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Campus extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -91,6 +89,9 @@ class Campus extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Institution, $this>
+     */
     public function relationWithInstitution(): BelongsTo
     {
         return $this->belongsTo(Institution::class, 'cam__inst_id', 'inst_id');

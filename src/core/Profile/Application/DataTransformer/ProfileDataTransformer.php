@@ -4,7 +4,6 @@ namespace Core\Profile\Application\DataTransformer;
 
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Profile;
-use Exception;
 
 class ProfileDataTransformer implements ProfileDataTransformerContract
 {
