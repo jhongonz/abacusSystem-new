@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\User\Application\Factory\DataProvider;
 
 final class DataProviderUserFactory
 {
+    /**
+     * @return array<int, array<int, array<string, mixed>>>
+     */
     public static function provider(): array
     {
         return [

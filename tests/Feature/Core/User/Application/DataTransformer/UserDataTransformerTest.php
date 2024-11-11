@@ -57,8 +57,11 @@ class UserDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $expected
+     * @param string $datetime
+     * @return void
      * @throws Exception
-     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'provider')]
     public function test_read_should_return_array(array $expected, string $datetime): void

@@ -27,6 +27,7 @@ class UserWarmupTest extends TestCase
 
     private UserFactoryContract|MockObject $userFactoryMock;
 
+    /** @var array|UserRepositoryContract[] */
     private array $repositories;
 
     private UserRepositoryContract|MockObject $readRepository;

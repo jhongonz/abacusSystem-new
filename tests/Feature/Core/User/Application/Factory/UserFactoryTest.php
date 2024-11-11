@@ -42,6 +42,8 @@ class UserFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataUser
+     * @return void
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderUserFactory::class, 'provider')]

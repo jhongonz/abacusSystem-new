@@ -117,7 +117,7 @@ class Profile
     }
 
     /**
-     * @param array<int<0, max>, int||string|null> $ids
+     * @param array<int<0, max>, int|string|null> $ids
      * @return $this
      */
     public function setModulesAggregator(array $ids): self

@@ -10,6 +10,9 @@ use DateTime;
 
 final class DataProviderEloquentRepository
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerInsert(): array
     {
         $datetime = new DateTime('2024-04-28 09:46:00');
@@ -31,6 +34,9 @@ final class DataProviderEloquentRepository
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerUpdate(): array
     {
         $datetime = new DateTime('2024-04-28 09:46:00');
@@ -62,6 +68,9 @@ final class DataProviderEloquentRepository
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerDelete(): array
     {
         return [

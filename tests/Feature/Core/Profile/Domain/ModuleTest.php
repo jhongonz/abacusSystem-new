@@ -247,9 +247,12 @@ class ModuleTest extends TestCase
         $this->assertIsArray($result);
     }
 
+    /**
+     * @throws Exception
+     */
     public function test_setOptions_should_change_and_return_self(): void
     {
-        $options = [1, 2, 3];
+        $options = [$this->createMock(Module::class)];
         $result = $this->module->setOptions($options);
 
         $this->assertInstanceOf(Module::class, $result);

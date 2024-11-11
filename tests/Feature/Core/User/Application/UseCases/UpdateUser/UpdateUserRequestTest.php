@@ -18,6 +18,7 @@ class UpdateUserRequestTest extends TestCase
 {
     private UserId|Mock $userId;
 
+    /** @var array<string, mixed> */
     private array $data;
 
     private UpdateUserRequest $request;

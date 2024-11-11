@@ -280,11 +280,13 @@ class EloquentUserRepositoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataInsert
+     * @param \DateTime $dateCreated
+     * @return void
      * @throws Exception
-     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerInsert')]
-    public function test_persistUser_should_return_user_object($dataInsert, $dateCreated): void
+    public function test_persistUser_should_return_user_object(array $dataInsert, \DateTime $dateCreated): void
     {
         $userMock = $this->createMock(UserDomain::class);
 
@@ -443,8 +445,11 @@ class EloquentUserRepositoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataReturn
+     * @param array<string, mixed> $dataUpdate
+     * @param \DateTime $dateUpdated
+     * @return void
      * @throws Exception
-     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerUpdate')]
     public function test_persistUser_should_update_model_and_return_user_object(array $dataReturn, array $dataUpdate, \DateTime $dateUpdated): void
@@ -621,8 +626,10 @@ class EloquentUserRepositoryTest extends TestCase
     }
 
     /**
-     * @throws UserNotFoundException
+     * @param array<string, mixed> $dataReturn
+     * @return void
      * @throws Exception
+     * @throws UserNotFoundException
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerDelete')]
     public function test_delete_should_delete_row(array $dataReturn): void

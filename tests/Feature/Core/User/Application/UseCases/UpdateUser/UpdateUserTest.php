@@ -53,8 +53,9 @@ class UpdateUserTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataUpdate
+     * @return void
      * @throws Exception
-     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderUpdateUser::class, 'provider')]
     public function test_execute_should_return_user_object(array $dataUpdate): void
