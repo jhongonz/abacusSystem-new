@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 /var/coverage
 /var/infection
+/var/phpstan

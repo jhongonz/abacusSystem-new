@@ -20,7 +20,7 @@ test-coverage:
 	$(PHPUNIT) --coverage-text
 
 analyse:
-	$(PHPSTAN) analyse app src tests --level=6
+	$(PHPSTAN) analyse
 
 pint:
 	$(PINT)
