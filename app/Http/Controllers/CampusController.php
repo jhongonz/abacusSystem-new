@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Campus\StoreCampusRequest;
+use App\Traits\DataTablesTrait;
 use Core\Campus\Domain\Campus;
 use Core\Employee\Domain\Employee;
 use Illuminate\Contracts\Session\Session;
@@ -11,15 +12,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Exceptions\Exception;
 
 class CampusController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly Session $session,
+        private readonly DataTables $datatables,
         LoggerInterface $logger,
         ViewFactory $viewFactory
     ) {
@@ -35,18 +42,31 @@ class CampusController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getCampusCollection(Request $request): JsonResponse
     {
         /** @var Employee $employee */
         $employee = $this->session->get('employee');
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
-        return $this->orchestrators->handler('retrieve-campus-collection', $request);
+        $dataCampus = $this->orchestrators->handler('retrieve-campus-collection', $request);
+        $collection = new Collection($dataCampus);
+        
+        $dataTable = $this->datatables->collection($collection);
+        $dataTable->addColumn('tools', function (array $element): string {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $dataTable->escapeColumns([])->toJson();
     }
 
     public function getCampus(Request $request, ?int $campusId = null): JsonResponse|string
     {
         $request->merge(['campusId' => $campusId]);
+
+        /** @var array<string, mixed> $dataCampus */
         $dataCampus = $this->orchestrators->handler('detail-campus', $request);
 
         $view = $this->viewFactory->make('campus.campus-form', $dataCampus)

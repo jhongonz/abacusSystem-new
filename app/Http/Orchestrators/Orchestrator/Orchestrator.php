@@ -12,9 +12,8 @@ interface Orchestrator
 {
     /**
      * @param Request $request
-     * @return mixed
      */
-    public function make(Request $request): mixed;
+    public function make(Request $request);
 
     /**
      * @return string

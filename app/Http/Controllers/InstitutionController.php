@@ -9,6 +9,7 @@ use Core\Institution\Domain\Institution;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
@@ -74,9 +75,11 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function setLogoInstitution(Request $request): JsonResponse
     {
-        if ($request->file('file')->isValid()) {
+        $uploadedFile = $request->file('file');
+        if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
+
             $random = Str::random(10);
-            $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
+            $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
         }

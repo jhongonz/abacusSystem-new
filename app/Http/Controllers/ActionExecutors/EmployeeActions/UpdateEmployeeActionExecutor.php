@@ -50,7 +50,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataUpdate['image'] = $filename;
         }
         $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
@@ -68,7 +68,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         }
 
         if ($request->filled('password')) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
+            $dataUpdateUser['password'] = $this->makeHashPassword($request->string('password'));
         }
 
         $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);
@@ -77,7 +77,10 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
 
         /** @var User $user */
         $user = $this->orchestratorHandler->handler($actionUser, $request);
-        $employee->userId()->setValue($user->id()->value());
+
+        if (! is_null($user->id()->value())) {
+            $employee->userId()->setValue($user->id()->value());
+        }
 
         return $employee;
     }

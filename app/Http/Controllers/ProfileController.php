@@ -48,7 +48,7 @@ class ProfileController extends Controller implements HasMiddleware
             /** @var Profile $profile */
             $profile = $this->orchestrators->handler('change-state-profile', $request);
 
-            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
+            ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -75,7 +75,7 @@ class ProfileController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_OK);
     }
 
-    public function getProfile(Request $request, ?int $id = null): JsonResponse
+    public function getProfile(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['profileId' => $id]);
         $dataProfile = $this->orchestrators->handler('detail-profile', $request);
@@ -94,7 +94,7 @@ class ProfileController extends Controller implements HasMiddleware
             /** @var Profile $profile */
             $profile = $this->orchestrators->handler($method, $request);
 
-            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
+            ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

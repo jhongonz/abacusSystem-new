@@ -13,6 +13,7 @@ use Core\Employee\Domain\Employee;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
@@ -96,8 +97,8 @@ class EmployeeController extends Controller implements HasMiddleware
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);
 
-            EmployeeUpdateOrDeletedEvent::dispatch($employee->id()->value());
-            UserUpdateOrDeleteEvent::dispatch($employee->userId()->value());
+            EmployeeUpdateOrDeletedEvent::dispatch((int) $employee->id()->value());
+            UserUpdateOrDeleteEvent::dispatch((int) $employee->userId()->value());
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -118,9 +119,11 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function setImageEmployee(Request $request): JsonResponse
     {
-        if ($request->file('file')->isValid()) {
+        $uploadedFile = $request->file('file');
+        if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
+            
             $random = Str::random(10);
-            $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
+            $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
         }

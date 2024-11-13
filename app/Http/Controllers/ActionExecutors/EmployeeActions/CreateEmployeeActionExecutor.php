@@ -33,7 +33,10 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
 
         /** @var User $user */
         $user = $this->orchestratorHandler->handler('create-user', $request);
-        $employee->userId()->setValue($user->id()->value());
+
+        if (!is_null($user->id()->value())) {
+            $employee->userId()->setValue($user->id()->value());
+        }
 
         return $employee;
     }

@@ -39,10 +39,12 @@ abstract class Controller
 
             /** @var Router $routerService */
             $routerService = app(Router::class);
-            $route = $routerService->current()->uri();
+
+            $routeCurrent = $routerService->current();
+            $route = ($routeCurrent) ? $routeCurrent->uri() : '';
         }
 
-        return json_encode([
+        return (string) json_encode([
             'start' => 0,
             'filters' => [],
             'uri' => $route

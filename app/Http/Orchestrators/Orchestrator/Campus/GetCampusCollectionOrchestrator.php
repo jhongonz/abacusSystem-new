@@ -6,37 +6,29 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Campus;
 
-use App\Traits\DataTablesTrait;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\View\Factory as ViewFactory;
-use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Exceptions\Exception;
 
+/**
+ * @template TKey of array-key
+ * @template-covariant TValue
+ */
 class GetCampusCollectionOrchestrator extends CampusOrchestrator
 {
-    use DataTablesTrait;
-
     public function __construct(
         CampusManagementContract $campusManagement,
         private readonly CampusDataTransformerContract $campusDataTransformer,
-        private readonly DataTables $dataTables,
-        protected ViewFactory $viewFactory
     ) {
         parent::__construct($campusManagement);
-        $this->setViewFactory($viewFactory);
     }
 
     /**
      * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
+     * @return array<int|string, mixed>
      */
-    public function make(Request $request): JsonResponse
+    public function make(Request $request): array
     {
         $campusCollection = $this->campusManagement->searchCampusCollection(
             $request->input('institutionId'),
@@ -51,13 +43,7 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
             }
         }
 
-        $collection = new Collection($dataCampus);
-        $dataTable = $this->dataTables->collection($collection);
-        $dataTable->addColumn('tools', function (array $element): string {
-            return $this->retrieveMenuOptionHtml($element);
-        });
-
-        return $dataTable->escapeColumns([])->toJson();
+        return $dataCampus;
     }
 
     /**

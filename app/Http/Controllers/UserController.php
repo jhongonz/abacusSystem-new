@@ -74,7 +74,7 @@ class UserController extends Controller implements HasMiddleware
     {
         $dataUpdate = [
             'state' => ValueObjectStatus::STATE_ACTIVE,
-            'password' => $this->makeHashPassword($request->input('password')),
+            'password' => $this->makeHashPassword($request->string('password')),
         ];
 
         $request->merge(['dataUpdate' => $dataUpdate]);
