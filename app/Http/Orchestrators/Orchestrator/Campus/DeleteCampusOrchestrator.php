@@ -22,7 +22,7 @@ class DeleteCampusOrchestrator extends CampusOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->campusManagement->deleteCampus($request->input('campusId'));
+        $this->campusManagement->deleteCampus($request->integer('campusId'));
         return true;
     }
 

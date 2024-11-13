@@ -10,13 +10,12 @@ use App\Traits\DataTablesTrait;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\View\Factory as ViewFactory;
-use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Exceptions\Exception;
 
+/**
+ * @template TKey of array-key
+ * @template-covariant TValue
+ */
 class GetEmployeesOrchestrator extends EmployeeOrchestrator
 {
     use DataTablesTrait;
@@ -24,22 +23,18 @@ class GetEmployeesOrchestrator extends EmployeeOrchestrator
     public function __construct(
         EmployeeManagementContract $employeeManagement,
         private readonly EmployeeDataTransformerContract $employeeDataTransformer,
-        private readonly DataTables $dataTables,
-        protected ViewFactory $viewFactory,
     ) {
         parent::__construct($employeeManagement);
-        $this->setViewFactory($viewFactory);
     }
 
     /**
      * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
+     * @return array<int|string, mixed>
      */
-    public function make(Request $request): JsonResponse
+    public function make(Request $request): array
     {
         $employees = $this->employeeManagement->searchEmployees(
-            $request->input('filters')
+            (array) $request->input('filters')
         );
 
         $dataEmployees = [];
@@ -50,13 +45,7 @@ class GetEmployeesOrchestrator extends EmployeeOrchestrator
             }
         }
 
-        $collection = new Collection($dataEmployees);
-        $datatable = $this->dataTables->collection($collection);
-        $datatable->addColumn('tools', function (array $element): string {
-            return $this->retrieveMenuOptionHtml($element);
-        });
-
-        return $datatable->escapeColumns([])->toJson();
+        return $dataEmployees;
     }
 
     /**

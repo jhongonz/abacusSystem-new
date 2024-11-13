@@ -53,7 +53,7 @@ class CampusController extends Controller implements HasMiddleware
 
         $dataCampus = $this->orchestrators->handler('retrieve-campus-collection', $request);
         $collection = new Collection($dataCampus);
-        
+
         $dataTable = $this->datatables->collection($collection);
         $dataTable->addColumn('tools', function (array $element): string {
             return $this->retrieveMenuOptionHtml($element);

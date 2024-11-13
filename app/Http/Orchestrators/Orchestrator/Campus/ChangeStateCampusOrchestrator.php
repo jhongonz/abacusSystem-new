@@ -8,6 +8,7 @@ namespace App\Http\Orchestrators\Orchestrator\Campus;
 
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
+use Core\Campus\Exceptions\CampusNotFoundException;
 use Illuminate\Http\Request;
 
 class ChangeStateCampusOrchestrator extends CampusOrchestrator
@@ -20,11 +21,16 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
     /**
      * @param Request $request
      * @return Campus
+     * @throws CampusNotFoundException
      */
     public function make(Request $request): Campus
     {
-        $campusId = $request->input('campusId');
+        $campusId = $request->integer('campusId');
         $campus = $this->campusManagement->searchCampusById($campusId);
+
+        if (is_null($campus)) {
+            throw new CampusNotFoundException(sprintf('Campus not found with id %s', $campusId));
+        }
 
         $campusState = $campus->state();
         if ($campusState->isNew() || $campusState->isInactivated()) {
@@ -34,7 +40,6 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
         }
 
         $dataUpdate['state'] = $campusState->value();
-
         return $this->campusManagement->updateCampus($campusId, $dataUpdate);
     }
 

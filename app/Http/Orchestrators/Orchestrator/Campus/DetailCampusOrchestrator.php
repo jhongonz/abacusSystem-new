@@ -23,9 +23,9 @@ class DetailCampusOrchestrator extends CampusOrchestrator
      */
     public function make(Request $request): array
     {
-        $campusId = $request->input('campusId');
+        $campusId = $request->integer('campusId');
 
-        if (! is_null($campusId)) {
+        if (! empty($campusId)) {
             $campus = $this->campusManagement->searchCampusById($campusId);
         }
 

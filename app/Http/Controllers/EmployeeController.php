@@ -7,6 +7,7 @@ use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
@@ -16,20 +17,24 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
     use UserTrait;
+    use DataTablesTrait;
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly ActionExecutorHandler $actionExecutorHandler,
+        private readonly DataTables $dataTables,
         protected ImageManagerInterface $imageManager,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
@@ -47,9 +52,20 @@ class EmployeeController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getEmployees(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-employees', $request);
+        $dataEmployees = $this->orchestrators->handler('retrieve-employees', $request);
+
+        $collection = new Collection($dataEmployees);
+        $datatable = $this->dataTables->collection($collection);
+        $datatable->addColumn('tools', function (array $element): string {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateEmployee(Request $request): JsonResponse
@@ -121,7 +137,7 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $uploadedFile = $request->file('file');
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-            
+
             $random = Str::random(10);
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 

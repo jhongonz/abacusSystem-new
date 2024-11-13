@@ -34,11 +34,10 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): Employee
     {
-        $birthdate = $request->date('birthdate', 'd/m/Y');
         $dataEmployee = [
-            'id' => $request->input('employeeId'),
+            'id' => $request->integer('employeeId'),
             'userId' => null,
-            'institutionId' => $request->input('institutionId'),
+            'institutionId' => $request->integer('institutionId'),
             'identification' => $request->input('identifier'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
@@ -47,13 +46,17 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => $this->getDateTime($birthdate->format('Y-m-d'))->format('Y-m-d H:i:s'),
             'state' => ValueObjectStatus::STATE_NEW,
             'image' => null
         ];
 
+        $birthdate = $request->date('birthdate', 'd/m/Y');
+        if (! is_null($birthdate)) {
+            $dataEmployee['birthdate'] = $this->getDateTime($birthdate->format('Y-m-d'))->format('Y-m-d H:i:s');
+        }
+
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataEmployee['image'] = $filename;
         }
 

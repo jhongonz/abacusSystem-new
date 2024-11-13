@@ -31,7 +31,7 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
             'observations' => $request->input('observations'),
         ];
 
-        return $this->campusManagement->updateCampus($request->input('campusId'), $dataUpdate);
+        return $this->campusManagement->updateCampus($request->integer('campusId'), $dataUpdate);
     }
 
     /**

@@ -8,6 +8,7 @@ namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Illuminate\Http\Request;
 
 class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
@@ -20,11 +21,16 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
     /**
      * @param Request $request
      * @return Employee
+     * @throws EmployeeNotFoundException
      */
     public function make(Request $request): Employee
     {
-        $employeeId = $request->input('id');
+        $employeeId = $request->integer('id');
         $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+
+        if (is_null($employee)) {
+            throw new EmployeeNotFoundException(sprintf('Employee with id %s not found', $employeeId));
+        }
 
         $employeeState = $employee->state();
         if ($employeeState->isNew() || $employeeState->isInactivated()) {
@@ -34,7 +40,6 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $dataUpdate['state'] = $employeeState->value();
-
         return $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
     }
 

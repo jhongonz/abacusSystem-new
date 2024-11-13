@@ -20,7 +20,7 @@ class DeleteEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->employeeManagement->deleteEmployee($request->input('employeeId'));
+        $this->employeeManagement->deleteEmployee($request->integer('employeeId'));
         return true;
     }
 
