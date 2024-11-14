@@ -30,7 +30,7 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
             'modules' => $this->getModulesAggregator($request)
         ];
 
-        return $this->profileManagement->updateProfile($request->input('profileId'), $dataUpdate);
+        return $this->profileManagement->updateProfile($request->integer('profileId'), $dataUpdate);
     }
 
     /**

@@ -23,7 +23,7 @@ class DeleteProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->profileManagement->deleteProfile($request->input('profileId'));
+        $this->profileManagement->deleteProfile($request->integer('profileId'));
 
         return true;
     }

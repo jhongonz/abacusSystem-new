@@ -6,56 +6,39 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
-use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\View\Factory as ViewFactory;
-use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Exceptions\Exception;
 
 class GetProfilesOrchestrator extends ProfileOrchestrator
 {
-    use DataTablesTrait;
-
     public function __construct(
         ProfileManagementContract $profileManagement,
-        protected ViewFactory $viewFactory,
-        private readonly DataTables $dataTables,
         private readonly ProfileDataTransformerContract $profileDataTransformer
     ) {
         parent::__construct($profileManagement);
-        $this->setViewFactory($viewFactory);
     }
 
     /**
      * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
+     * @return array<int, array<int|string, mixed>>
      */
-    public function make(Request $request): JsonResponse
+    public function make(Request $request): array
     {
-        $filters = $request->input('filters', []);
+        $filters = (array) $request->input('filters', []);
         $profiles = $this->profileManagement->searchProfiles($filters);
 
         $dataProfiles = [];
         if ($profiles->count()) {
+
             /** @var Profile $item */
             foreach ($profiles as $item) {
                 $dataProfiles[] = $this->profileDataTransformer->write($item)->readToShare();
             }
         }
 
-        $collection = new Collection($dataProfiles);
-        $datatable = $this->dataTables->collection($collection);
-        $datatable->addColumn('tools', function (array $element) {
-            return $this->retrieveMenuOptionHtml($element);
-        });
-
-        return $datatable->escapeColumns([])->toJson();
+        return $dataProfiles;
     }
 
     /**

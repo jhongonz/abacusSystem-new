@@ -23,8 +23,7 @@ class GetProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): ?Profile
     {
-        $profileId = $request->input('profileId');
-
+        $profileId = $request->integer('profileId');
         return $this->profileManagement->searchProfileById($profileId);
     }
 

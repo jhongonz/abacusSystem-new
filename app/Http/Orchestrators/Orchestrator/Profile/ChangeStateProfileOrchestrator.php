@@ -8,6 +8,7 @@ namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
+use Core\Profile\Exceptions\ProfileNotFoundException;
 use Illuminate\Http\Request;
 
 class ChangeStateProfileOrchestrator extends ProfileOrchestrator
@@ -21,11 +22,16 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
     /**
      * @param Request $request
      * @return Profile
+     * @throws ProfileNotFoundException
      */
     public function make(Request $request): Profile
     {
-        $profileId = $request->input('profileId');
+        $profileId = $request->integer('profileId');
         $profile = $this->profileManagement->searchProfileById($profileId);
+
+        if (is_null($profile)) {
+            throw new ProfileNotFoundException(sprintf('Profile with id %s not found', $profileId));
+        }
 
         $state = $profile->state();
         if ($state->isNew() || $state->isInactivated()) {
@@ -35,7 +41,6 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
-
         return $this->profileManagement->updateProfile($profileId, $dataUpdate);
     }
 

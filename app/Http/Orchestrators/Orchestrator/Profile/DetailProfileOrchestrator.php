@@ -30,14 +30,8 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): array
     {
-        $profileId = $request->input('profileId');
-        $profile = null;
-
-        if (isset($profileId)) {
-
-            /** @var Profile $profile */
-            $profile = $this->profileManagement->searchProfileById($profileId);
-        }
+        $profileId = $request->integer('profileId');
+        $profile = $this->profileManagement->searchProfileById($profileId);
 
         $modules = $this->moduleManagement->searchModules();
         $privileges = $this->retrievePrivilegesProfile($modules, $profile);
@@ -61,14 +55,16 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
     /**
      * @param Modules $modules
      * @param Profile|null $profile
-     * @return array<string, mixed>
+     * @return array<int|string, mixed>
      */
     private function retrievePrivilegesProfile(Modules $modules, ?Profile $profile): array
     {
-        $modulesToProfile = (isset($profile)) ? $profile->modulesAggregator() : [];
-        $parents = $this->config->get('menu.options');
-        $privileges = [];
+        $modulesToProfile = (!is_null($profile)) ? $profile->modulesAggregator() : [];
 
+        /** @var array<string, mixed> $parents */
+        $parents = $this->config->get('menu.options');
+
+        $privileges = [];
         foreach ($parents as $index => $item) {
             $modulesParent = $modules->moduleElementsOfKey($index);
 

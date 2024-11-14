@@ -5,20 +5,26 @@ namespace App\Http\Controllers;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
+use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Profile;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly DataTables $dataTables,
         ViewFactory $viewFactory,
         LoggerInterface $logger
     ) {
@@ -39,7 +45,15 @@ class ProfileController extends Controller implements HasMiddleware
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-profiles', $request);
+        $dataProfiles = $this->orchestrators->handler('retrieve-profiles', $request);
+
+        $collection = new Collection($dataProfiles);
+        $datatable = $this->dataTables->collection($collection);
+        $datatable->addColumn('tools', function (array $element) {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateProfile(Request $request): JsonResponse
