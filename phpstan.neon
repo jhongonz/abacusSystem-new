@@ -6,8 +6,6 @@ parameters:
 
     paths:
         - app/
-        - database/
-        - routes/
         - src/
 
     excludePaths:

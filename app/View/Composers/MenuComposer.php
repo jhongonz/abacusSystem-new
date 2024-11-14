@@ -13,6 +13,7 @@ use Core\User\Domain\User;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -72,7 +73,12 @@ class MenuComposer
     {
         $menuWithChildren = [];
         $menuUnique = [];
-        foreach ($this->config->get('menu.options') as $index => $item) {
+
+        /**
+         * @var string $index
+         * @var array<int|string, mixed> $item
+         */
+        foreach ((array) $this->config->get('menu.options') as $index => $item) {
             $item['id'] = 0;
             $item['state'] = ValueObjectStatus::STATE_ACTIVE;
             $item['createdAt'] = $this->getCurrentTime()->format('Y-m-d H:i:s');
@@ -110,10 +116,12 @@ class MenuComposer
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {
-        $routeCurrent = $this->router->current()->uri();
+        /** @var Route $routeCurrent */
+        $routeCurrent = $this->router->current();
+        $uriCurrent = $routeCurrent->uri();
 
         foreach ($modules as $item) {
-            if ($item->route()->value() === $routeCurrent) {
+            if ($item->route()->value() === $uriCurrent) {
                 $item->setExpanded(true);
                 $mainModule->setExpanded(true);
             }

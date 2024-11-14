@@ -57,7 +57,7 @@ class Modules extends ArrayIterator
 
     /**
      * @param string $menuKey
-     * @return array<int<0, max>, mixed>
+     * @return array<Module>
      */
     public function moduleElementsOfKey(string $menuKey): array
     {
