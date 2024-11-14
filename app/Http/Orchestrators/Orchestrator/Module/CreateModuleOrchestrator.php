@@ -37,13 +37,13 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
      */
     public function make(Request $request): Module
     {
-        $route = $request->input('route');
+        $route = $request->string('route');
 
         try {
             $this->validateRoute($route);
         } catch (AssertionFailedException $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new RouteNotFoundException('Route <'.$route.'> not found', Response::HTTP_NOT_FOUND);
+            throw new RouteNotFoundException(sprintf('Route <%s> not found', $route), Response::HTTP_NOT_FOUND);
         }
 
         $dataModule = [

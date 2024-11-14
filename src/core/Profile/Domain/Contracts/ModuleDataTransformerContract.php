@@ -9,7 +9,7 @@ interface ModuleDataTransformerContract
     public function write(Module $module): ModuleDataTransformerContract;
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, array<string, mixed>>
      */
     public function read(): array;
 

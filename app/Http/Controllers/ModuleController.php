@@ -5,20 +5,26 @@ namespace App\Http\Controllers;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
+use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Module;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class ModuleController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly DataTables $dataTables,
         ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
@@ -34,9 +40,20 @@ class ModuleController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getModules(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-modules', $request);
+        $dataModules = $this->orchestrators->handler('retrieve-modules', $request);
+
+        $collection = new Collection($dataModules);
+        $datatable = $this->dataTables->collection($collection);
+        $datatable->addColumn('tools', function (array $item) {
+            return $this->retrieveMenuOptionHtml($item);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateModule(Request $request): JsonResponse

@@ -8,6 +8,7 @@ namespace App\Http\Orchestrators\Orchestrator\Module;
 
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
+use Core\Profile\Exceptions\ModuleNotFoundException;
 use Illuminate\Http\Request;
 
 class ChangeStateModuleOrchestrator extends ModuleOrchestrator
@@ -21,13 +22,16 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
     /**
      * @param Request $request
      * @return Module
+     * @throws ModuleNotFoundException
      */
     public function make(Request $request): Module
     {
-        $moduleId = $request->input('moduleId');
-
-        /** @var Module $module */
+        $moduleId = $request->integer('moduleId');
         $module = $this->moduleManagement->searchModuleById($moduleId);
+
+        if (is_null($module)) {
+            throw new ModuleNotFoundException(sprintf('Module with id %s not found', $moduleId));
+        }
 
         $state = $module->state();
         if ($state->isNew() || $state->isInactivated()) {
@@ -37,7 +41,6 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
-
         return $this->moduleManagement->updateModule($moduleId, $dataUpdate);
     }
 

@@ -23,7 +23,7 @@ class DeleteModuleOrchestrator extends ModuleOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->moduleManagement->deleteModule($request->input('moduleId'));
+        $this->moduleManagement->deleteModule($request->integer('moduleId'));
 
         return true;
     }
