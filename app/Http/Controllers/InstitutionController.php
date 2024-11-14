@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
+use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Institution;
 use Exception;
@@ -12,18 +13,22 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class InstitutionController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
+    use DataTablesTrait;
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
+        private readonly DataTables $dataTables,
         protected ImageManagerInterface $imageManager,
         LoggerInterface $logger,
         ViewFactory $viewFactory,
@@ -57,9 +62,20 @@ class InstitutionController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getInstitutions(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-institutions', $request);
+        $dataInstitutions = $this->orchestrators->handler('retrieve-institutions', $request);
+        $collection = new Collection($dataInstitutions);
+        
+        $datatable = $this->dataTables->collection($collection);
+        $datatable->addColumn('tools', function (array $element) {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function getInstitution(Request $request, ?int $id = null): JsonResponse|string

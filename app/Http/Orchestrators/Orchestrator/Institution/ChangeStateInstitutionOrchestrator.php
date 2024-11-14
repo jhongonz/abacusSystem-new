@@ -8,6 +8,7 @@ namespace App\Http\Orchestrators\Orchestrator\Institution;
 
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
+use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Illuminate\Http\Request;
 
 class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
@@ -21,13 +22,16 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
     /**
      * @param Request $request
      * @return Institution
+     * @throws InstitutionNotFoundException
      */
     public function make(Request $request): Institution
     {
-        $institutionId = $request->input('institutionId');
-
-        /** @var Institution $institution */
+        $institutionId = $request->integer('institutionId');
         $institution = $this->institutionManagement->searchInstitutionById($institutionId);
+
+        if (is_null($institution)) {
+            throw new InstitutionNotFoundException(sprintf('Institution with id %s not found', $institutionId));
+        }
 
         $institutionState = $institution->state();
         if ($institutionState->isNew() || $institutionState->isInactivated()) {
@@ -37,7 +41,6 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $dataUpdate['state'] = $institutionState->value();
-
         return $this->institutionManagement->updateInstitution($institutionId, $dataUpdate);
     }
 

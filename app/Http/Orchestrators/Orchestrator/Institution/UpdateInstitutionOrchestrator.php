@@ -41,11 +41,11 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataUpdate['logo'] = $filename;
         }
 
-        return $this->institutionManagement->updateInstitution($request->input('institutionId'), $dataUpdate);
+        return $this->institutionManagement->updateInstitution($request->integer('institutionId'), $dataUpdate);
     }
 
     /**

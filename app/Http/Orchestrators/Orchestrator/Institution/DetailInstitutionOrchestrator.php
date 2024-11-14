@@ -27,18 +27,16 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
      */
     public function make(Request $request): array
     {
-        $institutionId = $request->input('institutionId');
-        if (! is_null($institutionId)) {
+        $institutionId = $request->integer('institutionId');
+        $institution = $this->institutionManagement->searchInstitutionById($institutionId);
 
-            /** @var Institution $institution */
-            $institution = $this->institutionManagement->searchInstitutionById($institutionId);
-
+        if ($institution instanceof Institution) {
             $urlFile = url(self::IMAGE_PATH_FULL.$institution->logo()->value().'?v='.Str::random(10));
         }
 
         return [
             'institutionId' => $institutionId,
-            'institution' => $institution ?? null,
+            'institution' => $institution,
             'image' => $urlFile ?? null
         ];
     }

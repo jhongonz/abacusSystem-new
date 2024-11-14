@@ -23,7 +23,7 @@ class DeleteInstitutionOrchestrator extends InstitutionOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->institutionManagement->deleteInstitution($request->input('institutionId'));
+        $this->institutionManagement->deleteInstitution($request->integer('institutionId'));
 
         return true;
     }

@@ -32,7 +32,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
     public function make(Request $request): Institution
     {
         $dataInstitution = [
-            'id' => $request->input('institutionId'),
+            'id' => $request->integer('institutionId'),
             'name' => $request->input('name'),
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
@@ -44,7 +44,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataInstitution['logo'] = $filename;
         }
 

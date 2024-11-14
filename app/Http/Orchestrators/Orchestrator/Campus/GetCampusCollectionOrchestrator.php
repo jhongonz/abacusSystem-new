@@ -9,7 +9,6 @@ namespace App\Http\Orchestrators\Orchestrator\Campus;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
-use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Illuminate\Http\Request;
 
 /**
@@ -28,7 +27,6 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
     /**
      * @param Request $request
      * @return array<int|string, mixed>
-     * @throws CampusCollectionNotFoundException
      */
     public function make(Request $request): array
     {
@@ -37,12 +35,9 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
             (array) $request->input('filters')
         );
 
-        if (is_null($campusCollection)) {
-            throw new CampusCollectionNotFoundException('Campus collection not found');
-        }
-
         $dataCampus = [];
-        if ($campusCollection->count()) {
+        if (!is_null($campusCollection) && $campusCollection->count()) {
+
             /** @var Campus $item */
             foreach ($campusCollection as $item) {
                 $dataCampus[] = $this->campusDataTransformer->write($item)->readToShare();

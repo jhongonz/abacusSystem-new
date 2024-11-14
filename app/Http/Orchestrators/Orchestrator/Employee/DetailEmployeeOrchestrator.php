@@ -7,7 +7,7 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
-use Core\Employee\Exceptions\EmployeeNotFoundException;
+use Core\Employee\Domain\Employee;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserManagementContract;
@@ -30,32 +30,30 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
     /**
      * @param Request $request
      * @return array<string, mixed>
-     * @throws EmployeeNotFoundException
      */
     public function make(Request $request): array
     {
         $employeeId = $request->integer('employeeId');
         $employee = $this->employeeManagement->searchEmployeeById($employeeId);
 
-        if (is_null($employee)) {
-            throw new EmployeeNotFoundException(sprintf('Employee with id %s not found', $employeeId));
+        if ($employee instanceof Employee) {
+            $userId = $employee->userId()->value();
+            $user = $this->userManagement->searchUserById($userId);
+
+            $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
         }
 
-        $userId = $employee->userId()->value();
-        $user = $this->userManagement->searchUserById($userId);
-        
-        $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
         $institutions = $this->institutionManagement->searchInstitutions();
         $profiles = $this->profileManagement->searchProfiles();
 
         return [
-            'userId' => $userId,
+            'userId' => $userId ?? null,
             'employeeId' => $employeeId,
             'employee' => $employee,
-            'user' => $user,
+            'user' => $user ?? null,
             'profiles' => $profiles,
             'institutions' => $institutions,
-            'image' => $urlFile,
+            'image' => $urlFile ?? null,
         ];
     }
 

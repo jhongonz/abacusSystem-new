@@ -21,7 +21,7 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int|string, array<string, mixed>>
      */
     public function read(): array
     {
