@@ -30,11 +30,12 @@ class InstitutionController extends Controller implements HasMiddleware
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
         protected ImageManagerInterface $imageManager,
+        protected ViewFactory $viewFactory,
         LoggerInterface $logger,
-        ViewFactory $viewFactory,
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
         $this->setImageManager($imageManager);
+        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string
@@ -69,7 +70,7 @@ class InstitutionController extends Controller implements HasMiddleware
     {
         $dataInstitutions = $this->orchestrators->handler('retrieve-institutions', $request);
         $collection = new Collection($dataInstitutions);
-        
+
         $datatable = $this->dataTables->collection($collection);
         $datatable->addColumn('tools', function (array $element) {
             return $this->retrieveMenuOptionHtml($element);

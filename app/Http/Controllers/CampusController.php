@@ -27,10 +27,11 @@ class CampusController extends Controller implements HasMiddleware
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly Session $session,
         private readonly DataTables $datatables,
-        LoggerInterface $logger,
-        ViewFactory $viewFactory
+        protected ViewFactory $viewFactory,
+        LoggerInterface $logger
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
+        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string

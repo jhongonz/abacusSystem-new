@@ -36,11 +36,12 @@ class EmployeeController extends Controller implements HasMiddleware
         private readonly ActionExecutorHandler $actionExecutorHandler,
         private readonly DataTables $dataTables,
         protected ImageManagerInterface $imageManager,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
         $this->setImageManager($imageManager);
+        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string

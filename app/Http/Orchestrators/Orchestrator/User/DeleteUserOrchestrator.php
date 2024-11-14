@@ -22,7 +22,7 @@ class DeleteUserOrchestrator extends UserOrchestrator
      */
     public function make(Request $request): bool
     {
-        $this->userManagement->deleteUser($request->input('userId'));
+        $this->userManagement->deleteUser($request->integer('userId'));
         return true;
     }
 

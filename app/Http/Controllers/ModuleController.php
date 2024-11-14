@@ -25,10 +25,11 @@ class ModuleController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
+        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string

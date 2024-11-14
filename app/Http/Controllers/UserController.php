@@ -25,11 +25,11 @@ class UserController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         Hasher $hasher,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
         LoggerInterface $logger,
         private readonly UrlGenerator $urlGenerator
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
         $this->setHasher($hasher);
     }
 

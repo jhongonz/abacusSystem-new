@@ -6,20 +6,13 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
-use App\Traits\DataTablesTrait;
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
 
-/**
- * @template TKey of array-key
- * @template-covariant TValue
- */
 class GetEmployeesOrchestrator extends EmployeeOrchestrator
 {
-    use DataTablesTrait;
-
     public function __construct(
         EmployeeManagementContract $employeeManagement,
         private readonly EmployeeDataTransformerContract $employeeDataTransformer,

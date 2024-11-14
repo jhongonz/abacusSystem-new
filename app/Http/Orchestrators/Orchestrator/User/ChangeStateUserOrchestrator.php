@@ -25,7 +25,7 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
     {
         $dataUpdate['state'] = $request->input('state');
 
-        return $this->userManagement->updateUser($request->input('userId'), $dataUpdate);
+        return $this->userManagement->updateUser($request->integer('userId'), $dataUpdate);
     }
 
     /**

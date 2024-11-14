@@ -28,12 +28,12 @@ class SecurityController extends Controller implements HasMiddleware
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
         LoggerInterface $logger,
         private readonly StatefulGuard $guard,
         private readonly Session $session
     ) {
-        parent::__construct($logger, $viewFactory);
+        parent::__construct($logger);
     }
 
     public function index(): Response

@@ -36,7 +36,7 @@ class CreateUserOrchestrator extends UserOrchestrator
             'employeeId' => $request->input('employeeId'),
             'profileId' => $request->input('profile'),
             'login' => $request->input('login'),
-            'password' => $this->makeHashPassword($request->input('password')),
+            'password' => $this->makeHashPassword($request->string('password')),
             'photo' => $request->input('image') ?? null,
             'state' => ValueObjectStatus::STATE_NEW
         ];
