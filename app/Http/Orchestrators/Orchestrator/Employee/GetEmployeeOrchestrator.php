@@ -19,16 +19,18 @@ class GetEmployeeOrchestrator extends EmployeeOrchestrator
 
     /**
      * @param Request $request
-     * @return Employee|null
+     * @return array<string, mixed>
      */
-    public function make(Request $request): ?Employee
+    public function make(Request $request): array
     {
         if ($request->filled('identification')) {
-            return $this->employeeManagement->searchEmployeeByIdentification($request->string('identification'));
+            $employee = $this->employeeManagement->searchEmployeeByIdentification($request->string('identification'));
         }
 
         $employeeId = $request->integer('employeeId');
-        return $this->employeeManagement->searchEmployeeById($employeeId);
+        $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+
+        return ['employee' => $employee];
     }
 
     /**

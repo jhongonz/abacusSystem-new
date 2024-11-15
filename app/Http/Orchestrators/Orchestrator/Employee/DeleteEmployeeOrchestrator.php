@@ -15,8 +15,10 @@ class DeleteEmployeeOrchestrator extends EmployeeOrchestrator
     {
         parent::__construct($employeeManagement);
     }
+
     /**
-     * @inheritDoc
+     * @param Request $request
+     * @return bool
      */
     public function make(Request $request): bool
     {

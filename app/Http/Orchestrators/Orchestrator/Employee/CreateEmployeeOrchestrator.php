@@ -29,10 +29,10 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
 
     /**
      * @param Request $request
-     * @return Employee
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    public function make(Request $request): Employee
+    public function make(Request $request): array
     {
         $dataEmployee = [
             'id' => $request->integer('employeeId'),
@@ -60,7 +60,8 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             $dataEmployee['image'] = $filename;
         }
 
-        return $this->employeeManagement->createEmployee([Employee::TYPE => $dataEmployee]);
+        $employee = $this->employeeManagement->createEmployee([Employee::TYPE => $dataEmployee]);
+        return ['employee' => $employee];
     }
 
     /**

@@ -23,10 +23,10 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
 
     /**
      * @param Request $request
-     * @return Employee
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    public function make(Request $request): Employee
+    public function make(Request $request): array
     {
         /** @var array<string, mixed> $dataUpdate */
         $dataUpdate = json_decode($request->string('dataUpdate'), true);
@@ -38,7 +38,8 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
             $dataUpdate['birthdate'] = $this->getDateTime($birthdate);
         }
 
-        return $this->employeeManagement->updateEmployee($request->integer('employeeId'), $dataUpdate);
+        $employee = $this->employeeManagement->updateEmployee($request->integer('employeeId'), $dataUpdate);
+        return ['employee' => $employee];
     }
 
     /**

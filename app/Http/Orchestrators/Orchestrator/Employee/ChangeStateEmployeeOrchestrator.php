@@ -20,10 +20,10 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
 
     /**
      * @param Request $request
-     * @return Employee
+     * @return array<string, mixed>
      * @throws EmployeeNotFoundException
      */
-    public function make(Request $request): Employee
+    public function make(Request $request): array
     {
         $employeeId = $request->integer('id');
         $employee = $this->employeeManagement->searchEmployeeById($employeeId);
@@ -40,7 +40,9 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $dataUpdate['state'] = $employeeState->value();
-        return $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
+
+        $employee = $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
+        return ['employee' => $employee];
     }
 
     /**
