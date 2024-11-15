@@ -53,9 +53,9 @@ class CampusController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
         $dataCampus = $this->orchestrators->handler('retrieve-campus-collection', $request);
-        $collection = new Collection($dataCampus);
+        $collection = new Collection((array) $dataCampus);
 
-        $dataTable = $this->datatables->collection($collection);
+        $dataTable = $this->datatables->collection((array) $collection);
         $dataTable->addColumn('tools', function (array $element): string {
             return $this->retrieveMenuOptionHtml($element);
         });

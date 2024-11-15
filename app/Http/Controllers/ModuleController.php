@@ -47,9 +47,9 @@ class ModuleController extends Controller implements HasMiddleware
     public function getModules(Request $request): JsonResponse
     {
         $dataModules = $this->orchestrators->handler('retrieve-modules', $request);
+        $collection = new Collection((array) $dataModules);
 
-        $collection = new Collection($dataModules);
-        $datatable = $this->dataTables->collection($collection);
+        $datatable = $this->dataTables->collection((array) $collection);
         $datatable->addColumn('tools', function (array $item) {
             return $this->retrieveMenuOptionHtml($item);
         });
@@ -76,6 +76,8 @@ class ModuleController extends Controller implements HasMiddleware
     public function getModule(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['moduleId' => $id]);
+
+        /** @var array<int|string, mixed> $dataModule */
         $dataModule = $this->orchestrators->handler('detail-module', $request);
 
         $view = $this->viewFactory->make('module.module-form', $dataModule)

@@ -47,9 +47,9 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfiles(Request $request): JsonResponse
     {
         $dataProfiles = $this->orchestrators->handler('retrieve-profiles', $request);
+        $collection = new Collection((array) $dataProfiles);
 
-        $collection = new Collection($dataProfiles);
-        $datatable = $this->dataTables->collection($collection);
+        $datatable = $this->dataTables->collection((array) $collection);
         $datatable->addColumn('tools', function (array $element) {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -93,6 +93,8 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfile(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['profileId' => $id]);
+
+        /** @var array<int|string, mixed> $dataProfile */
         $dataProfile = $this->orchestrators->handler('detail-profile', $request);
 
         $view = $this->viewFactory->make('profile.profile-form', $dataProfile)

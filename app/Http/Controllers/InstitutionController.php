@@ -69,9 +69,9 @@ class InstitutionController extends Controller implements HasMiddleware
     public function getInstitutions(Request $request): JsonResponse
     {
         $dataInstitutions = $this->orchestrators->handler('retrieve-institutions', $request);
-        $collection = new Collection($dataInstitutions);
+        $collection = new Collection((array) $dataInstitutions);
 
-        $datatable = $this->dataTables->collection($collection);
+        $datatable = $this->dataTables->collection((array) $collection);
         $datatable->addColumn('tools', function (array $element) {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -82,6 +82,8 @@ class InstitutionController extends Controller implements HasMiddleware
     public function getInstitution(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['institutionId' => $id]);
+
+        /** @var array<int|string, mixed> $dataInstitution */
         $dataInstitution = $this->orchestrators->handler('detail-institution', $request);
 
         $view = $this->viewFactory->make('institution.institution-form', $dataInstitution)

@@ -100,7 +100,11 @@ class SecurityController extends Controller implements HasMiddleware
     private function getEmployee(Request $request, User $user): Employee
     {
         $request->merge(['employeeId' => $user->employeeId()->value()]);
-        return $this->orchestrators->handler('retrieve-employee', $request);
+
+        /** @var array<int|string, Employee> $dataResponse */
+        $dataResponse = $this->orchestrators->handler('retrieve-employee', $request);
+
+        return $dataResponse['employee'];
     }
 
     /**
@@ -109,7 +113,10 @@ class SecurityController extends Controller implements HasMiddleware
     private function getProfile(Request $request, User $user): Profile
     {
         $request->merge(['profileId' => $user->profileId()->value()]);
-        $profile = $this->orchestrators->handler('retrieve-profile', $request);
+
+        /** @var array<string, Profile> $dataProfile */
+        $dataProfile = $this->orchestrators->handler('retrieve-profile', $request);
+        $profile = $dataProfile['profile'];
 
         if ($profile instanceof Profile && $profile->state()->isInactivated()) {
             $this->logger->warning("User's profile with id: ".$profile->id()->value().' is not active');

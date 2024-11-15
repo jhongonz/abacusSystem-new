@@ -11,10 +11,6 @@ use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Illuminate\Http\Request;
 
-/**
- * @template TKey of array-key
- * @template-covariant TValue
- */
 class GetCampusCollectionOrchestrator extends CampusOrchestrator
 {
     public function __construct(

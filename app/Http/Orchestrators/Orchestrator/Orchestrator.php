@@ -12,7 +12,7 @@ interface Orchestrator
 {
     /**
      * @param Request $request
-     * @return array<string, mixed>|bool
+     * @return array<int|string, mixed>|bool
      */
     public function make(Request $request): array|bool;
 

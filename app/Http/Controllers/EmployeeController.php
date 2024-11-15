@@ -59,9 +59,9 @@ class EmployeeController extends Controller implements HasMiddleware
     public function getEmployees(Request $request): JsonResponse
     {
         $dataEmployees = $this->orchestrators->handler('retrieve-employees', $request);
+        $collection = new Collection((array) $dataEmployees);
 
-        $collection = new Collection($dataEmployees);
-        $datatable = $this->dataTables->collection($collection);
+        $datatable = $this->dataTables->collection((array) $collection);
         $datatable->addColumn('tools', function (array $element): string {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -98,6 +98,8 @@ class EmployeeController extends Controller implements HasMiddleware
     public function getEmployee(Request $request, ?int $employeeId = null): JsonResponse|string
     {
         $request->merge(['employeeId' => $employeeId]);
+
+        /** @var array<int|string, mixed> $dataEmployee */
         $dataEmployee = $this->orchestrators->handler('detail-employee', $request);
 
         $view = $this->viewFactory->make('employee.employee-form', $dataEmployee)
