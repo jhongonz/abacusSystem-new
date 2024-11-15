@@ -19,15 +19,17 @@ class GetUserOrchestrator extends UserOrchestrator
 
     /**
      * @param Request $request
-     * @return User|null
+     * @return array<string, mixed>
      */
-    public function make(Request $request): ?User
+    public function make(Request $request): array
     {
         if ($request->filled('login')) {
-            return $this->userManagement->searchUserByLogin($request->string('login'));
+            $user = $this->userManagement->searchUserByLogin($request->string('login'));
+        } else {
+            $user = $this->userManagement->searchUserById($request->integer('userId'));
         }
 
-        return $this->userManagement->searchUserById($request->integer('userId'));
+        return ['user' => $user];
     }
 
     /**

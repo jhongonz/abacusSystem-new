@@ -21,10 +21,10 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
 
     /**
      * @param Request $request
-     * @return Module
+     * @return array<string, mixed>
      * @throws ModuleNotFoundException
      */
-    public function make(Request $request): Module
+    public function make(Request $request): array
     {
         $moduleId = $request->integer('moduleId');
         $module = $this->moduleManagement->searchModuleById($moduleId);
@@ -41,7 +41,9 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
-        return $this->moduleManagement->updateModule($moduleId, $dataUpdate);
+        $this->moduleManagement->updateModule($moduleId, $dataUpdate);
+
+        return ['module' => $module];
     }
 
     /**

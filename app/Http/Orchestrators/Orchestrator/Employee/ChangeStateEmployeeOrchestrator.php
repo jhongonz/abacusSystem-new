@@ -40,8 +40,8 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $dataUpdate['state'] = $employeeState->value();
+        $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
 
-        $employee = $this->employeeManagement->updateEmployee($employeeId, $dataUpdate);
         return ['employee' => $employee];
     }
 

@@ -20,9 +20,9 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return Profile
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Profile
+    public function make(Request $request): array
     {
         $dataUpdate = [
             'name' => $request->input('name'),
@@ -30,7 +30,8 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
             'modules' => $this->getModulesAggregator($request)
         ];
 
-        return $this->profileManagement->updateProfile($request->integer('profileId'), $dataUpdate);
+        $profile = $this->profileManagement->updateProfile($request->integer('profileId'), $dataUpdate);
+        return ['profile' => $profile];
     }
 
     /**

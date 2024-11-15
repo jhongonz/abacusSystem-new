@@ -21,10 +21,10 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
 
     /**
      * @param Request $request
-     * @return Institution
+     * @return array<string, mixed>
      * @throws InstitutionNotFoundException
      */
-    public function make(Request $request): Institution
+    public function make(Request $request): array
     {
         $institutionId = $request->integer('institutionId');
         $institution = $this->institutionManagement->searchInstitutionById($institutionId);
@@ -41,7 +41,9 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $dataUpdate['state'] = $institutionState->value();
-        return $this->institutionManagement->updateInstitution($institutionId, $dataUpdate);
+        $this->institutionManagement->updateInstitution($institutionId, $dataUpdate);
+
+        return ['institution' => $institution];
     }
 
     /**

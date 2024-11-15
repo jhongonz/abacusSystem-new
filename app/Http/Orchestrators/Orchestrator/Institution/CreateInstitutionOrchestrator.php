@@ -27,9 +27,9 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
 
     /**
      * @param Request $request
-     * @return Institution
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Institution
+    public function make(Request $request): array
     {
         $dataInstitution = [
             'id' => $request->integer('institutionId'),
@@ -48,7 +48,8 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             $dataInstitution['logo'] = $filename;
         }
 
-        return $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+        $institution = $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+        return ['institution' => $institution];
     }
 
     /**

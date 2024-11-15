@@ -25,10 +25,10 @@ class GetEmployeeOrchestrator extends EmployeeOrchestrator
     {
         if ($request->filled('identification')) {
             $employee = $this->employeeManagement->searchEmployeeByIdentification($request->string('identification'));
+        } else {
+            $employeeId = $request->integer('employeeId');
+            $employee = $this->employeeManagement->searchEmployeeById($employeeId);
         }
-
-        $employeeId = $request->integer('employeeId');
-        $employee = $this->employeeManagement->searchEmployeeById($employeeId);
 
         return ['employee' => $employee];
     }

@@ -31,10 +31,10 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
 
     /**
      * @param Request $request
-     * @return Module
+     * @return array<string, mixed>
      * @throws RouteNotFoundException
      */
-    public function make(Request $request): Module
+    public function make(Request $request): array
     {
         $route = $request->string('route');
 
@@ -53,7 +53,8 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
             'key' => $request->input('key'),
         ];
 
-        return $this->moduleManagement->updateModule($request->integer('moduleId'), $dataUpdate);
+        $module = $this->moduleManagement->updateModule($request->integer('moduleId'), $dataUpdate);
+        return ['module' => $module];
     }
 
     /**

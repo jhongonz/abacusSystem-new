@@ -19,13 +19,15 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @throws Exception
+     * @param Request $request
+     * @return array<string, mixed>
      */
-    public function make(Request $request): User
+    public function make(Request $request): array
     {
-        $dataUpdate['state'] = $request->input('state');
+        $dataUpdate['state'] = $request->integer('state');
 
-        return $this->userManagement->updateUser($request->integer('userId'), $dataUpdate);
+        $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdate);
+        return ['user' => $user];
     }
 
     /**

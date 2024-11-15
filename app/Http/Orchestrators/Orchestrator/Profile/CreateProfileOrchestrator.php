@@ -21,9 +21,9 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return Profile
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Profile
+    public function make(Request $request): array
     {
         $dataProfile = [
             'id' => null,
@@ -33,7 +33,8 @@ class CreateProfileOrchestrator extends ProfileOrchestrator
             'state' => ValueObjectStatus::STATE_NEW
         ];
 
-        return $this->profileManagement->createProfile([Profile::TYPE => $dataProfile]);
+        $profile = $this->profileManagement->createProfile([Profile::TYPE => $dataProfile]);
+        return ['profile' => $profile];
     }
 
     /**

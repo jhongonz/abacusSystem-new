@@ -21,10 +21,10 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return Profile
+     * @return array<string, mixed>
      * @throws ProfileNotFoundException
      */
-    public function make(Request $request): Profile
+    public function make(Request $request): array
     {
         $profileId = $request->integer('profileId');
         $profile = $this->profileManagement->searchProfileById($profileId);
@@ -41,7 +41,9 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
         }
 
         $dataUpdate['state'] = $state->value();
-        return $this->profileManagement->updateProfile($profileId, $dataUpdate);
+        $this->profileManagement->updateProfile($profileId, $dataUpdate);
+
+        return ['profile' => $profile];
     }
 
     /**

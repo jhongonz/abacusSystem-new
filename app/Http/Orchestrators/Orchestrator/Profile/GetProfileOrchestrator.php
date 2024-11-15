@@ -19,12 +19,14 @@ class GetProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return Profile|null
+     * @return array<string, mixed>
      */
-    public function make(Request $request): ?Profile
+    public function make(Request $request): array
     {
         $profileId = $request->integer('profileId');
-        return $this->profileManagement->searchProfileById($profileId);
+        $profile = $this->profileManagement->searchProfileById($profileId);
+
+        return['profile' => $profile];
     }
 
     /**

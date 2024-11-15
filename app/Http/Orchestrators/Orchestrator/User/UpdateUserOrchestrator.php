@@ -20,13 +20,15 @@ class UpdateUserOrchestrator extends UserOrchestrator
 
     /**
      * @param Request $request
-     * @return User
+     * @return array<string, mixed>
      */
-    public function make(Request $request): User
+    public function make(Request $request): array
     {
         /** @var array<string, mixed> $dataUpdateUser */
         $dataUpdateUser = json_decode($request->string('dataUpdate'), true);
-        return $this->userManagement->updateUser($request->integer('userId'), $dataUpdateUser);
+
+        $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdateUser);
+        return ['user' => $user];
     }
 
     /**

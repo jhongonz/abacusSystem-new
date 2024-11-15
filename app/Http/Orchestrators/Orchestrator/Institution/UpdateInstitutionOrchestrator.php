@@ -26,9 +26,9 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
 
     /**
      * @param Request $request
-     * @return Institution
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Institution
+    public function make(Request $request): array
     {
         $dataUpdate = [
             'code' => $request->input('code'),
@@ -45,7 +45,8 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
             $dataUpdate['logo'] = $filename;
         }
 
-        return $this->institutionManagement->updateInstitution($request->integer('institutionId'), $dataUpdate);
+        $institution = $this->institutionManagement->updateInstitution($request->integer('institutionId'), $dataUpdate);
+        return ['institution' => $institution];
     }
 
     /**

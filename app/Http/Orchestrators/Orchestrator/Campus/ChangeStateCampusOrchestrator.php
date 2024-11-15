@@ -40,7 +40,7 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
         }
 
         $dataUpdate['state'] = $campusState->value();
-        $campus = $this->campusManagement->updateCampus($campusId, $dataUpdate);
+        $this->campusManagement->updateCampus($campusId, $dataUpdate);
 
         return ['campus' => $campus];
     }

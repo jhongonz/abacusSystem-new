@@ -27,13 +27,13 @@ class CreateUserOrchestrator extends UserOrchestrator
 
     /**
      * @param Request $request
-     * @return User
+     * @return array<string, mixed>
      */
-    public function make(Request $request): User
+    public function make(Request $request): array
     {
         $dataUser = [
             'id' => null,
-            'employeeId' => $request->input('employeeId'),
+            'employeeId' => $request->integer('employeeId'),
             'profileId' => $request->input('profile'),
             'login' => $request->input('login'),
             'password' => $this->makeHashPassword($request->string('password')),
@@ -41,7 +41,8 @@ class CreateUserOrchestrator extends UserOrchestrator
             'state' => ValueObjectStatus::STATE_NEW
         ];
 
-        return $this->userManagement->createUser([User::TYPE => $dataUser]);
+        $user = $this->userManagement->createUser([User::TYPE => $dataUser]);
+        return ['user' => $user];
     }
 
     /**

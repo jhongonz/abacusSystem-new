@@ -32,10 +32,10 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
 
     /**
      * @param Request $request
-     * @return Module
+     * @return array<string, mixed>
      * @throws RouteNotFoundException
      */
-    public function make(Request $request): Module
+    public function make(Request $request): array
     {
         $route = $request->string('route');
 
@@ -56,7 +56,8 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'state' => ValueObjectStatus::STATE_NEW,
         ];
 
-        return $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
+        $module = $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
+        return ['module' => $module];
     }
 
     /**
