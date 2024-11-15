@@ -19,9 +19,9 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
 
     /**
      * @param Request $request
-     * @return Campus
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Campus
+    public function make(Request $request): array
     {
         $dataUpdate = [
             'name' => $request->input('name'),
@@ -31,7 +31,8 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
             'observations' => $request->input('observations'),
         ];
 
-        return $this->campusManagement->updateCampus($request->integer('campusId'), $dataUpdate);
+        $campus = $this->campusManagement->updateCampus($request->integer('campusId'), $dataUpdate);
+        return ['campus' => $campus];
     }
 
     /**

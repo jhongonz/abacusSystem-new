@@ -17,9 +17,9 @@ class OrchestratorHandler implements OrchestratorHandlerContract
     /**
      * @param string $actionType
      * @param Request $request
-     * @return mixed
+     * @return array<string, mixed>
      */
-    public function handler(string $actionType, Request $request): mixed
+    public function handler(string $actionType, Request $request): array
     {
         return $this->orchestrators[$actionType]->make($request);
     }

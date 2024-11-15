@@ -14,8 +14,10 @@ interface OrchestratorHandlerContract
     /**
      * @param string $actionType
      * @param Request $request
+     *
+     * @return array<string, mixed>
      */
-    public function handler(string $actionType, Request $request);
+    public function handler(string $actionType, Request $request): array;
 
     /**
      * @param Orchestrator $orchestrator

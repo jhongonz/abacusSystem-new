@@ -20,9 +20,9 @@ class CreateCampusOrchestrator extends CampusOrchestrator
 
     /**
      * @param Request $request
-     * @return Campus
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Campus
+    public function make(Request $request): array
     {
         $dataCampus = [
             'id' => $request->input('campusId'),
@@ -35,7 +35,8 @@ class CreateCampusOrchestrator extends CampusOrchestrator
             'state' => ValueObjectStatus::STATE_NEW
         ];
 
-        return $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);
+        $campus = $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);
+        return ['campus' => $campus];
     }
 
     /**

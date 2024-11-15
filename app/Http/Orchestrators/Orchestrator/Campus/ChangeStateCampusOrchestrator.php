@@ -20,10 +20,10 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
 
     /**
      * @param Request $request
-     * @return Campus
+     * @return array<string, mixed>
      * @throws CampusNotFoundException
      */
-    public function make(Request $request): Campus
+    public function make(Request $request): array
     {
         $campusId = $request->integer('campusId');
         $campus = $this->campusManagement->searchCampusById($campusId);
@@ -40,7 +40,9 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
         }
 
         $dataUpdate['state'] = $campusState->value();
-        return $this->campusManagement->updateCampus($campusId, $dataUpdate);
+        $campus = $this->campusManagement->updateCampus($campusId, $dataUpdate);
+
+        return ['campus' => $campus];
     }
 
     /**
