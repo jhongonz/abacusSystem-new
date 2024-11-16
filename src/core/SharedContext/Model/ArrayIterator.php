@@ -8,7 +8,7 @@ namespace Core\SharedContext\Model;
 abstract class ArrayIterator extends \ArrayIterator
 {
     /**
-     * @var array<int|string, mixed> $items
+     * @var array<int|string, mixed>
      */
     protected array $items = [];
 
@@ -18,7 +18,7 @@ abstract class ArrayIterator extends \ArrayIterator
     protected array $aggregator = [];
 
     /**
-     * @var array<int|string, mixed> $filters
+     * @var array<int|string, mixed>
      */
     protected array $filters = [];
 
@@ -41,14 +41,13 @@ abstract class ArrayIterator extends \ArrayIterator
 
     /**
      * @param array<int|string, mixed> $filters
-     * @return ArrayIterator
      */
     abstract public function setFilters(array $filters): ArrayIterator;
 
     protected function validateInstanceElement(string $class, mixed $item): void
     {
         if (!$item instanceof $class) {
-            throw new \InvalidArgumentException('Item is not valid to collection '. get_class($this));
+            throw new \InvalidArgumentException('Item is not valid to collection '.get_class($this));
         }
     }
 }

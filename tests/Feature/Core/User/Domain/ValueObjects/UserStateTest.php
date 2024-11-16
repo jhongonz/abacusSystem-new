@@ -8,7 +8,6 @@ namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\ValueObjects\UserState;
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -19,12 +18,12 @@ class UserStateTest extends TestCase
     private UserState $valueObject;
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new UserState;
+        $this->valueObject = new UserState();
     }
 
     public function tearDown(): void
@@ -34,9 +33,9 @@ class UserStateTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_value_return_should_integer(): void
+    public function testValueReturnShouldInteger(): void
     {
         $result = $this->valueObject->value();
 
@@ -44,7 +43,7 @@ class UserStateTest extends TestCase
         $this->assertIsInt($result);
     }
 
-    public function test_value_literal_should_return_string(): void
+    public function testValueLiteralShouldReturnString(): void
     {
         $result = $this->valueObject->getValueLiteral();
 
@@ -52,7 +51,7 @@ class UserStateTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_value_literal_should_return_with__string(): void
+    public function testValueLiteralShouldReturnWithString(): void
     {
         $result = $this->valueObject->__toString();
 
@@ -61,9 +60,9 @@ class UserStateTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_set_value_should_change_state(): void
+    public function testSetValueShouldChangeState(): void
     {
         $result = $this->valueObject->setValue(2);
 
@@ -72,15 +71,15 @@ class UserStateTest extends TestCase
         $this->assertSame(2, $this->valueObject->value());
     }
 
-    public function test_set_value_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\User\Domain\ValueObjects\UserState> does not allow the invalid state: <10>');
 
         $this->valueObject->setValue(10);
     }
 
-    public function test_activate_should_change_state_and_return_int(): void
+    public function testActivateShouldChangeStateAndReturnInt(): void
     {
         $result = $this->valueObject->activate();
 
@@ -89,7 +88,7 @@ class UserStateTest extends TestCase
         $this->assertSame(ValueObjectStatus::STATE_ACTIVE, $result->value());
     }
 
-    public function test_inactivate_should_change_state_and_return_int(): void
+    public function testInactivateShouldChangeStateAndReturnInt(): void
     {
         $result = $this->valueObject->inactive();
 
@@ -98,31 +97,31 @@ class UserStateTest extends TestCase
         $this->assertSame(ValueObjectStatus::STATE_INACTIVE, $result->value());
     }
 
-    public function test_is_new_should_return_bool_and_true(): void
+    public function testIsNewShouldReturnBoolAndTrue(): void
     {
         $result = $this->valueObject->isNew();
         $this->assertIsBool($result);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_is_activated_should_return_bool_and_true(): void
+    public function testIsActivatedShouldReturnBoolAndTrue(): void
     {
         $result = $this->valueObject->isActivated();
         $this->assertIsBool($result);
     }
 
-    public function test_is_inactivated_should_return_bool_and_true(): void
+    public function testIsInactivatedShouldReturnBoolAndTrue(): void
     {
         $result = $this->valueObject->isInactivated();
         $this->assertIsBool($result);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_formatHtmlToState_should_return_string_html(): void
+    public function testFormatHtmlToStateShouldReturnStringHtml(): void
     {
         $result = $this->valueObject->formatHtmlToState();
         $this->assertIsString($result);

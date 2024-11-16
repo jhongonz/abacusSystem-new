@@ -28,9 +28,9 @@ final class CampusFactoryDataProvider
                         'observations' => 'observations',
                         'state' => 1,
                         'createdAt' => '2024-06-24 11:02:00',
-                        'updatedAt' => '2024-06-24 11:02:00'
+                        'updatedAt' => '2024-06-24 11:02:00',
                     ],
-                ]
+                ],
             ],
         ];
     }

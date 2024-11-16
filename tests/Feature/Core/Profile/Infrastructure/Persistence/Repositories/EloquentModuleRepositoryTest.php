@@ -61,7 +61,7 @@ class EloquentModuleRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -69,7 +69,7 @@ class EloquentModuleRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -82,14 +82,14 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_find_should_return_module_object(): void
+    public function testFindShouldReturnModuleObject(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -141,7 +141,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))
@@ -191,7 +191,7 @@ class EloquentModuleRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistModule_should_return_object(): void
+    public function testPersistModuleShouldReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
 
@@ -284,7 +284,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with('test')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
@@ -359,7 +359,7 @@ class EloquentModuleRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistModule_should_update_and_return_object(): void
+    public function testPersistModuleShouldUpdateAndReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
 
@@ -450,7 +450,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with('test')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
@@ -529,7 +529,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws ModulesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $filters = ['q' => 'test'];
 
@@ -603,7 +603,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws ModulesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $filters = ['q' => 'test'];
 
@@ -657,7 +657,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_deleteModule_should_return_void(): void
+    public function testDeleteModuleShouldReturnVoid(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -705,7 +705,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_deleteModule_should_return_exception(): void
+    public function testDeleteModuleShouldReturnException(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))

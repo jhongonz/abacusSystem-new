@@ -74,7 +74,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_findCriteria_should_return_user_object(): void
+    public function testFindCriteriaShouldReturnUserObject(): void
     {
         $key = 'user::login-test';
         $loginMock = $this->createMock(UserLogin::class);
@@ -102,7 +102,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $key = 'user::login-test';
         $loginMock = $this->createMock(UserLogin::class);
@@ -126,7 +126,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $key = 'user::login-test';
         $loginMock = $this->createMock(UserLogin::class);
@@ -158,7 +158,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_find_should_return_user_object(): void
+    public function testFindShouldReturnUserObject(): void
     {
         $key = 'user::1';
         $userIdMock = $this->createMock(UserId::class);
@@ -186,7 +186,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $key = 'user::1';
         $userIdMock = $this->createMock(UserId::class);
@@ -210,7 +210,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $key = 'user::1';
         $userIdMock = $this->createMock(UserId::class);
@@ -242,7 +242,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserPersistException
      */
-    public function test_persistUser_should_return_user_object(): void
+    public function testPersistUserShouldReturnUserObject(): void
     {
         $loginKey = 'user::login-test';
         $userIdKey = 'user::1';
@@ -296,7 +296,7 @@ class RedisUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws UserPersistException
      */
-    public function test_persistUser_should_return_exception(): void
+    public function testPersistUserShouldReturnException(): void
     {
         $loginKey = 'user::login-test';
         $userIdKey = 'user::1';
@@ -348,7 +348,7 @@ class RedisUserRepositoryTest extends TestCase
         $this->repository->persistUser($userMock);
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -356,7 +356,7 @@ class RedisUserRepositoryTest extends TestCase
         $this->assertSame(100, $result);
     }
 
-    public function test_changePriority_should_change_value_and_return_self(): void
+    public function testChangePriorityShouldChangeValueAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(150);
         $value = $result->priority();
@@ -370,7 +370,7 @@ class RedisUserRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_delete_should_delete_data_user(): void
+    public function testDeleteShouldDeleteDataUser(): void
     {
         $key = 'user::1';
         $userIdMock = $this->createMock(UserId::class);

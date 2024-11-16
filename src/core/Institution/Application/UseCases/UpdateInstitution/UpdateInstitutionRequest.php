@@ -12,12 +12,11 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 class UpdateInstitutionRequest implements RequestService
 {
     /**
-     * @param InstitutionId $id
      * @param array<string, mixed> $data
      */
     public function __construct(
         private readonly InstitutionId $id,
-        private readonly array $data
+        private readonly array $data,
     ) {
     }
 

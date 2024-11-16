@@ -39,7 +39,7 @@ class GetEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_employee_with_identification(): void
+    public function testMakeShouldReturnEmployeeWithIdentification(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -67,7 +67,7 @@ class GetEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_employee_with_id(): void
+    public function testMakeShouldReturnEmployeeWithId(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -95,7 +95,7 @@ class GetEmployeeOrchestratorTest extends TestCase
         $this->assertSame($employeeMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

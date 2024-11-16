@@ -9,7 +9,6 @@ namespace Core\Institution\Application\UseCases\DeleteInstitution;
 use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Exception;
 
 class DeleteInstitution extends UseCasesService
 {
@@ -19,13 +18,13 @@ class DeleteInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteInstitutionRequest::class);
 
-        /** @var DeleteInstitutionRequest $request */
+        /* @var DeleteInstitutionRequest $request */
         $this->institutionRepository->delete($request->id());
 
         return null;

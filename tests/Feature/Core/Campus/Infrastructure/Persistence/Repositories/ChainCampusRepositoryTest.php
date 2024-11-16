@@ -17,7 +17,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 #[CoversClass(ChainCampusRepository::class)]
 class ChainCampusRepositoryTest extends TestCase
@@ -28,7 +27,7 @@ class ChainCampusRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainCampusRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -38,10 +37,7 @@ class ChainCampusRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -50,10 +46,9 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusMock = $this->createMock(Campus::class);
@@ -70,10 +65,9 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
 
@@ -89,10 +83,9 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::once())
@@ -102,7 +95,7 @@ class ChainCampusRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $campusIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(CampusNotFoundException::class);
         $this->expectExceptionMessage('Campus not found by id 1');
@@ -111,12 +104,11 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      * @throws CampusCollectionNotFoundException
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $institutionIdMock = $this->createMock(CampusInstitutionId::class);
         $campusCollection = $this->createMock(CampusCollection::class);
@@ -133,12 +125,11 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      * @throws CampusCollectionNotFoundException
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $institutionIdMock = $this->createMock(CampusInstitutionId::class);
 
@@ -154,19 +145,18 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      * @throws CampusCollectionNotFoundException
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $institutionIdMock = $this->createMock(CampusInstitutionId::class);
 
         $this->repository->expects(self::once())
             ->method('read')
             ->with('getAll', $institutionIdMock, [])
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(CampusCollectionNotFoundException::class);
         $this->expectExceptionMessage('Campus collection not found');
@@ -175,11 +165,10 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Exception
      * @throws Exception
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $campusId = $this->createMock(CampusId::class);
 
@@ -191,11 +180,10 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Exception
      * @throws Exception
      */
-    public function test_persistCampus_should_return_void(): void
+    public function testPersistCampusShouldReturnVoid(): void
     {
         $campusMock = $this->createMock(Campus::class);
 

@@ -15,7 +15,6 @@ use Core\User\Domain\ValueObjects\UserId;
 use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Exceptions\UserPersistException;
-use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
@@ -43,16 +42,16 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
         try {
             /** @var string $data */
             $data = Redis::get($this->userLoginKey($login));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by login '.$login->value());
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
-            /** @var User */
+            /* @var User */
             return $this->userFactory->buildUserFromArray($dataArray);
         }
 
@@ -67,16 +66,16 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
         try {
             /** @var string $data */
             $data = Redis::get($this->userKey($id));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by id '.$id->value());
         }
 
-        if (! empty($data)) {
+        if (!empty($data)) {
             /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
-            /** @var User */
+            /* @var User */
             return $this->userFactory->buildUserFromArray($dataArray);
         }
 
@@ -95,7 +94,7 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
         try {
             Redis::set($userLoginKey, json_encode($userData));
             Redis::set($userKey, json_encode($userData));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserPersistException('It could not persist User with key '.$userKey.' in redis');
         }

@@ -6,7 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use Exception;
 
 class SearchEmployeeByIdentification extends UseCasesService
 {
@@ -16,13 +15,13 @@ class SearchEmployeeByIdentification extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Employee
     {
         $this->validateRequest($request, SearchEmployeeByIdentificationRequest::class);
 
-        /** @var SearchEmployeeByIdentificationRequest $request */
+        /* @var SearchEmployeeByIdentificationRequest $request */
         return $this->employeeRepository->findCriteria($request->employeeIdentification());
     }
 }

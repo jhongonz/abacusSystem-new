@@ -17,7 +17,6 @@ class GetEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -32,9 +31,6 @@ class GetEmployeeOrchestrator extends EmployeeOrchestrator
         return ['employee' => $employee];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-employee';

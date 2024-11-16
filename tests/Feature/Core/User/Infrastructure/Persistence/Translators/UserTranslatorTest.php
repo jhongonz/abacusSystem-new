@@ -56,7 +56,7 @@ class UserTranslatorTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $return = $this->translator->setModel($this->userModel);
 
@@ -67,7 +67,7 @@ class UserTranslatorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_user_class(): void
+    public function testToDomainShouldReturnUserClass(): void
     {
         $this->userModel->expects(self::once())
             ->method('id')

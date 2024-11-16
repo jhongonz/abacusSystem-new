@@ -68,7 +68,7 @@ class UserWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('user:warmup', $this->command->getName());
         $this->assertSame('Warmup user in memory', $this->command->getDescription());
@@ -77,7 +77,7 @@ class UserWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_persist_user_in_write_repository(): void
+    public function testHandleShouldPersistUserInWriteRepository(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->method('getArgument')
@@ -116,7 +116,7 @@ class UserWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception(): void
+    public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->method('getArgument')

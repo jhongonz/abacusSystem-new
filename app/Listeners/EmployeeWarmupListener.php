@@ -12,7 +12,6 @@ class EmployeeWarmupListener
      */
     public function __construct()
     {
-
     }
 
     /**

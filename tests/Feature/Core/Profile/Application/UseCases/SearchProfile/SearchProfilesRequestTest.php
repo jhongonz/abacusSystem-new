@@ -14,7 +14,7 @@ class SearchProfilesRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new SearchProfilesRequest;
+        $this->request = new SearchProfilesRequest();
     }
 
     public function tearDown(): void
@@ -23,7 +23,7 @@ class SearchProfilesRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->request->filters();
 
@@ -31,7 +31,7 @@ class SearchProfilesRequestTest extends TestCase
         $this->assertSame([], $result);
     }
 
-    public function test_filters_should_return_array_with_initialization(): void
+    public function testFiltersShouldReturnArrayWithInitialization(): void
     {
         $requestMock = new SearchProfilesRequest(['testing']);
         $result = $requestMock->filters();

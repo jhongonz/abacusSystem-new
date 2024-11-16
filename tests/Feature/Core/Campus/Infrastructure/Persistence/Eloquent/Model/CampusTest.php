@@ -18,7 +18,7 @@ class CampusTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Campus;
+        $this->model = new Campus();
     }
 
     public function tearDown(): void
@@ -27,7 +27,7 @@ class CampusTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getSearchField_should_return_string(): void
+    public function testGetSearchFieldShouldReturnString(): void
     {
         $result = $this->model->getSearchField();
 
@@ -35,7 +35,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, 'cam_search');
     }
 
-    public function test_relationWithInstitution_should_return_relation(): void
+    public function testRelationWithInstitutionShouldReturnRelation(): void
     {
         $result = $this->model->relationWithInstitution();
 
@@ -43,14 +43,14 @@ class CampusTest extends TestCase
         $this->assertSame('institutions', $result->getModel()->getTable());
     }
 
-    public function test_institution_should_return_model(): void
+    public function testInstitutionShouldReturnModel(): void
     {
         $result = $this->model->institution();
 
         $this->assertInstanceOf(Institution::class, $result);
     }
 
-    public function test_id_should_return_null(): void
+    public function testIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -66,7 +66,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_id_should_return_int(): void
+    public function testIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -83,7 +83,7 @@ class CampusTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_changeId_should_change_and_return_self(): void
+    public function testChangeIdShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -100,7 +100,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_institutionId_should_return_int(): void
+    public function testInstitutionIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -117,7 +117,7 @@ class CampusTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_changeInstitutionId_should_change_and_return_self(): void
+    public function testChangeInstitutionIdShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -134,7 +134,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_name_should_return_string(): void
+    public function testNameShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -151,7 +151,7 @@ class CampusTest extends TestCase
         $this->assertSame('name-test', $result);
     }
 
-    public function test_changeName_should_change_and_return_self(): void
+    public function testChangeNameShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -168,7 +168,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_address_should_return_null(): void
+    public function testAddressShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -184,7 +184,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_address_should_return_string(): void
+    public function testAddressShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -201,7 +201,7 @@ class CampusTest extends TestCase
         $this->assertSame('address-test', $result);
     }
 
-    public function test_changeAddress_should_change_and_return_self(): void
+    public function testChangeAddressShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -218,7 +218,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_phone_should_return_null(): void
+    public function testPhoneShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -234,7 +234,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_phone_should_return_string(): void
+    public function testPhoneShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -251,7 +251,7 @@ class CampusTest extends TestCase
         $this->assertSame('1234567890', $result);
     }
 
-    public function test_changePhone_should_change_and_return_self(): void
+    public function testChangePhoneShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -268,7 +268,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_changePhone_should_change_and_return_self_when_value_is_null(): void
+    public function testChangePhoneShouldChangeAndReturnSelfWhenValueIsNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -285,7 +285,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_email_should_return_null(): void
+    public function testEmailShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -301,7 +301,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_email_should_return_string(): void
+    public function testEmailShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -318,7 +318,7 @@ class CampusTest extends TestCase
         $this->assertSame('test@test.com', $result);
     }
 
-    public function test_changeEmail_should_change_and_return_self(): void
+    public function testChangeEmailShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -335,7 +335,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_changeEmail_should_change_and_return_self_when_value_is_null(): void
+    public function testChangeEmailShouldChangeAndReturnSelfWhenValueIsNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -352,7 +352,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_observations_should_return_null(): void
+    public function testObservationsShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -368,7 +368,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_observations_should_return_string(): void
+    public function testObservationsShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -385,7 +385,7 @@ class CampusTest extends TestCase
         $this->assertSame('hello world', $result);
     }
 
-    public function test_changeObservations_should_change_and_return_self(): void
+    public function testChangeObservationsShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -402,7 +402,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_changeObservations_should_change_and_return_self_when_value_is_null(): void
+    public function testChangeObservationsShouldChangeAndReturnSelfWhenValueIsNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -419,7 +419,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_search_should_return_null(): void
+    public function testSearchShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -435,7 +435,7 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_search_should_return_string(): void
+    public function testSearchShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -452,7 +452,7 @@ class CampusTest extends TestCase
         $this->assertSame('hello world', $result);
     }
 
-    public function test_changeSearch_should_change_and_return_self(): void
+    public function testChangeSearchShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -469,7 +469,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_changeSearch_should_change_and_return_self_when_value_is_null(): void
+    public function testChangeSearchShouldChangeAndReturnSelfWhenValueIsNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -486,7 +486,7 @@ class CampusTest extends TestCase
         $this->assertSame($result, $this->modelMock);
     }
 
-    public function test_state_should_return_int(): void
+    public function testStateShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -503,7 +503,7 @@ class CampusTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_changeState_should_change_and_return_self(): void
+    public function testChangeStateShouldChangeAndReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
@@ -523,7 +523,7 @@ class CampusTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_createdAt_should_return_string(): void
+    public function testCreatedAtShouldReturnString(): void
     {
         $datetime = '2024-07-13 07:39:00';
         $this->modelMock = $this->getMockBuilder(Campus::class)
@@ -543,7 +543,7 @@ class CampusTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_createdAt_should_return_null(): void
+    public function testCreatedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -559,9 +559,9 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeCreatedAt_should_change_and_return_self(): void
+    public function testChangeCreatedAtShouldChangeAndReturnSelf(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -580,7 +580,7 @@ class CampusTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_string(): void
+    public function testUpdatedAtShouldReturnString(): void
     {
         $datetime = '2024-07-13 07:39:00';
         $this->modelMock = $this->getMockBuilder(Campus::class)
@@ -600,7 +600,7 @@ class CampusTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_null(): void
+    public function testUpdatedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -616,9 +616,9 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeUpdatedAt_should_change_and_return_self(): void
+    public function testChangeUpdatedAtShouldChangeAndReturnSelf(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -637,7 +637,7 @@ class CampusTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_deletedAt_should_return_null(): void
+    public function testDeletedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['getAttribute'])
@@ -653,9 +653,9 @@ class CampusTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeDeletedAt_should_change_and_return_self(): void
+    public function testChangeDeletedAtShouldChangeAndReturnSelf(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock = $this->getMockBuilder(Campus::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();

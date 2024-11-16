@@ -12,12 +12,11 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 class SearchCampusCollectionRequest implements RequestService
 {
     /**
-     * @param CampusInstitutionId $institutionId
      * @param array<string, mixed> $filters
      */
     public function __construct(
         private readonly CampusInstitutionId $institutionId,
-        private readonly array $filters = []
+        private readonly array $filters = [],
     ) {
     }
 

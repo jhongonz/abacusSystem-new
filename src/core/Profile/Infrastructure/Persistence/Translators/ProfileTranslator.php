@@ -8,7 +8,6 @@ use Core\Profile\Domain\Profiles;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 
 class ProfileTranslator
 {
@@ -32,7 +31,7 @@ class ProfileTranslator
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function toDomain(): Profile
     {
@@ -50,13 +49,13 @@ class ProfileTranslator
             $this->profileFactory->buildProfileSearch($this->model->search())
         );
 
-        if (! is_null($this->model->createdAt())) {
+        if (!is_null($this->model->createdAt())) {
             $profile->setCreatedAt(
                 $this->profileFactory->buildProfileCreatedAt($this->model->createdAt())
             );
         }
 
-        if (! is_null($this->model->updatedAt())) {
+        if (!is_null($this->model->updatedAt())) {
             $profile->setUpdatedAt(
                 $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
             );
@@ -66,7 +65,7 @@ class ProfileTranslator
         $modules = [];
         /** @var Module $item */
         foreach ($modulesModel->get() as $item) {
-            if ($item->state() === ValueObjectStatus::STATE_ACTIVE) {
+            if (ValueObjectStatus::STATE_ACTIVE === $item->state()) {
                 $modules[] = $item->id();
             }
         }
@@ -77,6 +76,7 @@ class ProfileTranslator
 
     /**
      * @param array<int<0, max>, int> $collection
+     *
      * @return $this
      */
     public function setCollection(array $collection): self
@@ -88,7 +88,7 @@ class ProfileTranslator
 
     public function toDomainCollection(): Profiles
     {
-        $profiles = new Profiles;
+        $profiles = new Profiles();
         foreach ($this->collection as $id) {
             $profiles->addId($id);
         }

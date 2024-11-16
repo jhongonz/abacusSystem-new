@@ -41,7 +41,7 @@ class ModulesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addItem_should_return_self(): void
+    public function testAddItemShouldReturnSelf(): void
     {
         $moduleMock = $this->createMock(Module::class);
         $result = $this->modules->addItem($moduleMock);
@@ -50,19 +50,19 @@ class ModulesTest extends TestCase
         $this->assertSame($result, $this->modules);
     }
 
-    public function test_items_should_return_array(): void
+    public function testItemsShouldReturnArray(): void
     {
         $result = $this->modules->items();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->modules->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_return_self(): void
+    public function testSetFiltersShouldReturnSelf(): void
     {
         $filters = ['hello'];
         $result = $this->modules->setFilters($filters);
@@ -75,7 +75,7 @@ class ModulesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_moduleElementsOfKey_should_return_array(): void
+    public function testModuleElementsOfKeyShouldReturnArray(): void
     {
         $menuKeyMock = $this->createMock(ModuleMenuKey::class);
         $menuKeyMock->expects(self::once())
@@ -92,7 +92,7 @@ class ModulesTest extends TestCase
         $this->assertSame([$this->module], $result);
     }
 
-    public function test_addId_should_return_self(): void
+    public function testAddIdShouldReturnSelf(): void
     {
         $result = $this->modules->addId(1);
         $this->assertInstanceOf(Modules::class, $result);
@@ -100,7 +100,7 @@ class ModulesTest extends TestCase
         $this->assertSame([1], $result->aggregator());
     }
 
-    public function test_aggregator_should_return_array(): void
+    public function testAggregatorShouldReturnArray(): void
     {
         $result = $this->modules->aggregator();
         $this->assertIsArray($result);

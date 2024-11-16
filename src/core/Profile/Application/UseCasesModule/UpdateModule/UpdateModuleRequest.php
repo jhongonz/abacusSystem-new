@@ -8,12 +8,11 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 class UpdateModuleRequest implements RequestService
 {
     /**
-     * @param ModuleId $moduleId
      * @param array<string, mixed> $data
      */
     public function __construct(
         private readonly ModuleId $moduleId,
-        private readonly array $data
+        private readonly array $data,
     ) {
     }
 

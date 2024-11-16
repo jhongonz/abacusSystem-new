@@ -28,7 +28,7 @@ class CampusController extends Controller implements HasMiddleware
         private readonly Session $session,
         private readonly DataTables $datatables,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($logger);
         $this->setViewFactory($this->viewFactory);
@@ -83,11 +83,10 @@ class CampusController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
         try {
-            $method = (! $request->filled('campusId')) ? 'create-campus' : 'update-campus';
+            $method = (!$request->filled('campusId')) ? 'create-campus' : 'update-campus';
 
             /** @var Campus $campus */
             $campus = $this->orchestrators->handler($method, $request);
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -110,7 +109,7 @@ class CampusController extends Controller implements HasMiddleware
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(status:Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function deleteCampus(Request $request, int $campusId): JsonResponse
@@ -136,7 +135,7 @@ class CampusController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth', 'verify-session']),
             new Middleware('only.ajax-request', only: [
-                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus','getCampus'
+                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus', 'getCampus',
             ]),
         ];
     }

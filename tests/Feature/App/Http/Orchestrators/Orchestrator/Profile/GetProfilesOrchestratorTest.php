@@ -62,7 +62,7 @@ class GetProfilesOrchestratorTest extends TestCase
      * @throws Exception
      * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_make_should_return_json_response(): void
+    public function testMakeShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -93,7 +93,6 @@ class GetProfilesOrchestratorTest extends TestCase
             ->with(
                 'tools',
                 $this->callback(function ($closure) {
-
                     $viewMock = $this->createMock(View::class);
                     $viewMock->expects(self::exactly(2))
                         ->method('with')
@@ -109,7 +108,7 @@ class GetProfilesOrchestratorTest extends TestCase
                         ->with('components.menu-options-datatable')
                         ->willReturn($viewMock);
 
-                    $view = $closure(['id' => 1,'state' => 2]);
+                    $view = $closure(['id' => 1, 'state' => 2]);
 
                     $this->assertIsString($view);
                     $this->assertSame($view, '<html lang="es"></html>');
@@ -141,7 +140,7 @@ class GetProfilesOrchestratorTest extends TestCase
         $this->assertSame($responseMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

@@ -19,14 +19,13 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
 
     public function __construct(
         InstitutionManagementContract $institutionManagement,
-        protected ImageManagerInterface $imageManager
+        protected ImageManagerInterface $imageManager,
     ) {
         parent::__construct($institutionManagement);
         $this->setImageManager($imageManager);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -40,7 +39,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'address' => $request->input('address'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
-            'state' => ValueObjectStatus::STATE_NEW
+            'state' => ValueObjectStatus::STATE_NEW,
         ];
 
         if ($request->filled('token')) {
@@ -49,12 +48,10 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $institution = $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+
         return ['institution' => $institution];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-institution';

@@ -70,7 +70,7 @@ class MenuComposerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_compose_should_prepare_menu(): void
+    public function testComposeShouldPrepareMenu(): void
     {
         $userMock = $this->createMock(User::class);
 
@@ -113,7 +113,7 @@ class MenuComposerTest extends TestCase
                 'name' => 'Testing',
                 'icon' => 'fas fa-tools',
                 'route' => 'testing',
-            ]
+            ],
         ];
         $this->config->expects(self::once())
             ->method('get')

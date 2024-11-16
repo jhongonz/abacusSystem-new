@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,19 +12,18 @@ class VerifySession
 {
     public function __construct(
         private readonly Redirector $redirector,
-        private readonly Session $session
+        private readonly Session $session,
     ) {
     }
 
     /**
      * Handle an incoming request.
      *
-     * @param Closure(Request): Response $next
+     * @param \Closure(Request): Response $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, \Closure $next): Response
     {
-        if (! $this->session->exists(['user', 'profile', 'employee'])) {
-
+        if (!$this->session->exists(['user', 'profile', 'employee'])) {
             if ($request->ajax()) {
                 return new JsonResponse(
                     [

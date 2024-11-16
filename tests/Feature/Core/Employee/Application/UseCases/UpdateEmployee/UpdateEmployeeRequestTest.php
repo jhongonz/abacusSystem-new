@@ -32,7 +32,7 @@ class UpdateEmployeeRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_employeeId_should_return_value_object(): void
+    public function testEmployeeIdShouldReturnValueObject(): void
     {
         $result = $this->request->employeeId();
 
@@ -40,7 +40,7 @@ class UpdateEmployeeRequestTest extends TestCase
         $this->assertSame($result, $this->employeeId);
     }
 
-    public function test_data_should_return_array(): void
+    public function testDataShouldReturnArray(): void
     {
         $result = $this->request->data();
 

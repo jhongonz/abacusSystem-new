@@ -39,7 +39,7 @@ class UpdateUserOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_update_and_return_user(): void
+    public function testMakeShouldUpdateAndReturnUser(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::exactly(2))
@@ -62,7 +62,7 @@ class UpdateUserOrchestratorTest extends TestCase
         $this->assertSame($userMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

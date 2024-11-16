@@ -12,7 +12,6 @@ interface ModuleRepositoryContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Modules|null
      */
     public function getAll(array $filters = []): ?Modules;
 

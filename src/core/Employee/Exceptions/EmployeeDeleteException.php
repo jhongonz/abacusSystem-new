@@ -2,8 +2,6 @@
 
 namespace Core\Employee\Exceptions;
 
-use Exception;
-
-class EmployeeDeleteException extends Exception
+class EmployeeDeleteException extends \Exception
 {
 }

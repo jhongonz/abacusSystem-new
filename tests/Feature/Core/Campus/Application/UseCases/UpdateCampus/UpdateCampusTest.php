@@ -43,12 +43,12 @@ class UpdateCampusTest extends TestCase
 
     /**
      * @param array<string|int, mixed> $dataTest
-     * @return void
+     *
      * @throws Exception
      * @throws \Exception
      */
     #[DataProviderExternal(UpdateCampusDataProvider::class, 'provider_update_campus')]
-    public function test_execute_should_return_object(array $dataTest): void
+    public function testExecuteShouldReturnObject(array $dataTest): void
     {
         $requestMock = $this->createMock(UpdateCampusRequest::class);
 

@@ -10,7 +10,6 @@ use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
-use Exception;
 
 class UpdateInstitution extends UseCasesService
 {
@@ -20,7 +19,7 @@ class UpdateInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Institution
     {
@@ -98,7 +97,7 @@ class UpdateInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Institution $institution, int $state): Institution
     {

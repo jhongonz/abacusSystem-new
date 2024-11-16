@@ -22,13 +22,11 @@ use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 
 interface EmployeeFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Employee
      */
     public function buildEmployeeFromArray(array $data): Employee;
 
@@ -36,9 +34,9 @@ interface EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname,
-        EmployeeState $state = new EmployeeState,
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        EmployeeLastname $lastname = new EmployeeLastname(),
+        EmployeeState $state = new EmployeeState(),
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt(),
     ): Employee;
 
     public function buildEmployeeId(?int $id = null): EmployeeId;
@@ -61,11 +59,11 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeSearch(?string $search = null): EmployeeSearch;
 
-    public function buildEmployeeCreatedAt(DateTime $datetime = new DateTime('now')): EmployeeCreatedAt;
+    public function buildEmployeeCreatedAt(\DateTime $datetime = new \DateTime('now')): EmployeeCreatedAt;
 
-    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt;
+    public function buildEmployeeUpdatedAt(?\DateTime $datetime = null): EmployeeUpdatedAt;
 
-    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate;
+    public function buildEmployeeBirthdate(?\DateTime $date = null): EmployeeBirthdate;
 
     public function buildEmployeeObservations(?string $observations = null): EmployeeObservations;
 

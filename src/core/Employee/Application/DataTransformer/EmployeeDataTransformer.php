@@ -4,7 +4,6 @@ namespace Core\Employee\Application\DataTransformer;
 
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Employee;
-use Exception;
 
 class EmployeeDataTransformer implements EmployeeDataTransformerContract
 {
@@ -13,6 +12,7 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     public function write(Employee $employee): self
     {
         $this->employee = $employee;
+
         return $this;
     }
 
@@ -27,8 +27,9 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     }
 
     /**
-     * @throws Exception
      * @return array<string, mixed>
+     *
+     * @throws \Exception
      */
     public function readToShare(): array
     {

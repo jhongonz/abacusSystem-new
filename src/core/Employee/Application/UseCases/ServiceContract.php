@@ -7,5 +7,5 @@ use Core\Employee\Domain\Employees;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|Employee|Employees;
+    public function execute(RequestService $request): Employee|Employees|null;
 }

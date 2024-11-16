@@ -7,5 +7,5 @@ use Core\Institution\Domain\Institutions;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|Institution|Institutions;
+    public function execute(RequestService $request): Institution|Institutions|null;
 }

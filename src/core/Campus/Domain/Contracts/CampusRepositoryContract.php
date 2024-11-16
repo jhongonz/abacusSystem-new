@@ -16,9 +16,7 @@ interface CampusRepositoryContract
     public function find(CampusId $id): ?Campus;
 
     /**
-     * @param CampusInstitutionId $id
      * @param array<string, mixed> $filters
-     * @return CampusCollection|null
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection;
 

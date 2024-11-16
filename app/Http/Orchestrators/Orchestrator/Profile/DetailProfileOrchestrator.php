@@ -25,7 +25,6 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -44,17 +43,12 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-profile';
     }
 
     /**
-     * @param Modules $modules
-     * @param Profile|null $profile
      * @return array<int|string, mixed>
      */
     private function retrievePrivilegesProfile(Modules $modules, ?Profile $profile): array

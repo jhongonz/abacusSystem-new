@@ -30,9 +30,9 @@ final class DataProviderInstitutionFactory
                         'email' => 'algo@algo.com',
                         'createdAt' => '2024-04-21 10:24:00',
                         'updatedAt' => '2024-04-21 10:24:00',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
     }
 }

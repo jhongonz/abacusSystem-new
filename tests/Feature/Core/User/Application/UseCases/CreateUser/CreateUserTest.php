@@ -48,7 +48,7 @@ class CreateUserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_User_object(): void
+    public function testExecuteShouldReturnUserObject(): void
     {
         $userDomainMock = $this->createMock(User::class);
 
@@ -69,7 +69,7 @@ class CreateUserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(DeleteUserRequest::class);
 

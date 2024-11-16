@@ -14,7 +14,7 @@ class StoreEmployeeRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new StoreEmployeeRequest;
+        $this->request = new StoreEmployeeRequest();
     }
 
     public function tearDown(): void
@@ -23,20 +23,21 @@ class StoreEmployeeRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_authorize_should_return_true(): void
+    public function testAuthorizeShouldReturnTrue(): void
     {
         $result = $this->request->authorize();
         $this->assertTrue($result);
     }
 
-    public function test_rules_should_return_array(): void
+    public function testRulesShouldReturnArray(): void
     {
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(10, $result);
     }
-    public function test_messages_should_return_array(): void
+
+    public function testMessagesShouldReturnArray(): void
     {
         $result = $this->request->messages();
 

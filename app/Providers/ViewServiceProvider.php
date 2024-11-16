@@ -24,11 +24,11 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
     }
 
     /**
      * Bootstrap services.
+     *
      * @throws BindingResolutionException
      */
     public function boot(): void
@@ -37,16 +37,15 @@ class ViewServiceProvider extends ServiceProvider
 
         View::composer('layouts.home', HomeComposer::class);
         View::composer('*', function ($view) {
-
             /** @var Request $requestService */
             $requestService = $this->app->make(Request::class);
 
             $isAjax = $requestService->ajax();
-            if ($this->session->get('user') !== null && ! $isAjax) {
+            if (null !== $this->session->get('user') && !$isAjax) {
                 View::composer('layouts.menu', MenuComposer::class);
             }
 
-            $baseHome = (! $isAjax) ? 'layouts.home' : 'layouts.home-ajax';
+            $baseHome = (!$isAjax) ? 'layouts.home' : 'layouts.home-ajax';
             $view->with('layout', $baseHome);
         });
     }

@@ -18,15 +18,13 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
-use DateTime;
-use Exception;
 
 class UserFactory implements UserFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return User
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildUserFromArray(array $data): User
     {
@@ -74,8 +72,8 @@ class UserFactory implements UserFactoryContract
         UserProfileId $profileId,
         UserLogin $login,
         UserPassword $password,
-        UserState $state = new UserState,
-        UserCreatedAt $createdAt = new UserCreatedAt
+        UserState $state = new UserState(),
+        UserCreatedAt $createdAt = new UserCreatedAt(),
     ): User {
         return new User(
             $id,
@@ -109,19 +107,19 @@ class UserFactory implements UserFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildState(int $state = ValueObjectStatus::STATE_NEW): UserState
     {
         return new UserState($state);
     }
 
-    public function buildCreatedAt(DateTime $createdAt = new DateTime('now')): UserCreatedAt
+    public function buildCreatedAt(\DateTime $createdAt = new \DateTime('now')): UserCreatedAt
     {
         return new UserCreatedAt($createdAt);
     }
 
-    public function buildUpdatedAt(?DateTime $updatedAt = null): UserUpdatedAt
+    public function buildUpdatedAt(?\DateTime $updatedAt = null): UserUpdatedAt
     {
         return new UserUpdatedAt($updatedAt);
     }
@@ -137,10 +135,10 @@ class UserFactory implements UserFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

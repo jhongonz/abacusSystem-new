@@ -61,7 +61,7 @@ class EmployeeWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('employee:warmup', $this->command->getName());
         $this->assertSame('Warmup employee in memory', $this->command->getDescription());
@@ -70,7 +70,7 @@ class EmployeeWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_employee_in_repositories(): void
+    public function testHandleShouldUpdateEmployeeInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::once())
@@ -109,7 +109,7 @@ class EmployeeWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception(): void
+    public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::once())

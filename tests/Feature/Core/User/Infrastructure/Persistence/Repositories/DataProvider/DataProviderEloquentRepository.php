@@ -6,8 +6,6 @@
 
 namespace Tests\Feature\Core\User\Infrastructure\Persistence\Repositories\DataProvider;
 
-use DateTime;
-
 final class DataProviderEloquentRepository
 {
     /**
@@ -15,7 +13,7 @@ final class DataProviderEloquentRepository
      */
     public static function providerInsert(): array
     {
-        $datetime = new DateTime('2024-04-28 09:46:00');
+        $datetime = new \DateTime('2024-04-28 09:46:00');
 
         return [
             [
@@ -39,7 +37,7 @@ final class DataProviderEloquentRepository
      */
     public static function providerUpdate(): array
     {
-        $datetime = new DateTime('2024-04-28 09:46:00');
+        $datetime = new \DateTime('2024-04-28 09:46:00');
 
         return [
             [

@@ -35,7 +35,7 @@ class CreateProfileRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_profile_should_return_object(): void
+    public function testProfileShouldReturnObject(): void
     {
         $result = $this->request->profile();
 

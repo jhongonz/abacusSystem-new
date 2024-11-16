@@ -60,7 +60,7 @@ class EloquentProfileRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -68,7 +68,7 @@ class EloquentProfileRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -81,7 +81,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_find_should_return_object(): void
+    public function testFindShouldReturnObject(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -99,7 +99,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -138,7 +138,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::exactly(2))
@@ -188,7 +188,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_findCriteria_should_return_object(): void
+    public function testFindCriteriaShouldReturnObject(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::once())
@@ -206,7 +206,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('pro_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -245,7 +245,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::exactly(2))
@@ -295,7 +295,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws ProfilesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_object(): void
+    public function testGetAllShouldReturnObject(): void
     {
         $filters = ['q' => 'test'];
 
@@ -364,7 +364,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws ProfilesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $filters = ['q' => 'test'];
 
@@ -413,7 +413,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_deleteProfile_should_return_void(): void
+    public function testDeleteProfileShouldReturnVoid(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::exactly(2))
@@ -525,7 +525,7 @@ class EloquentProfileRepositoryTest extends TestCase
      * @throws Exception
      * @throws ProfileNotFoundException
      */
-    public function test_deleteProfile_should_return_exception(): void
+    public function testDeleteProfileShouldReturnException(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::exactly(2))
@@ -563,7 +563,7 @@ class EloquentProfileRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistProfile_should_return_object(): void
+    public function testPersistProfileShouldReturnObject(): void
     {
         $profileMock = $this->createMock(Profile::class);
 
@@ -630,7 +630,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('test')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
@@ -738,7 +738,7 @@ class EloquentProfileRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistProfile_should_update_and_return_object(): void
+    public function testPersistProfileShouldUpdateAndReturnObject(): void
     {
         $profileMock = $this->createMock(Profile::class);
 
@@ -804,7 +804,7 @@ class EloquentProfileRepositoryTest extends TestCase
             ->with('test')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')

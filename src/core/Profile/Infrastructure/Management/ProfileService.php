@@ -18,7 +18,6 @@ use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
-use Exception;
 use Psr\Log\LoggerInterface;
 
 class ProfileService implements ProfileManagementContract
@@ -36,7 +35,7 @@ class ProfileService implements ProfileManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchProfileById(?int $id): ?Profile
     {
@@ -47,7 +46,7 @@ class ProfileService implements ProfileManagementContract
         /** @var Profile $profile */
         $profile = $this->searchProfileById->execute($request);
 
-        $modules = new Modules;
+        $modules = new Modules();
         foreach ($profile->modulesAggregator() as $item) {
             try {
                 /** @var Module $module */
@@ -56,8 +55,7 @@ class ProfileService implements ProfileManagementContract
                 if ($module->state()->isActivated()) {
                     $modules->addItem($module);
                 }
-
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 $this->logger->warning($exception->getMessage(), $exception->getTrace());
             }
         }
@@ -67,7 +65,7 @@ class ProfileService implements ProfileManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchProfiles(array $filters = []): Profiles
     {
@@ -87,7 +85,7 @@ class ProfileService implements ProfileManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateProfile(int $id, array $data): Profile
     {
@@ -100,7 +98,7 @@ class ProfileService implements ProfileManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteProfile(int $id): void
     {
@@ -112,7 +110,7 @@ class ProfileService implements ProfileManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function createProfile(array $data): Profile
     {

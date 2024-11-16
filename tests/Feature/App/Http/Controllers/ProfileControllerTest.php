@@ -60,7 +60,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -105,7 +105,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -150,7 +150,7 @@ class ProfileControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_getProfiles_should_return_json_response(): void
+    public function testGetProfilesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -169,7 +169,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateProfile_should_return_json_response(): void
+    public function testChangeStateProfileShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $profileMock = $this->createMock(Profile::class);
@@ -196,7 +196,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateProfile_should_return_json_response_when_is_exception(): void
+    public function testChangeStateProfileShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $profileMock = $this->createMock(Profile::class);
@@ -222,7 +222,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteProfile_should_return_json_response(): void
+    public function testDeleteProfileShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -244,7 +244,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteProfile_should_return_json_response_when_is_exception(): void
+    public function testDeleteProfileShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -270,7 +270,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getProfile_should_return_json_response_when_id_is_null(): void
+    public function testGetProfileShouldReturnJsonResponseWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -310,7 +310,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_create_profile_when_id_is_null(): void
+    public function testStoreProfileShouldCreateProfileWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -342,7 +342,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_update_profile_when_id_is_not_null(): void
+    public function testStoreProfileShouldUpdateProfileWhenIdIsNotNull(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -374,7 +374,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_return_exception(): void
+    public function testStoreProfileShouldReturnException(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -398,7 +398,7 @@ class ProfileControllerTest extends TestCase
         $this->assertArrayHasKey('msg', $result->getData(true));
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

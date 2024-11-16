@@ -15,7 +15,7 @@ class RefreshModulesSessionEventTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->event = new RefreshModulesSessionEvent;
+        $this->event = new RefreshModulesSessionEvent();
     }
 
     public function tearDown(): void
@@ -24,7 +24,7 @@ class RefreshModulesSessionEventTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_broadcastOn_should_return_array_object(): void
+    public function testBroadcastOnShouldReturnArrayObject(): void
     {
         $result = $this->event->broadcastOn();
 

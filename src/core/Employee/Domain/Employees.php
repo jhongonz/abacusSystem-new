@@ -25,6 +25,7 @@ class Employees extends ArrayIterator
         $this->validateInstanceElement(Employee::class, $item);
 
         $this->append($item);
+
         return $this;
     }
 
@@ -39,6 +40,7 @@ class Employees extends ArrayIterator
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 
@@ -60,11 +62,13 @@ class Employees extends ArrayIterator
 
     /**
      * @param array<int|string, mixed> $filters
+     *
      * @return $this
      */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 }

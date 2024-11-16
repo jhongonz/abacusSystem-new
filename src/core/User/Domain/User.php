@@ -29,11 +29,11 @@ class User
         private UserProfileId $profileId,
         private UserLogin $login,
         private UserPassword $password,
-        private UserState $state = new UserState,
-        private UserCreatedAt $createdAt = new UserCreatedAt,
+        private UserState $state = new UserState(),
+        private UserCreatedAt $createdAt = new UserCreatedAt(),
     ) {
-        $this->updatedAt = new UserUpdatedAt;
-        $this->photo = new UserPhoto;
+        $this->updatedAt = new UserUpdatedAt();
+        $this->photo = new UserPhoto();
     }
 
     public function id(): UserId

@@ -18,7 +18,7 @@ class OrchestratorHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->orchestratorHandler = new OrchestratorHandler;
+        $this->orchestratorHandler = new OrchestratorHandler();
     }
 
     public function tearDown(): void
@@ -31,7 +31,7 @@ class OrchestratorHandlerTest extends TestCase
      * @throws Exception
      * @throws DuplicateOrchestratorException
      */
-    public function test_handler_should_return_mixed(): void
+    public function testHandlerShouldReturnMixed(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -54,7 +54,7 @@ class OrchestratorHandlerTest extends TestCase
      * @throws Exception
      * @throws DuplicateOrchestratorException
      */
-    public function test_addOrchestrator_should_return_exception(): void
+    public function testAddOrchestratorShouldReturnException(): void
     {
         $orchestratorMock1 = $this->createMock(Orchestrator::class);
         $orchestratorMock1->expects(self::exactly(2))

@@ -31,7 +31,7 @@ trait RouterTrait
         foreach ($routes as $item) {
             $method = $item->methods();
 
-            if ($method[0] === 'GET') {
+            if ('GET' === $method[0]) {
                 $slugs[] = $item->uri();
             }
         }

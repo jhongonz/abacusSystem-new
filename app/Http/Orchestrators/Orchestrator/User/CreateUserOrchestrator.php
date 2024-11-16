@@ -19,14 +19,13 @@ class CreateUserOrchestrator extends UserOrchestrator
 
     public function __construct(
         UserManagementContract $userManagement,
-        protected Hasher $hasher
+        protected Hasher $hasher,
     ) {
         parent::__construct($userManagement);
         $this->setHasher($hasher);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -38,16 +37,14 @@ class CreateUserOrchestrator extends UserOrchestrator
             'login' => $request->input('login'),
             'password' => $this->makeHashPassword($request->string('password')),
             'photo' => $request->input('image') ?? null,
-            'state' => ValueObjectStatus::STATE_NEW
+            'state' => ValueObjectStatus::STATE_NEW,
         ];
 
         $user = $this->userManagement->createUser([User::TYPE => $dataUser]);
+
         return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-user';

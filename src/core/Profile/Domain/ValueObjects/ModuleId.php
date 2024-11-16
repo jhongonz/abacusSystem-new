@@ -5,7 +5,7 @@ namespace Core\Profile\Domain\ValueObjects;
 class ModuleId
 {
     public function __construct(
-        private ?int $value = null
+        private ?int $value = null,
     ) {
     }
 

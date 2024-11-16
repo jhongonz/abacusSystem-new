@@ -19,19 +19,17 @@ use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
-use DateTime;
 
 interface CampusFactoryContract
 {
     public function buildCampus(
         CampusId $id,
         CampusInstitutionId $institutionId,
-        CampusName $name
+        CampusName $name,
     ): Campus;
 
     /**
      * @param array<string, mixed> $data
-     * @return Campus
      */
     public function buildCampusFromArray(array $data): Campus;
 
@@ -53,9 +51,9 @@ interface CampusFactoryContract
 
     public function buildCampusState(int $state): CampusState;
 
-    public function buildCampusCreatedAt(DateTime $dateTime): CampusCreatedAt;
+    public function buildCampusCreatedAt(\DateTime $dateTime): CampusCreatedAt;
 
-    public function buildCampusUpdatedAt(?DateTime $dateTime = null): CampusUpdatedAt;
+    public function buildCampusUpdatedAt(?\DateTime $dateTime = null): CampusUpdatedAt;
 
     public function buildCampusCollection(Campus ...$campus): CampusCollection;
 }

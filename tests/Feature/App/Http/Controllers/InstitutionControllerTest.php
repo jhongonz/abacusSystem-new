@@ -68,7 +68,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -113,7 +113,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -158,7 +158,7 @@ class InstitutionControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_changeStateInstitution_should_return_json_response_when_is_activate(): void
+    public function testChangeStateInstitutionShouldReturnJsonResponseWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -178,7 +178,7 @@ class InstitutionControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_changeStateInstitution_should_return_json_response_when_is_exception(): void
+    public function testChangeStateInstitutionShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -200,7 +200,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getInstitutions_should_return_json_response(): void
+    public function testGetInstitutionsShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -219,7 +219,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getInstitution_should_return_json_response_with_id_int(): void
+    public function testGetInstitutionShouldReturnJsonResponseWithIdInt(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -259,7 +259,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getInstitution_should_return_string_with_id_null(): void
+    public function testGetInstitutionShouldReturnStringWithIdNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -298,7 +298,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLogoInstitution_should_return_json_response(): void
+    public function testSetLogoInstitutionShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -338,7 +338,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLogoInstitution_should_return_internal_error(): void
+    public function testSetLogoInstitutionShouldReturnInternalError(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -362,7 +362,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeInstitution_should_return_json_response_when_create_institution(): void
+    public function testStoreInstitutionShouldReturnJsonResponseWhenCreateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -395,7 +395,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeInstitution_should_return_json_response_with_exception_when_create_institution(): void
+    public function testStoreInstitutionShouldReturnJsonResponseWithExceptionWhenCreateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -422,7 +422,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_updateInstitution_should_return_json_response_when_update_institution(): void
+    public function testUpdateInstitutionShouldReturnJsonResponseWhenUpdateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -455,7 +455,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteInstitution_should_return_json_response(): void
+    public function testDeleteInstitutionShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -477,7 +477,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteInstitution_should_return_json_response_with_exception(): void
+    public function testDeleteInstitutionShouldReturnJsonResponseWithException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -500,7 +500,7 @@ class InstitutionControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

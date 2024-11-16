@@ -6,12 +6,10 @@
 
 namespace Core\Campus\Domain\ValueObjects;
 
-use InvalidArgumentException;
-
 class CampusInstitutionId
 {
     public function __construct(
-        private int $value
+        private int $value,
     ) {
         $this->validate($value);
         $this->setValue($value);
@@ -38,10 +36,8 @@ class CampusInstitutionId
             ],
         ];
 
-        if (! filter_var($value, FILTER_VALIDATE_INT, $options)) {
-            throw new InvalidArgumentException(
-                sprintf('<%s> does not allow the value <%s>.', static::class, $value)
-            );
+        if (!filter_var($value, FILTER_VALIDATE_INT, $options)) {
+            throw new \InvalidArgumentException(sprintf('<%s> does not allow the value <%s>.', static::class, $value));
         }
     }
 }

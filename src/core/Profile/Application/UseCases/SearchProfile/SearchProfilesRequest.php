@@ -10,7 +10,7 @@ class SearchProfilesRequest implements RequestService
      * @param array<int|string, mixed> $filters
      */
     public function __construct(
-        private readonly array $filters = []
+        private readonly array $filters = [],
     ) {
     }
 

@@ -10,7 +10,6 @@ use Core\User\Application\UseCases\RequestService;
 use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
-use Exception;
 
 class SearchUserByLogin extends UseCasesService
 {
@@ -20,13 +19,13 @@ class SearchUserByLogin extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?User
     {
         $this->validateRequest($request, SearchUserByLoginRequest::class);
 
-        /** @var SearchUserByLoginRequest $request */
+        /* @var SearchUserByLoginRequest $request */
         return $this->userRepository->findCriteria($request->login());
     }
 }

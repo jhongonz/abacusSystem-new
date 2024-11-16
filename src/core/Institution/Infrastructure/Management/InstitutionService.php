@@ -20,7 +20,6 @@ use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
-use Exception;
 
 class InstitutionService implements InstitutionManagementContract
 {
@@ -30,12 +29,12 @@ class InstitutionService implements InstitutionManagementContract
         private readonly SearchInstitutions $searchInstitutions,
         private readonly UpdateInstitution $updateInstitution,
         private readonly CreateInstitution $createInstitution,
-        private readonly DeleteInstitution $deleteInstitution
+        private readonly DeleteInstitution $deleteInstitution,
     ) {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchInstitutionById(?int $id): ?Institution
     {
@@ -48,8 +47,8 @@ class InstitutionService implements InstitutionManagementContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Institutions
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function searchInstitutions(array $filters = []): Institutions
     {
@@ -59,7 +58,6 @@ class InstitutionService implements InstitutionManagementContract
         $institutions = $this->searchInstitutions->execute($request);
 
         foreach ($institutions->aggregator() as $item) {
-
             /** @var Institution $institution */
             $institution = $this->searchInstitutionById($item);
             $institutions->addItem($institution);
@@ -69,7 +67,7 @@ class InstitutionService implements InstitutionManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateInstitution(int $id, array $data): Institution
     {
@@ -81,8 +79,8 @@ class InstitutionService implements InstitutionManagementContract
 
     /**
      * @param array<string, mixed> $data
-     * @return Institution
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function createInstitution(array $data): Institution
     {
@@ -93,7 +91,7 @@ class InstitutionService implements InstitutionManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteInstitution(int $id): void
     {

@@ -38,7 +38,7 @@ class DeleteUserOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_delete_and_return_true(): void
+    public function testMakeShouldDeleteAndReturnTrue(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -54,7 +54,7 @@ class DeleteUserOrchestratorTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

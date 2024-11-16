@@ -7,7 +7,6 @@ use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
 use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Module;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -64,7 +63,7 @@ class ModuleController extends Controller implements HasMiddleware
             $module = $this->orchestrators->handler('change-state-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -89,13 +88,13 @@ class ModuleController extends Controller implements HasMiddleware
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
         try {
-            $method = (! $request->filled('moduleId')) ? 'create-module' : 'update-module';
+            $method = (!$request->filled('moduleId')) ? 'create-module' : 'update-module';
 
             /** @var Module $module */
             $module = $this->orchestrators->handler($method, $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -114,10 +113,10 @@ class ModuleController extends Controller implements HasMiddleware
             $this->orchestrators->handler('delete-module', $request);
 
             ModuleUpdatedOrDeletedEvent::dispatch((int) $id);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);

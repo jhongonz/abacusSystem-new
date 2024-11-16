@@ -32,7 +32,7 @@ class InstitutionDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->institution = $this->createMock(Institution::class);
-        $this->dataTransformer = new InstitutionDataTransformer;
+        $this->dataTransformer = new InstitutionDataTransformer();
     }
 
     public function tearDown(): void
@@ -44,7 +44,7 @@ class InstitutionDataTransformerTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_write_should_return_self(): void
+    public function testWriteShouldReturnSelf(): void
     {
         $result = $this->dataTransformer->write($this->institution);
 
@@ -55,7 +55,7 @@ class InstitutionDataTransformerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_read_should_return_array(): void
+    public function testReadShouldReturnArray(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::once())
@@ -116,7 +116,7 @@ class InstitutionDataTransformerTest extends TestCase
         $createdAt = $this->createMock(InstitutionCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime())->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -124,7 +124,7 @@ class InstitutionDataTransformerTest extends TestCase
         $updatedAt = $this->createMock(InstitutionUpdatedAt::class);
         $updatedAt->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime())->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);
@@ -139,7 +139,7 @@ class InstitutionDataTransformerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_readToShare_should_return_array(): void
+    public function testReadToShareShouldReturnArray(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::once())
@@ -203,7 +203,7 @@ class InstitutionDataTransformerTest extends TestCase
         $createdAt = $this->createMock(InstitutionCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime())->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAt);
@@ -211,7 +211,7 @@ class InstitutionDataTransformerTest extends TestCase
         $updatedAt = $this->createMock(InstitutionUpdatedAt::class);
         $updatedAt->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new \DateTime)->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime())->format(dateTimeModel::DATE_FORMAT));
         $this->institution->expects(self::once())
             ->method('updatedAt')
             ->willReturn($updatedAt);

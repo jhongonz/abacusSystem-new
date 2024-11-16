@@ -3,7 +3,7 @@ PHP_BIN := php
 COMPOSER := composer
 PHPUNIT := ./vendor/bin/phpunit
 PHPSTAN := ./vendor/bin/phpstan
-PINT := ./vendor/bin/pint
+PHP-CS-FIXER := ./vendor/bin/php-cs-fixer
 INFECTION := ./vendor/bin/infection
 export XDEBUG_MODE=coverage
 
@@ -22,8 +22,8 @@ test-coverage:
 analyse:
 	$(PHPSTAN) analyse
 
-pint:
-	$(PINT)
+cs-fixer:
+	$(PHP-CS-FIXER) fix
 
 clean:
 	rm -rf vendor composer.lock
@@ -32,8 +32,8 @@ clean:
 infection:
 	$(INFECTION)
 
-install: c-install pint test-coverage
+install: c-install cs-fixer test-coverage
 
-all: c-install pint analyse test infection
+all: c-install cs-fixer analyse test infection
 
-tests: pint analyse test infection
+tests: cs-fixer analyse test infection

@@ -42,7 +42,7 @@ class EmployeeFactoryTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employees::class);
-        $this->factory = new EmployeeFactory;
+        $this->factory = new EmployeeFactory();
     }
 
     public function tearDown(): void
@@ -53,11 +53,11 @@ class EmployeeFactoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataObject
-     * @return void
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderEmployeeFactory::class, 'provider')]
-    public function test_buildEmployeeFromArray_should_return_employee_object(array $dataObject): void
+    public function testBuildEmployeeFromArrayShouldReturnEmployeeObject(array $dataObject): void
     {
         $result = $this->factory->buildEmployeeFromArray($dataObject);
 
@@ -119,7 +119,7 @@ class EmployeeFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildEmployees_should_return_object(): void
+    public function testBuildEmployeesShouldReturnObject(): void
     {
         $employee = $this->createMock(Employee::class);
         $result = $this->factory->buildEmployees($employee);

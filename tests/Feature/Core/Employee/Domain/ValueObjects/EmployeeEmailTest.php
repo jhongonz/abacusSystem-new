@@ -14,7 +14,7 @@ class EmployeeEmailTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeEmail;
+        $this->valueObject = new EmployeeEmail();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class EmployeeEmailTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject = new EmployeeEmail('test@test.com');
         $result = $this->valueObject->value();
@@ -38,7 +38,7 @@ class EmployeeEmailTest extends TestCase
         $this->assertSame('test@test.com', $result);
     }
 
-    public function test_setValue_should_change_and_return_self(): void
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue('test@test.com');
 
@@ -46,7 +46,7 @@ class EmployeeEmailTest extends TestCase
         $this->assertSame('test@test.com', $this->valueObject->value());
     }
 
-    public function test_setValue_should_exception(): void
+    public function testSetValueShouldException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeEmail> does not allow the invalid email: <test>.');

@@ -24,7 +24,6 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -45,12 +44,10 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $institution = $this->institutionManagement->updateInstitution($request->integer('institutionId'), $dataUpdate);
+
         return ['institution' => $institution];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-institution';

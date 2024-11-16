@@ -21,7 +21,6 @@ class GetModulesOrchestrator extends ModuleOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<int|string, mixed>
      */
     public function make(Request $request): array
@@ -41,9 +40,6 @@ class GetModulesOrchestrator extends ModuleOrchestrator
         return $dataModules;
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-modules';

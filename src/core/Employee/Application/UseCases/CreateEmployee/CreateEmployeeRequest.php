@@ -8,7 +8,7 @@ use Core\Employee\Domain\Employee;
 class CreateEmployeeRequest implements RequestService
 {
     public function __construct(
-        private readonly Employee $employee
+        private readonly Employee $employee,
     ) {
     }
 

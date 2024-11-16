@@ -23,17 +23,13 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
         protected ImageManagerInterface $imageManager,
-        protected Hasher $hasher
+        protected Hasher $hasher,
     ) {
         parent::__construct($orchestratorHandler);
         $this->setImageManager($imageManager);
         $this->setHasher($hasher);
     }
 
-    /**
-     * @param Request $request
-     * @return Employee
-     */
     public function invoke(Request $request): Employee
     {
         $birthdate = $request->date('birthdate', 'd/m/Y');
@@ -60,7 +56,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
 
         $dataUpdateUser = [
             'profileId' => $request->input('profile'),
-            'login' => $request->input('login')
+            'login' => $request->input('login'),
         ];
 
         if (isset($dataUpdate['image'])) {
@@ -78,16 +74,13 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         /** @var User $user */
         $user = $this->orchestratorHandler->handler($actionUser, $request);
 
-        if (! is_null($user->id()->value())) {
+        if (!is_null($user->id()->value())) {
             $employee->userId()->setValue($user->id()->value());
         }
 
         return $employee;
     }
 
-    /**
-     * @return string
-     */
     public function canExecute(): string
     {
         return 'update-employee-action';

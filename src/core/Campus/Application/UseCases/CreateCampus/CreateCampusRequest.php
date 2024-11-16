@@ -12,7 +12,7 @@ use Core\Campus\Domain\Campus;
 class CreateCampusRequest implements RequestService
 {
     public function __construct(
-        private readonly Campus $campus
+        private readonly Campus $campus,
     ) {
     }
 

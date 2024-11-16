@@ -12,24 +12,21 @@ use Illuminate\Http\Request;
 class DeleteModuleOrchestrator extends ModuleOrchestrator
 {
     public function __construct(
-        ModuleManagementContract $moduleManagement
+        ModuleManagementContract $moduleManagement,
     ) {
         parent::__construct($moduleManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->moduleManagement->deleteModule($request->integer('moduleId'));
+
         return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-module';

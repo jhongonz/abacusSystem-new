@@ -26,7 +26,7 @@ class ChainProfileRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainProfileRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -36,10 +36,7 @@ class ChainProfileRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -48,12 +45,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $profileMock = $this->createMock(Profile::class);
@@ -70,12 +66,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $profileId = $this->createMock(ProfileId::class);
 
@@ -91,12 +86,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $profileIdMock->expects(self::once())
@@ -106,7 +100,7 @@ class ChainProfileRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $profileIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(ProfileNotFoundException::class);
         $this->expectExceptionMessage('Profile not found by id 1');
@@ -115,12 +109,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_value_object(): void
+    public function testFindCriteriaShouldReturnValueObject(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileMock = $this->createMock(Profile::class);
@@ -137,12 +130,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $profileName = $this->createMock(ProfileName::class);
 
@@ -158,12 +150,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws ProfileNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::once())
@@ -173,7 +164,7 @@ class ChainProfileRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('findCriteria', $profileName)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(ProfileNotFoundException::class);
         $this->expectExceptionMessage('Profile not found by name test');
@@ -182,11 +173,10 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $profileId = $this->createMock(ProfileId::class);
 
@@ -198,11 +188,10 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Exception
      */
-    public function test_persistEmployee_should_return_void(): void
+    public function testPersistEmployeeShouldReturnVoid(): void
     {
         $profileMock = $this->createMock(Profile::class);
 
@@ -218,12 +207,11 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfilesNotFoundException
+     * @throws ProfilesNotFoundException
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $profilesMock = $this->createMock(Profiles::class);
 
@@ -239,11 +227,10 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ProfilesNotFoundException
+     * @throws ProfilesNotFoundException
      * @throws \Throwable
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
@@ -257,16 +244,15 @@ class ChainProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws ProfilesNotFoundException
      * @throws \Throwable
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
             ->with('getAll', [])
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(ProfilesNotFoundException::class);
         $this->expectExceptionMessage('Profiles not found');

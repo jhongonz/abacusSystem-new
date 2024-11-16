@@ -12,13 +12,12 @@ use Illuminate\Http\Request;
 class UpdateProfileOrchestrator extends ProfileOrchestrator
 {
     public function __construct(
-        ProfileManagementContract $profileManagement
+        ProfileManagementContract $profileManagement,
     ) {
         parent::__construct($profileManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -26,16 +25,14 @@ class UpdateProfileOrchestrator extends ProfileOrchestrator
         $dataUpdate = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'modules' => $this->getModulesAggregator($request)
+            'modules' => $this->getModulesAggregator($request),
         ];
 
         $profile = $this->profileManagement->updateProfile($request->integer('profileId'), $dataUpdate);
+
         return ['profile' => $profile];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-profile';

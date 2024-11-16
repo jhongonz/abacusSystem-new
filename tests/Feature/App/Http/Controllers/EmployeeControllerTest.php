@@ -78,7 +78,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -122,7 +122,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -167,7 +167,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getEmployees_should_return_json_response(): void
+    public function testGetEmployeesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -186,7 +186,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateEmployee_should_activate_and_return_json_response(): void
+    public function testChangeStateEmployeeShouldActivateAndReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $employeeMock = $this->createMock(Employee::class);
@@ -219,7 +219,7 @@ class EmployeeControllerTest extends TestCase
             ->method('merge')
             ->with([
                 'userId' => 10,
-                'state' => 2
+                'state' => 2,
             ])
             ->willReturnSelf();
 
@@ -232,7 +232,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateEmployee_should_inactivate_and_return_json_response(): void
+    public function testChangeStateEmployeeShouldInactivateAndReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -277,7 +277,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateEmployee_should_return_exception_when_not_found_employee(): void
+    public function testChangeStateEmployeeShouldReturnExceptionWhenNotFoundEmployee(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -303,7 +303,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getEmployee_with_null_should_return_json_response(): void
+    public function testGetEmployeeWithNullShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -343,7 +343,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getEmployee_with_data_should_return_json_response(): void
+    public function testGetEmployeeWithDataShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -384,7 +384,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getEmployee_with_null_should_return_string(): void
+    public function testGetEmployeeWithNullShouldReturnString(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -424,7 +424,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeEmployee_should_return_json_response_when_create_new_object(): void
+    public function testStoreEmployeeShouldReturnJsonResponseWhenCreateNewObject(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
@@ -467,7 +467,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeEmployee_should_return_json_response_with_exception_when_create_new_object(): void
+    public function testStoreEmployeeShouldReturnJsonResponseWithExceptionWhenCreateNewObject(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
@@ -494,7 +494,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setImageEmployee_should_return_json_response(): void
+    public function testSetImageEmployeeShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -534,7 +534,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setImageEmployee_should_return_internal_error(): void
+    public function testSetImageEmployeeShouldReturnInternalError(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -558,7 +558,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteEmployee_should_return_json_response(): void
+    public function testDeleteEmployeeShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -599,7 +599,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteEmployee_should_return_json_response_with_exception(): void
+    public function testDeleteEmployeeShouldReturnJsonResponseWithException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -629,7 +629,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeEmployee_should_return_json_response_when_update_object(): void
+    public function testStoreEmployeeShouldReturnJsonResponseWhenUpdateObject(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
@@ -671,7 +671,7 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeEmployee_should_return_json_response_with_exception_when_update_object(): void
+    public function testStoreEmployeeShouldReturnJsonResponseWithExceptionWhenUpdateObject(): void
     {
         $request = $this->createMock(StoreEmployeeRequest::class);
         $request->expects(self::once())
@@ -695,7 +695,7 @@ class EmployeeControllerTest extends TestCase
         $this->assertArrayHasKey('msg', $result->getData(true));
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

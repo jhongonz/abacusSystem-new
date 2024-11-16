@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
-use Exception;
 
 class UpdateProfile extends UseCasesService
 {
@@ -16,7 +15,7 @@ class UpdateProfile extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Profile
     {
@@ -38,7 +37,7 @@ class UpdateProfile extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Profile $profile, int $value): Profile
     {
@@ -62,9 +61,7 @@ class UpdateProfile extends UseCasesService
     }
 
     /**
-     * @param Profile $profile
      * @param array<int<0, max>, int|null> $modules
-     * @return Profile
      */
     private function changeModules(Profile $profile, array $modules): Profile
     {

@@ -17,7 +17,6 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -31,12 +30,10 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
         ];
 
         $campus = $this->campusManagement->updateCampus($request->integer('campusId'), $dataUpdate);
+
         return ['campus' => $campus];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-campus';

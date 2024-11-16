@@ -40,7 +40,7 @@ class ChangeStateProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_change_state_when_is_new_and_return_profile(): void
+    public function testMakeShouldChangeStateWhenIsNewAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -88,7 +88,7 @@ class ChangeStateProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_change_state_when_is_activated_and_return_profile(): void
+    public function testMakeShouldChangeStateWhenIsActivatedAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -141,7 +141,7 @@ class ChangeStateProfileOrchestratorTest extends TestCase
         $this->assertSame($profileMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

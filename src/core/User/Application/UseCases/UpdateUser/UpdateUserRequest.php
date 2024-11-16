@@ -12,7 +12,6 @@ use Core\User\Domain\ValueObjects\UserId;
 class UpdateUserRequest implements RequestService
 {
     /**
-     * @param UserId $id
      * @param array<string, mixed> $data
      */
     public function __construct(

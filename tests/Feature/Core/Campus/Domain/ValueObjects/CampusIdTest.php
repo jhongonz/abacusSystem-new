@@ -14,7 +14,7 @@ class CampusIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusId;
+        $this->valueObject = new CampusId();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class CampusIdTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_setValue_should_return_object(): void
+    public function testSetValueShouldReturnObject(): void
     {
         $result = $this->valueObject->setValue(1);
 
@@ -38,7 +38,7 @@ class CampusIdTest extends TestCase
         $this->assertSame(1, $result->value());
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $this->valueObject = new CampusId(1);
         $result = $this->valueObject->value();
@@ -47,7 +47,7 @@ class CampusIdTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusId> does not allow the value <0>.');

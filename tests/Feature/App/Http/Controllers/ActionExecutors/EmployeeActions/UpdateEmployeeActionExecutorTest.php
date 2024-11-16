@@ -58,7 +58,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_invoke_should_return_employee(): void
+    public function testInvokeShouldReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $carbonMock = $this->createMock(Carbon::class);
@@ -149,7 +149,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
         $this->assertSame($employeeMock, $result);
     }
 
-    public function test_canExecute_should_return_string(): void
+    public function testCanExecuteShouldReturnString(): void
     {
         $result = $this->actionExecutor->canExecute();
 

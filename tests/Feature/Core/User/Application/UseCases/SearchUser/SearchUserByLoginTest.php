@@ -46,7 +46,7 @@ class SearchUserByLoginTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_user_object(): void
+    public function testExecuteShouldReturnUserObject(): void
     {
         $userMock = $this->createMock(User::class);
         $userLoginMock = $this->createMock(UserLogin::class);
@@ -71,7 +71,7 @@ class SearchUserByLoginTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $userLoginMock = $this->createMock(UserLogin::class);
 
@@ -94,7 +94,7 @@ class SearchUserByLoginTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_request_fail_should_return_exception(): void
+    public function testExecuteRequestFailShouldReturnException(): void
     {
         $requestMock = $this->createMock(SearchUserByIdRequest::class);
 

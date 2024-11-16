@@ -7,7 +7,6 @@ use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Profile;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -26,7 +25,7 @@ class ProfileController extends Controller implements HasMiddleware
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     ) {
         parent::__construct($logger);
         $this->setViewFactory($this->viewFactory);
@@ -42,7 +41,7 @@ class ProfileController extends Controller implements HasMiddleware
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getProfiles(Request $request): JsonResponse
     {
@@ -64,7 +63,7 @@ class ProfileController extends Controller implements HasMiddleware
             $profile = $this->orchestrators->handler('change-state-profile', $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -80,11 +79,10 @@ class ProfileController extends Controller implements HasMiddleware
 
             $this->orchestrators->handler('delete-profile', $request);
             ProfileUpdatedOrDeletedEvent::dispatch($id);
-
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
@@ -112,7 +110,7 @@ class ProfileController extends Controller implements HasMiddleware
             $profile = $this->orchestrators->handler($method, $request);
 
             ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(

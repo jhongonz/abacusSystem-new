@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 class ChangeStateProfileOrchestrator extends ProfileOrchestrator
 {
     public function __construct(
-        ProfileManagementContract $profileManagement
+        ProfileManagementContract $profileManagement,
     ) {
         parent::__construct($profileManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws ProfileNotFoundException
      */
     public function make(Request $request): array
@@ -45,9 +45,6 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
         return ['profile' => $profile];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-profile';

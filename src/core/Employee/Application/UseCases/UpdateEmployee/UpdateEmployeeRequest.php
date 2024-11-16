@@ -8,7 +8,6 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 class UpdateEmployeeRequest implements RequestService
 {
     /**
-     * @param EmployeeId $id
      * @param array<string, mixed> $data
      */
     public function __construct(

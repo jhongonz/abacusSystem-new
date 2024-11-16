@@ -39,10 +39,9 @@ class CreateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_create_and_return_campus(): void
+    public function testMakeShouldCreateAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::exactly(7))
@@ -70,10 +69,7 @@ class CreateCampusOrchestratorTest extends TestCase
         $this->assertSame($campusMock, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

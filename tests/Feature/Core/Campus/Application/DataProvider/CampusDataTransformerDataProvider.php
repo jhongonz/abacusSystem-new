@@ -15,8 +15,8 @@ final class CampusDataTransformerDataProvider
     {
         return [
             [
-                'dataTest' => self::retrieveGenericDataTest()
-            ]
+                'dataTest' => self::retrieveGenericDataTest(),
+            ],
         ];
     }
 
@@ -30,8 +30,8 @@ final class CampusDataTransformerDataProvider
 
         return [
             [
-                'dataExpected' => $dataExpected
-            ]
+                'dataExpected' => $dataExpected,
+            ],
         ];
     }
 

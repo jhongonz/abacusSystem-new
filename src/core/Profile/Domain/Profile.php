@@ -27,13 +27,13 @@ class Profile
     public function __construct(
         private ProfileId $id,
         private ProfileName $name,
-        private ProfileState $state = new ProfileState,
-        private ProfileCreatedAt $createdAt = new ProfileCreatedAt
+        private ProfileState $state = new ProfileState(),
+        private ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
     ) {
-        $this->search = new ProfileSearch;
-        $this->updatedAt = new ProfileUpdatedAt;
-        $this->modules = new Modules;
-        $this->description = new ProfileDescription;
+        $this->search = new ProfileSearch();
+        $this->updatedAt = new ProfileUpdatedAt();
+        $this->modules = new Modules();
+        $this->description = new ProfileDescription();
     }
 
     public function id(): ProfileId
@@ -118,6 +118,7 @@ class Profile
 
     /**
      * @param array<int<0, max>, int|null> $ids
+     *
      * @return $this
      */
     public function setModulesAggregator(array $ids): self

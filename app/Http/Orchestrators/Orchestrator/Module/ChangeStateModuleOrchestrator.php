@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 class ChangeStateModuleOrchestrator extends ModuleOrchestrator
 {
     public function __construct(
-        ModuleManagementContract $moduleManagement
+        ModuleManagementContract $moduleManagement,
     ) {
         parent::__construct($moduleManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws ModuleNotFoundException
      */
     public function make(Request $request): array
@@ -45,9 +45,6 @@ class ChangeStateModuleOrchestrator extends ModuleOrchestrator
         return ['module' => $module];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-module';

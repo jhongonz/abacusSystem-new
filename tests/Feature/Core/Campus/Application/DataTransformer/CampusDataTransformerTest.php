@@ -35,7 +35,7 @@ class CampusDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->campus = $this->createMock(Campus::class);
-        $this->dataTransformer = new CampusDataTransformer;
+        $this->dataTransformer = new CampusDataTransformer();
     }
 
     public function tearDown(): void
@@ -50,7 +50,7 @@ class CampusDataTransformerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_write_should_return_self(): void
+    public function testWriteShouldReturnSelf(): void
     {
         $campusMock = $this->createMock(Campus::class);
         $result = $this->dataTransformer->write($campusMock);
@@ -61,11 +61,11 @@ class CampusDataTransformerTest extends TestCase
 
     /**
      * @param array<string|int, mixed> $dataTest
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(CampusDataTransformerDataProvider::class, 'provider_read')]
-    public function test_read_should_return_array(array $dataTest): void
+    public function testReadShouldReturnArray(array $dataTest): void
     {
         $this->prepareCampusMock($dataTest);
 
@@ -86,11 +86,11 @@ class CampusDataTransformerTest extends TestCase
 
     /**
      * @param array<string|int, mixed> $dataExpected
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(CampusDataTransformerDataProvider::class, 'provider_readToShare')]
-    public function test_readToSearch_should_return_array(array $dataExpected): void
+    public function testReadToSearchShouldReturnArray(array $dataExpected): void
     {
         $this->prepareCampusMock($dataExpected);
 
@@ -113,7 +113,7 @@ class CampusDataTransformerTest extends TestCase
 
     /**
      * @param array<string|int, mixed> $data
-     * @return void
+     *
      * @throws Exception
      */
     private function prepareCampusMock(array $data): void

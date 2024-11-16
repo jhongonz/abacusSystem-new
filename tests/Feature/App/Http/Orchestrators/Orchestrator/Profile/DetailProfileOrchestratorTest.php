@@ -56,7 +56,7 @@ class DetailProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_profile(): void
+    public function testMakeShouldReturnArrayWithProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -131,7 +131,7 @@ class DetailProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_without_profile(): void
+    public function testMakeShouldReturnArrayWithoutProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -170,7 +170,7 @@ class DetailProfileOrchestratorTest extends TestCase
         $this->assertArrayHasKey('privileges', $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

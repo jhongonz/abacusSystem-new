@@ -34,7 +34,7 @@ class MenuComposer
         Config $config,
         Router $router,
         Session $session,
-        UrlGenerator $urlGenerator
+        UrlGenerator $urlGenerator,
     ) {
         $this->moduleFactory = $moduleFactory;
         $this->config = $config;
@@ -66,7 +66,6 @@ class MenuComposer
     }
 
     /**
-     * @param Modules $modules
      * @return array<int, mixed>
      */
     private function prepareMenu(Modules $modules): array
@@ -75,7 +74,7 @@ class MenuComposer
         $menuUnique = [];
 
         /**
-         * @var string $index
+         * @var string                   $index
          * @var array<int|string, mixed> $item
          */
         foreach ((array) $this->config->get('menu.options') as $index => $item) {
@@ -104,7 +103,6 @@ class MenuComposer
 
     /**
      * @param array<string, mixed> $data
-     * @return Module
      */
     private function getModuleMenu(array $data): Module
     {
@@ -112,7 +110,7 @@ class MenuComposer
     }
 
     /**
-     * @param  array<Module>  $modules
+     * @param array<Module> $modules
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {

@@ -17,18 +17,15 @@ class DeleteUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->userManagement->deleteUser($request->integer('userId'));
+
         return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-user';

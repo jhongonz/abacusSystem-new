@@ -12,7 +12,6 @@ class UserWarmupListener
      */
     public function __construct()
     {
-
     }
 
     /**

@@ -22,13 +22,12 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
         EmployeeManagementContract $employeeManagement,
         private readonly UserManagementContract $userManagement,
         private readonly ProfileManagementContract $profileManagement,
-        private readonly InstitutionManagementContract $institutionManagement
+        private readonly InstitutionManagementContract $institutionManagement,
     ) {
         parent::__construct($employeeManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -57,9 +56,6 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-employee';

@@ -3,8 +3,6 @@
 namespace Core\Campus\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
-use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -113,6 +111,7 @@ class Campus extends Model
     public function changeId(?int $id): self
     {
         $this->setAttribute('cam_id', $id);
+
         return $this;
     }
 
@@ -127,6 +126,7 @@ class Campus extends Model
     public function changeInstitutionId(int $id): self
     {
         $this->setAttribute('cam__inst_id', $id);
+
         return $this;
     }
 
@@ -141,6 +141,7 @@ class Campus extends Model
     public function changeName(string $name): self
     {
         $this->setAttribute('cam_name', $name);
+
         return $this;
     }
 
@@ -155,6 +156,7 @@ class Campus extends Model
     public function changeAddress(string $address): self
     {
         $this->setAttribute('cam_address', $address);
+
         return $this;
     }
 
@@ -169,6 +171,7 @@ class Campus extends Model
     public function changePhone(?string $phone = null): self
     {
         $this->setAttribute('cam_phone', $phone);
+
         return $this;
     }
 
@@ -183,6 +186,7 @@ class Campus extends Model
     public function changeEmail(?string $email = null): self
     {
         $this->setAttribute('cam_email', $email);
+
         return $this;
     }
 
@@ -197,6 +201,7 @@ class Campus extends Model
     public function changeObservations(?string $observations = null): self
     {
         $this->setAttribute('cam_observations', $observations);
+
         return $this;
     }
 
@@ -211,6 +216,7 @@ class Campus extends Model
     public function changeSearch(?string $search = null): self
     {
         $this->setAttribute('cam_search', $search);
+
         return $this;
     }
 
@@ -225,13 +231,14 @@ class Campus extends Model
     public function changeState(int $state): self
     {
         $this->setAttribute('cam_state', $state);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
@@ -239,16 +246,17 @@ class Campus extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): self
+    public function changeCreatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
@@ -256,16 +264,17 @@ class Campus extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
@@ -273,17 +282,18 @@ class Campus extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(?string $datetime = null): \DateTime
     {
-        return new DateTime($datetime ?? 'now');
+        return new \DateTime($datetime ?? 'now');
     }
 }

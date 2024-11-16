@@ -5,7 +5,7 @@ namespace Core\Profile\Domain\ValueObjects;
 class ModulePosition
 {
     public function __construct(
-        private int $value = 1
+        private int $value = 1,
     ) {
     }
 

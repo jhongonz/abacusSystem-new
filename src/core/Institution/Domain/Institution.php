@@ -35,18 +35,18 @@ class Institution
     public function __construct(
         private InstitutionId $id,
         private InstitutionName $name,
-        private InstitutionShortname $shortname = new InstitutionShortname,
-        private InstitutionCode $code = new InstitutionCode,
-        private InstitutionState $state = new InstitutionState,
+        private InstitutionShortname $shortname = new InstitutionShortname(),
+        private InstitutionCode $code = new InstitutionCode(),
+        private InstitutionState $state = new InstitutionState(),
     ) {
-        $this->logo = new InstitutionLogo;
-        $this->search = new InstitutionSearch;
-        $this->observations = new InstitutionObservations;
-        $this->createdAt = new InstitutionCreatedAt;
-        $this->updatedAt = new InstitutionUpdatedAt;
-        $this->address = new InstitutionAddress;
-        $this->phone = new InstitutionPhone;
-        $this->email = new InstitutionEmail;
+        $this->logo = new InstitutionLogo();
+        $this->search = new InstitutionSearch();
+        $this->observations = new InstitutionObservations();
+        $this->createdAt = new InstitutionCreatedAt();
+        $this->updatedAt = new InstitutionUpdatedAt();
+        $this->address = new InstitutionAddress();
+        $this->phone = new InstitutionPhone();
+        $this->email = new InstitutionEmail();
     }
 
     public function id(): InstitutionId
@@ -57,6 +57,7 @@ class Institution
     public function setId(InstitutionId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class Institution
     public function setName(InstitutionName $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -79,6 +81,7 @@ class Institution
     public function setShortname(InstitutionShortname $shortname): self
     {
         $this->shortname = $shortname;
+
         return $this;
     }
 
@@ -90,6 +93,7 @@ class Institution
     public function setCode(InstitutionCode $code): self
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -101,6 +105,7 @@ class Institution
     public function setLogo(InstitutionLogo $logo): self
     {
         $this->logo = $logo;
+
         return $this;
     }
 
@@ -112,6 +117,7 @@ class Institution
     public function setObservations(InstitutionObservations $observations): self
     {
         $this->observations = $observations;
+
         return $this;
     }
 
@@ -123,6 +129,7 @@ class Institution
     public function setAddress(InstitutionAddress $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -134,6 +141,7 @@ class Institution
     public function setState(InstitutionState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -145,6 +153,7 @@ class Institution
     public function setSearch(InstitutionSearch $search): self
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -156,6 +165,7 @@ class Institution
     public function setCreatedAt(InstitutionCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -167,6 +177,7 @@ class Institution
     public function setUpdatedAt(InstitutionUpdatedAt $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
@@ -184,6 +195,7 @@ class Institution
 
         $dataSearch = trim(strtolower(implode(' ', $data)));
         $this->search->setValue($dataSearch);
+
         return $this;
     }
 
@@ -195,6 +207,7 @@ class Institution
     public function setPhone(InstitutionPhone $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -206,6 +219,7 @@ class Institution
     public function setEmail(InstitutionEmail $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 }

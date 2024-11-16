@@ -15,7 +15,7 @@ class HomeComposerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->composer = new HomeComposer;
+        $this->composer = new HomeComposer();
     }
 
     public function tearDown(): void
@@ -27,7 +27,7 @@ class HomeComposerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_compose_should_return_void(): void
+    public function testComposeShouldReturnVoid(): void
     {
         $view = $this->createMock(\Illuminate\View\View::class);
         $view->expects(self::once())

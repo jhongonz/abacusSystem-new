@@ -38,7 +38,7 @@ class ProfilesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addItem_should_return_self(): void
+    public function testAddItemShouldReturnSelf(): void
     {
         $profile = $this->createMock(Profile::class);
         $result = $this->profiles->addItem($profile);
@@ -47,19 +47,19 @@ class ProfilesTest extends TestCase
         $this->assertSame($result, $this->profiles);
     }
 
-    public function test_items_should_return_array(): void
+    public function testItemsShouldReturnArray(): void
     {
         $result = $this->profiles->items();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->profiles->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_return_self(): void
+    public function testSetFiltersShouldReturnSelf(): void
     {
         $filters = ['test'];
         $result = $this->profiles->setFilters($filters);
@@ -69,7 +69,7 @@ class ProfilesTest extends TestCase
         $this->assertSame($filters, $result->filters());
     }
 
-    public function test_addId_should_return_self(): void
+    public function testAddIdShouldReturnSelf(): void
     {
         $result = $this->profiles->addId(1);
 
@@ -78,7 +78,7 @@ class ProfilesTest extends TestCase
         $this->assertSame([1], $result->aggregator());
     }
 
-    public function test_aggregator_should_return_array(): void
+    public function testAggregatorShouldReturnArray(): void
     {
         $result = $this->profiles->aggregator();
         $this->assertIsArray($result);

@@ -7,7 +7,6 @@ use App\Http\Requests\Institution\StoreInstitutionRequest;
 use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Institution;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -48,13 +47,13 @@ class InstitutionController extends Controller implements HasMiddleware
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function changeStateInstitution(Request $request): JsonResponse
     {
         try {
             $this->orchestrators->handler('change-state-institution', $request);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -96,7 +95,6 @@ class InstitutionController extends Controller implements HasMiddleware
     {
         $uploadedFile = $request->file('file');
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-
             $random = Str::random(10);
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
@@ -113,8 +111,7 @@ class InstitutionController extends Controller implements HasMiddleware
 
             /** @var Institution $institution */
             $institution = $this->orchestrators->handler($method, $request);
-
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -124,7 +121,7 @@ class InstitutionController extends Controller implements HasMiddleware
         }
 
         return new JsonResponse([
-            'institutionId' => $institution->id()->value()
+            'institutionId' => $institution->id()->value(),
         ], Response::HTTP_CREATED);
     }
 
@@ -134,7 +131,7 @@ class InstitutionController extends Controller implements HasMiddleware
 
         try {
             $this->orchestrators->handler('delete-institution', $request);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);

@@ -41,7 +41,7 @@ class SearchModuleByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $requestMock = $this->createMock(SearchModuleByIdRequest::class);
@@ -65,7 +65,7 @@ class SearchModuleByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $requestMock = $this->createMock(SearchModuleByIdRequest::class);
@@ -85,7 +85,7 @@ class SearchModuleByIdTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $request = $this->createMock(DeleteModuleRequest::class);
 

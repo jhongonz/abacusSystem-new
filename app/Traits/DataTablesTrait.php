@@ -17,8 +17,6 @@ trait DataTablesTrait
 
     /**
      * @param array<string, mixed> $item
-     * @param string|null $permission
-     * @return string
      */
     private function retrieveMenuOptionHtml(array $item, ?string $permission = null): string
     {

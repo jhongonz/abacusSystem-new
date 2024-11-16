@@ -78,7 +78,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_response(): void
+    public function testIndexShouldReturnResponse(): void
     {
         $viewMock = $this->createMock(View::class);
         $viewMock->expects(self::once())
@@ -101,7 +101,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_authenticate_should_return_json_response_when_attempt_true_and_request_is_ajax(): void
+    public function testAuthenticateShouldReturnJsonResponseWhenAttemptTrueAndRequestIsAjax(): void
     {
         $request = $this->createMock(LoginRequest::class);
 
@@ -174,7 +174,7 @@ class SecurityControllerTest extends TestCase
             ->with([
                 'user_login' => 'login',
                 'password' => 'password',
-                'user_id' => 1
+                'user_id' => 1,
             ])
             ->willReturn(true);
 
@@ -187,7 +187,7 @@ class SecurityControllerTest extends TestCase
             ->with([
                 'user' => $userMock,
                 'profile' => $profileMock,
-                'employee' => $employeeMock
+                'employee' => $employeeMock,
             ]);
 
         $result = $this->controller->authenticate($request);
@@ -199,7 +199,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_authenticate_should_return_redirect_response_when_attempt_true_and_request_is_not_ajax(): void
+    public function testAuthenticateShouldReturnRedirectResponseWhenAttemptTrueAndRequestIsNotAjax(): void
     {
         $request = $this->createMock(LoginRequest::class);
 
@@ -272,7 +272,7 @@ class SecurityControllerTest extends TestCase
             ->with([
                 'user_login' => 'login',
                 'password' => 'password',
-                'user_id' => 1
+                'user_id' => 1,
             ])
             ->willReturn(true);
 
@@ -286,7 +286,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_authenticate_should_return_json_response_with_exception(): void
+    public function testAuthenticateShouldReturnJsonResponseWithException(): void
     {
         $request = $this->createMock(LoginRequest::class);
 
@@ -374,7 +374,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_authenticate_should_return_redirect_response_with_exception(): void
+    public function testAuthenticateShouldReturnRedirectResponseWithException(): void
     {
         $request = $this->createMock(LoginRequest::class);
 
@@ -462,7 +462,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_authenticate_should_return_exception_when_profile_is_not_active(): void
+    public function testAuthenticateShouldReturnExceptionWhenProfileIsNotActive(): void
     {
         $request = $this->createMock(LoginRequest::class);
 
@@ -535,7 +535,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_home_should_return_json_response(): void
+    public function testHomeShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -562,7 +562,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_home_should_return_string(): void
+    public function testHomeShouldReturnString(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -589,7 +589,7 @@ class SecurityControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_logout_should_return_redirect(): void
+    public function testLogoutShouldReturnRedirect(): void
     {
         $this->session->expects(self::once())
             ->method('flush');
@@ -611,7 +611,7 @@ class SecurityControllerTest extends TestCase
         $this->assertSame('http://localhost/login', $result->getTargetUrl());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

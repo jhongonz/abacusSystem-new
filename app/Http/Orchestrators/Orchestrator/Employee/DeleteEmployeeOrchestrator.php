@@ -17,18 +17,15 @@ class DeleteEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->employeeManagement->deleteEmployee($request->integer('employeeId'));
+
         return [];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function canOrchestrate(): string
     {
         return 'delete-employee';

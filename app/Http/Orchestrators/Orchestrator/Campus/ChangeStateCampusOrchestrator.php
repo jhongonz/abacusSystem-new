@@ -18,8 +18,8 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws CampusNotFoundException
      */
     public function make(Request $request): array
@@ -44,9 +44,6 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
         return ['campus' => $campus];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-campus';

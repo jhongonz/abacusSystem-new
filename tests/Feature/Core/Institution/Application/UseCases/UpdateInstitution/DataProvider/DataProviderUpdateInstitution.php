@@ -25,9 +25,9 @@ final class DataProviderUpdateInstitution
                     'phone' => 'phone',
                     'email' => 'email',
                     'state' => 2,
-                    'updatedAt' => new \DateTime,
-                ]
-            ]
+                    'updatedAt' => new \DateTime(),
+                ],
+            ],
         ];
     }
 }

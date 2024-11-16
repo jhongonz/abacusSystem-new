@@ -14,7 +14,7 @@ class SearchInstitutionsRequest implements RequestService
      * @param array<string, mixed> $filters
      */
     public function __construct(
-        private readonly array $filters
+        private readonly array $filters,
     ) {
     }
 

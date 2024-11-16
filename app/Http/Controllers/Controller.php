@@ -34,7 +34,6 @@ abstract class Controller
     public function getPagination(?string $route = null): string
     {
         if (is_null($route)) {
-
             /** @var Router $routerService */
             $routerService = app(Router::class);
 
@@ -45,7 +44,7 @@ abstract class Controller
         return (string) json_encode([
             'start' => 0,
             'filters' => [],
-            'uri' => $route
+            'uri' => $route,
         ]);
     }
 }

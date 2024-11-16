@@ -10,7 +10,6 @@ use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institutions;
-use Exception;
 
 class SearchInstitutions extends UseCasesService
 {
@@ -20,13 +19,13 @@ class SearchInstitutions extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function execute(RequestService $request): null|Institutions
+    public function execute(RequestService $request): ?Institutions
     {
         $this->validateRequest($request, SearchInstitutionsRequest::class);
 
-        /** @var SearchInstitutionsRequest $request */
+        /* @var SearchInstitutionsRequest $request */
         return $this->institutionRepository->getAll($request->filters());
     }
 }

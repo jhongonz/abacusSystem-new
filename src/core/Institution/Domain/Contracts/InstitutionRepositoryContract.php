@@ -16,7 +16,6 @@ interface InstitutionRepositoryContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Institutions|null
      */
     public function getAll(array $filters = []): ?Institutions;
 

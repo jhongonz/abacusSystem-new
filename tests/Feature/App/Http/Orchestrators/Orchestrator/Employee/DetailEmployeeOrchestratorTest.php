@@ -59,7 +59,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_employee(): void
+    public function testMakeShouldReturnArrayWithEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -107,7 +107,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_null(): void
+    public function testMakeShouldReturnArrayWithNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -137,7 +137,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $this->assertNull($result['image']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

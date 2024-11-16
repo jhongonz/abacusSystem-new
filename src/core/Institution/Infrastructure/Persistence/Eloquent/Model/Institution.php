@@ -3,8 +3,6 @@
 namespace Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus;
-use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -99,7 +97,6 @@ class Institution extends Model
         return $this->hasMany(Campus::class, 'cam__inst_id', 'inst_id');
     }
 
-
     public function campus(): Model
     {
         return $this->relationWithCampus()->getModel();
@@ -116,6 +113,7 @@ class Institution extends Model
     public function changeId(?int $id): self
     {
         $this->setAttribute('inst_id', $id);
+
         return $this;
     }
 
@@ -130,6 +128,7 @@ class Institution extends Model
     public function changeCode(?string $code): self
     {
         $this->setAttribute('inst_code', $code);
+
         return $this;
     }
 
@@ -144,6 +143,7 @@ class Institution extends Model
     public function changeName(?string $name): self
     {
         $this->setAttribute('inst_name', $name);
+
         return $this;
     }
 
@@ -158,6 +158,7 @@ class Institution extends Model
     public function changeShortname(?string $shortname): self
     {
         $this->setAttribute('inst_shortname', $shortname);
+
         return $this;
     }
 
@@ -172,6 +173,7 @@ class Institution extends Model
     public function changeLogo(?string $logo): self
     {
         $this->setAttribute('inst_logo', $logo);
+
         return $this;
     }
 
@@ -186,6 +188,7 @@ class Institution extends Model
     public function changeObservations(?string $observations): self
     {
         $this->setAttribute('inst_observations', $observations);
+
         return $this;
     }
 
@@ -200,6 +203,7 @@ class Institution extends Model
     public function changeAddress(?string $address): self
     {
         $this->setAttribute('inst_address', $address);
+
         return $this;
     }
 
@@ -214,6 +218,7 @@ class Institution extends Model
     public function changePhone(string $phone): self
     {
         $this->setAttribute('inst_phone', $phone);
+
         return $this;
     }
 
@@ -228,6 +233,7 @@ class Institution extends Model
     public function changeEmail(?string $email): self
     {
         $this->setAttribute('inst_email', $email);
+
         return $this;
     }
 
@@ -242,6 +248,7 @@ class Institution extends Model
     public function changeSearch(string $search): self
     {
         $this->setAttribute('inst_search', $search);
+
         return $this;
     }
 
@@ -256,13 +263,14 @@ class Institution extends Model
     public function changeState(int $state): self
     {
         $this->setAttribute('inst_state', $state);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
@@ -270,7 +278,7 @@ class Institution extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): self
+    public function changeCreatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
 
@@ -278,9 +286,9 @@ class Institution extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
@@ -288,7 +296,7 @@ class Institution extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
 
@@ -296,9 +304,9 @@ class Institution extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
@@ -306,7 +314,7 @@ class Institution extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
 
@@ -314,10 +322,10 @@ class Institution extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $datetime = 'now'): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

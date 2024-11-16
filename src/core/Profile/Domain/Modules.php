@@ -46,6 +46,7 @@ class Modules extends ArrayIterator
 
     /**
      * @param array<int|string, mixed> $filters
+     *
      * @return $this
      */
     public function setFilters(array $filters): self
@@ -56,7 +57,6 @@ class Modules extends ArrayIterator
     }
 
     /**
-     * @param string $menuKey
      * @return array<Module>
      */
     public function moduleElementsOfKey(string $menuKey): array

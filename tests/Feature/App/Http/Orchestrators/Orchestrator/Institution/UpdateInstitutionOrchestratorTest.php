@@ -46,7 +46,7 @@ class UpdateInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_institution(): void
+    public function testMakeShouldReturnInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::exactly(9))
@@ -97,7 +97,7 @@ class UpdateInstitutionOrchestratorTest extends TestCase
         $this->assertSame($institutionMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

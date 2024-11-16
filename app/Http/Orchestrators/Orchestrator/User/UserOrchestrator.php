@@ -12,7 +12,7 @@ use Core\User\Domain\Contracts\UserManagementContract;
 abstract class UserOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly UserManagementContract $userManagement
+        protected readonly UserManagementContract $userManagement,
     ) {
     }
 }

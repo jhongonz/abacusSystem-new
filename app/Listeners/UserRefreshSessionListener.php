@@ -17,7 +17,7 @@ class UserRefreshSessionListener
      */
     public function __construct(
         ProfileManagementContract $profileService,
-        Session $session
+        Session $session,
     ) {
         $this->profileService = $profileService;
         $this->session = $session;

@@ -4,7 +4,6 @@ namespace Tests\Feature\Core\Employee\Domain\ValueObjects;
 
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -17,7 +16,7 @@ class EmployeeStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeState;
+        $this->valueObject = new EmployeeState();
     }
 
     public function tearDown(): void
@@ -26,7 +25,7 @@ class EmployeeStateTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_int_and_new_state(): void
+    public function testValueShouldReturnIntAndNewState(): void
     {
         $result = $this->valueObject->value();
 
@@ -35,9 +34,9 @@ class EmployeeStateTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_setValue_should_change_and_return_self(): void
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue(2);
 
@@ -46,15 +45,15 @@ class EmployeeStateTest extends TestCase
         $this->assertSame(2, $this->valueObject->value());
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeState> does not allow the invalid state: <10>.');
 
         $this->valueObject->setValue(10);
     }
 
-    public function test_getValueLiteral_should_return_string(): void
+    public function testGetValueLiteralShouldReturnString(): void
     {
         $result = $this->valueObject->getValueLiteral();
 
@@ -62,7 +61,7 @@ class EmployeeStateTest extends TestCase
         $this->assertSame('Nuevo', $result);
     }
 
-    public function test_value_literal_should_return_with__string(): void
+    public function testValueLiteralShouldReturnWithString(): void
     {
         $result = $this->valueObject->__toString();
 
@@ -70,7 +69,7 @@ class EmployeeStateTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_activate_should_change_activated_and_return_self(): void
+    public function testActivateShouldChangeActivatedAndReturnSelf(): void
     {
         $result = $this->valueObject->activate();
 
@@ -79,7 +78,7 @@ class EmployeeStateTest extends TestCase
         $this->assertSame(ValueObjectStatus::STATE_ACTIVE, $this->valueObject->value());
     }
 
-    public function test_activate_should_change_inactivated_and_return_self(): void
+    public function testActivateShouldChangeInactivatedAndReturnSelf(): void
     {
         $result = $this->valueObject->inactive();
 
@@ -88,25 +87,25 @@ class EmployeeStateTest extends TestCase
         $this->assertSame(ValueObjectStatus::STATE_INACTIVE, $this->valueObject->value());
     }
 
-    public function test_isNew_should_return_boolean(): void
+    public function testIsNewShouldReturnBoolean(): void
     {
         $result = $this->valueObject->isNew();
         $this->assertIsBool($result);
     }
 
-    public function test_isActivated_should_return_boolean(): void
+    public function testIsActivatedShouldReturnBoolean(): void
     {
         $result = $this->valueObject->isActivated();
         $this->assertIsBool($result);
     }
 
-    public function test_isInactivated_should_return_boolean(): void
+    public function testIsInactivatedShouldReturnBoolean(): void
     {
         $result = $this->valueObject->isInactivated();
         $this->assertIsBool($result);
     }
 
-    public function test_formatHtmlToState_should_return_string(): void
+    public function testFormatHtmlToStateShouldReturnString(): void
     {
         $result = $this->valueObject->formatHtmlToState();
         $this->assertIsString($result);

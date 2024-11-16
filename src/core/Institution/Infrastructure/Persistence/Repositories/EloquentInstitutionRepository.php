@@ -16,7 +16,6 @@ use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as In
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentInstitutionRepository implements InstitutionRepositoryContract, ChainPriority
@@ -28,7 +27,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         private readonly InstitutionModel $model,
         private readonly InstitutionTranslator $institutionTranslator,
         private readonly DatabaseManager $databaseManager,
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
@@ -40,12 +39,13 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws InstitutionNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(InstitutionId $id): ?Institution
     {
@@ -56,18 +56,17 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException(
-                sprintf('Institution not found with id %s', $id->value())
-            );
+            throw new InstitutionNotFoundException(sprintf('Institution not found with id %s', $id->value()));
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
+
         return $this->institutionTranslator->setModel($institutionModel)->toDomain();
     }
 
     /**
      * @param array{q?: string|null} $filters
-     * @return Institutions|null
+     *
      * @throws InstitutionsNotFoundException
      */
     public function getAll(array $filters = []): ?Institutions
@@ -80,7 +79,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         }
 
         $institutionCollection = $builder->get(['inst_id']);
-        if (count($institutionCollection) === 0) {
+        if (0 === count($institutionCollection)) {
             throw new InstitutionsNotFoundException('Institutions not found');
         }
 
@@ -101,7 +100,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     /**
      * @throws InstitutionNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function delete(InstitutionId $id): void
     {
@@ -110,9 +109,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException(
-                sprintf('Institution not found with id %s', $id->value())
-            );
+            throw new InstitutionNotFoundException(sprintf('Institution not found with id %s', $id->value()));
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
@@ -123,7 +120,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistInstitution(Institution $institution): Institution
     {
@@ -179,7 +176,6 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     /**
      * @param array<string, mixed> $data
-     * @return InstitutionModel
      */
     private function updateAttributesModelInstitution(array $data = []): InstitutionModel
     {
@@ -194,7 +190,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

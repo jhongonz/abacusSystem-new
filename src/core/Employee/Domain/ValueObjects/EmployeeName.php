@@ -5,7 +5,7 @@ namespace Core\Employee\Domain\ValueObjects;
 class EmployeeName
 {
     public function __construct(
-        private string $value
+        private string $value,
     ) {
     }
 

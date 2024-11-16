@@ -21,7 +21,6 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<int|string, mixed>
      */
     public function make(Request $request): array
@@ -33,7 +32,6 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
 
         $dataCampus = [];
         if (!is_null($campusCollection) && $campusCollection->count()) {
-
             /** @var Campus $item */
             foreach ($campusCollection as $item) {
                 $dataCampus[] = $this->campusDataTransformer->write($item)->readToShare();
@@ -43,9 +41,6 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
         return $dataCampus;
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-campus-collection';

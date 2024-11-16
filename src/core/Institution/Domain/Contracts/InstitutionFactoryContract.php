@@ -27,7 +27,6 @@ interface InstitutionFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Institution
      */
     public function buildInstitutionFromArray(array $data): Institution;
 

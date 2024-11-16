@@ -11,13 +11,9 @@ use Illuminate\Http\Request;
 interface Orchestrator
 {
     /**
-     * @param Request $request
      * @return array<int|string, mixed>
      */
     public function make(Request $request): array;
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string;
 }

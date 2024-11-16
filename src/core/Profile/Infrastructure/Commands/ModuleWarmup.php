@@ -6,7 +6,6 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
-use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as CommandSymfony;
@@ -50,20 +49,18 @@ class ModuleWarmup extends Command
     public function handle(): int
     {
         $id = ($this->option('id')) ? (int) $this->option('id') : null;
-        if ($id == 0) {
-
+        if (0 == $id) {
             /** @var Modules $modules */
             $modules = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
                 foreach ($modules->aggregator() as $item) {
-
                     try {
                         /** @var Module $module */
                         $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
 
                         $repository->persistModule($module);
-                    } catch (Exception $exception) {
+                    } catch (\Exception $exception) {
                         $this->logger->error($exception->getMessage(), $exception->getTrace());
 
                         return CommandSymfony::FAILURE;
@@ -71,7 +68,6 @@ class ModuleWarmup extends Command
                 }
             }
         } else {
-
             $moduleId = $this->moduleFactory->buildModuleId($id);
             foreach ($this->repositories as $repository) {
                 try {
@@ -79,7 +75,7 @@ class ModuleWarmup extends Command
                     $module = $this->readRepository->find($moduleId);
 
                     $repository->persistModule($module);
-                } catch (Exception $exception) {
+                } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage(), $exception->getTrace());
 
                     return CommandSymfony::FAILURE;
@@ -88,6 +84,7 @@ class ModuleWarmup extends Command
         }
 
         $this->logger->info('Command executed');
+
         return CommandSymfony::SUCCESS;
     }
 }

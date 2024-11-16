@@ -10,7 +10,6 @@ use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
-use Exception;
 
 class CampusTranslator
 {
@@ -22,18 +21,19 @@ class CampusTranslator
     private array $collection = [];
 
     public function __construct(
-        private readonly CampusFactoryContract $campusFactory
+        private readonly CampusFactoryContract $campusFactory,
     ) {
     }
 
     public function setModel(CampusModel $model): self
     {
         $this->model = $model;
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function toDomain(): Campus
     {
@@ -50,11 +50,11 @@ class CampusTranslator
         $campus->state()->setValue($this->model->state());
         $campus->search()->setValue($this->model->search());
 
-        if (! is_null($this->model->createdAt())) {
+        if (!is_null($this->model->createdAt())) {
             $campus->createdAt()->setValue($this->model->createdAt());
         }
 
-        if (! is_null($this->model->updatedAt())) {
+        if (!is_null($this->model->updatedAt())) {
             $campus->updatedAt()->setValue($this->model->updatedAt());
         }
 
@@ -63,17 +63,19 @@ class CampusTranslator
 
     /**
      * @param array<int<0, max>, int> $collection
+     *
      * @return $this
      */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
+
         return $this;
     }
 
     public function toDomainCollection(): CampusCollection
     {
-        $campusCollection = new CampusCollection;
+        $campusCollection = new CampusCollection();
         foreach ($this->collection as $id) {
             $campusCollection->addId($id);
         }

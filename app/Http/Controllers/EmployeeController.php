@@ -11,7 +11,6 @@ use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -74,7 +73,7 @@ class EmployeeController extends Controller implements HasMiddleware
         try {
             /** @var Employee $employee */
             $employee = $this->orchestrators->handler('change-state-employee', $request);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$request->input('id'), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -82,17 +81,16 @@ class EmployeeController extends Controller implements HasMiddleware
 
         $userId = $employee->userId()->value();
         if (isset($userId)) {
-
             $request->merge([
                 'userId' => $userId,
-                'state' => $employee->state()->value()
+                'state' => $employee->state()->value(),
             ]);
 
             $this->orchestrators->handler('change-state-user', $request);
             UserUpdateOrDeleteEvent::dispatch($userId);
         }
 
-        return new JsonResponse(status:Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function getEmployee(Request $request, ?int $employeeId = null): JsonResponse|string
@@ -111,14 +109,14 @@ class EmployeeController extends Controller implements HasMiddleware
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
         try {
-            $method = (! $request->filled('employeeId')) ? 'create-employee-action' : 'update-employee-action';
+            $method = (!$request->filled('employeeId')) ? 'create-employee-action' : 'update-employee-action';
 
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);
 
             EmployeeUpdateOrDeletedEvent::dispatch((int) $employee->id()->value());
             UserUpdateOrDeleteEvent::dispatch((int) $employee->userId()->value());
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -140,7 +138,6 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $uploadedFile = $request->file('file');
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-
             $random = Str::random(10);
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
@@ -164,7 +161,7 @@ class EmployeeController extends Controller implements HasMiddleware
             if (!is_null($image)) {
                 $this->deleteImage($image);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);

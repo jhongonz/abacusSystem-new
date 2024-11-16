@@ -12,7 +12,7 @@ use Core\Campus\Domain\ValueObjects\CampusId;
 class DeleteCampusRequest implements RequestService
 {
     public function __construct(
-        private readonly CampusId $id
+        private readonly CampusId $id,
     ) {
     }
 

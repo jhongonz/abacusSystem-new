@@ -67,7 +67,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -111,7 +111,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -156,7 +156,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getCampusCollection_should_return_json_response(): void
+    public function testGetCampusCollectionShouldReturnJsonResponse(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -194,7 +194,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getCampus_with_null_should_return_json_response(): void
+    public function testGetCampusWithNullShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -234,7 +234,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getCampus_with_data_should_return_json_response(): void
+    public function testGetCampusWithDataShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -275,7 +275,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_json_response_when_create_new_object(): void
+    public function testStoreCampusShouldReturnJsonResponseWhenCreateNewObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -319,7 +319,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_json_response_when_update_object(): void
+    public function testStoreCampusShouldReturnJsonResponseWhenUpdateObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -363,7 +363,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_exception_when_create_new_object(): void
+    public function testStoreCampusShouldReturnExceptionWhenCreateNewObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -410,7 +410,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateCampus_should_inactivate_and_return_json_response(): void
+    public function testChangeStateCampusShouldInactivateAndReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -427,7 +427,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateCampus_should_return_exception(): void
+    public function testChangeStateCampusShouldReturnException(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -447,10 +447,9 @@ class CampusControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_deleteCampus_should_return_json_response(): void
+    public function testDeleteCampusShouldReturnJsonResponse(): void
     {
         $campusId = 1;
 
@@ -472,10 +471,9 @@ class CampusControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_deleteCampus_should_return_exception(): void
+    public function testDeleteCampusShouldReturnException(): void
     {
         $campusId = 1;
 
@@ -500,10 +498,7 @@ class CampusControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

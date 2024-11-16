@@ -15,7 +15,7 @@ class UpdateModuleRequestTest extends TestCase
     private ModuleId|MockObject $moduleId;
     private UpdateModuleRequest $request;
 
-    /** @var array<string, mixed>  */
+    /** @var array<string, mixed> */
     private array $data = [];
 
     /**
@@ -34,7 +34,7 @@ class UpdateModuleRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_moduleId_should_return_object(): void
+    public function testModuleIdShouldReturnObject(): void
     {
         $result = $this->request->moduleId();
 
@@ -42,7 +42,7 @@ class UpdateModuleRequestTest extends TestCase
         $this->assertSame($result, $this->moduleId);
     }
 
-    public function test_data_should_return_array(): void
+    public function testDataShouldReturnArray(): void
     {
         $result = $this->request->data();
 

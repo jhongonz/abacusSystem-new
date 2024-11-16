@@ -48,9 +48,9 @@ class UpdateModuleTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
 
         $dataUpdate = [
             'name' => 'test',
@@ -165,7 +165,7 @@ class UpdateModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $request = $this->createMock(DeleteModuleRequest::class);
 

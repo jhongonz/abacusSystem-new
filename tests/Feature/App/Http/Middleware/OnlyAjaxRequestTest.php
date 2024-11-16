@@ -40,7 +40,7 @@ class OnlyAjaxRequestTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_redirect_response(): void
+    public function testHandleShouldReturnRedirectResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -54,7 +54,7 @@ class OnlyAjaxRequestTest extends TestCase
             ->willReturn($responseMock);
 
         $result = $this->middleware->handle($requestMock, function ($request) {
-            return new Response;
+            return new Response();
         });
 
         $this->assertInstanceOf(RedirectResponse::class, $result);
@@ -64,7 +64,7 @@ class OnlyAjaxRequestTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_response(): void
+    public function testHandleShouldReturnResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())

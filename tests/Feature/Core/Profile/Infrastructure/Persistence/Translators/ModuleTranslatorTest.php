@@ -51,7 +51,7 @@ class ModuleTranslatorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $model = $this->createMock(ModuleModel::class);
         $result = $this->translator->setModel($model);
@@ -64,7 +64,7 @@ class ModuleTranslatorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_object(): void
+    public function testToDomainShouldReturnObject(): void
     {
         $this->model = $this->createMock(ModuleModel::class);
         $moduleMock = $this->createMock(Module::class);
@@ -162,7 +162,7 @@ class ModuleTranslatorTest extends TestCase
         $this->assertSame($moduleMock, $result);
     }
 
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->translator->setCollection([1]);
 
@@ -170,7 +170,7 @@ class ModuleTranslatorTest extends TestCase
         $this->assertSame($this->translator, $result);
     }
 
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
         $this->translator->setCollection([1]);
         $result = $this->translator->toDomainCollection();

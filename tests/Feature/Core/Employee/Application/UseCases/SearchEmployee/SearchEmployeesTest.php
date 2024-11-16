@@ -48,7 +48,7 @@ class SearchEmployeesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_value_object(): void
+    public function testExecuteShouldReturnValueObject(): void
     {
         $employeesMock = $this->createMock(Employees::class);
 
@@ -71,7 +71,7 @@ class SearchEmployeesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $this->request->expects(self::once())
             ->method('filters')
@@ -90,7 +90,7 @@ class SearchEmployeesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');

@@ -28,8 +28,8 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws \Exception
      */
     public function make(Request $request): array
@@ -47,11 +47,11 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'state' => ValueObjectStatus::STATE_NEW,
-            'image' => null
+            'image' => null,
         ];
 
         $birthdate = $request->date('birthdate', 'd/m/Y');
-        if (! is_null($birthdate)) {
+        if (!is_null($birthdate)) {
             $dataEmployee['birthdate'] = $this->getDateTime($birthdate->format('Y-m-d'))->format('Y-m-d H:i:s');
         }
 
@@ -61,12 +61,10 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $employee = $this->employeeManagement->createEmployee([Employee::TYPE => $dataEmployee]);
+
         return ['employee' => $employee];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-employee';

@@ -29,7 +29,7 @@ class CreateInstitution extends UseCasesService
         $institution = $request->institution();
         $institution->refreshSearch();
 
-        /** @var CreateInstitutionRequest $request */
+        /* @var CreateInstitutionRequest $request */
         return $this->institutionRepository->persistInstitution($institution);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\CampusController;
-use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SecurityController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 

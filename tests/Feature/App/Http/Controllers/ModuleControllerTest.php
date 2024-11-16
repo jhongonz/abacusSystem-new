@@ -62,7 +62,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -107,7 +107,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -151,7 +151,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getModules_should_return_json_response(): void
+    public function testGetModulesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -170,7 +170,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateModule_should_return_json_response(): void
+    public function testChangeStateModuleShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $moduleMock = $this->createMock(Module::class);
@@ -197,7 +197,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateModule_should_return_json_response_when_is_exception(): void
+    public function testChangeStateModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -223,7 +223,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getModule_should_return_json_response_when_id_is_null(): void
+    public function testGetModuleShouldReturnJsonResponseWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -263,7 +263,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_create_new_module_and_return_json_response(): void
+    public function testStoreModuleShouldCreateNewModuleAndReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -295,7 +295,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_return_json_response_when_exception_routing(): void
+    public function testStoreModuleShouldReturnJsonResponseWhenExceptionRouting(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -322,7 +322,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_update_module_and_return_json_response(): void
+    public function testStoreModuleShouldUpdateModuleAndReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -354,7 +354,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_return_json_response_when_is_exception(): void
+    public function testStoreModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -381,7 +381,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteModule_should_return_json_response(): void
+    public function testDeleteModuleShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -403,7 +403,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteModule_should_return_json_response_when_is_exception(): void
+    public function testDeleteModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -426,7 +426,7 @@ class ModuleControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

@@ -16,7 +16,7 @@ class ControllerServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singletonIf(ActionExecutorHandler::class, function (Application $app) {
-            $actionExecutorHandler = new ActionExecutorHandler;
+            $actionExecutorHandler = new ActionExecutorHandler();
 
             $actionExecutorHandler->addActionExecutor(
                 $app->make(CreateEmployeeActionExecutor::class)

@@ -46,10 +46,9 @@ class CampusTranslatorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $modelMock = $this->createMock(CampusModel::class);
         $result = $this->campusTranslator->setModel($modelMock);
@@ -59,11 +58,10 @@ class CampusTranslatorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_campus_object(): void
+    public function testToDomainShouldReturnCampusObject(): void
     {
         $modelMock = $this->createMock(CampusModel::class);
 
@@ -91,7 +89,7 @@ class CampusTranslatorTest extends TestCase
             ->method('phone')
             ->willReturn('phone');
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $modelMock->expects(self::once())
             ->method('createdAt')
             ->willReturn($datetime);
@@ -177,10 +175,7 @@ class CampusTranslatorTest extends TestCase
         $this->assertSame($campusMock, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->campusTranslator->setCollection([1, 2, 3]);
 
@@ -188,12 +183,9 @@ class CampusTranslatorTest extends TestCase
         $this->assertSame($this->campusTranslator, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
-        $expected = [1,2,3];
+        $expected = [1, 2, 3];
         $this->campusTranslator->setCollection($expected);
 
         $result = $this->campusTranslator->toDomainCollection();

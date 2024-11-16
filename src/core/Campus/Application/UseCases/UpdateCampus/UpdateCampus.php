@@ -36,48 +36,56 @@ class UpdateCampus extends UseCasesService
         }
 
         $campus->refreshSearch();
+
         return $this->campusRepository->persistCampus($campus);
     }
 
     private function changeInstitutionId(Campus $campus, int $institutionId): Campus
     {
         $campus->institutionId()->setValue($institutionId);
+
         return $campus;
     }
 
     private function changeName(Campus $campus, string $name): Campus
     {
         $campus->name()->setValue($name);
+
         return $campus;
     }
 
     private function changeAddress(Campus $campus, ?string $address): Campus
     {
         $campus->address()->setValue($address);
+
         return $campus;
     }
 
     private function changePhone(Campus $campus, ?string $phone): Campus
     {
         $campus->phone()->setValue($phone);
+
         return $campus;
     }
 
     private function changeEmail(Campus $campus, ?string $email): Campus
     {
         $campus->email()->setValue($email);
+
         return $campus;
     }
 
     private function changeObservations(Campus $campus, ?string $observations): Campus
     {
         $campus->observations()->setValue($observations);
+
         return $campus;
     }
 
     private function changeSearch(Campus $campus, ?string $search): Campus
     {
         $campus->search()->setValue($search);
+
         return $campus;
     }
 
@@ -87,18 +95,20 @@ class UpdateCampus extends UseCasesService
     private function changeState(Campus $campus, int $state): Campus
     {
         $campus->state()->setValue($state);
+
         return $campus;
     }
 
     private function changeCreatedAt(Campus $campus, \DateTime $dateTime): Campus
     {
         $campus->createdAt()->setValue($dateTime);
+
         return $campus;
     }
 
     private function changeUpdatedAt(Campus $campus, ?\DateTime $dateTime): Campus
     {
-        if (! is_null($dateTime)) {
+        if (!is_null($dateTime)) {
             $campus->updatedAt()->setValue($dateTime);
         }
 

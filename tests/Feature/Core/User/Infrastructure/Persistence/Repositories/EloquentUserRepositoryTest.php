@@ -78,7 +78,7 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_find_should_return_user_object(): void
+    public function testFindShouldReturnUserObject(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
@@ -96,7 +96,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
 
         $builderMock->shouldReceive('first')
             ->once()
@@ -131,7 +131,7 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::exactly(2))
@@ -172,7 +172,7 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_findCriteria_should_return_user_object(): void
+    public function testFindCriteriaShouldReturnUserObject(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $loginMock->expects(self::once())
@@ -190,7 +190,7 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -224,7 +224,7 @@ class EloquentUserRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $loginMock->expects(self::exactly(2))
@@ -261,7 +261,7 @@ class EloquentUserRepositoryTest extends TestCase
         $this->repository->findCriteria($loginMock);
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -269,7 +269,7 @@ class EloquentUserRepositoryTest extends TestCase
         $this->assertIsInt($result);
     }
 
-    public function test_changePriority_should_return_void(): void
+    public function testChangePriorityShouldReturnVoid(): void
     {
         $result = $this->repository->changePriority(70);
         $value = $result->priority();
@@ -281,12 +281,11 @@ class EloquentUserRepositoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataInsert
-     * @param \DateTime $dateCreated
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerInsert')]
-    public function test_persistUser_should_return_user_object(array $dataInsert, \DateTime $dateCreated): void
+    public function testPersistUserShouldReturnUserObject(array $dataInsert, \DateTime $dateCreated): void
     {
         $userMock = $this->createMock(UserDomain::class);
 
@@ -447,12 +446,11 @@ class EloquentUserRepositoryTest extends TestCase
     /**
      * @param array<string, mixed> $dataReturn
      * @param array<string, mixed> $dataUpdate
-     * @param \DateTime $dateUpdated
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerUpdate')]
-    public function test_persistUser_should_update_model_and_return_user_object(array $dataReturn, array $dataUpdate, \DateTime $dateUpdated): void
+    public function testPersistUserShouldUpdateModelAndReturnUserObject(array $dataReturn, array $dataUpdate, \DateTime $dateUpdated): void
     {
         $userMock = $this->createMock(UserDomain::class);
 
@@ -627,12 +625,12 @@ class EloquentUserRepositoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataReturn
-     * @return void
+     *
      * @throws Exception
      * @throws UserNotFoundException
      */
     #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerDelete')]
-    public function test_delete_should_delete_row(array $dataReturn): void
+    public function testDeleteShouldDeleteRow(array $dataReturn): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
@@ -675,7 +673,7 @@ class EloquentUserRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_delete_user_null_should_return_exception(): void
+    public function testDeleteUserNullShouldReturnException(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::exactly(2))

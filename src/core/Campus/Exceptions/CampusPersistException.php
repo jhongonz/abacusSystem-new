@@ -6,8 +6,6 @@
 
 namespace Core\Campus\Exceptions;
 
-use Exception;
-
-class CampusPersistException extends Exception
+class CampusPersistException extends \Exception
 {
 }

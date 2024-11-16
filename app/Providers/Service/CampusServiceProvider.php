@@ -20,13 +20,14 @@ use Psr\Log\LoggerInterface;
 class CampusServiceProvider extends ServiceProvider
 {
     /**
-     * All the container bindings that should be registered
-     * @var array<string, string> $singletons
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         CampusFactoryContract::class => CampusFactory::class,
         CampusDataTransformerContract::class => CampusDataTransformer::class,
-        CampusManagementContract::class => CampusService::class
+        CampusManagementContract::class => CampusService::class,
     ];
 
     /**
@@ -35,7 +36,7 @@ class CampusServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singletonIf(CampusRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainCampusRepository;
+            $chainRepository = new ChainCampusRepository();
 
             $chainRepository->addRepository(
                 $app->make(RedisCampusRepository::class)
@@ -48,7 +49,7 @@ class CampusServiceProvider extends ServiceProvider
             return $chainRepository;
         });
 
-        //Commands
+        // Commands
         $this->app->singletonIf(CampusWarmup::class, function (Application $app) {
             return new CampusWarmup(
                 $app->make(LoggerInterface::class),

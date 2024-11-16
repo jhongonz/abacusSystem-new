@@ -44,7 +44,7 @@ class DeleteUserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_user_object(): void
+    public function testExecuteShouldReturnUserObject(): void
     {
         $userId = $this->createMock(UserId::class);
 

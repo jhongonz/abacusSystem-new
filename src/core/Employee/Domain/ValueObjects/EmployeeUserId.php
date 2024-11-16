@@ -5,7 +5,7 @@ namespace Core\Employee\Domain\ValueObjects;
 class EmployeeUserId
 {
     public function __construct(
-        private ?int $value = null
+        private ?int $value = null,
     ) {
     }
 

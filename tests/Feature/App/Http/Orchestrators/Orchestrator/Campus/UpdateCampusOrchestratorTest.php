@@ -39,10 +39,9 @@ class UpdateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_return_campus(): void
+    public function testMakeShouldReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::exactly(6))
@@ -65,7 +64,7 @@ class UpdateCampusOrchestratorTest extends TestCase
                 'phone' => '123456789',
                 'email' => 'sandbox@test.com',
                 'address' => 'address',
-                'observations' => 'observations'
+                'observations' => 'observations',
             ])
             ->willReturn($campusMock);
 
@@ -75,7 +74,7 @@ class UpdateCampusOrchestratorTest extends TestCase
         $this->assertSame($campusMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

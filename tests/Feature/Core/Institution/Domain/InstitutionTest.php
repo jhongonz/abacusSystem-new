@@ -52,7 +52,7 @@ class InstitutionTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->institution->id();
 
@@ -63,7 +63,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setId_should_return_self(): void
+    public function testSetIdShouldReturnSelf(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $result = $this->institution->setId($idMock);
@@ -73,7 +73,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($idMock, $result->id());
     }
 
-    public function test_name_should_return_value_object(): void
+    public function testNameShouldReturnValueObject(): void
     {
         $result = $this->institution->name();
 
@@ -84,7 +84,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setName_should_return_self(): void
+    public function testSetNameShouldReturnSelf(): void
     {
         $name = $this->createMock(InstitutionName::class);
         $result = $this->institution->setName($name);
@@ -94,7 +94,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($name, $result->name());
     }
 
-    public function test_shortname_should_return_value_object(): void
+    public function testShortnameShouldReturnValueObject(): void
     {
         $result = $this->institution->shortname();
 
@@ -104,7 +104,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setShortname_should_return_self(): void
+    public function testSetShortnameShouldReturnSelf(): void
     {
         $shortname = $this->createMock(InstitutionShortname::class);
         $result = $this->institution->setShortname($shortname);
@@ -114,7 +114,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($shortname, $result->shortname());
     }
 
-    public function test_code_should_return_value_object(): void
+    public function testCodeShouldReturnValueObject(): void
     {
         $result = $this->institution->code();
 
@@ -124,7 +124,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCode_should_return_self(): void
+    public function testSetCodeShouldReturnSelf(): void
     {
         $codeMock = $this->createMock(InstitutionCode::class);
         $result = $this->institution->setCode($codeMock);
@@ -134,7 +134,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($codeMock, $result->code());
     }
 
-    public function test_logo_should_return_value_object(): void
+    public function testLogoShouldReturnValueObject(): void
     {
         $result = $this->institution->logo();
 
@@ -144,7 +144,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLogo_should_return_self(): void
+    public function testSetLogoShouldReturnSelf(): void
     {
         $logoMock = $this->createMock(InstitutionLogo::class);
         $result = $this->institution->setLogo($logoMock);
@@ -154,7 +154,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($logoMock, $result->logo());
     }
 
-    public function test_observations_should_return_value_object(): void
+    public function testObservationsShouldReturnValueObject(): void
     {
         $result = $this->institution->observations();
 
@@ -164,7 +164,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setObservations_should_return_self(): void
+    public function testSetObservationsShouldReturnSelf(): void
     {
         $observations = $this->createMock(InstitutionObservations::class);
         $result = $this->institution->setObservations($observations);
@@ -174,7 +174,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($observations, $result->observations());
     }
 
-    public function test_address_should_return_value_object(): void
+    public function testAddressShouldReturnValueObject(): void
     {
         $result = $this->institution->address();
 
@@ -184,7 +184,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setAddress_should_return_self(): void
+    public function testSetAddressShouldReturnSelf(): void
     {
         $address = $this->createMock(InstitutionAddress::class);
         $result = $this->institution->setAddress($address);
@@ -194,7 +194,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($address, $result->address());
     }
 
-    public function test_state_should_return_value_object(): void
+    public function testStateShouldReturnValueObject(): void
     {
         $result = $this->institution->state();
 
@@ -205,7 +205,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setState_should_return_self(): void
+    public function testSetStateShouldReturnSelf(): void
     {
         $stateMock = $this->createMock(InstitutionState::class);
         $result = $this->institution->setState($stateMock);
@@ -215,7 +215,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($stateMock, $result->state());
     }
 
-    public function test_search_should_return_value_object(): void
+    public function testSearchShouldReturnValueObject(): void
     {
         $result = $this->institution->search();
 
@@ -225,7 +225,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setSearch_should_return_self(): void
+    public function testSetSearchShouldReturnSelf(): void
     {
         $searchMock = $this->createMock(InstitutionSearch::class);
         $result = $this->institution->setSearch($searchMock);
@@ -235,7 +235,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($searchMock, $result->search());
     }
 
-    public function test_createdAt_should_return_value_object(): void
+    public function testCreatedAtShouldReturnValueObject(): void
     {
         $result = $this->institution->createdAt();
 
@@ -245,7 +245,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCreatedAt_should_return_self(): void
+    public function testSetCreatedAtShouldReturnSelf(): void
     {
         $createdAt = $this->createMock(InstitutionCreatedAt::class);
         $result = $this->institution->setCreatedAt($createdAt);
@@ -255,7 +255,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($createdAt, $result->createdAt());
     }
 
-    public function test_updatedAt_should_return_value_object(): void
+    public function testUpdatedAtShouldReturnValueObject(): void
     {
         $result = $this->institution->updatedAt();
 
@@ -265,7 +265,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUpdatedAt_should_return_self(): void
+    public function testSetUpdatedAtShouldReturnSelf(): void
     {
         $updatedAt = $this->createMock(InstitutionUpdatedAt::class);
         $result = $this->institution->setUpdatedAt($updatedAt);
@@ -278,7 +278,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_refreshSearch_should_update_and_return_self(): void
+    public function testRefreshSearchShouldUpdateAndReturnSelf(): void
     {
         $codeMock = $this->createMock(InstitutionCode::class);
         $codeMock->expects(self::once())
@@ -335,7 +335,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($this->institution, $result);
     }
 
-    public function test_phone_should_return_value_object(): void
+    public function testPhoneShouldReturnValueObject(): void
     {
         $result = $this->institution->phone();
 
@@ -345,7 +345,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setPhone_should_return_self(): void
+    public function testSetPhoneShouldReturnSelf(): void
     {
         $phone = $this->createMock(InstitutionPhone::class);
         $result = $this->institution->setPhone($phone);
@@ -355,7 +355,7 @@ class InstitutionTest extends TestCase
         $this->assertSame($phone, $result->phone());
     }
 
-    public function test_email_should_return_value_object(): void
+    public function testEmailShouldReturnValueObject(): void
     {
         $result = $this->institution->email();
 
@@ -365,7 +365,7 @@ class InstitutionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setEmail_should_return_self(): void
+    public function testSetEmailShouldReturnSelf(): void
     {
         $email = $this->createMock(InstitutionEmail::class);
         $result = $this->institution->setEmail($email);

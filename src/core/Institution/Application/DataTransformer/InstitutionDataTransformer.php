@@ -26,7 +26,7 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
     public function read(): array
     {
         return [
-            Institution::TYPE => $this->retrieveData()
+            Institution::TYPE => $this->retrieveData(),
         ];
     }
 
@@ -58,7 +58,7 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
             'email' => $this->institution->email()->value(),
             'state' => $this->institution->state()->value(),
             'search' => $this->institution->search()->value(),
-            'createdAt' => $this->institution->createdAt()->toFormattedString()
+            'createdAt' => $this->institution->createdAt()->toFormattedString(),
         ];
 
         $updatedAt = $this->institution->updatedAt()->toFormattedString();

@@ -15,15 +15,12 @@ interface UserManagementContract
     public function searchUserByLogin(string $login): ?User;
 
     /**
-     * @param int $id
      * @param array<string, mixed> $data
-     * @return User
      */
     public function updateUser(int $id, array $data): User;
 
     /**
      * @param array<string, mixed> $data
-     * @return User
      */
     public function createUser(array $data): User;
 

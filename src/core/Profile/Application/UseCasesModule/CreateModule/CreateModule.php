@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCasesModule\RequestService;
 use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
-use Exception;
 
 class CreateModule extends UseCasesService
 {
@@ -16,7 +15,7 @@ class CreateModule extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Module
     {

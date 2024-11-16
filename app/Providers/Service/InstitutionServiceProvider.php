@@ -20,8 +20,9 @@ use Psr\Log\LoggerInterface;
 class InstitutionServiceProvider extends ServiceProvider
 {
     /**
-     * All the container bindings that should be registered
-     * @var array<string, string> $singletons
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         InstitutionFactoryContract::class => InstitutionFactory::class,
@@ -35,7 +36,7 @@ class InstitutionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singletonIf(InstitutionRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainInstitutionRepository;
+            $chainRepository = new ChainInstitutionRepository();
 
             $chainRepository->addRepository(
                 $app->make(RedisInstitutionRepository::class)
@@ -48,7 +49,7 @@ class InstitutionServiceProvider extends ServiceProvider
             return $chainRepository;
         });
 
-        //Commands
+        // Commands
         $this->app->singletonIf(InstitutionWarmup::class, function (Application $app) {
             return new InstitutionWarmup(
                 $app->make(LoggerInterface::class),

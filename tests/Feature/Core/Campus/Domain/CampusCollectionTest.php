@@ -39,7 +39,7 @@ class CampusCollectionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addItem_should_return_self(): void
+    public function testAddItemShouldReturnSelf(): void
     {
         $campusMock = $this->createMock(Campus::class);
         $result = $this->campusCollection->addItem($campusMock);
@@ -48,10 +48,7 @@ class CampusCollectionTest extends TestCase
         $this->assertSame($this->campusCollection, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_construct_should_return_exception(): void
+    public function testConstructShouldReturnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Item is not valid to collection Core\Campus\Domain\CampusCollection');
@@ -59,7 +56,7 @@ class CampusCollectionTest extends TestCase
         $this->campusCollection = new CampusCollection(['testing']);
     }
 
-    public function test_items_should_return_array(): void
+    public function testItemsShouldReturnArray(): void
     {
         $result = $this->campusCollection->items();
 
@@ -67,7 +64,7 @@ class CampusCollectionTest extends TestCase
         $this->assertCount(1, $result);
     }
 
-    public function test_addId_should_return_self(): void
+    public function testAddIdShouldReturnSelf(): void
     {
         $result = $this->campusCollection->addId(1);
 
@@ -75,19 +72,19 @@ class CampusCollectionTest extends TestCase
         $this->assertSame($this->campusCollection, $result);
     }
 
-    public function test_aggregator_should_return_array(): void
+    public function testAggregatorShouldReturnArray(): void
     {
         $result = $this->campusCollection->aggregator();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->campusCollection->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_return_self(): void
+    public function testSetFiltersShouldReturnSelf(): void
     {
         $result = $this->campusCollection->setFilters(['testing']);
 

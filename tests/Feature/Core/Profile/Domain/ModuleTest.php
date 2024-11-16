@@ -66,7 +66,7 @@ class ModuleTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->module->id();
         $this->assertInstanceOf(ModuleId::class, $result);
@@ -76,7 +76,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setId_should_change_and_return_self(): void
+    public function testSetIdShouldChangeAndReturnSelf(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $result = $this->module->setId($moduleId);
@@ -86,7 +86,7 @@ class ModuleTest extends TestCase
         $this->assertSame($moduleId, $result->id());
     }
 
-    public function test_menuKey_should_return_value_object(): void
+    public function testMenuKeyShouldReturnValueObject(): void
     {
         $result = $this->module->menuKey();
         $this->assertInstanceOf(ModuleMenuKey::class, $result);
@@ -96,7 +96,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setMenuKey_should_change_and_return_self(): void
+    public function testSetMenuKeyShouldChangeAndReturnSelf(): void
     {
         $menuKey = $this->createMock(ModuleMenuKey::class);
         $result = $this->module->setMenuKey($menuKey);
@@ -106,7 +106,7 @@ class ModuleTest extends TestCase
         $this->assertSame($menuKey, $result->menuKey());
     }
 
-    public function test_name_should_return_value_object(): void
+    public function testNameShouldReturnValueObject(): void
     {
         $result = $this->module->name();
         $this->assertInstanceOf(ModuleName::class, $result);
@@ -116,7 +116,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setName_should_change_and_return_self(): void
+    public function testSetNameShouldChangeAndReturnSelf(): void
     {
         $name = $this->createMock(ModuleName::class);
         $result = $this->module->setName($name);
@@ -126,7 +126,7 @@ class ModuleTest extends TestCase
         $this->assertSame($name, $result->name());
     }
 
-    public function test_route_should_return_value_object(): void
+    public function testRouteShouldReturnValueObject(): void
     {
         $result = $this->module->route();
         $this->assertInstanceOf(ModuleRoute::class, $result);
@@ -136,7 +136,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setRoute_should_change_and_return_self(): void
+    public function testSetRouteShouldChangeAndReturnSelf(): void
     {
         $route = $this->createMock(ModuleRoute::class);
         $result = $this->module->setRoute($route);
@@ -146,7 +146,7 @@ class ModuleTest extends TestCase
         $this->assertSame($route, $result->route());
     }
 
-    public function test_icon_should_return_value_object(): void
+    public function testIconShouldReturnValueObject(): void
     {
         $result = $this->module->icon();
         $this->assertInstanceOf(ModuleIcon::class, $result);
@@ -155,7 +155,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setIcon_should_change_and_return_self(): void
+    public function testSetIconShouldChangeAndReturnSelf(): void
     {
         $icon = $this->createMock(ModuleIcon::class);
         $result = $this->module->setIcon($icon);
@@ -165,7 +165,7 @@ class ModuleTest extends TestCase
         $this->assertSame($icon, $result->icon());
     }
 
-    public function test_state_should_return_value_object(): void
+    public function testStateShouldReturnValueObject(): void
     {
         $result = $this->module->state();
         $this->assertInstanceOf(ModuleState::class, $result);
@@ -174,7 +174,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setState_should_change_and_return_self(): void
+    public function testSetStateShouldChangeAndReturnSelf(): void
     {
         $state = $this->createMock(ModuleState::class);
         $result = $this->module->setState($state);
@@ -184,7 +184,7 @@ class ModuleTest extends TestCase
         $this->assertSame($state, $result->state());
     }
 
-    public function test_createdAt_should_return_value_object(): void
+    public function testCreatedAtShouldReturnValueObject(): void
     {
         $result = $this->module->createdAt();
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
@@ -193,7 +193,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCreatedAt_should_change_and_return_self(): void
+    public function testSetCreatedAtShouldChangeAndReturnSelf(): void
     {
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $result = $this->module->setCreatedAt($createdAt);
@@ -203,7 +203,7 @@ class ModuleTest extends TestCase
         $this->assertSame($createdAt, $result->createdAt());
     }
 
-    public function test_updatedAt_should_return_value_object(): void
+    public function testUpdatedAtShouldReturnValueObject(): void
     {
         $result = $this->module->updatedAt();
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
@@ -212,7 +212,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUpdatedAt_should_change_and_return_self(): void
+    public function testSetUpdatedAtShouldChangeAndReturnSelf(): void
     {
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $result = $this->module->setUpdatedAt($updatedAt);
@@ -222,7 +222,7 @@ class ModuleTest extends TestCase
         $this->assertSame($updatedAt, $result->updatedAt());
     }
 
-    public function test_search_should_return_value_object(): void
+    public function testSearchShouldReturnValueObject(): void
     {
         $result = $this->module->search();
         $this->assertInstanceOf(ModuleSearch::class, $result);
@@ -231,7 +231,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setSearch_should_change_and_return_self(): void
+    public function testSetSearchShouldChangeAndReturnSelf(): void
     {
         $search = $this->createMock(ModuleSearch::class);
         $result = $this->module->setSearch($search);
@@ -241,7 +241,7 @@ class ModuleTest extends TestCase
         $this->assertSame($search, $result->search());
     }
 
-    public function test_options_should_return_value_object(): void
+    public function testOptionsShouldReturnValueObject(): void
     {
         $result = $this->module->options();
         $this->assertIsArray($result);
@@ -250,7 +250,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setOptions_should_change_and_return_self(): void
+    public function testSetOptionsShouldChangeAndReturnSelf(): void
     {
         $options = [$this->createMock(Module::class)];
         $result = $this->module->setOptions($options);
@@ -260,21 +260,21 @@ class ModuleTest extends TestCase
         $this->assertSame($options, $result->options());
     }
 
-    public function test_haveChildren_should_return_boolean(): void
+    public function testHaveChildrenShouldReturnBoolean(): void
     {
         $result = $this->module->haveChildren();
         $this->assertIsBool($result);
         $this->assertFalse($result);
     }
 
-    public function test_expanded_should_return_boolean(): void
+    public function testExpandedShouldReturnBoolean(): void
     {
         $result = $this->module->expanded();
         $this->assertIsBool($result);
         $this->assertFalse($result);
     }
 
-    public function test_setExpanded_should_return_self(): void
+    public function testSetExpandedShouldReturnSelf(): void
     {
         $result = $this->module->setExpanded(true);
 
@@ -286,7 +286,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_refreshSearch_should_return_self(): void
+    public function testRefreshSearchShouldReturnSelf(): void
     {
         $this->moduleMenuKey->expects(self::once())
             ->method('value')
@@ -317,7 +317,7 @@ class ModuleTest extends TestCase
         $this->assertSame($result, $this->module);
     }
 
-    public function test_position_should_return_value_object(): void
+    public function testPositionShouldReturnValueObject(): void
     {
         $result = $this->module->position();
         $this->assertInstanceOf(ModulePosition::class, $result);
@@ -326,7 +326,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setPosition_should_change_and_return_self(): void
+    public function testSetPositionShouldChangeAndReturnSelf(): void
     {
         $position = $this->createMock(ModulePosition::class);
         $result = $this->module->setPosition($position);

@@ -14,13 +14,12 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
 {
     public function __construct(
         ModuleManagementContract $moduleManagement,
-        private readonly Config $config
+        private readonly Config $config,
     ) {
         parent::__construct($moduleManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -31,13 +30,10 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
         return [
             'moduleId' => $moduleId,
             'module' => $module,
-            'menuKeys' => $this->config->get('menu.options')
+            'menuKeys' => $this->config->get('menu.options'),
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-module';

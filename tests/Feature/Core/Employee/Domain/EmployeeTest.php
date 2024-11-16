@@ -64,7 +64,7 @@ class EmployeeTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->employee->id();
         $this->assertInstanceOf(EmployeeId::class, $result);
@@ -73,7 +73,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setId_should_change_value_and_return_self(): void
+    public function testSetIdShouldChangeValueAndReturnSelf(): void
     {
         $id = $this->createMock(EmployeeId::class);
         $result = $this->employee->setId($id);
@@ -83,7 +83,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($id, $this->employee->id());
     }
 
-    public function test_identification_should_return_value_object(): void
+    public function testIdentificationShouldReturnValueObject(): void
     {
         $result = $this->employee->identification();
         $this->assertInstanceOf(EmployeeIdentification::class, $result);
@@ -92,7 +92,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setIdentification_should_change_and_return_self(): void
+    public function testSetIdentificationShouldChangeAndReturnSelf(): void
     {
         $identification = $this->createMock(EmployeeIdentification::class);
         $result = $this->employee->setIdentification($identification);
@@ -102,7 +102,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($identification, $this->employee->identification());
     }
 
-    public function test_name_should_return_value_object(): void
+    public function testNameShouldReturnValueObject(): void
     {
         $result = $this->employee->name();
         $this->assertInstanceOf(EmployeeName::class, $result);
@@ -111,7 +111,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setName_should_change_and_return_self(): void
+    public function testSetNameShouldChangeAndReturnSelf(): void
     {
         $name = $this->createMock(EmployeeName::class);
         $result = $this->employee->setName($name);
@@ -121,7 +121,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($name, $this->employee->name());
     }
 
-    public function test_lastname_should_return_value_object(): void
+    public function testLastnameShouldReturnValueObject(): void
     {
         $result = $this->employee->lastname();
         $this->assertInstanceOf(EmployeeLastname::class, $result);
@@ -130,7 +130,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLastname_should_change_and_return_self(): void
+    public function testSetLastnameShouldChangeAndReturnSelf(): void
     {
         $lastname = $this->createMock(EmployeeLastname::class);
         $result = $this->employee->setLastname($lastname);
@@ -140,7 +140,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($lastname, $this->employee->lastname());
     }
 
-    public function test_phone_should_return_value_object(): void
+    public function testPhoneShouldReturnValueObject(): void
     {
         $result = $this->employee->phone();
         $this->assertInstanceOf(EmployeePhone::class, $result);
@@ -149,7 +149,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setPhone_should_change_and_return_self(): void
+    public function testSetPhoneShouldChangeAndReturnSelf(): void
     {
         $phone = $this->createMock(EmployeePhone::class);
         $result = $this->employee->setPhone($phone);
@@ -159,7 +159,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($phone, $this->employee->phone());
     }
 
-    public function test_email_should_return_value_object(): void
+    public function testEmailShouldReturnValueObject(): void
     {
         $result = $this->employee->email();
         $this->assertInstanceOf(EmployeeEmail::class, $result);
@@ -168,7 +168,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setEmail_should_change_and_return_self(): void
+    public function testSetEmailShouldChangeAndReturnSelf(): void
     {
         $email = $this->createMock(EmployeeEmail::class);
         $result = $this->employee->setEmail($email);
@@ -178,7 +178,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($email, $this->employee->email());
     }
 
-    public function test_address_should_return_value_object(): void
+    public function testAddressShouldReturnValueObject(): void
     {
         $result = $this->employee->address();
         $this->assertInstanceOf(EmployeeAddress::class, $result);
@@ -187,7 +187,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setAddress_should_change_and_return_self(): void
+    public function testSetAddressShouldChangeAndReturnSelf(): void
     {
         $address = $this->createMock(EmployeeAddress::class);
         $result = $this->employee->setAddress($address);
@@ -197,7 +197,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($address, $this->employee->address());
     }
 
-    public function test_state_should_return_value_object(): void
+    public function testStateShouldReturnValueObject(): void
     {
         $result = $this->employee->state();
         $this->assertInstanceOf(EmployeeState::class, $result);
@@ -206,7 +206,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setState_should_change_and_return_self(): void
+    public function testSetStateShouldChangeAndReturnSelf(): void
     {
         $state = $this->createMock(EmployeeState::class);
         $result = $this->employee->setState($state);
@@ -216,7 +216,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($state, $this->employee->state());
     }
 
-    public function test_createdAt_should_return_value_object(): void
+    public function testCreatedAtShouldReturnValueObject(): void
     {
         $result = $this->employee->createdAt();
         $this->assertInstanceOf(EmployeeCreatedAt::class, $result);
@@ -225,7 +225,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCreatedAt_should_change_and_return_self(): void
+    public function testSetCreatedAtShouldChangeAndReturnSelf(): void
     {
         $createdAt = $this->createMock(EmployeeCreatedAt::class);
         $result = $this->employee->setCreatedAt($createdAt);
@@ -235,7 +235,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($createdAt, $this->employee->createdAt());
     }
 
-    public function test_updateAt_should_return_value_object(): void
+    public function testUpdateAtShouldReturnValueObject(): void
     {
         $result = $this->employee->updatedAt();
         $this->assertInstanceOf(EmployeeUpdatedAt::class, $result);
@@ -244,7 +244,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUpdatedAt_should_change_and_return_self(): void
+    public function testSetUpdatedAtShouldChangeAndReturnSelf(): void
     {
         $updatedAt = $this->createMock(EmployeeUpdatedAt::class);
         $result = $this->employee->setUpdatedAt($updatedAt);
@@ -254,7 +254,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($updatedAt, $this->employee->updatedAt());
     }
 
-    public function test_userId_should_return_value_object(): void
+    public function testUserIdShouldReturnValueObject(): void
     {
         $result = $this->employee->userId();
         $this->assertInstanceOf(EmployeeUserId::class, $result);
@@ -263,7 +263,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUserId_should_change_and_return_self(): void
+    public function testSetUserIdShouldChangeAndReturnSelf(): void
     {
         $userId = $this->createMock(EmployeeUserId::class);
         $result = $this->employee->setUserId($userId);
@@ -273,7 +273,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($userId, $this->employee->userId());
     }
 
-    public function test_search_should_return_value_object(): void
+    public function testSearchShouldReturnValueObject(): void
     {
         $result = $this->employee->search();
         $this->assertInstanceOf(EmployeeSearch::class, $result);
@@ -282,7 +282,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setSearch_should_change_and_return_self(): void
+    public function testSetSearchShouldChangeAndReturnSelf(): void
     {
         $search = $this->createMock(EmployeeSearch::class);
         $result = $this->employee->setSearch($search);
@@ -292,7 +292,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($search, $this->employee->search());
     }
 
-    public function test_birthdate_should_return_value_object(): void
+    public function testBirthdateShouldReturnValueObject(): void
     {
         $result = $this->employee->birthdate();
         $this->assertInstanceOf(EmployeeBirthdate::class, $result);
@@ -301,7 +301,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setBirthdate_should_change_and_return_self(): void
+    public function testSetBirthdateShouldChangeAndReturnSelf(): void
     {
         $birthdate = $this->createMock(EmployeeBirthdate::class);
         $result = $this->employee->setBirthdate($birthdate);
@@ -311,7 +311,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($birthdate, $this->employee->birthdate());
     }
 
-    public function test_identificationType_should_return_value_object(): void
+    public function testIdentificationTypeShouldReturnValueObject(): void
     {
         $result = $this->employee->identificationType();
         $this->assertInstanceOf(EmployeeIdentificationType::class, $result);
@@ -320,7 +320,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setIdentificationType_should_change_and_return_self(): void
+    public function testSetIdentificationTypeShouldChangeAndReturnSelf(): void
     {
         $type = $this->createMock(EmployeeIdentificationType::class);
         $result = $this->employee->setIdentificationType($type);
@@ -330,7 +330,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($type, $this->employee->identificationType());
     }
 
-    public function test_image_should_return_value_object(): void
+    public function testImageShouldReturnValueObject(): void
     {
         $result = $this->employee->image();
         $this->assertInstanceOf(EmployeeImage::class, $result);
@@ -339,7 +339,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setImage_should_change_and_return_self(): void
+    public function testSetImageShouldChangeAndReturnSelf(): void
     {
         $image = $this->createMock(EmployeeImage::class);
         $result = $this->employee->setImage($image);
@@ -349,7 +349,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($image, $this->employee->image());
     }
 
-    public function test_observations_should_return_value_object(): void
+    public function testObservationsShouldReturnValueObject(): void
     {
         $result = $this->employee->observations();
         $this->assertInstanceOf(EmployeeObservations::class, $result);
@@ -358,7 +358,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setObservations_should_change_and_return_self(): void
+    public function testSetObservationsShouldChangeAndReturnSelf(): void
     {
         $observations = $this->createMock(EmployeeObservations::class);
         $result = $this->employee->setObservations($observations);
@@ -368,7 +368,7 @@ class EmployeeTest extends TestCase
         $this->assertSame($observations, $this->employee->observations());
     }
 
-    public function test_institutionId_should_return_value_object(): void
+    public function testInstitutionIdShouldReturnValueObject(): void
     {
         $result = $this->employee->institutionId();
         $this->assertInstanceOf(EmployeeInstitutionId::class, $result);
@@ -377,7 +377,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setInstitutionId_should_change_and_return_self(): void
+    public function testSetInstitutionIdShouldChangeAndReturnSelf(): void
     {
         $institutionId = $this->createMock(EmployeeInstitutionId::class);
         $result = $this->employee->setInstitutionId($institutionId);
@@ -390,7 +390,7 @@ class EmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_refreshSearch_should_change_and_return_self(): void
+    public function testRefreshSearchShouldChangeAndReturnSelf(): void
     {
         $identificationMock = $this->createMock(EmployeeIdentification::class);
         $identificationMock->expects(self::once())

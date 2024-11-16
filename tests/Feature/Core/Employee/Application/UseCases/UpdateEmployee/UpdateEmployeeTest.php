@@ -60,11 +60,11 @@ class UpdateEmployeeTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataUpdate
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderUpdateEmployee::class, 'provider')]
-    public function test_execute_should_change_and_return_object(array $dataUpdate): void
+    public function testExecuteShouldChangeAndReturnObject(array $dataUpdate): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
 
@@ -199,7 +199,7 @@ class UpdateEmployeeTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');

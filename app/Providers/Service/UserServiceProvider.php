@@ -21,8 +21,9 @@ use Psr\Log\LoggerInterface;
 class UserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
-     * All the container bindings that should be registered
-     * @var array<string, string> $singletons
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         UserFactoryContract::class => UserFactory::class,
@@ -36,7 +37,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register(): void
     {
         $this->app->singletonIf(UserRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainUserRepository;
+            $chainRepository = new ChainUserRepository();
 
             $chainRepository->addRepository(
                 $app->make(RedisUserRepository::class)
@@ -48,7 +49,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             return $chainRepository;
         });
 
-        //Commands
+        // Commands
         $this->app->singletonIf(UserWarmup::class, function (Application $app) {
             return new UserWarmup(
                 $app->make(LoggerInterface::class),
@@ -78,6 +79,5 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function boot(): void
     {
-
     }
 }

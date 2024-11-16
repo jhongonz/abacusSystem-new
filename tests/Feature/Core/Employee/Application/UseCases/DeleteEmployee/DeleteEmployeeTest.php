@@ -48,7 +48,7 @@ class DeleteEmployeeTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_execute_should_delete_and_return_null(): void
+    public function testExecuteShouldDeleteAndReturnNull(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $this->request->expects(self::once())
@@ -68,7 +68,7 @@ class DeleteEmployeeTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');

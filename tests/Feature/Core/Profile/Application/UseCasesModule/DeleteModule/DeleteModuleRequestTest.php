@@ -34,7 +34,7 @@ class DeleteModuleRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_moduleId_should_return_object(): void
+    public function testModuleIdShouldReturnObject(): void
     {
         $result = $this->request->id();
 

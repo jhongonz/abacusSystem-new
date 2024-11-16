@@ -15,8 +15,6 @@ class OrchestratorHandler implements OrchestratorHandlerContract
     private array $orchestrators;
 
     /**
-     * @param string $actionType
-     * @param Request $request
      * @return array<int|string, mixed>|bool
      */
     public function handler(string $actionType, Request $request): array|bool
@@ -34,6 +32,7 @@ class OrchestratorHandler implements OrchestratorHandlerContract
         }
 
         $this->orchestrators[$orchestrator->canOrchestrate()] = $orchestrator;
+
         return $this;
     }
 }

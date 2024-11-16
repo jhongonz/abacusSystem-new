@@ -40,10 +40,9 @@ class ChangeStateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_active_when_is_new_and_return_campus(): void
+    public function testMakeShouldActiveWhenIsNewAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -86,10 +85,9 @@ class ChangeStateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_inactive_when_is_active_and_return_campus(): void
+    public function testMakeShouldInactiveWhenIsActiveAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -142,10 +140,7 @@ class ChangeStateCampusOrchestratorTest extends TestCase
         $this->assertSame($campusMock, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

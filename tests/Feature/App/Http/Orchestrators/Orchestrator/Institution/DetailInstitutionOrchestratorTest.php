@@ -42,7 +42,7 @@ class DetailInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_institution(): void
+    public function testMakeShouldReturnArrayWithInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -76,7 +76,7 @@ class DetailInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_without_institution(): void
+    public function testMakeShouldReturnArrayWithoutInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -95,7 +95,7 @@ class DetailInstitutionOrchestratorTest extends TestCase
         $this->assertNull($result['image']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

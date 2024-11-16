@@ -4,8 +4,6 @@ namespace Core\User\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
-use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -225,18 +223,17 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
         /** @var string|null $dateTime */
         $dateTime = $this->getAttribute('created_at');
 
         return null !== $dateTime ? $this->getDateTime($dateTime) : null;
-
     }
 
-    public function changeCreatedAt(DateTime $datetime): self
+    public function changeCreatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
 
@@ -244,9 +241,9 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
@@ -254,7 +251,7 @@ class User extends Authenticatable
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
 
@@ -262,9 +259,9 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
@@ -272,7 +269,7 @@ class User extends Authenticatable
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
 
@@ -295,10 +292,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $datetime = 'now'): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

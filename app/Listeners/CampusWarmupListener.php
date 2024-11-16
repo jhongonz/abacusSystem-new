@@ -12,7 +12,6 @@ class CampusWarmupListener
      */
     public function __construct()
     {
-
     }
 
     /**

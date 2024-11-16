@@ -8,12 +8,12 @@ use App\Http\Orchestrators\Orchestrator\Campus\DeleteCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\DetailCampusOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Campus\UpdateCampusOrchestrator;
+use App\Http\Orchestrators\Orchestrator\Employee\ChangeStateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\CreateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DeleteEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\DetailEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\GetEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\GetEmployeesOrchestrator;
-use App\Http\Orchestrators\Orchestrator\Employee\ChangeStateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Employee\UpdateEmployeeOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Institution\ChangeStateInstitutionOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Institution\CreateInstitutionOrchestrator;
@@ -34,10 +34,10 @@ use App\Http\Orchestrators\Orchestrator\Profile\DetailProfileOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\GetProfileOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\GetProfilesOrchestrator;
 use App\Http\Orchestrators\Orchestrator\Profile\UpdateProfileOrchestrator;
+use App\Http\Orchestrators\Orchestrator\User\ChangeStateUserOrchestrator;
 use App\Http\Orchestrators\Orchestrator\User\CreateUserOrchestrator;
 use App\Http\Orchestrators\Orchestrator\User\DeleteUserOrchestrator;
 use App\Http\Orchestrators\Orchestrator\User\GetUserOrchestrator;
-use App\Http\Orchestrators\Orchestrator\User\ChangeStateUserOrchestrator;
 use App\Http\Orchestrators\Orchestrator\User\UpdateUserOrchestrator;
 use App\Http\Orchestrators\OrchestratorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -52,9 +52,9 @@ class OrchestratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singletonIf(OrchestratorHandlerContract::class, function (Application $app) {
-            $orchestratorHandler = new OrchestratorHandler;
+            $orchestratorHandler = new OrchestratorHandler();
 
-            //Employee Orchestrators
+            // Employee Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(CreateEmployeeOrchestrator::class)
             );
@@ -83,7 +83,7 @@ class OrchestratorServiceProvider extends ServiceProvider
                 $app->make(DeleteEmployeeOrchestrator::class)
             );
 
-            //User Orchestrators
+            // User Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(ChangeStateUserOrchestrator::class)
             );
@@ -104,7 +104,7 @@ class OrchestratorServiceProvider extends ServiceProvider
                 $app->make(DeleteUserOrchestrator::class)
             );
 
-            //Profile Orchestrators
+            // Profile Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(GetProfilesOrchestrator::class)
             );
@@ -133,7 +133,7 @@ class OrchestratorServiceProvider extends ServiceProvider
                 $app->make(UpdateProfileOrchestrator::class)
             );
 
-            //Institution Orchestrators
+            // Institution Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(ChangeStateInstitutionOrchestrator::class)
             );
@@ -158,7 +158,7 @@ class OrchestratorServiceProvider extends ServiceProvider
                 $app->make(DeleteInstitutionOrchestrator::class)
             );
 
-            //Module Orchestrators
+            // Module Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(ChangeStateModuleOrchestrator::class)
             );
@@ -183,7 +183,7 @@ class OrchestratorServiceProvider extends ServiceProvider
                 $app->make(GetModulesOrchestrator::class)
             );
 
-            //Campus Orchestrators
+            // Campus Orchestrators
             $orchestratorHandler->addOrchestrator(
                 $app->make(GetCampusCollectionOrchestrator::class)
             );

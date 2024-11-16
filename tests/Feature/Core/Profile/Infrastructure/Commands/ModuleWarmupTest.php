@@ -57,7 +57,7 @@ class ModuleWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('module:warmup', $this->command->getName());
         $this->assertSame('Warmup modules in memory', $this->command->getDescription());
@@ -66,7 +66,7 @@ class ModuleWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_module_in_repositories(): void
+    public function testHandleShouldUpdateModuleInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::once())
@@ -114,7 +114,7 @@ class ModuleWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception_in_repositories(): void
+    public function testHandleShouldReturnExceptionInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::once())
@@ -162,7 +162,7 @@ class ModuleWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_module_with_option_id_in_repositories(): void
+    public function testHandleShouldUpdateModuleWithOptionIdInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::exactly(2))
@@ -201,7 +201,7 @@ class ModuleWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_with_option_id_should_return_exception_in_repositories(): void
+    public function testHandleWithOptionIdShouldReturnExceptionInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::exactly(2))

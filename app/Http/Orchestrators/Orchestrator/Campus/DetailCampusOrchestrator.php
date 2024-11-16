@@ -12,13 +12,12 @@ use Illuminate\Http\Request;
 class DetailCampusOrchestrator extends CampusOrchestrator
 {
     public function __construct(
-        CampusManagementContract $campusManagement
+        CampusManagementContract $campusManagement,
     ) {
         parent::__construct($campusManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -32,9 +31,6 @@ class DetailCampusOrchestrator extends CampusOrchestrator
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-campus';

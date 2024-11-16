@@ -34,7 +34,7 @@ class UpdateCampusRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_object(): void
+    public function testIdShouldReturnObject(): void
     {
         $result = $this->request->id();
 
@@ -42,7 +42,7 @@ class UpdateCampusRequestTest extends TestCase
         $this->assertSame($this->campusId, $result);
     }
 
-    public function test_data_should_return_array(): void
+    public function testDataShouldReturnArray(): void
     {
         $result = $this->request->data();
 

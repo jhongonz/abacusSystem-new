@@ -12,24 +12,21 @@ use Illuminate\Http\Request;
 class DeleteProfileOrchestrator extends ProfileOrchestrator
 {
     public function __construct(
-        ProfileManagementContract $profileManagement
+        ProfileManagementContract $profileManagement,
     ) {
         parent::__construct($profileManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->profileManagement->deleteProfile($request->integer('profileId'));
+
         return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-profile';

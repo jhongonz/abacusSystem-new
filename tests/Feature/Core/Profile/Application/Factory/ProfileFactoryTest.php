@@ -26,7 +26,7 @@ class ProfileFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new ProfileFactory;
+        $this->factory = new ProfileFactory();
     }
 
     public function tearDown(): void
@@ -37,11 +37,11 @@ class ProfileFactoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataObject
-     * @return void
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerProfile')]
-    public function test_buildProfileFromArray_should_return_profile_object(array $dataObject): void
+    public function testBuildProfileFromArrayShouldReturnProfileObject(array $dataObject): void
     {
         $result = $this->factory->buildProfileFromArray($dataObject);
         $data = $dataObject[Profile::TYPE];
@@ -68,7 +68,7 @@ class ProfileFactoryTest extends TestCase
         $this->assertInstanceOf(Profile::class, $result);
     }
 
-    public function test_buildProfileUpdateAt_should_return_value_object_with_null(): void
+    public function testBuildProfileUpdateAtShouldReturnValueObjectWithNull(): void
     {
         $result = $this->factory->buildProfileUpdateAt();
 
@@ -76,25 +76,25 @@ class ProfileFactoryTest extends TestCase
         $this->assertNull($result->value());
     }
 
-    public function test_buildProfileUpdateAt_should_return_value_object(): void
+    public function testBuildProfileUpdateAtShouldReturnValueObject(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $result = $this->factory->buildProfileUpdateAt($datetime);
 
         $this->assertInstanceOf(ProfileUpdatedAt::class, $result);
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test_buildProfileCreatedAt_should_return_value_object(): void
+    public function testBuildProfileCreatedAtShouldReturnValueObject(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $result = $this->factory->buildProfileCreatedAt($datetime);
 
         $this->assertInstanceOf(ProfileCreatedAt::class, $result);
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test_buildProfileSearch_should_return_value_object_with_null(): void
+    public function testBuildProfileSearchShouldReturnValueObjectWithNull(): void
     {
         $result = $this->factory->buildProfileSearch();
 
@@ -102,7 +102,7 @@ class ProfileFactoryTest extends TestCase
         $this->assertNull($result->value());
     }
 
-    public function test_buildProfileSearch_should_return_value_object(): void
+    public function testBuildProfileSearchShouldReturnValueObject(): void
     {
         $search = 'test test';
         $result = $this->factory->buildProfileSearch($search);
@@ -114,7 +114,7 @@ class ProfileFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildProfiles_should_return_value_object(): void
+    public function testBuildProfilesShouldReturnValueObject(): void
     {
         $profileMock = $this->createMock(Profile::class);
         $result = $this->factory->buildProfiles($profileMock);

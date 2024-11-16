@@ -24,15 +24,15 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
     public function __construct(
         ModuleManagementContract $moduleManagement,
         protected Router $router,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($moduleManagement);
         $this->setRouter($router);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws RouteNotFoundException
      */
     public function make(Request $request): array
@@ -57,12 +57,10 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
         ];
 
         $module = $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
+
         return ['module' => $module];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-module';

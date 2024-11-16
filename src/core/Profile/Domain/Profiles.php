@@ -46,6 +46,7 @@ class Profiles extends ArrayIterator
 
     /**
      * @param array<int|string, mixed> $filters
+     *
      * @return $this
      */
     public function setFilters(array $filters): self

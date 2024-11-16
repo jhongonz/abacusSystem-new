@@ -22,15 +22,15 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
     public function __construct(
         ModuleManagementContract $moduleManagement,
         protected Router $router,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($moduleManagement);
         $this->setRouter($this->router);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws RouteNotFoundException
      */
     public function make(Request $request): array
@@ -53,12 +53,10 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
         ];
 
         $module = $this->moduleManagement->updateModule($request->integer('moduleId'), $dataUpdate);
+
         return ['module' => $module];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-module';

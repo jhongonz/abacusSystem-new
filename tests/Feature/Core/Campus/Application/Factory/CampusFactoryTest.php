@@ -30,7 +30,7 @@ class CampusFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->campusFactory = new CampusFactory;
+        $this->campusFactory = new CampusFactory();
     }
 
     public function tearDown(): void
@@ -42,7 +42,7 @@ class CampusFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildCampus_should_return_object(): void
+    public function testBuildCampusShouldReturnObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
@@ -58,17 +58,17 @@ class CampusFactoryTest extends TestCase
 
     /**
      * @param array<int|string, mixed> $dataTest
-     * @return void
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(CampusFactoryDataProvider::class, 'provider_dataArray')]
-    public function test_buildCampusFromArray_should_return_object(array $dataTest): void
+    public function testBuildCampusFromArrayShouldReturnObject(array $dataTest): void
     {
         $result = $this->campusFactory->buildCampusFromArray($dataTest);
         $this->assertInstanceOf(Campus::class, $result);
     }
 
-    public function test_buildCampusAddress_should_return_object(): void
+    public function testBuildCampusAddressShouldReturnObject(): void
     {
         $result = $this->campusFactory->buildCampusAddress('address');
 
@@ -76,7 +76,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame('address', $result->value());
     }
 
-    public function test_buildCampusPhone_should_return_object_when_phone_is_string(): void
+    public function testBuildCampusPhoneShouldReturnObjectWhenPhoneIsString(): void
     {
         $result = $this->campusFactory->buildCampusPhone('testing');
 
@@ -84,7 +84,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame('testing', $result->value());
     }
 
-    public function test_buildCampusPhone_should_return_object_when_phone_is_null(): void
+    public function testBuildCampusPhoneShouldReturnObjectWhenPhoneIsNull(): void
     {
         $result = $this->campusFactory->buildCampusPhone();
 
@@ -92,7 +92,7 @@ class CampusFactoryTest extends TestCase
         $this->assertNull($result->value());
     }
 
-    public function test_buildCampusEmail_should_return_object_when_email_is_string(): void
+    public function testBuildCampusEmailShouldReturnObjectWhenEmailIsString(): void
     {
         $result = $this->campusFactory->buildCampusEmail('testing@test.com');
 
@@ -100,7 +100,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame('testing@test.com', $result->value());
     }
 
-    public function test_buildCampusEmail_should_return_object_when_email_is_null(): void
+    public function testBuildCampusEmailShouldReturnObjectWhenEmailIsNull(): void
     {
         $result = $this->campusFactory->buildCampusEmail();
 
@@ -108,7 +108,7 @@ class CampusFactoryTest extends TestCase
         $this->assertNull($result->value());
     }
 
-    public function test_buildCampusEmail_should_return_exception(): void
+    public function testBuildCampusEmailShouldReturnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusEmail> does not allow the invalid email: <testing>.');
@@ -116,7 +116,7 @@ class CampusFactoryTest extends TestCase
         $this->campusFactory->buildCampusEmail('testing');
     }
 
-    public function test_buildCampusObservations_should_return_object_when_observations_is_string(): void
+    public function testBuildCampusObservationsShouldReturnObjectWhenObservationsIsString(): void
     {
         $result = $this->campusFactory->buildCampusObservations('testing');
 
@@ -124,7 +124,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame('testing', $result->value());
     }
 
-    public function test_buildCampusObservations_should_return_object_when_observations_is_null(): void
+    public function testBuildCampusObservationsShouldReturnObjectWhenObservationsIsNull(): void
     {
         $result = $this->campusFactory->buildCampusObservations();
 
@@ -132,7 +132,7 @@ class CampusFactoryTest extends TestCase
         $this->assertNull($result->value());
     }
 
-    public function test_buildCampusSearch_should_return_object_when_search_is_string(): void
+    public function testBuildCampusSearchShouldReturnObjectWhenSearchIsString(): void
     {
         $result = $this->campusFactory->buildCampusSearch('testing');
 
@@ -140,7 +140,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame('testing', $result->value());
     }
 
-    public function test_buildCampusSearch_should_return_object_when_search_is_null(): void
+    public function testBuildCampusSearchShouldReturnObjectWhenSearchIsNull(): void
     {
         $result = $this->campusFactory->buildCampusSearch();
 
@@ -151,7 +151,7 @@ class CampusFactoryTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_buildCampusState_should_return_object(): void
+    public function testBuildCampusStateShouldReturnObject(): void
     {
         $result = $this->campusFactory->buildCampusState(1);
 
@@ -159,7 +159,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame(1, $result->value());
     }
 
-    public function test_buildCampusState_should_return_exception(): void
+    public function testBuildCampusStateShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusState> does not allow the invalid state: <5>.');
@@ -167,7 +167,7 @@ class CampusFactoryTest extends TestCase
         $this->campusFactory->buildCampusState(5);
     }
 
-    public function test_buildCampusCreatedAt_should_return_object(): void
+    public function testBuildCampusCreatedAtShouldReturnObject(): void
     {
         $datetime = new \DateTime('2024-06-25 8:13:00');
         $result = $this->campusFactory->buildCampusCreatedAt($datetime);
@@ -176,7 +176,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test_buildCampusUpdatedAt_should_return_object_where_date_is_not_null(): void
+    public function testBuildCampusUpdatedAtShouldReturnObjectWhereDateIsNotNull(): void
     {
         $datetime = new \DateTime('2024-06-25 8:13:00');
         $result = $this->campusFactory->buildCampusUpdatedAt($datetime);
@@ -185,7 +185,7 @@ class CampusFactoryTest extends TestCase
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test_buildCampusUpdatedAt_should_return_object_where_date_is_null(): void
+    public function testBuildCampusUpdatedAtShouldReturnObjectWhereDateIsNull(): void
     {
         $result = $this->campusFactory->buildCampusUpdatedAt();
 
@@ -196,7 +196,7 @@ class CampusFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildCampusCollection_should_return_object(): void
+    public function testBuildCampusCollectionShouldReturnObject(): void
     {
         $campusMock1 = $this->createMock(Campus::class);
         $campusMock2 = $this->createMock(Campus::class);

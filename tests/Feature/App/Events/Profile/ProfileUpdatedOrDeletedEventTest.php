@@ -24,7 +24,7 @@ class ProfileUpdatedOrDeletedEventTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_profileId_should_return_int(): void
+    public function testProfileIdShouldReturnInt(): void
     {
         $result = $this->event->profileId();
 
@@ -32,7 +32,7 @@ class ProfileUpdatedOrDeletedEventTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_broadcastOn_should_return_array_object(): void
+    public function testBroadcastOnShouldReturnArrayObject(): void
     {
         $result = $this->event->broadcastOn();
 

@@ -15,13 +15,12 @@ class GetInstitutionsOrchestrator extends InstitutionOrchestrator
 {
     public function __construct(
         InstitutionManagementContract $institutionManagement,
-        private readonly InstitutionDataTransformerContract $institutionDataTransformer
+        private readonly InstitutionDataTransformerContract $institutionDataTransformer,
     ) {
         parent::__construct($institutionManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<int|string, mixed>
      */
     public function make(Request $request): array
@@ -41,9 +40,6 @@ class GetInstitutionsOrchestrator extends InstitutionOrchestrator
         return $dataInstitutions;
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-institutions';

@@ -9,8 +9,6 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
-use Exception;
-use Throwable;
 
 class ChainModuleRepository extends AbstractChainRepository implements ModuleRepositoryContract
 {
@@ -22,7 +20,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      * @throws ModuleNotFoundException
      */
     public function find(ModuleId $id): ?Module
@@ -32,13 +30,13 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
             $result = $this->read(__FUNCTION__, $id);
 
             return $result;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistModule(Module $module): Module
     {
@@ -50,7 +48,7 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
 
     /**
      * @throws ModulesNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function getAll(array $filters = []): ?Modules
     {
@@ -61,13 +59,13 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
             $result = $this->read(__FUNCTION__, $filters);
 
             return $result;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             throw new ModulesNotFoundException('Modules not found');
         }
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function deleteModule(ModuleId $id): void
     {

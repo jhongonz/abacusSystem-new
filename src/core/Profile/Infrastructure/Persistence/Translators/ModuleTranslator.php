@@ -6,7 +6,6 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
-use Exception;
 
 class ModuleTranslator
 {
@@ -30,7 +29,7 @@ class ModuleTranslator
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function toDomain(): Module
     {
@@ -57,6 +56,7 @@ class ModuleTranslator
 
     /**
      * @param array<int<0, max>, int> $collection
+     *
      * @return $this
      */
     public function setCollection(array $collection): self
@@ -68,7 +68,7 @@ class ModuleTranslator
 
     public function toDomainCollection(): Modules
     {
-        $modules = new Modules;
+        $modules = new Modules();
         foreach ($this->collection as $id) {
             $modules->addId($id);
         }

@@ -6,24 +6,18 @@
 
 namespace App\Traits;
 
-use DateTime;
-use Exception;
-
 trait UtilsDateTimeTrait
 {
-    /**
-     * @return DateTime
-     */
-    public function getCurrentTime(): DateTime
+    public function getCurrentTime(): \DateTime
     {
-        return new DateTime;
+        return new \DateTime();
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getDateTime(string $datetime): DateTime
+    public function getDateTime(string $datetime): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

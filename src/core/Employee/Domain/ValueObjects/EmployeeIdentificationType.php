@@ -5,7 +5,7 @@ namespace Core\Employee\Domain\ValueObjects;
 class EmployeeIdentificationType
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
     }
 

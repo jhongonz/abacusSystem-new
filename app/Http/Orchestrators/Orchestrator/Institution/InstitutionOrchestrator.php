@@ -12,7 +12,7 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 abstract class InstitutionOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly InstitutionManagementContract $institutionManagement
+        protected readonly InstitutionManagementContract $institutionManagement,
     ) {
     }
 }

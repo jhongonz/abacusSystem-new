@@ -3,8 +3,6 @@
 namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -65,7 +63,7 @@ class Profile extends Model
     ];
 
     /** @var string[] */
-    protected $touches = ['user','pivotModules','modules'];
+    protected $touches = ['user', 'pivotModules', 'modules'];
 
     /**
      * The search field associated with the table.
@@ -136,6 +134,7 @@ class Profile extends Model
     public function changeId(?int $id): self
     {
         $this->setAttribute('pro_id', $id);
+
         return $this;
     }
 
@@ -150,6 +149,7 @@ class Profile extends Model
     public function changeName(string $name): self
     {
         $this->setAttribute('pro_name', $name);
+
         return $this;
     }
 
@@ -164,6 +164,7 @@ class Profile extends Model
     public function changeState(int $state): self
     {
         $this->setAttribute('pro_state', $state);
+
         return $this;
     }
 
@@ -178,6 +179,7 @@ class Profile extends Model
     public function changeSearch(?string $search): self
     {
         $this->setAttribute('pro_search', $search);
+
         return $this;
     }
 
@@ -192,13 +194,14 @@ class Profile extends Model
     public function changeDescription(string $description): self
     {
         $this->setAttribute('pro_description', $description);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
@@ -206,16 +209,17 @@ class Profile extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(DateTime $datetime): self
+    public function changeCreatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
@@ -223,16 +227,17 @@ class Profile extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(DateTime $datetime): self
+    public function changeUpdatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
@@ -240,17 +245,18 @@ class Profile extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(DateTime $datetime): self
+    public function changeDeletedAt(\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $datetime = 'now'): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

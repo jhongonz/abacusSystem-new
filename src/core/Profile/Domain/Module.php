@@ -21,7 +21,7 @@ class Module
     private ModuleSearch $search;
     private ModulePosition $position;
 
-    /** @var Module[]  */
+    /** @var Module[] */
     private array $options = [];
     private bool $expanded = false;
 
@@ -30,13 +30,13 @@ class Module
         private ModuleMenuKey $menuKey,
         private ModuleName $name,
         private ModuleRoute $route,
-        private ModuleIcon $icon = new ModuleIcon,
-        private ModuleState $state = new ModuleState,
-        private ModuleCreatedAt $createdAt = new ModuleCreatedAt,
+        private ModuleIcon $icon = new ModuleIcon(),
+        private ModuleState $state = new ModuleState(),
+        private ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
     ) {
-        $this->search = new ModuleSearch;
-        $this->updatedAt = new ModuleUpdatedAt;
-        $this->position = new ModulePosition;
+        $this->search = new ModuleSearch();
+        $this->updatedAt = new ModuleUpdatedAt();
+        $this->position = new ModulePosition();
     }
 
     public function id(): ModuleId
@@ -157,6 +157,7 @@ class Module
 
     /**
      * @param Module[] $data
+     *
      * @return $this
      */
     public function setOptions(array $data): self
@@ -174,6 +175,7 @@ class Module
     public function setPosition(ModulePosition $position): self
     {
         $this->position = $position;
+
         return $this;
     }
 

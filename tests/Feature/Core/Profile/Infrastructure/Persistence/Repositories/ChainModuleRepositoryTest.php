@@ -26,7 +26,7 @@ class ChainModuleRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainModuleRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -36,10 +36,7 @@ class ChainModuleRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -48,12 +45,11 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
-     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws ModuleNotFoundException
+     * @throws Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleMock = $this->createMock(Module::class);
@@ -70,12 +66,11 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
-     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws ModuleNotFoundException
+     * @throws Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
 
@@ -94,7 +89,7 @@ class ChainModuleRepositoryTest extends TestCase
      * @throws \Throwable
      * @throws Exception
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -104,7 +99,7 @@ class ChainModuleRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $moduleIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(ModuleNotFoundException::class);
         $this->expectExceptionMessage('Module not found by id 1');
@@ -113,11 +108,10 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Throwable
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
 
@@ -129,10 +123,9 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_persistEmployee_should_return_void(): void
+    public function testPersistEmployeeShouldReturnVoid(): void
     {
         $moduleMock = $this->createMock(Module::class);
 
@@ -148,12 +141,11 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws \Core\Profile\Exceptions\ModulesNotFoundException
+     * @throws ModulesNotFoundException
      * @throws \Throwable
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $modulesMock = $this->createMock(Modules::class);
 
@@ -169,11 +161,10 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws \Core\Profile\Exceptions\ModulesNotFoundException
+     * @throws ModulesNotFoundException
      * @throws \Throwable
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
@@ -187,16 +178,15 @@ class ChainModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws ModulesNotFoundException
      * @throws \Throwable
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
             ->with('getAll', [])
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(ModulesNotFoundException::class);
         $this->expectExceptionMessage('Modules not found');

@@ -40,7 +40,7 @@ class DeleteInstitutionTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $institutionMock = $this->createMock(InstitutionId::class);
 
@@ -61,7 +61,7 @@ class DeleteInstitutionTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(CreateInstitutionRequest::class);
 

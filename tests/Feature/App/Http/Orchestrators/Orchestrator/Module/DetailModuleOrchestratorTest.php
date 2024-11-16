@@ -46,7 +46,7 @@ class DetailModuleOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_module(): void
+    public function testMakeShouldReturnArrayWithModule(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -70,7 +70,7 @@ class DetailModuleOrchestratorTest extends TestCase
         $dataExpected = [
             'moduleId' => 1,
             'module' => $moduleMock,
-            'menuKeys' => ['testing']
+            'menuKeys' => ['testing'],
         ];
 
         $this->assertIsArray($result);
@@ -80,7 +80,7 @@ class DetailModuleOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_without_module(): void
+    public function testMakeShouldReturnArrayWithoutModule(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -101,14 +101,14 @@ class DetailModuleOrchestratorTest extends TestCase
         $dataExpected = [
             'moduleId' => null,
             'module' => null,
-            'menuKeys' => ['testing']
+            'menuKeys' => ['testing'],
         ];
 
         $this->assertIsArray($result);
         $this->assertSame($dataExpected, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

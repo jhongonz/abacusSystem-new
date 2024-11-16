@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profiles;
-use Exception;
 
 class SearchProfiles extends UseCasesService
 {
@@ -16,13 +15,13 @@ class SearchProfiles extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Profiles
     {
         $this->validateRequest($request, SearchProfilesRequest::class);
 
-        /** @var SearchProfilesRequest $request */
+        /* @var SearchProfilesRequest $request */
         return $this->profileRepository->getAll($request->filters());
     }
 }

@@ -12,7 +12,7 @@ use Core\Institution\Domain\Institution;
 class CreateInstitutionRequest implements RequestService
 {
     public function __construct(
-        private readonly Institution $institution
+        private readonly Institution $institution,
     ) {
     }
 

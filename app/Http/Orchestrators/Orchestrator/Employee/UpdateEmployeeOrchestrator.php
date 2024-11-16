@@ -21,8 +21,8 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws \Exception
      */
     public function make(Request $request): array
@@ -38,12 +38,10 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
         }
 
         $employee = $this->employeeManagement->updateEmployee($request->integer('employeeId'), $dataUpdate);
+
         return ['employee' => $employee];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-employee';

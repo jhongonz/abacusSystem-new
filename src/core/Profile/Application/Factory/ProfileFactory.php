@@ -13,15 +13,13 @@ use Core\Profile\Domain\ValueObjects\ProfileSearch;
 use Core\Profile\Domain\ValueObjects\ProfileState;
 use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
-use Exception;
 
 class ProfileFactory implements ProfileFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Profile
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildProfileFromArray(array $data): Profile
     {
@@ -63,10 +61,9 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState,
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt
+        ProfileState $state = new ProfileState(),
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
     ): Profile {
-
         return new Profile(
             $id,
             $name,
@@ -86,19 +83,19 @@ class ProfileFactory implements ProfileFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildProfileState(int $state = ValueObjectStatus::STATE_NEW): ProfileState
     {
         return new ProfileState($state);
     }
 
-    public function buildProfileCreatedAt(DateTime $datetime): ProfileCreatedAt
+    public function buildProfileCreatedAt(\DateTime $datetime): ProfileCreatedAt
     {
         return new ProfileCreatedAt($datetime);
     }
 
-    public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt
+    public function buildProfileUpdateAt(?\DateTime $datetime = null): ProfileUpdatedAt
     {
         return new ProfileUpdatedAt($datetime);
     }
@@ -119,10 +116,10 @@ class ProfileFactory implements ProfileFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

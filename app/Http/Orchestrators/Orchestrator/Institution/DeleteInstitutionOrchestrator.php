@@ -12,24 +12,21 @@ use Illuminate\Http\Request;
 class DeleteInstitutionOrchestrator extends InstitutionOrchestrator
 {
     public function __construct(
-        InstitutionManagementContract $institutionManagement
+        InstitutionManagementContract $institutionManagement,
     ) {
         parent::__construct($institutionManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->institutionManagement->deleteInstitution($request->integer('institutionId'));
+
         return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-institution';

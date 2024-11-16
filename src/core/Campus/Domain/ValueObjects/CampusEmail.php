@@ -6,14 +6,12 @@
 
 namespace Core\Campus\Domain\ValueObjects;
 
-use InvalidArgumentException;
-
 class CampusEmail
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             $this->validate($value);
             $this->setValue($value);
         }
@@ -26,7 +24,7 @@ class CampusEmail
 
     public function setValue(?string $value): self
     {
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             $this->validate($value);
             $this->value = $value;
         }
@@ -36,10 +34,8 @@ class CampusEmail
 
     private function validate(string $value): void
     {
-        if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException(
-                sprintf('<%s> does not allow the invalid email: <%s>.', static::class, $value)
-            );
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException(sprintf('<%s> does not allow the invalid email: <%s>.', static::class, $value));
         }
     }
 }

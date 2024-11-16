@@ -19,10 +19,6 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
         parent::__construct($orchestratorHandler);
     }
 
-    /**
-     * @param Request $request
-     * @return Employee
-     */
     public function invoke(Request $request): Employee
     {
         /** @var Employee $employee */
@@ -41,9 +37,6 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
         return $employee;
     }
 
-    /**
-     * @return string
-     */
     public function canExecute(): string
     {
         return 'create-employee-action';

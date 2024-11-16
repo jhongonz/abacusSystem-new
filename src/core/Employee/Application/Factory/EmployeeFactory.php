@@ -23,15 +23,13 @@ use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
-use Exception;
 
 class EmployeeFactory implements EmployeeFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Employee
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildEmployeeFromArray(array $data): Employee
     {
@@ -102,11 +100,10 @@ class EmployeeFactory implements EmployeeFactoryContract
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname,
-        EmployeeState $state = new EmployeeState,
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        EmployeeLastname $lastname = new EmployeeLastname(),
+        EmployeeState $state = new EmployeeState(),
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt(),
     ): Employee {
-
         $employee = new Employee(
             $id,
             $identification,
@@ -156,19 +153,19 @@ class EmployeeFactory implements EmployeeFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildEmployeeState(int $state = ValueObjectStatus::STATE_NEW): EmployeeState
     {
         return new EmployeeState($state);
     }
 
-    public function buildEmployeeCreatedAt(DateTime $datetime = new DateTime('now')): EmployeeCreatedAt
+    public function buildEmployeeCreatedAt(\DateTime $datetime = new \DateTime('now')): EmployeeCreatedAt
     {
         return new EmployeeCreatedAt($datetime);
     }
 
-    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt
+    public function buildEmployeeUpdatedAt(?\DateTime $datetime = null): EmployeeUpdatedAt
     {
         return new EmployeeUpdatedAt($datetime);
     }
@@ -183,7 +180,7 @@ class EmployeeFactory implements EmployeeFactoryContract
         return new EmployeeSearch($search);
     }
 
-    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate
+    public function buildEmployeeBirthdate(?\DateTime $date = null): EmployeeBirthdate
     {
         return new EmployeeBirthdate($date);
     }
@@ -209,11 +206,11 @@ class EmployeeFactory implements EmployeeFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 
     public function buildEmployeeInstitutionId(?int $institutionId = null): EmployeeInstitutionId

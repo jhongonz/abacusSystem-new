@@ -11,14 +11,11 @@ interface ProfileManagementContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Profiles
      */
     public function searchProfiles(array $filters = []): Profiles;
 
     /**
-     * @param int $id
      * @param array<string, mixed> $data
-     * @return Profile
      */
     public function updateProfile(int $id, array $data): Profile;
 
@@ -26,7 +23,6 @@ interface ProfileManagementContract
 
     /**
      * @param array<string, mixed> $data
-     * @return Profile
      */
     public function createProfile(array $data): Profile;
 }

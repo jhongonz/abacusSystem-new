@@ -14,7 +14,6 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
-use Throwable;
 
 class ChainCampusRepository extends AbstractChainRepository implements CampusRepositoryContract
 {
@@ -26,7 +25,7 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function find(CampusId $id): ?Campus
     {
@@ -42,7 +41,7 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
 
     /**
      * @throws CampusCollectionNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {

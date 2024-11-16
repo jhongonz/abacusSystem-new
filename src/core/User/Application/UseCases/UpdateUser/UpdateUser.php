@@ -10,8 +10,6 @@ use Core\User\Application\UseCases\RequestService;
 use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
-use DateTime;
-use Exception;
 
 class UpdateUser extends UseCasesService
 {
@@ -22,7 +20,7 @@ class UpdateUser extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): User
     {
@@ -71,7 +69,7 @@ class UpdateUser extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(User $user, int $value): User
     {
@@ -80,14 +78,14 @@ class UpdateUser extends UseCasesService
         return $user;
     }
 
-    private function changeCreatedAt(User $user, DateTime $value): User
+    private function changeCreatedAt(User $user, \DateTime $value): User
     {
         $user->createdAt()->setValue($value);
 
         return $user;
     }
 
-    private function changeUpdatedAt(User $user, DateTime $value): User
+    private function changeUpdatedAt(User $user, \DateTime $value): User
     {
         $user->updatedAt()->setValue($value);
 

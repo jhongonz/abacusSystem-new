@@ -73,7 +73,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -118,7 +118,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -162,7 +162,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_recoveryAccount_should_return_json_response(): void
+    public function testRecoveryAccountShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -191,7 +191,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_recoveryAccount_should_return_string(): void
+    public function testRecoveryAccountShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -219,7 +219,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_validateAccount_should_return_json_response(): void
+    public function testValidateAccountShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(RecoveryAccountRequest::class);
 
@@ -255,7 +255,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_resetAccount_should_return_response(): void
+    public function testResetAccountShouldReturnResponse(): void
     {
         $view = $this->createMock(View::class);
 
@@ -268,7 +268,7 @@ class UserControllerTest extends TestCase
             ->method('make')
             ->with('user.restart-password', [
                 'userId' => 1,
-                'activeLink' => true
+                'activeLink' => true,
             ])
             ->willReturn($view);
 
@@ -281,7 +281,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_resetPassword_should_return_json_response(): void
+    public function testResetPasswordShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(ResetPasswordRequest::class);
         $requestMock->expects(self::once())
@@ -311,7 +311,7 @@ class UserControllerTest extends TestCase
         $this->assertSame(201, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
         $result = $this->controller::middleware();
 

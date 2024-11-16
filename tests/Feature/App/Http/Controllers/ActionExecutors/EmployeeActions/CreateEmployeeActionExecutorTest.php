@@ -46,7 +46,7 @@ class CreateEmployeeActionExecutorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_invoke_should_return_employee(): void
+    public function testInvokeShouldReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $employeeMock = $this->createMock(Employee::class);
@@ -97,7 +97,7 @@ class CreateEmployeeActionExecutorTest extends TestCase
         $this->assertSame($employeeMock, $result);
     }
 
-    public function test_canExecute_should_return_string(): void
+    public function testCanExecuteShouldReturnString(): void
     {
         $result = $this->actionExecutor->canExecute();
 

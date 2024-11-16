@@ -4,7 +4,6 @@ namespace Core\Institution\Infrastructure\Commands;
 
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as CommandSymfony;
@@ -54,12 +53,11 @@ class InstitutionWarmup extends Command
             $institution = $this->readRepository->find($institutionId);
 
             foreach ($this->repositories as $repository) {
-
-                if (! is_null($institution)) {
+                if (!is_null($institution)) {
                     $repository->persistInstitution($institution);
                 }
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return CommandSymfony::FAILURE;

@@ -19,7 +19,6 @@ class CreateCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -32,16 +31,14 @@ class CreateCampusOrchestrator extends CampusOrchestrator
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'state' => ValueObjectStatus::STATE_NEW
+            'state' => ValueObjectStatus::STATE_NEW,
         ];
 
         $campus = $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);
+
         return ['campus' => $campus];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-campus';

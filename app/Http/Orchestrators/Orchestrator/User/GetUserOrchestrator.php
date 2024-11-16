@@ -17,7 +17,6 @@ class GetUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -31,9 +30,6 @@ class GetUserOrchestrator extends UserOrchestrator
         return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-user';

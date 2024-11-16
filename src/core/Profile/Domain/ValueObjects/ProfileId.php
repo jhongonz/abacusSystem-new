@@ -2,14 +2,12 @@
 
 namespace Core\Profile\Domain\ValueObjects;
 
-use InvalidArgumentException;
-
 class ProfileId
 {
     public function __construct(
-        private ?int $value = null
+        private ?int $value = null,
     ) {
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             $this->validate($value);
             $this->setValue($value);
         }
@@ -36,10 +34,8 @@ class ProfileId
             ],
         ];
 
-        if (! filter_var($value, FILTER_VALIDATE_INT, $options)) {
-            throw new InvalidArgumentException(
-                sprintf('<%s> does not allow the value <%s>.', static::class, $value)
-            );
+        if (!filter_var($value, FILTER_VALIDATE_INT, $options)) {
+            throw new \InvalidArgumentException(sprintf('<%s> does not allow the value <%s>.', static::class, $value));
         }
     }
 }

@@ -15,7 +15,6 @@ interface ProfileRepositoryContract
 
     /**
      * @param array<int|string, mixed> $filters
-     * @return Profiles|null
      */
     public function getAll(array $filters = []): ?Profiles;
 

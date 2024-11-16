@@ -10,7 +10,6 @@ use Core\User\Application\UseCases\RequestService;
 use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
-use Exception;
 
 class CreateUser extends UseCasesService
 {
@@ -20,13 +19,13 @@ class CreateUser extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): User
     {
         $this->validateRequest($request, CreateUserRequest::class);
 
-        /** @var CreateUserRequest $request */
+        /* @var CreateUserRequest $request */
         return $this->userRepository->persistUser($request->user());
     }
 }

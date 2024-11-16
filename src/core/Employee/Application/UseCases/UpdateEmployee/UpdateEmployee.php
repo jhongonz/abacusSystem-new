@@ -6,8 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use DateTime;
-use Exception;
 
 class UpdateEmployee extends UseCasesService
 {
@@ -17,7 +15,7 @@ class UpdateEmployee extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Employee
     {
@@ -94,7 +92,7 @@ class UpdateEmployee extends UseCasesService
         return $employee;
     }
 
-    private function changeBirthdate(Employee $employee, ?DateTime $birthdate): Employee
+    private function changeBirthdate(Employee $employee, ?\DateTime $birthdate): Employee
     {
         $employee->birthdate()->setValue($birthdate);
 
@@ -102,7 +100,7 @@ class UpdateEmployee extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Employee $employee, int $state): Employee
     {

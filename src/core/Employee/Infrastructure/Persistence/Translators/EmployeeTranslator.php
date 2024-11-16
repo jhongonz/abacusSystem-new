@@ -7,7 +7,6 @@ use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use Exception;
 
 class EmployeeTranslator
 {
@@ -29,7 +28,7 @@ class EmployeeTranslator
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function toDomain(): Employee
     {
@@ -44,7 +43,7 @@ class EmployeeTranslator
         $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
         $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt($this->employee->updatedAt()));
 
-        if (! is_null($this->employee->createdAt())) {
+        if (!is_null($this->employee->createdAt())) {
             $employee->setCreatedAt($this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt()));
         }
 
@@ -68,6 +67,7 @@ class EmployeeTranslator
 
     /**
      * @param array<int<0, max>, int> $collection
+     *
      * @return $this
      */
     public function setCollection(array $collection): self
@@ -79,7 +79,7 @@ class EmployeeTranslator
 
     public function toDomainCollection(): Employees
     {
-        $employees = new Employees;
+        $employees = new Employees();
         foreach ($this->collection as $id) {
             $employees->addId($id);
         }

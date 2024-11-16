@@ -59,7 +59,7 @@ class EmployeeTranslatorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $model = $this->createMock(Employee::class);
 
@@ -73,7 +73,7 @@ class EmployeeTranslatorTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_toDomain_should_return_domain_object(): void
+    public function testToDomainShouldReturnDomainObject(): void
     {
         $dateTime = new \DateTime('2024-05-01 21:37:00');
         $modelMock = $this->createMock(Employee::class);
@@ -309,7 +309,7 @@ class EmployeeTranslatorTest extends TestCase
         $this->assertSame($result, $employeeMock);
     }
 
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->translator->setCollection([1]);
 
@@ -317,7 +317,7 @@ class EmployeeTranslatorTest extends TestCase
         $this->assertSame($result, $this->translator);
     }
 
-    public function test_toDomainCollection_should_return_employees(): void
+    public function testToDomainCollectionShouldReturnEmployees(): void
     {
         $this->translator->setCollection([1]);
         $result = $this->translator->toDomainCollection();

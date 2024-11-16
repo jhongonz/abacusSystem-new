@@ -20,17 +20,14 @@ use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
-use DateTime;
-use Exception;
 
 class CampusFactory implements CampusFactoryContract
 {
     public function buildCampus(
         CampusId $id,
         CampusInstitutionId $institutionId,
-        CampusName $name
+        CampusName $name,
     ): Campus {
-
         return new Campus(
             $id,
             $institutionId,
@@ -40,8 +37,8 @@ class CampusFactory implements CampusFactoryContract
 
     /**
      * @param array<string, mixed> $data
-     * @return Campus
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildCampusFromArray(array $data): Campus
     {
@@ -123,19 +120,19 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildCampusState(int $state): CampusState
     {
         return new CampusState($state);
     }
 
-    public function buildCampusCreatedAt(DateTime $dateTime): CampusCreatedAt
+    public function buildCampusCreatedAt(\DateTime $dateTime): CampusCreatedAt
     {
         return new CampusCreatedAt($dateTime);
     }
 
-    public function buildCampusUpdatedAt(?DateTime $dateTime = null): CampusUpdatedAt
+    public function buildCampusUpdatedAt(?\DateTime $dateTime = null): CampusUpdatedAt
     {
         return new CampusUpdatedAt($dateTime);
     }
@@ -146,10 +143,10 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

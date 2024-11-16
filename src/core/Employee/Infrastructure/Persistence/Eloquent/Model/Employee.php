@@ -4,8 +4,6 @@ namespace Core\Employee\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -149,6 +147,7 @@ class Employee extends Model
     public function changeInstitutionId(int $institutionId): self
     {
         $this->setAttribute('emp__inst_id', $institutionId);
+
         return $this;
     }
 
@@ -258,9 +257,9 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
@@ -268,7 +267,7 @@ class Employee extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): self
+    public function changeCreatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
 
@@ -276,9 +275,9 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
@@ -286,7 +285,7 @@ class Employee extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
 
@@ -294,9 +293,9 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
@@ -304,7 +303,7 @@ class Employee extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
 
@@ -327,9 +326,9 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function birthdate(): ?DateTime
+    public function birthdate(): ?\DateTime
     {
         /** @var string|null $datetime */
         $datetime = $this->getAttribute('emp_birthdate');
@@ -337,7 +336,7 @@ class Employee extends Model
         return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeBirthdate(?DateTime $date): self
+    public function changeBirthdate(?\DateTime $date): self
     {
         $this->setAttribute('emp_birthdate', $date);
 
@@ -390,10 +389,10 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(?string $datetime = null): \DateTime
     {
-        return new DateTime($datetime ?? 'now');
+        return new \DateTime($datetime ?? 'now');
     }
 }

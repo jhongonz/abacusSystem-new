@@ -7,22 +7,21 @@
 namespace Core\User\Application\UseCases;
 
 use Core\User\Domain\Contracts\UserRepositoryContract;
-use Exception;
 
 abstract class UseCasesService implements ServiceContract
 {
     public function __construct(
-        protected readonly UserRepositoryContract $userRepository
+        protected readonly UserRepositoryContract $userRepository,
     ) {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     protected function validateRequest(RequestService $request, string $requestClass): RequestService
     {
-        if (! $request instanceof $requestClass) {
-            throw new Exception('Request not valid');
+        if (!$request instanceof $requestClass) {
+            throw new \Exception('Request not valid');
         }
 
         return $request;

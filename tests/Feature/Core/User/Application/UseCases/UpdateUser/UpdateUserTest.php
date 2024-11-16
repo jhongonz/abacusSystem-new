@@ -54,11 +54,11 @@ class UpdateUserTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataUpdate
-     * @return void
+     *
      * @throws Exception
      */
     #[DataProviderExternal(DataProviderUpdateUser::class, 'provider')]
-    public function test_execute_should_return_user_object(array $dataUpdate): void
+    public function testExecuteShouldReturnUserObject(array $dataUpdate): void
     {
         $userIdMock = $this->createMock(UserId::class);
 
@@ -164,7 +164,7 @@ class UpdateUserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_request_fail_should_return_exception(): void
+    public function testExecuteRequestFailShouldReturnException(): void
     {
         $requestMock = $this->createMock(CreateUserRequest::class);
 

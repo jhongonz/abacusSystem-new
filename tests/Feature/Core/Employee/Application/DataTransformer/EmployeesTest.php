@@ -24,7 +24,7 @@ class EmployeesTest extends TestCase
     {
         parent::setUp();
         $this->employee = $this->createMock(Employee::class);
-        $this->dataTransformer = new EmployeeDataTransformer;
+        $this->dataTransformer = new EmployeeDataTransformer();
     }
 
     public function tearDown(): void
@@ -36,14 +36,14 @@ class EmployeesTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_write_should_change_and_return_self(): void
+    public function testWriteShouldChangeAndReturnSelf(): void
     {
         $result = $this->dataTransformer->write($this->employee);
         $this->assertInstanceOf(EmployeeDataTransformer::class, $result);
         $this->assertSame($result, $this->dataTransformer);
     }
 
-    public function test_read_should_return_array_with_data(): void
+    public function testReadShouldReturnArrayWithData(): void
     {
         $this->employee->expects(self::once())
             ->method('id');
@@ -110,7 +110,7 @@ class EmployeesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_readToShare_should_return_array_with_data(): void
+    public function testReadToShareShouldReturnArrayWithData(): void
     {
         $this->employee->expects(self::once())
             ->method('id');

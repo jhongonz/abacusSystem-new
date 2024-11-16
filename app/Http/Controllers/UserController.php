@@ -27,7 +27,7 @@ class UserController extends Controller implements HasMiddleware
         Hasher $hasher,
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
-        private readonly UrlGenerator $urlGenerator
+        private readonly UrlGenerator $urlGenerator,
     ) {
         parent::__construct($logger);
         $this->setHasher($hasher);
@@ -79,6 +79,7 @@ class UserController extends Controller implements HasMiddleware
 
         $request->merge(['dataUpdate' => $dataUpdate]);
         $this->orchestrators->handler('update-user', $request);
+
         return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }
 

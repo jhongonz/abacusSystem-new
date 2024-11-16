@@ -16,15 +16,13 @@ use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
-use Exception;
 
 class ModuleFactory implements ModuleFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Module
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildModuleFromArray(array $data): Module
     {
@@ -71,11 +69,10 @@ class ModuleFactory implements ModuleFactoryContract
         ModuleMenuKey $key,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon,
-        ModuleState $state = new ModuleState,
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt
+        ModuleIcon $icon = new ModuleIcon(),
+        ModuleState $state = new ModuleState(),
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
     ): Module {
-
         return new Module(
             $id,
             $key,
@@ -113,19 +110,19 @@ class ModuleFactory implements ModuleFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState
     {
         return new ModuleState($state);
     }
 
-    public function buildModuleCreatedAt(DateTime $datetime = new DateTime): ModuleCreatedAt
+    public function buildModuleCreatedAt(\DateTime $datetime = new \DateTime()): ModuleCreatedAt
     {
         return new ModuleCreatedAt($datetime);
     }
 
-    public function buildModuleUpdatedAt(?DateTime $datetime = null): ModuleUpdatedAt
+    public function buildModuleUpdatedAt(?\DateTime $datetime = null): ModuleUpdatedAt
     {
         return new ModuleUpdatedAt($datetime);
     }
@@ -137,17 +134,16 @@ class ModuleFactory implements ModuleFactoryContract
 
     /**
      * @param array<string, mixed> $data
-     * @return Modules
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildModulesFromArray(array $data): Modules
     {
         /** @var array<string|int, array<string, mixed>> $dataModules */
         $dataModules = $data[Modules::TYPE];
 
-        $modules = new Modules;
+        $modules = new Modules();
         foreach ($dataModules as $item) {
-
             $module = $this->buildModuleFromArray($item);
             $modules->addItem($module);
         }
@@ -166,10 +162,10 @@ class ModuleFactory implements ModuleFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

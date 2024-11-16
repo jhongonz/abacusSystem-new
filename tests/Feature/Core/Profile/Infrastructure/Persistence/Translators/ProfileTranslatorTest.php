@@ -51,7 +51,7 @@ class ProfileTranslatorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $model = $this->createMock(ProfileModel::class);
         $return = $this->translator->setModel($model);
@@ -64,7 +64,7 @@ class ProfileTranslatorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_object(): void
+    public function testToDomainShouldReturnObject(): void
     {
         $this->model = $this->createMock(ProfileModel::class);
         $profileMock = $this->createMock(Profile::class);
@@ -167,7 +167,7 @@ class ProfileTranslatorTest extends TestCase
         $this->assertIsArray($result->modulesAggregator());
     }
 
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->translator->setCollection([1]);
 
@@ -175,7 +175,7 @@ class ProfileTranslatorTest extends TestCase
         $this->assertSame($this->translator, $result);
     }
 
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
         $this->translator->setCollection([1]);
         $result = $this->translator->toDomainCollection();

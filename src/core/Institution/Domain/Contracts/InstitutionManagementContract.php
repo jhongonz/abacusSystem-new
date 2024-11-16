@@ -15,20 +15,16 @@ interface InstitutionManagementContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Institutions
      */
     public function searchInstitutions(array $filters = []): Institutions;
 
     /**
-     * @param int $id
      * @param array<string, mixed> $data
-     * @return Institution
      */
     public function updateInstitution(int $id, array $data): Institution;
 
     /**
      * @param array<string, mixed> $data
-     * @return Institution
      */
     public function createInstitution(array $data): Institution;
 

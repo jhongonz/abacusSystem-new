@@ -38,7 +38,7 @@ class EmployeesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addItem_should_add_and_return_self(): void
+    public function testAddItemShouldAddAndReturnSelf(): void
     {
         $employeeMock = $this->createMock(Employee::class);
         $result = $this->employees->addItem($employeeMock);
@@ -47,32 +47,32 @@ class EmployeesTest extends TestCase
         $this->assertSame($result, $this->employees);
     }
 
-    public function test_items_should_return_array(): void
+    public function testItemsShouldReturnArray(): void
     {
         $result = $this->employees->items();
         $this->assertIsArray($result);
     }
 
-    public function test_addId_should_add_and_return_self(): void
+    public function testAddIdShouldAddAndReturnSelf(): void
     {
         $result = $this->employees->addId(1);
         $this->assertInstanceOf(Employees::class, $result);
         $this->assertSame($result, $this->employees);
     }
 
-    public function test_aggregator_should_return_array(): void
+    public function testAggregatorShouldReturnArray(): void
     {
         $result = $this->employees->aggregator();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->employees->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_change_and_return_self(): void
+    public function testSetFiltersShouldChangeAndReturnSelf(): void
     {
         $result = $this->employees->setFilters(['hello']);
         $this->assertInstanceOf(Employees::class, $result);

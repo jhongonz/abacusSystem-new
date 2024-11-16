@@ -12,21 +12,19 @@ use Core\Profile\Domain\ValueObjects\ProfileSearch;
 use Core\Profile\Domain\ValueObjects\ProfileState;
 use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 
 interface ProfileFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Profile
      */
     public function buildProfileFromArray(array $data): Profile;
 
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState,
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt,
+        ProfileState $state = new ProfileState(),
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
     ): Profile;
 
     public function buildProfileId(?int $id = null): ProfileId;
@@ -39,9 +37,9 @@ interface ProfileFactoryContract
 
     public function buildProfileDescription(?string $description = null): ProfileDescription;
 
-    public function buildProfileCreatedAt(DateTime $datetime): ProfileCreatedAt;
+    public function buildProfileCreatedAt(\DateTime $datetime): ProfileCreatedAt;
 
-    public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt;
+    public function buildProfileUpdateAt(?\DateTime $datetime = null): ProfileUpdatedAt;
 
     public function buildProfiles(Profile ...$profiles): Profiles;
 }

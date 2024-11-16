@@ -13,20 +13,16 @@ interface EmployeeManagementContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Employees
      */
     public function searchEmployees(array $filters = []): Employees;
 
     /**
-     * @param int $id
      * @param array<string, mixed> $data
-     * @return Employee
      */
     public function updateEmployee(int $id, array $data): Employee;
 
     /**
      * @param array<string, mixed> $data
-     * @return Employee
      */
     public function createEmployee(array $data): Employee;
 

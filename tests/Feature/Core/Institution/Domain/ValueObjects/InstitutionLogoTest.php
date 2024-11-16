@@ -14,7 +14,7 @@ class InstitutionLogoTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new InstitutionLogo;
+        $this->valueObject = new InstitutionLogo();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class InstitutionLogoTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue('testing');
 

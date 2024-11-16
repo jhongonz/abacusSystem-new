@@ -34,7 +34,7 @@ class StoreCampusRequest extends FormRequest
             'email' => ['email:rfc', 'nullable'],
             'phone' => ['nullable'],
             'address' => ['required'],
-            'observations' => ['nullable']
+            'observations' => ['nullable'],
         ];
     }
 

@@ -24,17 +24,16 @@ $application->withMiddleware(function (Middleware $middleware) {
 });
 
 $application->withExceptions(function (Exceptions $exceptions) {
-
 });
 
 $application->withCommands([
-    //__DIR__.'/../src/core/Profile/Infrastructure/Commands',
-    \Core\Profile\Infrastructure\Commands\ModuleWarmup::class,
-    \Core\Profile\Infrastructure\Commands\ProfileWarmup::class,
-    \Core\Employee\Infrastructure\Commands\EmployeeWarmup::class,
-    \Core\User\Infrastructure\Commands\UserWarmup::class,
-    \Core\Institution\Infrastructure\Commands\InstitutionWarmup::class,
-    \Core\Campus\Infrastructure\Commands\CampusWarmup::class
+    // __DIR__.'/../src/core/Profile/Infrastructure/Commands',
+    Core\Profile\Infrastructure\Commands\ModuleWarmup::class,
+    Core\Profile\Infrastructure\Commands\ProfileWarmup::class,
+    Core\Employee\Infrastructure\Commands\EmployeeWarmup::class,
+    Core\User\Infrastructure\Commands\UserWarmup::class,
+    Core\Institution\Infrastructure\Commands\InstitutionWarmup::class,
+    Core\Campus\Infrastructure\Commands\CampusWarmup::class,
 ]);
 
 return $application->create();

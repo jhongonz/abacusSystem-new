@@ -17,18 +17,15 @@ class DeleteCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<null>
      */
     public function make(Request $request): array
     {
         $this->campusManagement->deleteCampus($request->integer('campusId'));
+
         return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-campus';

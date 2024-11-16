@@ -18,7 +18,6 @@ class UpdateUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -27,12 +26,10 @@ class UpdateUserOrchestrator extends UserOrchestrator
         $dataUpdateUser = json_decode($request->string('dataUpdate'), true);
 
         $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdateUser);
+
         return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-user';

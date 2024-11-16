@@ -29,7 +29,7 @@ class ModuleFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new ModuleFactory;
+        $this->factory = new ModuleFactory();
     }
 
     public function tearDown(): void
@@ -40,11 +40,11 @@ class ModuleFactoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataObject
-     * @return void
+     *
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProvider\DataProviderFactory::class, 'providerModule')]
-    public function test_buildModuleFromArray_should_return_module_object(array $dataObject): void
+    #[DataProviderExternal(DataProviderFactory::class, 'providerModule')]
+    public function testBuildModuleFromArrayShouldReturnModuleObject(array $dataObject): void
     {
         $result = $this->factory->buildModuleFromArray($dataObject);
         $data = $dataObject[Module::TYPE];
@@ -73,23 +73,23 @@ class ModuleFactoryTest extends TestCase
         $this->assertInstanceOf(ModulePosition::class, $result->position());
     }
 
-    public function test_buildModuleCreatedAt_should_return_value_object_with_datetime(): void
+    public function testBuildModuleCreatedAtShouldReturnValueObjectWithDatetime(): void
     {
-        $result = $this->factory->buildModuleCreatedAt(new \DateTime);
+        $result = $this->factory->buildModuleCreatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }
 
-    public function test_buildModuleUpdatedAt_should_return_value_object_with_null(): void
+    public function testBuildModuleUpdatedAtShouldReturnValueObjectWithNull(): void
     {
         $result = $this->factory->buildModuleUpdatedAt();
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
         $this->assertNull($result->value());
     }
 
-    public function test_buildModuleUpdatedAt_should_return_value_object_with_datetime(): void
+    public function testBuildModuleUpdatedAtShouldReturnValueObjectWithDatetime(): void
     {
-        $result = $this->factory->buildModuleUpdatedAt(new \DateTime);
+        $result = $this->factory->buildModuleUpdatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }
@@ -97,7 +97,7 @@ class ModuleFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildModules_should_return_modules_object(): void
+    public function testBuildModulesShouldReturnModulesObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
         $result = $this->factory->buildModules($moduleMock);
@@ -105,7 +105,7 @@ class ModuleFactoryTest extends TestCase
         $this->assertInstanceOf(Modules::class, $result);
     }
 
-    public function test_buildModuleSearch_should_return_object_with_null(): void
+    public function testBuildModuleSearchShouldReturnObjectWithNull(): void
     {
         $result = $this->factory->buildModuleSearch();
 
@@ -115,11 +115,11 @@ class ModuleFactoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $dataObject
-     * @return void
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerModules')]
-    public function test_buildModulesFromArray_should_return_modules(array $dataObject): void
+    public function testBuildModulesFromArrayShouldReturnModules(array $dataObject): void
     {
         $result = $this->factory->buildModulesFromArray($dataObject);
 
@@ -128,7 +128,7 @@ class ModuleFactoryTest extends TestCase
         $this->assertIsArray($result->items());
     }
 
-    public function test_buildModulePosition_should_return_value_object(): void
+    public function testBuildModulePositionShouldReturnValueObject(): void
     {
         $result = $this->factory->buildModulePosition();
 

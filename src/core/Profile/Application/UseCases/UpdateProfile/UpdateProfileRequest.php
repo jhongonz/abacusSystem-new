@@ -8,7 +8,6 @@ use Core\Profile\Domain\ValueObjects\ProfileId;
 class UpdateProfileRequest implements RequestService
 {
     /**
-     * @param ProfileId $profileId
      * @param array<string, mixed> $data
      */
     public function __construct(

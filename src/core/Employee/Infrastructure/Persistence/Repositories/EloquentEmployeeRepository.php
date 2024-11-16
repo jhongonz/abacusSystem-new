@@ -13,7 +13,6 @@ use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as Employee
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryContract
@@ -24,7 +23,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         private readonly DatabaseManager $database,
         private readonly EmployeeTranslator $employeeTranslator,
         private readonly EmployeeModel $model,
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
@@ -42,7 +41,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @throws EmployeeNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(EmployeeId $id): ?Employee
     {
@@ -63,7 +62,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @throws EmployeeNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
@@ -83,7 +82,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @throws EmployeeNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function delete(EmployeeId $id): void
     {
@@ -103,7 +102,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistEmployee(Employee $employee): Employee
     {
@@ -132,7 +131,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @param array{q?: string|null} $filters
-     * @return Employees|null
+     *
      * @throws EmployeesNotFoundException
      */
     public function getAll(array $filters = []): ?Employees
@@ -145,7 +144,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
         $employeeCollection = $builder->get(['emp_id']);
 
-        if (count($employeeCollection) === 0) {
+        if (0 === count($employeeCollection)) {
             throw new EmployeesNotFoundException('Employees not found');
         }
 
@@ -153,7 +152,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         foreach ($employeeCollection as $item) {
             $employeeModel = $this->updateAttributesModelEmployee((array) $item);
 
-            if (! is_null($employeeModel->id())) {
+            if (!is_null($employeeModel->id())) {
                 $collection[] = $employeeModel->id();
             }
         }
@@ -187,11 +186,11 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $model->changeSearch($domain->search()->value() ?? '');
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (! is_null($domain->institutionId()->value())) {
+        if (!is_null($domain->institutionId()->value())) {
             $model->changeInstitutionId($domain->institutionId()->value());
         }
 
-        if (! is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
@@ -200,7 +199,6 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @param array<string, mixed> $data
-     * @return EmployeeModel
      */
     private function updateAttributesModelEmployee(array $data = []): EmployeeModel
     {
@@ -215,7 +213,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

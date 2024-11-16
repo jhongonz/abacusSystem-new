@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
 {
     public function __construct(
-        InstitutionManagementContract $institutionManagement
+        InstitutionManagementContract $institutionManagement,
     ) {
         parent::__construct($institutionManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws InstitutionNotFoundException
      */
     public function make(Request $request): array
@@ -45,9 +45,6 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
         return ['institution' => $institution];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-institution';

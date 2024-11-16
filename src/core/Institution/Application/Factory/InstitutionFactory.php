@@ -23,15 +23,13 @@ use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
-use Exception;
 
 class InstitutionFactory implements InstitutionFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Institution
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function buildInstitutionFromArray(array $data): Institution
     {
@@ -142,7 +140,7 @@ class InstitutionFactory implements InstitutionFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildInstitutionState(int $state = ValueObjectStatus::STATE_NEW): InstitutionState
     {
@@ -154,12 +152,12 @@ class InstitutionFactory implements InstitutionFactoryContract
         return new InstitutionSearch($search);
     }
 
-    public function buildInstitutionCreatedAt(DateTime $dateTime = new DateTime('now')): InstitutionCreatedAt
+    public function buildInstitutionCreatedAt(\DateTime $dateTime = new \DateTime('now')): InstitutionCreatedAt
     {
         return new InstitutionCreatedAt($dateTime);
     }
 
-    public function buildInstitutionUpdatedAt(?DateTime $dateTime = null): InstitutionUpdatedAt
+    public function buildInstitutionUpdatedAt(?\DateTime $dateTime = null): InstitutionUpdatedAt
     {
         return new InstitutionUpdatedAt($dateTime);
     }
@@ -185,10 +183,10 @@ class InstitutionFactory implements InstitutionFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

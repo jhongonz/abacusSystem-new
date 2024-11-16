@@ -29,6 +29,7 @@ class CampusCollection extends ArrayIterator
         $this->validateInstanceElement(Campus::class, $item);
 
         $this->append($item);
+
         return $this;
     }
 
@@ -43,6 +44,7 @@ class CampusCollection extends ArrayIterator
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 
@@ -64,11 +66,13 @@ class CampusCollection extends ArrayIterator
 
     /**
      * @param array<int|string, mixed> $filters
+     *
      * @return $this
      */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 }

@@ -10,14 +10,7 @@ use Illuminate\Http\Request;
 
 interface ActionExecutor
 {
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function invoke(Request $request): mixed;
 
-    /**
-     * @return string
-     */
     public function canExecute(): string;
 }

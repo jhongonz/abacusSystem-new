@@ -37,7 +37,7 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_active_when_is_new_and_return_employee(): void
+    public function testMakeShouldActiveWhenIsNewAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -85,7 +85,7 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_active_when_is_isActivated_and_return_employee(): void
+    public function testMakeShouldActiveWhenIsIsActivatedAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -138,7 +138,7 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
         $this->assertSame($employeeMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

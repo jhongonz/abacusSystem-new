@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class ActionExecutorHandler
 {
-    /** @var ActionExecutor[]  */
+    /** @var ActionExecutor[] */
     private array $actionExecutors;
 
     public function __construct()
@@ -32,7 +32,7 @@ class ActionExecutorHandler
     public function invoke(string $action, Request $request): mixed
     {
         if (empty($this->actionExecutors[$action])) {
-            throw new ActionExecutorNotFoundException;
+            throw new ActionExecutorNotFoundException();
         }
 
         return $this->actionExecutors[$action]->invoke($request);

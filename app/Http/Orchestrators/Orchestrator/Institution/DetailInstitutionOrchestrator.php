@@ -16,13 +16,12 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
     private const IMAGE_PATH_FULL = '/images/full/';
 
     public function __construct(
-        InstitutionManagementContract $institutionManagement
+        InstitutionManagementContract $institutionManagement,
     ) {
         parent::__construct($institutionManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -37,13 +36,10 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
         return [
             'institutionId' => $institutionId,
             'institution' => $institution,
-            'image' => $urlFile ?? null
+            'image' => $urlFile ?? null,
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-institution';

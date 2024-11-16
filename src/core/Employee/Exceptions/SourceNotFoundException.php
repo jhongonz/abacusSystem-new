@@ -2,8 +2,6 @@
 
 namespace Core\Employee\Exceptions;
 
-use Exception;
-
-class SourceNotFoundException extends Exception
+class SourceNotFoundException extends \Exception
 {
 }

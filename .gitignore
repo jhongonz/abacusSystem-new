@@ -20,3 +20,4 @@ yarn-error.log
 /var/coverage
 /var/infection
 /var/phpstan
+.php-cs-fixer.cache

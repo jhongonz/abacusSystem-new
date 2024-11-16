@@ -9,7 +9,6 @@ use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
 use Core\Profile\Domain\Profile;
 use Core\User\Domain\User;
-use Exception;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +30,7 @@ class SecurityController extends Controller implements HasMiddleware
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
         private readonly StatefulGuard $guard,
-        private readonly Session $session
+        private readonly Session $session,
     ) {
         parent::__construct($logger);
     }
@@ -39,6 +38,7 @@ class SecurityController extends Controller implements HasMiddleware
     public function index(): Response
     {
         $html = $this->viewFactory->make('home.login')->render();
+
         return new Response($html);
     }
 
@@ -66,16 +66,16 @@ class SecurityController extends Controller implements HasMiddleware
                 ]);
 
                 if ($request->ajax()) {
-                    return new JsonResponse(status:ResponseSymfony::HTTP_OK);
+                    return new JsonResponse(status: ResponseSymfony::HTTP_OK);
                 }
 
                 return new RedirectResponse('/home');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
         }
 
-        return ! $request->ajax() ?
+        return !$request->ajax() ?
             new RedirectResponse('/login') :
             new JsonResponse(['message' => 'Bad credentials'], ResponseSymfony::HTTP_BAD_REQUEST);
     }
@@ -83,6 +83,7 @@ class SecurityController extends Controller implements HasMiddleware
     public function home(): JsonResponse|string
     {
         $view = $this->viewFactory->make('home.index')->render();
+
         return $this->renderView($view);
     }
 

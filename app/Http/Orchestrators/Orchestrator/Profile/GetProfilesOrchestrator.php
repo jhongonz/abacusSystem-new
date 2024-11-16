@@ -15,13 +15,12 @@ class GetProfilesOrchestrator extends ProfileOrchestrator
 {
     public function __construct(
         ProfileManagementContract $profileManagement,
-        private readonly ProfileDataTransformerContract $profileDataTransformer
+        private readonly ProfileDataTransformerContract $profileDataTransformer,
     ) {
         parent::__construct($profileManagement);
     }
 
     /**
-     * @param Request $request
      * @return array<int, array<int|string, mixed>>
      */
     public function make(Request $request): array
@@ -31,7 +30,6 @@ class GetProfilesOrchestrator extends ProfileOrchestrator
 
         $dataProfiles = [];
         if ($profiles->count()) {
-
             /** @var Profile $item */
             foreach ($profiles as $item) {
                 $dataProfiles[] = $this->profileDataTransformer->write($item)->readToShare();
@@ -41,9 +39,6 @@ class GetProfilesOrchestrator extends ProfileOrchestrator
         return $dataProfiles;
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-profiles';

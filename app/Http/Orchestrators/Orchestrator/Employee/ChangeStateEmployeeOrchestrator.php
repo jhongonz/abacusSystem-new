@@ -18,8 +18,8 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
+     *
      * @throws EmployeeNotFoundException
      */
     public function make(Request $request): array
@@ -44,9 +44,6 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         return ['employee' => $employee];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-employee';

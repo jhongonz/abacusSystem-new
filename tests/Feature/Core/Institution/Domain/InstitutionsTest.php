@@ -34,7 +34,7 @@ class InstitutionsTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addItem_should_return_self(): void
+    public function testAddItemShouldReturnSelf(): void
     {
         $institutionMock = $this->createMock(Institution::class);
         $result = $this->institutions->addItem($institutionMock);
@@ -44,14 +44,14 @@ class InstitutionsTest extends TestCase
         $this->assertCount(2, $this->institutions->items());
     }
 
-    public function test_items_should_return_array(): void
+    public function testItemsShouldReturnArray(): void
     {
         $result = $this->institutions->items();
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
     }
 
-    public function test_addId_should_return_self(): void
+    public function testAddIdShouldReturnSelf(): void
     {
         $result = $this->institutions->addId(1);
 
@@ -60,13 +60,13 @@ class InstitutionsTest extends TestCase
         $this->assertCount(1, $result->aggregator());
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->institutions->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_return_self(): void
+    public function testSetFiltersShouldReturnSelf(): void
     {
         $result = $this->institutions->setFilters(['test']);
 

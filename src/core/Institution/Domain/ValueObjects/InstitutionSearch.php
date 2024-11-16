@@ -9,7 +9,7 @@ namespace Core\Institution\Domain\ValueObjects;
 class InstitutionSearch
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
     }
 
@@ -21,6 +21,7 @@ class InstitutionSearch
     public function setValue(?string $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

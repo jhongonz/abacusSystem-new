@@ -12,7 +12,7 @@ use Core\Campus\Domain\Contracts\CampusManagementContract;
 abstract class CampusOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly CampusManagementContract $campusManagement
+        protected readonly CampusManagementContract $campusManagement,
     ) {
     }
 }

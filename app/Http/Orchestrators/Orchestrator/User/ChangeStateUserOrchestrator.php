@@ -17,7 +17,6 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
      * @return array<string, mixed>
      */
     public function make(Request $request): array
@@ -25,12 +24,10 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
         $dataUpdate['state'] = $request->integer('state');
 
         $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdate);
+
         return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'change-state-user';

@@ -19,7 +19,7 @@ class ModuleTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Module;
+        $this->model = new Module();
     }
 
     public function tearDown(): void
@@ -28,7 +28,7 @@ class ModuleTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getSearchField_should_return_string(): void
+    public function testGetSearchFieldShouldReturnString(): void
     {
         $result = $this->model->getSearchField();
 
@@ -39,7 +39,7 @@ class ModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_profiles_should_return_relation(): void
+    public function testProfilesShouldReturnRelation(): void
     {
         $relationBelongsToManyMock = $this->createMock(BelongsToMany::class);
         $relationBelongsToManyMock->expects(self::once())
@@ -54,7 +54,7 @@ class ModuleTest extends TestCase
             ->willReturnSelf();
 
         $this->modelMock = $this->getMockBuilder(Module::class)
-            ->onlyMethods(['newRelatedInstance','belongsToMany','newBelongsToMany'])
+            ->onlyMethods(['newRelatedInstance', 'belongsToMany', 'newBelongsToMany'])
             ->getMock();
 
         $this->modelMock->expects(self::once())
@@ -73,7 +73,7 @@ class ModuleTest extends TestCase
         $this->assertSame($relationBelongsToManyMock, $result);
     }
 
-    public function test_id_should_return_int(): void
+    public function testIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -90,7 +90,7 @@ class ModuleTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_id_should_return_null(): void
+    public function testIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -106,7 +106,7 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeId_should_return_self(): void
+    public function testChangeIdShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -123,7 +123,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_menuKey_should_return_string(): void
+    public function testMenuKeyShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -140,7 +140,7 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_menuKey_should_return_null(): void
+    public function testMenuKeyShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -156,7 +156,7 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeMenuKey_should_return_self(): void
+    public function testChangeMenuKeyShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -173,7 +173,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_name_should_return_string(): void
+    public function testNameShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -190,7 +190,7 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_changeName_should_return_self(): void
+    public function testChangeNameShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -207,7 +207,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_route_should_return_string(): void
+    public function testRouteShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -224,7 +224,7 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_route_should_return_null(): void
+    public function testRouteShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -240,7 +240,7 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeRoute_should_return_self(): void
+    public function testChangeRouteShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -257,7 +257,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_icon_should_return_string(): void
+    public function testIconShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -274,7 +274,7 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_icon_should_return_null(): void
+    public function testIconShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -290,7 +290,7 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeIcon_should_return_self(): void
+    public function testChangeIconShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -307,7 +307,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_search_should_return_string(): void
+    public function testSearchShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -324,7 +324,7 @@ class ModuleTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_search_should_return_null(): void
+    public function testSearchShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -340,7 +340,7 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeSearch_should_return_self(): void
+    public function testChangeSearchShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -357,7 +357,7 @@ class ModuleTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_state_should_return_int(): void
+    public function testStateShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -374,7 +374,7 @@ class ModuleTest extends TestCase
         $this->assertSame(2, $result);
     }
 
-    public function test_changeState_should_return_self(): void
+    public function testChangeStateShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
@@ -393,7 +393,7 @@ class ModuleTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_createdAt_should_return_datetime(): void
+    public function testCreatedAtShouldReturnDatetime(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -409,13 +409,13 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_changeCreatedAt_should_return_self(): void
+    public function testChangeCreatedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
             ->with('created_at', $datetime)
@@ -430,7 +430,7 @@ class ModuleTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_datetime(): void
+    public function testUpdatedAtShouldReturnDatetime(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -449,7 +449,7 @@ class ModuleTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_null(): void
+    public function testUpdatedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -465,13 +465,13 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeUpdatedAt_should_return_self(): void
+    public function testChangeUpdatedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
             ->with('updated_at', $datetime)
@@ -486,7 +486,7 @@ class ModuleTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_deletedAt_should_return_null(): void
+    public function testDeletedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -502,13 +502,13 @@ class ModuleTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeDeletedAt_should_return_self(): void
+    public function testChangeDeletedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $this->modelMock->expects(self::once())
             ->method('setAttribute')
             ->with('deleted_at', $datetime)
@@ -523,7 +523,7 @@ class ModuleTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_position_should_return_int(): void
+    public function testPositionShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['getAttribute'])
@@ -540,7 +540,7 @@ class ModuleTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_changePosition_should_return_self(): void
+    public function testChangePositionShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Module::class)
             ->onlyMethods(['setAttribute'])

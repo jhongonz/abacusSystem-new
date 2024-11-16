@@ -16,6 +16,7 @@ class CampusDataTransformer implements CampusDataTransformerContract
     public function write(Campus $campus): self
     {
         $this->campus = $campus;
+
         return $this;
     }
 
@@ -25,7 +26,7 @@ class CampusDataTransformer implements CampusDataTransformerContract
     public function read(): array
     {
         return [
-          Campus::TYPE => $this->retrieveData()
+            Campus::TYPE => $this->retrieveData(),
         ];
     }
 

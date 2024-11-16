@@ -41,7 +41,7 @@ class SearchInstitutionByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
 
@@ -65,7 +65,7 @@ class SearchInstitutionByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
 
@@ -89,7 +89,7 @@ class SearchInstitutionByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(SearchInstitutionsRequest::class);
 

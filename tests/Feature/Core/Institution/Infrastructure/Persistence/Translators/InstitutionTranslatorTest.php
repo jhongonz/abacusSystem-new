@@ -54,7 +54,7 @@ class InstitutionTranslatorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_object(): void
+    public function testToDomainShouldReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
 
@@ -97,7 +97,7 @@ class InstitutionTranslatorTest extends TestCase
         $this->assertSame($institutionMock, $result);
     }
 
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->translator->setCollection([]);
 
@@ -105,13 +105,13 @@ class InstitutionTranslatorTest extends TestCase
         $this->assertSame($this->translator, $result);
     }
 
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
-        $this->translator->setCollection([1,2,3]);
+        $this->translator->setCollection([1, 2, 3]);
         $result = $this->translator->toDomainCollection();
 
         $this->assertInstanceOf(Institutions::class, $result);
         $this->assertCount(3, $result->aggregator());
-        $this->assertSame([1,2,3], $result->aggregator());
+        $this->assertSame([1, 2, 3], $result->aggregator());
     }
 }

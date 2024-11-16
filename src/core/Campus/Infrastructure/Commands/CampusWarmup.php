@@ -4,7 +4,6 @@ namespace Core\Campus\Infrastructure\Commands;
 
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
-use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as CommandSymfony;
@@ -18,7 +17,7 @@ class CampusWarmup extends Command
         private readonly LoggerInterface $logger,
         private readonly CampusFactoryContract $campusFactory,
         private readonly CampusRepositoryContract $readRepository,
-        CampusRepositoryContract ...$repositories
+        CampusRepositoryContract ...$repositories,
     ) {
         $this->repositories = $repositories;
         parent::__construct();
@@ -51,12 +50,11 @@ class CampusWarmup extends Command
             $campus = $this->readRepository->find($campusId);
 
             foreach ($this->repositories as $repository) {
-
-                if (! is_null($campus)) {
+                if (!is_null($campus)) {
                     $repository->persistCampus($campus);
                 }
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return CommandSymfony::FAILURE;

@@ -5,7 +5,6 @@ namespace Core\Profile\Application\UseCasesModule\DeleteModule;
 use Core\Profile\Application\UseCasesModule\RequestService;
 use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
-use Exception;
 
 class DeleteModule extends UseCasesService
 {
@@ -15,13 +14,13 @@ class DeleteModule extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): null
     {
         $this->validateRequest($request, DeleteModuleRequest::class);
 
-        /** @var DeleteModuleRequest $request */
+        /* @var DeleteModuleRequest $request */
         $this->moduleRepository->deleteModule($request->id());
 
         return null;

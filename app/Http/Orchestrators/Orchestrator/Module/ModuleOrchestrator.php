@@ -12,7 +12,7 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
 abstract class ModuleOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly ModuleManagementContract $moduleManagement
+        protected readonly ModuleManagementContract $moduleManagement,
     ) {
     }
 }

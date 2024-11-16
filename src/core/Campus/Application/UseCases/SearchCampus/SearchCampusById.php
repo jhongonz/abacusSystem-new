@@ -10,7 +10,6 @@ use Core\Campus\Application\UseCases\RequestService;
 use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
-use Exception;
 
 class SearchCampusById extends UseCasesService
 {
@@ -20,13 +19,13 @@ class SearchCampusById extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Campus
     {
         $this->validateRequest($request, SearchCampusByIdRequest::class);
 
-        /** @var SearchCampusByIdRequest $request */
+        /* @var SearchCampusByIdRequest $request */
         return $this->campusRepository->find($request->id());
     }
 }

@@ -86,7 +86,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchProfileById_should_return_object(): void
+    public function testSearchProfileByIdShouldReturnObject(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $this->factory->expects(self::once())
@@ -131,7 +131,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchProfileById_should_return_exception(): void
+    public function testSearchProfileByIdShouldReturnException(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $this->factory->expects(self::once())
@@ -170,7 +170,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchProfiles_should_return_object(): void
+    public function testSearchProfilesShouldReturnObject(): void
     {
         $filters = [];
         $request = new SearchProfilesRequest($filters);
@@ -205,7 +205,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updateProfile_should_return_void(): void
+    public function testUpdateProfileShouldReturnVoid(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $this->factory->expects(self::once())
@@ -231,7 +231,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_deleteProfile_should_return_void(): void
+    public function testDeleteProfileShouldReturnVoid(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $this->factory->expects(self::once())
@@ -254,7 +254,7 @@ class ProfileServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createProfile_should_return_object(): void
+    public function testCreateProfileShouldReturnObject(): void
     {
         $profileMock = $this->createMock(Profile::class);
         $this->factory->expects(self::once())

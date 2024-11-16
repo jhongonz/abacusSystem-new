@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCasesModule\RequestService;
 use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Modules;
-use Exception;
 
 class SearchModules extends UseCasesService
 {
@@ -16,13 +15,13 @@ class SearchModules extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Modules
     {
         $this->validateRequest($request, SearchModulesRequest::class);
 
-        /** @var SearchModulesRequest $request */
+        /* @var SearchModulesRequest $request */
         return $this->moduleRepository->getAll($request->filters());
     }
 }

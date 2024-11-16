@@ -39,7 +39,7 @@ class GetProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_profile(): void
+    public function testMakeShouldReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -62,7 +62,7 @@ class GetProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_null(): void
+    public function testMakeShouldReturnNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -81,7 +81,7 @@ class GetProfileOrchestratorTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

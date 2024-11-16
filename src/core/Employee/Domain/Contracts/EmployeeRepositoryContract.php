@@ -15,7 +15,6 @@ interface EmployeeRepositoryContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Employees|null
      */
     public function getAll(array $filters = []): ?Employees;
 

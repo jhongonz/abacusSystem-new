@@ -40,7 +40,7 @@ class ChangeStateModuleOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_module_when_is_activate(): void
+    public function testMakeShouldReturnModuleWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -89,7 +89,7 @@ class ChangeStateModuleOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_module_when_is_inactivate(): void
+    public function testMakeShouldReturnModuleWhenIsInactivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -143,7 +143,7 @@ class ChangeStateModuleOrchestratorTest extends TestCase
         $this->assertSame($moduleMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

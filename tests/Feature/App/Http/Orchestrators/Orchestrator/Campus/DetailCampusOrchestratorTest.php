@@ -39,10 +39,9 @@ class DetailCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_return_array_with_campus(): void
+    public function testMakeShouldReturnArrayWithCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -66,10 +65,9 @@ class DetailCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_return_array_with_null(): void
+    public function testMakeShouldReturnArrayWithNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -89,10 +87,7 @@ class DetailCampusOrchestratorTest extends TestCase
         $this->assertNull($result['campusId']);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

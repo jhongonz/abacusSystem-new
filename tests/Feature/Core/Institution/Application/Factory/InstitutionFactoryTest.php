@@ -13,7 +13,6 @@ use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
-use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
@@ -28,7 +27,7 @@ class InstitutionFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new InstitutionFactory;
+        $this->factory = new InstitutionFactory();
     }
 
     public function tearDown(): void
@@ -39,17 +38,17 @@ class InstitutionFactoryTest extends TestCase
 
     /**
      * @param array<string, mixed> $data
-     * @return void
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderInstitutionFactory::class, 'provider')]
-    public function test_buildInstitutionFromArray_should_return_object(array $data): void
+    public function testBuildInstitutionFromArrayShouldReturnObject(array $data): void
     {
         $result = $this->factory->buildInstitutionFromArray($data);
         $this->assertInstanceOf(Institution::class, $result);
     }
 
-    public function test_buildInstitutionCode_should_return_object(): void
+    public function testBuildInstitutionCodeShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionCode('code');
 
@@ -57,7 +56,7 @@ class InstitutionFactoryTest extends TestCase
         $this->assertSame('code', $result->value());
     }
 
-    public function test_buildInstitutionShortname_should_return_object(): void
+    public function testBuildInstitutionShortnameShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionShortname('shortname');
 
@@ -65,7 +64,7 @@ class InstitutionFactoryTest extends TestCase
         $this->assertSame('shortname', $result->value());
     }
 
-    public function test_buildInstitutionLogo_should_return_object(): void
+    public function testBuildInstitutionLogoShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionLogo('logo');
 
@@ -73,7 +72,7 @@ class InstitutionFactoryTest extends TestCase
         $this->assertSame('logo', $result->value());
     }
 
-    public function test_buildInstitutionObservations_should_return_object(): void
+    public function testBuildInstitutionObservationsShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionObservations('observations');
 
@@ -84,7 +83,7 @@ class InstitutionFactoryTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_buildInstitutionState_should_return_object(): void
+    public function testBuildInstitutionStateShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionState(1);
 
@@ -92,7 +91,7 @@ class InstitutionFactoryTest extends TestCase
         $this->assertSame(1, $result->value());
     }
 
-    public function test_buildInstitutionSearch_should_return_object(): void
+    public function testBuildInstitutionSearchShouldReturnObject(): void
     {
         $result = $this->factory->buildInstitutionSearch('search');
 
@@ -100,18 +99,18 @@ class InstitutionFactoryTest extends TestCase
         $this->assertSame('search', $result->value());
     }
 
-    public function test_buildInstitutionCreatedAt_should_return_object(): void
+    public function testBuildInstitutionCreatedAtShouldReturnObject(): void
     {
-        $datetime = new DateTime;
+        $datetime = new \DateTime();
         $result = $this->factory->buildInstitutionCreatedAt($datetime);
 
         $this->assertInstanceOf(InstitutionCreatedAt::class, $result);
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test_buildInstitutionUpdatedAt_should_return_object(): void
+    public function testBuildInstitutionUpdatedAtShouldReturnObject(): void
     {
-        $datetime = new DateTime;
+        $datetime = new \DateTime();
         $result = $this->factory->buildInstitutionUpdatedAt($datetime);
 
         $this->assertInstanceOf(InstitutionUpdatedAt::class, $result);
@@ -121,7 +120,7 @@ class InstitutionFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildInstitutions_should_return_object(): void
+    public function testBuildInstitutionsShouldReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
         $result = $this->factory->buildInstitutions($institutionMock);

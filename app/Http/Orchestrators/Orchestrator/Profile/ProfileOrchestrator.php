@@ -13,12 +13,11 @@ use Illuminate\Http\Request;
 abstract class ProfileOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly ProfileManagementContract $profileManagement
+        protected readonly ProfileManagementContract $profileManagement,
     ) {
     }
 
     /**
-     * @param Request $request
      * @return array<int<0, max>, mixed>
      */
     protected function getModulesAggregator(Request $request): array
@@ -28,7 +27,6 @@ abstract class ProfileOrchestrator implements Orchestrator
 
         $modulesAggregator = [];
         foreach ($modules as $item) {
-
             if (array_key_exists('id', $item)) {
                 $modulesAggregator[] = $item['id'];
             }

@@ -71,7 +71,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -79,7 +79,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -92,7 +92,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_find_should_return_employee_object(): void
+    public function testFindShouldReturnEmployeeObject(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $employeeId->expects(self::once())
@@ -110,7 +110,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -149,7 +149,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws EmployeeNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $employeeId->expects(self::exactly(2))
@@ -190,7 +190,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_findCriteria_should_return_employee_object(): void
+    public function testFindCriteriaShouldReturnEmployeeObject(): void
     {
         $identificationMock = $this->createMock(EmployeeIdentification::class);
         $identificationMock->expects(self::once())
@@ -208,7 +208,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('emp_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -247,7 +247,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws EmployeeNotFoundException
      * @throws Exception
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $identification = $this->createMock(EmployeeIdentification::class);
         $identification->expects(self::exactly(2))
@@ -288,7 +288,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -333,7 +333,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_delete_should_return_exception(): void
+    public function testDeleteShouldReturnException(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::exactly(2))
@@ -368,7 +368,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistEmployee_should_return_employee_object(): void
+    public function testPersistEmployeeShouldReturnEmployeeObject(): void
     {
         $employeeMock = $this->createMock(Employee::class);
 
@@ -432,7 +432,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')
@@ -599,7 +599,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistEmployee_should_update_return_employee_object(): void
+    public function testPersistEmployeeShouldUpdateReturnEmployeeObject(): void
     {
         $employeeMock = $this->createMock(Employee::class);
 
@@ -663,7 +663,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with('12345')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $birthdateMock = $this->createMock(EmployeeBirthdate::class);
         $birthdateMock->expects(self::once())
             ->method('value')
@@ -832,7 +832,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws EmployeesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_employees_object(): void
+    public function testGetAllShouldReturnEmployeesObject(): void
     {
         $builderMock = $this->mock(Builder::class);
 
@@ -900,7 +900,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
      * @throws EmployeesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('where')

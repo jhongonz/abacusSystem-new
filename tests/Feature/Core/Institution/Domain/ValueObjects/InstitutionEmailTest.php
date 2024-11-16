@@ -14,7 +14,7 @@ class InstitutionEmailTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new InstitutionEmail;
+        $this->valueObject = new InstitutionEmail();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class InstitutionEmailTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject = new InstitutionEmail('testing@test.com');
 
@@ -38,7 +38,7 @@ class InstitutionEmailTest extends TestCase
         $this->assertSame('testing@test.com', $result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue('test@test.com');
 
@@ -47,7 +47,7 @@ class InstitutionEmailTest extends TestCase
         $this->assertSame('test@test.com', $result->value());
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Institution\Domain\ValueObjects\InstitutionEmail> does not allow the invalid email: <testing>.');

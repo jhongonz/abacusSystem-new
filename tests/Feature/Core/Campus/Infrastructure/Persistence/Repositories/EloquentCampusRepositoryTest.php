@@ -62,7 +62,7 @@ class EloquentCampusRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -70,7 +70,7 @@ class EloquentCampusRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -83,7 +83,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws CampusNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_object(): void
+    public function testFindShouldReturnObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::once())
@@ -105,7 +105,7 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with('cam_state', '>', -1)
             ->andReturnSelf();
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
             ->andReturn($modelMock);
@@ -140,7 +140,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws Exception
      * @throws CampusNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::exactly(2))
@@ -181,7 +181,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws Exception
      * @throws CampusCollectionNotFoundException
      */
-    public function test_getAll_should_return_campus_object(): void
+    public function testGetAllShouldReturnCampusObject(): void
     {
         $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
         $campusInstitutionIdMock->expects(self::once())
@@ -257,7 +257,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws Exception
      * @throws CampusCollectionNotFoundException
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldReturnException(): void
     {
         $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
         $campusInstitutionIdMock->expects(self::once())
@@ -317,7 +317,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws CampusNotFoundException
      * @throws Exception
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::once())
@@ -365,7 +365,7 @@ class EloquentCampusRepositoryTest extends TestCase
      * @throws CampusNotFoundException
      * @throws Exception
      */
-    public function test_delete_should_return_exception(): void
+    public function testDeleteShouldReturnException(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::exactly(2))
@@ -407,11 +407,10 @@ class EloquentCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Exception
      * @throws Exception
      */
-    public function test_persistCampus_should_return_campus_object(): void
+    public function testPersistCampusShouldReturnCampusObject(): void
     {
         $campusMock = $this->createMock(Campus::class);
 
@@ -526,7 +525,7 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with(1)
             ->willReturnSelf();
 
-        $createAt = new \DateTime;
+        $createAt = new \DateTime();
         $createAtMock = $this->createMock(CampusCreatedAt::class);
         $createAtMock->expects(self::once())
             ->method('value')
@@ -578,11 +577,10 @@ class EloquentCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistCampus_should_update_return_campus_object(): void
+    public function testPersistCampusShouldUpdateReturnCampusObject(): void
     {
         $campusMock = $this->createMock(Campus::class);
 
@@ -699,7 +697,7 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with(1)
             ->willReturnSelf();
 
-        $createAt = new \DateTime;
+        $createAt = new \DateTime();
         $createAtMock = $this->createMock(CampusCreatedAt::class);
         $createAtMock->expects(self::once())
             ->method('value')

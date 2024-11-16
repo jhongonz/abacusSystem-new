@@ -35,7 +35,7 @@ class ModuleDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->module = $this->createMock(Module::class);
-        $this->dataTransformer = new ModuleDataTransformer;
+        $this->dataTransformer = new ModuleDataTransformer();
     }
 
     public function tearDown(): void
@@ -47,7 +47,7 @@ class ModuleDataTransformerTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_write_should_return_self(): void
+    public function testWriteShouldReturnSelf(): void
     {
         $result = $this->dataTransformer->write($this->module);
 
@@ -57,13 +57,12 @@ class ModuleDataTransformerTest extends TestCase
 
     /**
      * @param array<string, mixed> $expected
-     * @param string $datetime
-     * @return void
+     *
      * @throws Exception
      * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToRead')]
-    public function test_read_should_return_array(array $expected, string $datetime): void
+    public function testReadShouldReturnArray(array $expected, string $datetime): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -147,13 +146,12 @@ class ModuleDataTransformerTest extends TestCase
 
     /**
      * @param array<string, mixed> $expected
-     * @param string $datetime
-     * @return void
+     *
      * @throws Exception
      * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'providerModuleToReadToShare')]
-    public function test_readToShare_should_return_array(array $expected, string $datetime): void
+    public function testReadToShareShouldReturnArray(array $expected, string $datetime): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())

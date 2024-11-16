@@ -12,7 +12,6 @@ use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
@@ -41,7 +40,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @throws ModuleNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(ModuleId $id): Module
     {
@@ -61,7 +60,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistModule(Module $module): Module
     {
@@ -90,7 +89,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @param array{q?: string|null} $filters
-     * @return Modules|null
+     *
      * @throws ModulesNotFoundException
      */
     public function getAll(array $filters = []): ?Modules
@@ -105,7 +104,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
 
-        if (count($moduleCollection) === 0) {
+        if (0 === count($moduleCollection)) {
             throw new ModulesNotFoundException('Modules not found');
         }
 
@@ -113,7 +112,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         foreach ($moduleCollection as $item) {
             $moduleModel = $this->updateAttributesModelModule((array) $item);
 
-            if (! is_null($moduleModel->id())) {
+            if (!is_null($moduleModel->id())) {
                 $collection[] = $moduleModel->id();
             }
         }
@@ -126,7 +125,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @throws ModuleNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteModule(ModuleId $id): void
     {
@@ -163,7 +162,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $model->changePosition($domain->position()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (! is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
@@ -172,7 +171,6 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @param array<string, mixed> $data
-     * @return ModuleModel
      */
     private function updateAttributesModelModule(array $data = []): ModuleModel
     {
@@ -187,7 +185,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

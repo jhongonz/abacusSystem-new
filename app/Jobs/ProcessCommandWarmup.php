@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -56,7 +55,7 @@ class ProcessCommandWarmup implements ShouldQueue
     {
         try {
             Artisan::call($this->command);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->fail($exception);
         }
     }

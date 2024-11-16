@@ -18,7 +18,6 @@ use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
-use Exception;
 
 class EmployeeService implements EmployeeManagementContract
 {
@@ -34,7 +33,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchEmployeeById(?int $id): ?Employee
     {
@@ -46,7 +45,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchEmployeeByIdentification(string $identification): ?Employee
     {
@@ -59,8 +58,8 @@ class EmployeeService implements EmployeeManagementContract
 
     /**
      * @param array<string, mixed> $filters
-     * @return Employees
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function searchEmployees(array $filters = []): Employees
     {
@@ -70,7 +69,6 @@ class EmployeeService implements EmployeeManagementContract
         $employees = $this->searchEmployees->execute($request);
 
         foreach ($employees->aggregator() as $item) {
-
             /** @var Employee $employee */
             $employee = $this->searchEmployeeById($item);
             $employees->addItem($employee);
@@ -80,10 +78,9 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @param int $id
      * @param array<string, mixed> $data
-     * @return Employee
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function updateEmployee(int $id, array $data): Employee
     {
@@ -95,8 +92,8 @@ class EmployeeService implements EmployeeManagementContract
 
     /**
      * @param array<string ,mixed> $data
-     * @return Employee
-     * @throws Exception
+     *
+     * @throws \Exception
      */
     public function createEmployee(array $data): Employee
     {
@@ -107,7 +104,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteEmployee(int $id): void
     {

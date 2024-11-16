@@ -6,8 +6,6 @@
 
 namespace Core\Campus\Exceptions;
 
-use Exception;
-
-class CampusNotFoundException extends Exception
+class CampusNotFoundException extends \Exception
 {
 }

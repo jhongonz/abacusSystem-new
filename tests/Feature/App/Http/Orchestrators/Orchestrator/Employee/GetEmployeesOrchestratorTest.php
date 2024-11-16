@@ -63,7 +63,7 @@ class GetEmployeesOrchestratorTest extends TestCase
      * @throws Exception
      * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_make_should_return_json_response(): void
+    public function testMakeShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -71,7 +71,7 @@ class GetEmployeesOrchestratorTest extends TestCase
             ->with('filters')
             ->willReturn([]);
 
-        $employeesMock = new Employees;
+        $employeesMock = new Employees();
         $employeeMock = $this->createMock(Employee::class);
         $employeesMock->addItem($employeeMock);
 
@@ -93,7 +93,6 @@ class GetEmployeesOrchestratorTest extends TestCase
         $collectionDatatableMock->expects(self::once())
             ->method('addColumn')
             ->with('tools', $this->callback(function ($closure) {
-
                 $viewMock = $this->createMock(View::class);
                 $viewMock->expects(self::exactly(2))
                     ->method('with')
@@ -109,10 +108,11 @@ class GetEmployeesOrchestratorTest extends TestCase
                     ->with('components.menu-options-datatable')
                     ->willReturn($viewMock);
 
-                $view = $closure(['id' => 1,'state' => 2]);
+                $view = $closure(['id' => 1, 'state' => 2]);
 
                 $this->assertIsString($view);
                 $this->assertSame('<html lang="es"></html>', $view);
+
                 return true;
             }))
             ->willReturnSelf();
@@ -139,7 +139,7 @@ class GetEmployeesOrchestratorTest extends TestCase
         $this->assertSame($responseMock, $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

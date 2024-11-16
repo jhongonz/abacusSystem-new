@@ -9,7 +9,7 @@ namespace Core\Campus\Domain\ValueObjects;
 class CampusName
 {
     public function __construct(
-        private string $value = ''
+        private string $value = '',
     ) {
     }
 
@@ -21,6 +21,7 @@ class CampusName
     public function setValue(string $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

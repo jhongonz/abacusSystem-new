@@ -17,7 +17,6 @@ use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
 use Core\Campus\Infrastructure\Persistence\Translators\CampusTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentCampusRepository implements ChainPriority, CampusRepositoryContract
@@ -28,7 +27,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         private readonly DatabaseManager $databaseManager,
         private readonly CampusTranslator $campusTranslator,
         private readonly CampusModel $campusModel,
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
@@ -40,12 +39,13 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws CampusNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(CampusId $id): ?Campus
     {
@@ -63,9 +63,8 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     }
 
     /**
-     * @param CampusInstitutionId $id
      * @param array{q?: string|null} $filters
-     * @return CampusCollection|null
+     *
      * @throws CampusCollectionNotFoundException
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
@@ -74,12 +73,12 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $builder->where('cam__inst_id', $id->value());
         $builder->where('cam_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (! empty($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->campusModel->getSearchField(), $filters['q']);
         }
         $campusCollectionResult = $builder->get(['cam_id']);
 
-        if (count($campusCollectionResult) === 0) {
+        if (0 === count($campusCollectionResult)) {
             throw new CampusCollectionNotFoundException('Campus collection not found');
         }
 
@@ -87,7 +86,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         foreach ($campusCollectionResult as $item) {
             $campusModel = $this->updateAttributesModel((array) $item);
 
-            if (! is_null($campusModel->id())) {
+            if (!is_null($campusModel->id())) {
                 $collection[] = $campusModel->id();
             }
         }
@@ -100,7 +99,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
 
     /**
      * @throws CampusNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function delete(CampusId $id): void
     {
@@ -120,7 +119,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistCampus(Campus $campus): Campus
     {
@@ -136,7 +135,6 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
             $campusId = $builder->insertGetId($dataModel);
             $campus->id()->setValue($campusId);
             $campus->createdAt()->setValue($dataModel['created_at']);
-
         } else {
             $dataModel['updated_at'] = $this->getDateTime();
             $campus->updatedAt()->setValue($dataModel['updated_at']);
@@ -148,10 +146,6 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         return $campus;
     }
 
-    /**
-     * @param Campus $domain
-     * @return CampusModel
-     */
     private function domainToModel(Campus $domain): CampusModel
     {
         $builder = $this->databaseManager->table($this->getTable());
@@ -177,11 +171,11 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
 
     /**
      * @param array<string, mixed> $data
-     * @return CampusModel
      */
     private function updateAttributesModel(array $data = []): CampusModel
     {
         $this->campusModel->fill($data);
+
         return $this->campusModel;
     }
 
@@ -191,7 +185,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

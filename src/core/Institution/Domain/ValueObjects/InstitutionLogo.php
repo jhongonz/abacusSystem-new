@@ -9,7 +9,7 @@ namespace Core\Institution\Domain\ValueObjects;
 class InstitutionLogo
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
     }
 
@@ -21,6 +21,7 @@ class InstitutionLogo
     public function setValue(string $value): self
     {
         $this->value = $value;
+
         return $this;
     }
 }

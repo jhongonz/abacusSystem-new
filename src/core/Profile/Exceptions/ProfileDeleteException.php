@@ -2,8 +2,6 @@
 
 namespace Core\Profile\Exceptions;
 
-use Exception;
-
-class ProfileDeleteException extends Exception
+class ProfileDeleteException extends \Exception
 {
 }

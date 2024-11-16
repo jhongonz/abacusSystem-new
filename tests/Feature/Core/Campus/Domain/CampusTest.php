@@ -54,7 +54,7 @@ class CampusTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->campus->id();
 
@@ -65,7 +65,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setId_should_change_and_return_self(): void
+    public function testSetIdShouldChangeAndReturnSelf(): void
     {
         $campusId = $this->createMock(CampusId::class);
         $result = $this->campus->setId($campusId);
@@ -75,7 +75,7 @@ class CampusTest extends TestCase
         $this->assertSame($campusId, $result->id());
     }
 
-    public function test_institutionId_should_return_value_object(): void
+    public function testInstitutionIdShouldReturnValueObject(): void
     {
         $result = $this->campus->institutionId();
 
@@ -86,7 +86,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setInstitutionId_should_change_and_return_self(): void
+    public function testSetInstitutionIdShouldChangeAndReturnSelf(): void
     {
         $campusInstitutionId = $this->createMock(CampusInstitutionId::class);
         $result = $this->campus->setInstitutionId($campusInstitutionId);
@@ -96,7 +96,7 @@ class CampusTest extends TestCase
         $this->assertSame($campusInstitutionId, $result->institutionId());
     }
 
-    public function test_name_should_return_value_object(): void
+    public function testNameShouldReturnValueObject(): void
     {
         $result = $this->campus->name();
 
@@ -107,7 +107,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setName_should_change_and_return_self(): void
+    public function testSetNameShouldChangeAndReturnSelf(): void
     {
         $nameMock = $this->createMock(CampusName::class);
         $result = $this->campus->setName($nameMock);
@@ -117,7 +117,7 @@ class CampusTest extends TestCase
         $this->assertSame($nameMock, $result->name());
     }
 
-    public function test_address_should_return_value_object(): void
+    public function testAddressShouldReturnValueObject(): void
     {
         $result = $this->campus->address();
         $this->assertInstanceOf(CampusAddress::class, $result);
@@ -126,7 +126,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setAddress_should_change_and_return_self(): void
+    public function testSetAddressShouldChangeAndReturnSelf(): void
     {
         $addressMock = $this->createMock(CampusAddress::class);
         $result = $this->campus->setAddress($addressMock);
@@ -136,7 +136,7 @@ class CampusTest extends TestCase
         $this->assertSame($addressMock, $result->address());
     }
 
-    public function test_phone_should_return_value_object(): void
+    public function testPhoneShouldReturnValueObject(): void
     {
         $result = $this->campus->phone();
         $this->assertInstanceOf(CampusPhone::class, $result);
@@ -145,7 +145,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setPhone_should_change_and_return_self(): void
+    public function testSetPhoneShouldChangeAndReturnSelf(): void
     {
         $phoneMock = $this->createMock(CampusPhone::class);
         $result = $this->campus->setPhone($phoneMock);
@@ -155,7 +155,7 @@ class CampusTest extends TestCase
         $this->assertSame($phoneMock, $result->phone());
     }
 
-    public function test_email_should_return_value_object(): void
+    public function testEmailShouldReturnValueObject(): void
     {
         $result = $this->campus->email();
         $this->assertInstanceOf(CampusEmail::class, $result);
@@ -164,7 +164,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setEmail_should_change_and_return_self(): void
+    public function testSetEmailShouldChangeAndReturnSelf(): void
     {
         $emailMock = $this->createMock(CampusEmail::class);
         $result = $this->campus->setEmail($emailMock);
@@ -174,7 +174,7 @@ class CampusTest extends TestCase
         $this->assertSame($emailMock, $result->email());
     }
 
-    public function test_observations_should_return_value_object(): void
+    public function testObservationsShouldReturnValueObject(): void
     {
         $result = $this->campus->observations();
         $this->assertInstanceOf(CampusObservations::class, $result);
@@ -183,7 +183,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setObservations_should_change_and_return_self(): void
+    public function testSetObservationsShouldChangeAndReturnSelf(): void
     {
         $observationsMock = $this->createMock(CampusObservations::class);
         $result = $this->campus->setObservations($observationsMock);
@@ -193,7 +193,7 @@ class CampusTest extends TestCase
         $this->assertSame($observationsMock, $result->observations());
     }
 
-    public function test_search_should_return_value_object(): void
+    public function testSearchShouldReturnValueObject(): void
     {
         $result = $this->campus->search();
         $this->assertInstanceOf(CampusSearch::class, $result);
@@ -202,7 +202,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setSearch_should_change_and_return_self(): void
+    public function testSetSearchShouldChangeAndReturnSelf(): void
     {
         $searchMock = $this->createMock(CampusSearch::class);
         $result = $this->campus->setSearch($searchMock);
@@ -212,7 +212,7 @@ class CampusTest extends TestCase
         $this->assertSame($searchMock, $result->search());
     }
 
-    public function test_state_should_return_value_object(): void
+    public function testStateShouldReturnValueObject(): void
     {
         $result = $this->campus->state();
         $this->assertInstanceOf(CampusState::class, $result);
@@ -221,7 +221,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setState_should_change_and_return_self(): void
+    public function testSetStateShouldChangeAndReturnSelf(): void
     {
         $stateMock = $this->createMock(CampusState::class);
         $result = $this->campus->setState($stateMock);
@@ -231,7 +231,7 @@ class CampusTest extends TestCase
         $this->assertSame($stateMock, $result->state());
     }
 
-    public function test_createdAt_should_return_value_object(): void
+    public function testCreatedAtShouldReturnValueObject(): void
     {
         $result = $this->campus->createdAt();
         $this->assertInstanceOf(CampusCreatedAt::class, $result);
@@ -240,7 +240,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCreatedAt_should_change_and_return_self(): void
+    public function testSetCreatedAtShouldChangeAndReturnSelf(): void
     {
         $createdAt = $this->createMock(CampusCreatedAt::class);
         $result = $this->campus->setCreatedAt($createdAt);
@@ -250,7 +250,7 @@ class CampusTest extends TestCase
         $this->assertSame($createdAt, $result->createdAt());
     }
 
-    public function test_updatedAt_should_return_value_object(): void
+    public function testUpdatedAtShouldReturnValueObject(): void
     {
         $result = $this->campus->updatedAt();
         $this->assertInstanceOf(CampusUpdatedAt::class, $result);
@@ -259,7 +259,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUpdatedAt_should_change_and_return_self(): void
+    public function testSetUpdatedAtShouldChangeAndReturnSelf(): void
     {
         $updatedAt = $this->createMock(CampusUpdatedAt::class);
         $result = $this->campus->setUpdatedAt($updatedAt);
@@ -272,7 +272,7 @@ class CampusTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_refreshSearch_should_return_self(): void
+    public function testRefreshSearchShouldReturnSelf(): void
     {
         $this->campusName->expects(self::once())
             ->method('value')

@@ -15,13 +15,11 @@ use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
 use Core\SharedContext\Model\ValueObjectStatus;
-use DateTime;
 
 interface ModuleFactoryContract
 {
     /**
      * @param array<string, mixed> $data
-     * @return Module
      */
     public function buildModuleFromArray(array $data): Module;
 
@@ -30,9 +28,9 @@ interface ModuleFactoryContract
         ModuleMenuKey $key,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon,
-        ModuleState $state = new ModuleState,
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt
+        ModuleIcon $icon = new ModuleIcon(),
+        ModuleState $state = new ModuleState(),
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
     ): Module;
 
     public function buildModuleId(?int $id = null): ModuleId;
@@ -47,9 +45,9 @@ interface ModuleFactoryContract
 
     public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState;
 
-    public function buildModuleCreatedAt(DateTime $datetime): ModuleCreatedAt;
+    public function buildModuleCreatedAt(\DateTime $datetime): ModuleCreatedAt;
 
-    public function buildModuleUpdatedAt(?DateTime $datetime = null): ModuleUpdatedAt;
+    public function buildModuleUpdatedAt(?\DateTime $datetime = null): ModuleUpdatedAt;
 
     public function buildModuleSearch(?string $search = null): ModuleSearch;
 
@@ -57,7 +55,6 @@ interface ModuleFactoryContract
 
     /**
      * @param array<string, mixed> $data
-     * @return Modules
      */
     public function buildModulesFromArray(array $data): Modules;
 
