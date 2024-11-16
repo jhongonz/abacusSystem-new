@@ -52,13 +52,15 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
     public function find(EmployeeId $id): ?Employee
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->employeeKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
 
-        if (isset($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var Employee */
@@ -74,13 +76,15 @@ class RedisEmployeeRepository implements ChainPriority, EmployeeRepositoryContra
     public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->employeeIdentificationKey($identification));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new EmployeeNotFoundException('Employee not found by identification '.$identification->value());
         }
 
-        if (! is_null($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var Employee */

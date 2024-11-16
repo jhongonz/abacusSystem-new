@@ -132,11 +132,12 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     }
 
     /**
+     * @param array{q?: string|null} $filters
+     * @return Employees|null
      * @throws EmployeesNotFoundException
      */
     public function getAll(array $filters = []): ?Employees
     {
-        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable())
             ->where('emp_state', '>', ValueObjectStatus::STATE_DELETE);
 
@@ -152,7 +153,10 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $collection = [];
         foreach ($employeeCollection as $item) {
             $employeeModel = $this->updateAttributesModelEmployee((array) $item);
-            $collection[] = $employeeModel->id();
+
+            if (! is_null($employeeModel->id())) {
+                $collection[] = $employeeModel->id();
+            }
         }
 
         $employees = $this->employeeTranslator->setCollection($collection)->toDomainCollection();
@@ -170,20 +174,23 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $model = $this->updateAttributesModelEmployee((array) $data);
 
         $model->changeId($domain->id()->value());
-        $model->changeIdentification($domain->identification()->value());
-        $model->changeIdentificationType($domain->identificationType()->value());
+        $model->changeIdentification($domain->identification()->value() ?? '');
+        $model->changeIdentificationType($domain->identificationType()->value() ?? '');
         $model->changeName($domain->name()->value());
-        $model->changeLastname($domain->lastname()->value());
-        $model->changePhone($domain->phone()->value());
+        $model->changeLastname($domain->lastname()->value() ?? '');
+        $model->changePhone($domain->phone()->value() ?? '');
         $model->changeBirthdate($domain->birthdate()->value());
-        $model->changeEmail($domain->email()->value());
+        $model->changeEmail($domain->email()->value() ?? '');
         $model->changeAddress($domain->address()->value());
         $model->changeObservations($domain->observations()->value());
         $model->changeImage($domain->image()->value());
-        $model->changeInstitutionId($domain->institutionId()->value());
         $model->changeState($domain->state()->value());
-        $model->changeSearch($domain->search()->value());
+        $model->changeSearch($domain->search()->value() ?? '');
         $model->changeCreatedAt($domain->createdAt()->value());
+
+        if (! is_null($domain->institutionId()->value())) {
+            $model->changeInstitutionId($domain->institutionId()->value());
+        }
 
         if (! is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());

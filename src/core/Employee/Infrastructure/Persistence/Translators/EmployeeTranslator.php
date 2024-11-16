@@ -13,7 +13,7 @@ class EmployeeTranslator
 {
     private EmployeeModel $employee;
 
-    /** @var array<int<0, max>, int|null> */
+    /** @var array<int<0, max>, int> */
     private array $collection = [];
 
     public function __construct(
@@ -35,15 +35,18 @@ class EmployeeTranslator
     {
         $employee = $this->employeeFactory->buildEmployee(
             $this->employeeFactory->buildEmployeeId($this->employee->id()),
-            $this->employeeFactory->buildEmployeeIdentification($this->employee->identification()),
-            $this->employeeFactory->buildEmployeeName($this->employee->name()),
-            $this->employeeFactory->buildEmployeeLastname($this->employee->lastname()),
-            $this->employeeFactory->buildEmployeeState($this->employee->state()),
-            $this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt())
+            $this->employeeFactory->buildEmployeeIdentification($this->employee->identification() ?? ''),
+            $this->employeeFactory->buildEmployeeName($this->employee->name() ?? ''),
+            $this->employeeFactory->buildEmployeeLastname($this->employee->lastname() ?? ''),
+            $this->employeeFactory->buildEmployeeState($this->employee->state())
         );
 
         $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
         $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt($this->employee->updatedAt()));
+
+        if (! is_null($this->employee->createdAt())) {
+            $employee->setCreatedAt($this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt()));
+        }
 
         $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
         $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
@@ -56,6 +59,7 @@ class EmployeeTranslator
 
         /** @var User|null $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);
+
         $userId = $user ? $user->id() : null;
         $employee->setUserId($this->employeeFactory->buildEmployeeUserId($userId));
 
@@ -63,7 +67,7 @@ class EmployeeTranslator
     }
 
     /**
-     * @param array<int<0, max>, int|null> $collection
+     * @param array<int<0, max>, int> $collection
      * @return $this
      */
     public function setCollection(array $collection): self

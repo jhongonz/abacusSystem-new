@@ -29,7 +29,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     public function find(EmployeeId $id): ?Employee
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var Employee|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (Exception $exception) {
             throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
@@ -42,7 +45,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         try {
-            return $this->read(__FUNCTION__, $identification);
+            /** @var Employee|null $result */
+            $result = $this->read(__FUNCTION__, $identification);
+
+            return $result;
         } catch (Exception $exception) {
             throw new EmployeeNotFoundException('Employee not found by identification '.$identification->value());
         }
@@ -61,7 +67,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
      */
     public function persistEmployee(Employee $employee): Employee
     {
-        return $this->write(__FUNCTION__, $employee);
+        /** @var Employee $result */
+        $result = $this->write(__FUNCTION__, $employee);
+
+        return $result;
     }
 
     /**
@@ -75,7 +84,10 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $filters);
+            /** @var Employees|null $result */
+            $result = $this->read(__FUNCTION__, $filters);
+
+            return $result;
         } catch (Exception $exception) {
             throw new EmployeesNotFoundException('Employees not found');
         }

@@ -86,7 +86,10 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $collection = [];
         foreach ($campusCollectionResult as $item) {
             $campusModel = $this->updateAttributesModel((array) $item);
-            $collection[] = intval($campusModel->id());
+
+            if (! is_null($campusModel->id())) {
+                $collection[] = $campusModel->id();
+            }
         }
 
         $campusCollection = $this->campusTranslator->setCollection($collection)->toDomainCollection();
