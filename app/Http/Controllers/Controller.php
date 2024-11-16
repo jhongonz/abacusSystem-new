@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 

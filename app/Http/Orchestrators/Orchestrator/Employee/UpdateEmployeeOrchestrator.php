@@ -8,7 +8,6 @@ namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
-use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
 
 class UpdateEmployeeOrchestrator extends EmployeeOrchestrator

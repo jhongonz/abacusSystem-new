@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Institution;
 
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
-use Core\Institution\Domain\Institution;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Illuminate\Http\Request;
 

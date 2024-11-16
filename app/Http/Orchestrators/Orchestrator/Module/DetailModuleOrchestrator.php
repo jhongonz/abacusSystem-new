@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Module;
 
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
-use Core\Profile\Domain\Module;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 

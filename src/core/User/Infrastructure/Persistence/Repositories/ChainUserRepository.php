@@ -30,7 +30,10 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     public function find(UserId $id): ?User
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var User|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (Exception $exception) {
             throw new UserNotFoundException('User not found by id '.$id->value());
         }
@@ -42,7 +45,10 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
     public function findCriteria(UserLogin $login): ?User
     {
         try {
-            return $this->read(__FUNCTION__, $login);
+            /** @var User|null $result */
+            $result = $this->read(__FUNCTION__, $login);
+
+            return $result;
         } catch (Exception $exception) {
             throw new UserNotFoundException('User not found by login '.$login->value());
         }
@@ -61,6 +67,9 @@ class ChainUserRepository extends AbstractChainRepository implements UserReposit
      */
     public function persistUser(User $user): User
     {
-        return $this->write(__FUNCTION__, $user);
+        /** @var User $result */
+        $result = $this->write(__FUNCTION__, $user);
+
+        return $result;
     }
 }

@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Profile;
 use Illuminate\Http\Request;
 
 class UpdateProfileOrchestrator extends ProfileOrchestrator

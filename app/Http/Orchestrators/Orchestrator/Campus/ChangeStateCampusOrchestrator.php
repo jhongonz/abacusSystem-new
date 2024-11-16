@@ -6,7 +6,6 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Campus;
 
-use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Illuminate\Http\Request;

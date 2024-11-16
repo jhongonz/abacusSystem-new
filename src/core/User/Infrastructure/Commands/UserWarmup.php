@@ -8,6 +8,7 @@ namespace Core\User\Infrastructure\Commands;
 
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserRepositoryContract;
+use Core\User\Domain\User;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
@@ -55,6 +56,7 @@ class UserWarmup extends Command
         $userId = $this->userFactory->buildId($id);
 
         try {
+            /** @var User $user */
             $user = $this->readRepository->find($userId);
 
             foreach ($this->repositories as $repository) {

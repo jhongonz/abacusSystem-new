@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
-use Core\Employee\Domain\Employee;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Illuminate\Http\Request;
 

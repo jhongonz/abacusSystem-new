@@ -4,7 +4,6 @@ namespace Core\Institution\Infrastructure\Commands;
 
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Core\Institution\Domain\Institution;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;

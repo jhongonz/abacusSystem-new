@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Profile;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Illuminate\Http\Request;
 

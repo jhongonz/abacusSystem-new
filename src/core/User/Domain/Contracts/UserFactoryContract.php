@@ -6,6 +6,7 @@
 
 namespace Core\User\Domain\Contracts;
 
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
 use Core\User\Domain\ValueObjects\UserEmployeeId;
@@ -46,9 +47,9 @@ interface UserFactoryContract
 
     public function buildPassword(string $password): UserPassword;
 
-    public function buildState(?int $state = null): UserState;
+    public function buildState(int $state = ValueObjectStatus::STATE_NEW): UserState;
 
-    public function buildCreatedAt(?DateTime $createdAt): UserCreatedAt;
+    public function buildCreatedAt(DateTime $createdAt = new DateTime('now')): UserCreatedAt;
 
     public function buildUpdatedAt(?DateTime $updatedAt): UserUpdatedAt;
 

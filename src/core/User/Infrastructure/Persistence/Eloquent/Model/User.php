@@ -136,7 +136,10 @@ class User extends Authenticatable
 
     public function id(): ?int
     {
-        return $this->getAttribute('user_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('user_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -148,7 +151,10 @@ class User extends Authenticatable
 
     public function employeeId(): ?int
     {
-        return $this->getAttribute('user__emp_id');
+        /** @var int|null $employeeId */
+        $employeeId = $this->getAttribute('user_emp_id');
+
+        return $employeeId;
     }
 
     public function changeEmployeeId(int $id): self
@@ -160,7 +166,10 @@ class User extends Authenticatable
 
     public function profileId(): ?int
     {
-        return $this->getAttribute('user__pro_id');
+        /** @var int|null $profileId */
+        $profileId = $this->getAttribute('user_pro_id');
+
+        return $profileId;
     }
 
     public function changeProfileId(int $id): self
@@ -172,7 +181,10 @@ class User extends Authenticatable
 
     public function login(): ?string
     {
-        return $this->getAttribute('user_login');
+        /** @var string|null $login */
+        $login = $this->getAttribute('user_login');
+
+        return $login;
     }
 
     public function changeLogin(string $login): self
@@ -184,7 +196,10 @@ class User extends Authenticatable
 
     public function password(): ?string
     {
-        return $this->getAttribute('password');
+        /** @var string|null $password */
+        $password = $this->getAttribute('password');
+
+        return $password;
     }
 
     public function changePassword(string $password): self
@@ -196,7 +211,10 @@ class User extends Authenticatable
 
     public function state(): int
     {
-        return $this->getAttribute('user_state');
+        /** @var int $state */
+        $state = $this->getAttribute('user_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -211,9 +229,10 @@ class User extends Authenticatable
      */
     public function createdAt(): ?DateTime
     {
+        /** @var string|null $dateTime */
         $dateTime = $this->getAttribute('created_at');
 
-        return ($dateTime) ? $this->getDateTime($dateTime) : $dateTime;
+        return null !== $dateTime ? $this->getDateTime($dateTime) : null;
 
     }
 
@@ -229,9 +248,10 @@ class User extends Authenticatable
      */
     public function updatedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): self
@@ -246,9 +266,10 @@ class User extends Authenticatable
      */
     public function deletedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeDeletedAt(?DateTime $datetime): self
@@ -260,7 +281,10 @@ class User extends Authenticatable
 
     public function photo(): ?string
     {
-        return $this->getAttribute('user_photo');
+        /** @var string|null $photo */
+        $photo = $this->getAttribute('user_photo');
+
+        return $photo;
     }
 
     public function changePhoto(?string $photo): self
@@ -273,7 +297,7 @@ class User extends Authenticatable
     /**
      * @throws Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): DateTime
     {
         return new DateTime($datetime);
     }

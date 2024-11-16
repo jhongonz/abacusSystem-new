@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\User;
 
 use Core\User\Domain\Contracts\UserManagementContract;
-use Core\User\Domain\User;
 use Illuminate\Http\Request;
 
 class GetUserOrchestrator extends UserOrchestrator

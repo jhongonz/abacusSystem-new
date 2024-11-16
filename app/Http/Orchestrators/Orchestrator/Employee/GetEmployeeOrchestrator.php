@@ -7,7 +7,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
-use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
 
 class GetEmployeeOrchestrator extends EmployeeOrchestrator

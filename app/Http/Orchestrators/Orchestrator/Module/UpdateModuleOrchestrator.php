@@ -10,7 +10,6 @@ use App\Http\Exceptions\RouteNotFoundException;
 use App\Traits\RouterTrait;
 use Assert\AssertionFailedException;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
-use Core\Profile\Domain\Module;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Psr\Log\LoggerInterface;

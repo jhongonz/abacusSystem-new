@@ -15,7 +15,6 @@ use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContract
 {

@@ -41,13 +41,15 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
     public function findCriteria(UserLogin $login): ?User
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->userLoginKey($login));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by login '.$login->value());
         }
 
-        if (! is_null($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var User */
@@ -63,13 +65,15 @@ class RedisUserRepository implements ChainPriority, UserRepositoryContract
     public function find(UserId $id): ?User
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->userKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new UserNotFoundException('User not found by id '.$id->value());
         }
 
-        if (! is_null($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var User */

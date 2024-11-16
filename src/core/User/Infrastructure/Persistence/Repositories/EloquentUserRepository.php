@@ -138,13 +138,19 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         $model = $this->updateAttributesModelUser((array) $data);
 
         $model->changeId($domain->id()->value());
-        $model->changeEmployeeId($domain->employeeId()->value());
-        $model->changeProfileId($domain->profileId()->value());
         $model->changeLogin($domain->login()->value());
         $model->changePassword($domain->password()->value());
         $model->changeState($domain->state()->value());
         $model->changePhoto($domain->photo()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
+
+        if (! is_null($domain->employeeId()->value())) {
+            $model->changeEmployeeId($domain->employeeId()->value());
+        }
+
+        if (! is_null($domain->profileId()->value())) {
+            $model->changeProfileId($domain->profileId()->value());
+        }
 
         if (! is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());

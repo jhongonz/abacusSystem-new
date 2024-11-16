@@ -6,6 +6,7 @@
 
 namespace Core\User\Application\Factory;
 
+use Core\SharedContext\Model\ValueObjectStatus;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserCreatedAt;
@@ -29,26 +30,39 @@ class UserFactory implements UserFactoryContract
      */
     public function buildUserFromArray(array $data): User
     {
-        $data = $data[User::TYPE];
+        /** @var array{
+         *     id: int,
+         *     employeeId: int,
+         *     profileId: int,
+         *     login: string,
+         *     password: string,
+         *     state: int,
+         *     createdAt: string|null,
+         *     updatedAt: string|null,
+         *     photo: string|null
+         * } $dataUser
+         */
+        $dataUser = $data[User::TYPE];
+
         $user = $this->buildUser(
-            $this->buildId($data['id']),
-            $this->buildEmployeeId($data['employeeId']),
-            $this->buildProfileId($data['profileId']),
-            $this->buildLogin($data['login']),
-            $this->buildPassword($data['password']),
-            $this->buildState($data['state'])
+            $this->buildId($dataUser['id']),
+            $this->buildEmployeeId($dataUser['employeeId']),
+            $this->buildProfileId($dataUser['profileId']),
+            $this->buildLogin($dataUser['login']),
+            $this->buildPassword($dataUser['password']),
+            $this->buildState($dataUser['state'])
         );
 
-        if (isset($data['createdAt'])) {
-            $user->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($dataUser['createdAt'])) {
+            $user->createdAt()->setValue($this->getDateTime($dataUser['createdAt']));
         }
 
-        if (isset($data['updatedAt'])) {
-            $user->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        if (isset($dataUser['updatedAt'])) {
+            $user->updatedAt()->setValue($this->getDateTime($dataUser['updatedAt']));
         }
 
-        if (isset($data['photo'])) {
-            $user->photo()->setValue($data['photo']);
+        if (isset($dataUser['photo'])) {
+            $user->photo()->setValue($dataUser['photo']);
         }
 
         return $user;
@@ -97,12 +111,12 @@ class UserFactory implements UserFactoryContract
     /**
      * @throws Exception
      */
-    public function buildState(?int $state = null): UserState
+    public function buildState(int $state = ValueObjectStatus::STATE_NEW): UserState
     {
         return new UserState($state);
     }
 
-    public function buildCreatedAt(?DateTime $createdAt): UserCreatedAt
+    public function buildCreatedAt(DateTime $createdAt = new DateTime('now')): UserCreatedAt
     {
         return new UserCreatedAt($createdAt);
     }

@@ -4,7 +4,6 @@ namespace Core\Employee\Infrastructure\Commands;
 
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
-use Core\Employee\Domain\Employee;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;

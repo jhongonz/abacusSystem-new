@@ -8,7 +8,6 @@ namespace App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
-use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 
