@@ -25,7 +25,7 @@ class SearchInstitutions extends UseCasesService
     {
         $this->validateRequest($request, SearchInstitutionsRequest::class);
 
-        /* @var SearchInstitutionsRequest $request */
+        /** @var SearchInstitutionsRequest $request */
         return $this->institutionRepository->getAll($request->filters());
     }
 }

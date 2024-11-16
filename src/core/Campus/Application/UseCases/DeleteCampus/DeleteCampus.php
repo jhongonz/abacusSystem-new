@@ -24,7 +24,7 @@ class DeleteCampus extends UseCasesService
     {
         $this->validateRequest($request, DeleteCampusRequest::class);
 
-        /* @var DeleteCampusRequest $request */
+        /** @var DeleteCampusRequest $request */
         $this->campusRepository->delete($request->id());
 
         return null;

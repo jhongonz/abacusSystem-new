@@ -13,7 +13,6 @@ $finder = Finder::create()
         __DIR__ . '/app',
         __DIR__ . '/config',
         __DIR__ . '/routes',
-        __DIR__ . '/database',
         __DIR__ . '/resources',
         __DIR__ . '/tests',
         __DIR__ . '/src',
@@ -28,6 +27,7 @@ return (new Config())
     ->setRules([
         '@PSR12' => true,
         '@Symfony' => true,
+        'phpdoc_to_comment' => false,
         'array_syntax' => ['syntax' => 'short'],
         'single_quote' => true,
         'no_unused_imports' => true,

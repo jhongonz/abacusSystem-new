@@ -34,7 +34,7 @@ abstract class AbstractChainRepository
     /**
      * @throws \Exception
      */
-    protected function write(string $functionName, ...$source): mixed
+    protected function write(string $functionName, mixed ...$source): mixed
     {
         $task = new Task(function () use ($functionName, $source) {
             $result = null;
@@ -59,9 +59,9 @@ abstract class AbstractChainRepository
     }
 
     /**
-     * @throws \Throwable
+     * @throws \Exception
      */
-    protected function read(string $functionName, ...$source): mixed
+    protected function read(string $functionName, mixed ...$source): mixed
     {
         $result = $this->readFromRepositories($functionName, ...$source);
 
@@ -75,7 +75,7 @@ abstract class AbstractChainRepository
     /**
      * @throws \Exception
      */
-    protected function readFromRepositories(string $functionName, ...$source): mixed
+    protected function readFromRepositories(string $functionName, mixed ...$source): mixed
     {
         $task = new Task(function () use ($functionName, $source) {
             $result = null;
@@ -108,7 +108,7 @@ abstract class AbstractChainRepository
         return $task->getResult();
     }
 
-    protected function persistence(string $functionName, ...$sources): void
+    protected function persistence(string $functionName, mixed ...$sources): void
     {
         while (false !== ($repository = prev($this->repositories))) {
             try {

@@ -20,7 +20,7 @@ class DeleteProfile extends UseCasesService
     {
         $this->validateRequest($request, DeleteProfileRequest::class);
 
-        /* @var DeleteProfileRequest $request */
+        /** @var DeleteProfileRequest $request */
         $this->profileRepository->deleteProfile($request->id());
 
         return null;

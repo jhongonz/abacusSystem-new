@@ -21,7 +21,7 @@ class SearchProfileById extends UseCasesService
     {
         $this->validateRequest($request, SearchProfileByIdRequest::class);
 
-        /* @var SearchProfileByIdRequest $request */
+        /** @var SearchProfileByIdRequest $request */
         return $this->profileRepository->find($request->profileId());
     }
 }

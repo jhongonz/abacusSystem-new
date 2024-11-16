@@ -25,7 +25,7 @@ class SearchCampusCollection extends UseCasesService
     {
         $this->validateRequest($request, SearchCampusCollectionRequest::class);
 
-        /* @var SearchCampusCollectionRequest $request */
+        /** @var SearchCampusCollectionRequest $request */
         return $this->campusRepository->getAll($request->institutionId(), $request->filters());
     }
 }

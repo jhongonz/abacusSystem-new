@@ -25,7 +25,7 @@ class SearchUserById extends UseCasesService
     {
         $this->validateRequest($request, SearchUserByIdRequest::class);
 
-        /* @var SearchUserByIdRequest $request */
+        /** @var SearchUserByIdRequest $request */
         return $this->userRepository->find($request->userId());
     }
 }
