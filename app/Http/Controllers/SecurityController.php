@@ -44,8 +44,10 @@ class SecurityController extends Controller implements HasMiddleware
 
     public function authenticate(LoginRequest $request): JsonResponse|RedirectResponse
     {
+        $dataUser = $this->orchestrators->handler('retrieve-user', $request);
+
         /** @var User $user */
-        $user = $this->orchestrators->handler('retrieve-user', $request);
+        $user = $dataUser['user'];
 
         try {
             $employee = $this->getEmployee($request, $user);
