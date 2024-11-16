@@ -4,6 +4,7 @@ namespace Core\Employee\Infrastructure\Commands;
 
 use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
+use Core\Employee\Domain\Employee;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
@@ -51,6 +52,7 @@ class EmployeeWarmup extends Command
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
 
         try {
+            /** @var Employee $employee */
             $employee = $this->readRepository->find($employeeId);
 
             foreach ($this->repositories as $repository) {

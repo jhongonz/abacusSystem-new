@@ -21,6 +21,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 
 interface EmployeeFactoryContract
@@ -56,11 +57,11 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeAddress(?string $address): EmployeeAddress;
 
-    public function buildEmployeeState(?int $state = null): EmployeeState;
+    public function buildEmployeeState(int $state = ValueObjectStatus::STATE_NEW): EmployeeState;
 
     public function buildEmployeeSearch(?string $search = null): EmployeeSearch;
 
-    public function buildEmployeeCreatedAt(?DateTime $datetime = null): EmployeeCreatedAt;
+    public function buildEmployeeCreatedAt(DateTime $datetime = new DateTime('now')): EmployeeCreatedAt;
 
     public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt;
 

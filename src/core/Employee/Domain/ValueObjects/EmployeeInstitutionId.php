@@ -11,7 +11,7 @@ class EmployeeInstitutionId
     ) {
         if (! is_null($value)) {
             $this->validate($value);
-            $this->setValue($this->value);
+            $this->setValue($value);
         }
     }
 

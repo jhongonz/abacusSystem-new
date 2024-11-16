@@ -65,9 +65,13 @@ class EmployeeService implements EmployeeManagementContract
     public function searchEmployees(array $filters = []): Employees
     {
         $request = new SearchEmployeesRequest($filters);
+
+        /** @var Employees $employees */
         $employees = $this->searchEmployees->execute($request);
 
         foreach ($employees->aggregator() as $item) {
+
+            /** @var Employee $employee */
             $employee = $this->searchEmployeeById($item);
             $employees->addItem($employee);
         }
