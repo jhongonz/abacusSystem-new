@@ -6,11 +6,15 @@ parameters:
 
     paths:
         - app/
+        - bootstrap/
+        - config/
+        - routes/
         - src/
 
     excludePaths:
         - storage/*
         - bootstrap/cache/*
+        - ./routes/console.php
 
     bootstrapFiles:
         - ./vendor/autoload.php
