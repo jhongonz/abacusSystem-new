@@ -9,7 +9,7 @@ class Modules extends ArrayIterator
     public const TYPE = 'modules';
 
     /**
-     * @param array<int, mixed> $modules
+     * @param array<int|string, Module> $modules
      */
     public function __construct(array $modules = [])
     {
@@ -29,7 +29,7 @@ class Modules extends ArrayIterator
     }
 
     /**
-     * @return array<int, mixed>
+     * @return array<int|string, mixed>
      */
     public function items(): array
     {
@@ -82,7 +82,7 @@ class Modules extends ArrayIterator
     }
 
     /**
-     * @return array<int, int|null>
+     * @return array<int, int>
      */
     public function aggregator(): array
     {

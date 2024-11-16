@@ -49,9 +49,13 @@ class ModuleService implements ModuleManagementContract
     {
         $request = new SearchModulesRequest($filters);
 
+        /** @var Modules $modules */
         $modules = $this->searchModules->execute($request);
+
         foreach ($modules->aggregator() as $item) {
+            /** @var Module $module */
             $module = $this->searchModuleById($item);
+
             $modules->addItem($module);
         }
 

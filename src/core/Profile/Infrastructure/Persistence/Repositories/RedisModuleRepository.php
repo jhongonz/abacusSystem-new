@@ -50,13 +50,15 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
     public function find(ModuleId $id): ?Module
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->moduleKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (isset($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var Module */

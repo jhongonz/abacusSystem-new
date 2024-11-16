@@ -11,6 +11,7 @@ use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileSearch;
 use Core\Profile\Domain\ValueObjects\ProfileState;
 use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 
 interface ProfileFactoryContract
@@ -32,7 +33,7 @@ interface ProfileFactoryContract
 
     public function buildProfileName(string $name): ProfileName;
 
-    public function buildProfileState(?int $state): ProfileState;
+    public function buildProfileState(int $state = ValueObjectStatus::STATE_NEW): ProfileState;
 
     public function buildProfileSearch(?string $search = null): ProfileSearch;
 

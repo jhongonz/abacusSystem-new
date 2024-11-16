@@ -9,7 +9,7 @@ class Profiles extends ArrayIterator
     public const TYPE = 'profiles';
 
     /**
-     * @param array<int, mixed> $profiles
+     * @param array<int|string, Profile> $profiles
      */
     public function __construct(array $profiles = [])
     {
@@ -29,7 +29,7 @@ class Profiles extends ArrayIterator
     }
 
     /**
-     * @return array<int, mixed>
+     * @return array<int|string, mixed>
      */
     public function items(): array
     {

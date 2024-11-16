@@ -14,7 +14,6 @@ use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
 use Exception;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
@@ -90,12 +89,12 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
+     * @param array{q?: string|null} $filters
+     * @return Modules|null
      * @throws ModulesNotFoundException
-     * @throws Exception
      */
     public function getAll(array $filters = []): ?Modules
     {
-        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable())
             ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
 
@@ -113,7 +112,10 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $collection = [];
         foreach ($moduleCollection as $item) {
             $moduleModel = $this->updateAttributesModelModule((array) $item);
-            $collection[] = $moduleModel->id();
+
+            if (! is_null($moduleModel->id())) {
+                $collection[] = $moduleModel->id();
+            }
         }
 
         $modules = $this->moduleTranslator->setCollection($collection)->toDomainCollection();

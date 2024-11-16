@@ -13,7 +13,7 @@ class ModuleTranslator
     private ModuleModel $model;
 
     /**
-     * @var array<int<0, max>, int|null>
+     * @var array<int<0, max>, int>
      */
     private array $collection = [];
 
@@ -36,9 +36,9 @@ class ModuleTranslator
     {
         $module = $this->moduleFactory->buildModule(
             $this->moduleFactory->buildModuleId($this->model->id()),
-            $this->moduleFactory->buildModuleMenuKey($this->model->menuKey()),
+            $this->moduleFactory->buildModuleMenuKey($this->model->menuKey() ?? ''),
             $this->moduleFactory->buildModuleName($this->model->name()),
-            $this->moduleFactory->buildModuleRoute($this->model->route()),
+            $this->moduleFactory->buildModuleRoute($this->model->route() ?? ''),
             $this->moduleFactory->buildModuleIcon($this->model->icon()),
             $this->moduleFactory->buildModuleState($this->model->state()),
             $this->moduleFactory->buildModuleCreatedAt($this->model->createdAt())
@@ -56,7 +56,7 @@ class ModuleTranslator
     }
 
     /**
-     * @param array<int<0, max>, int|null> $collection
+     * @param array<int<0, max>, int> $collection
      * @return $this
      */
     public function setCollection(array $collection): self

@@ -52,13 +52,15 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
     public function find(ProfileId $id): ?Profile
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->profileKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfileNotFoundException('Profile not found by id '.$id->value());
         }
 
-        if (! is_null($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /** @var Profile */
@@ -74,13 +76,15 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
     public function findCriteria(ProfileName $name): ?Profile
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->profileKeyWithName($name));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ProfileNotFoundException('Profile not found by name '.$name->value());
         }
 
-        if (! is_null($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             return $this->profileFactory->buildProfileFromArray($dataArray);

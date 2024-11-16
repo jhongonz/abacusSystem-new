@@ -14,6 +14,7 @@ use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 
 interface ModuleFactoryContract
@@ -36,15 +37,15 @@ interface ModuleFactoryContract
 
     public function buildModuleId(?int $id = null): ModuleId;
 
-    public function buildModuleMenuKey(?string $key = null): ModuleMenuKey;
+    public function buildModuleMenuKey(string $key = ''): ModuleMenuKey;
 
     public function buildModuleName(string $name): ModuleName;
 
-    public function buildModuleRoute(?string $route = null): ModuleRoute;
+    public function buildModuleRoute(string $route = ''): ModuleRoute;
 
     public function buildModuleIcon(?string $icon = null): ModuleIcon;
 
-    public function buildModuleState(?int $state = null): ModuleState;
+    public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState;
 
     public function buildModuleCreatedAt(DateTime $datetime): ModuleCreatedAt;
 

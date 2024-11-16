@@ -72,12 +72,12 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     }
 
     /**
+     * @param array{q?: string|null} $filters
+     * @return Profiles
      * @throws ProfilesNotFoundException
-     * @throws Exception
      */
     public function getAll(array $filters = []): Profiles
     {
-        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable());
         $builder->where('pro_state', '>', ValueObjectStatus::STATE_DELETE);
 
@@ -94,7 +94,10 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $collection = [];
         foreach ($profileCollection as $item) {
             $profileModel = $this->updateAttributesModelProfile((array) $item);
-            $collection[] = $profileModel->id();
+
+            if (! is_null($profileModel->id())) {
+                $collection[] = $profileModel->id();
+            }
         }
 
         $profiles = $this->profileTranslator->setCollection($collection)->toDomainCollection();
@@ -182,7 +185,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $model->changeName($domain->name()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
-        $model->changeDescription($domain->description()->value());
+        $model->changeDescription($domain->description()->value() ?? '');
         $model->changeCreatedAt($domain->createdAt()->value());
 
         if (! is_null($domain->updatedAt()->value())) {

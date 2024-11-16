@@ -15,7 +15,7 @@ class ProfileTranslator
     private ProfileModel $model;
 
     /**
-     * @var array<int<0, max>, int|null>
+     * @var array<int<0, max>, int>
      */
     private array $collection = [];
 
@@ -38,9 +38,8 @@ class ProfileTranslator
     {
         $profile = $this->profileFactory->buildProfile(
             $this->profileFactory->buildProfileId($this->model->id()),
-            $this->profileFactory->buildProfileName($this->model->name()),
-            $this->profileFactory->buildProfileState($this->model->state()),
-            $this->profileFactory->buildProfileCreatedAt($this->model->createdAt())
+            $this->profileFactory->buildProfileName($this->model->name() ?? ''),
+            $this->profileFactory->buildProfileState($this->model->state())
         );
 
         $profile->setDescription(
@@ -51,9 +50,17 @@ class ProfileTranslator
             $this->profileFactory->buildProfileSearch($this->model->search())
         );
 
-        $profile->setUpdatedAt(
-            $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
-        );
+        if (! is_null($this->model->createdAt())) {
+            $profile->setCreatedAt(
+                $this->profileFactory->buildProfileCreatedAt($this->model->createdAt())
+            );
+        }
+
+        if (! is_null($this->model->updatedAt())) {
+            $profile->setUpdatedAt(
+                $this->profileFactory->buildProfileUpdateAt($this->model->updatedAt())
+            );
+        }
 
         $modulesModel = $this->model->pivotModules();
         $modules = [];
@@ -69,7 +76,7 @@ class ProfileTranslator
     }
 
     /**
-     * @param array<int<0, max>, int|null> $collection
+     * @param array<int<0, max>, int> $collection
      * @return $this
      */
     public function setCollection(array $collection): self

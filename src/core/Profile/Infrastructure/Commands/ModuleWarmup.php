@@ -4,6 +4,8 @@ namespace Core\Profile\Infrastructure\Commands;
 
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
+use Core\Profile\Domain\Module;
+use Core\Profile\Domain\Modules;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
@@ -49,12 +51,15 @@ class ModuleWarmup extends Command
     {
         $id = ($this->option('id')) ? (int) $this->option('id') : null;
         if ($id == 0) {
+
+            /** @var Modules $modules */
             $modules = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
                 foreach ($modules->aggregator() as $item) {
 
                     try {
+                        /** @var Module $module */
                         $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
 
                         $repository->persistModule($module);
@@ -70,6 +75,7 @@ class ModuleWarmup extends Command
             $moduleId = $this->moduleFactory->buildModuleId($id);
             foreach ($this->repositories as $repository) {
                 try {
+                    /** @var Module $module */
                     $module = $this->readRepository->find($moduleId);
 
                     $repository->persistModule($module);

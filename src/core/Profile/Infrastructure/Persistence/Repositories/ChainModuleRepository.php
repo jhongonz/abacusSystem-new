@@ -28,7 +28,10 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
     public function find(ModuleId $id): ?Module
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var Module|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (Exception $exception) {
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
@@ -39,7 +42,10 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
      */
     public function persistModule(Module $module): Module
     {
-        return $this->write(__FUNCTION__, $module);
+        /** @var Module $result */
+        $result = $this->write(__FUNCTION__, $module);
+
+        return $result;
     }
 
     /**
@@ -51,7 +57,10 @@ class ChainModuleRepository extends AbstractChainRepository implements ModuleRep
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $filters);
+            /** @var Modules|null $result */
+            $result = $this->read(__FUNCTION__, $filters);
+
+            return $result;
         } catch (Exception $exception) {
             throw new ModulesNotFoundException('Modules not found');
         }

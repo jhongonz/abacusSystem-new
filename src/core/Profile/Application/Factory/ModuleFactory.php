@@ -15,6 +15,7 @@ use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 use Exception;
 
@@ -27,26 +28,39 @@ class ModuleFactory implements ModuleFactoryContract
      */
     public function buildModuleFromArray(array $data): Module
     {
-        $data = $data[Module::TYPE];
+        /** @var array{
+         *     id: int,
+         *     key: string,
+         *     name: string,
+         *     route: string,
+         *     icon: string|null,
+         *     state: int,
+         *     position: int|null,
+         *     createdAt: string|null,
+         *     updatedAt: string|null
+         * } $dataModule
+         */
+        $dataModule = $data[Module::TYPE];
+
         $module = $this->buildModule(
-            $this->buildModuleId($data['id']),
-            $this->buildModuleMenuKey($data['key']),
-            $this->buildModuleName($data['name']),
-            $this->buildModuleRoute($data['route']),
-            $this->buildModuleIcon($data['icon']),
-            $this->buildModuleState($data['state']),
+            $this->buildModuleId($dataModule['id']),
+            $this->buildModuleMenuKey($dataModule['key']),
+            $this->buildModuleName($dataModule['name']),
+            $this->buildModuleRoute($dataModule['route']),
+            $this->buildModuleIcon($dataModule['icon']),
+            $this->buildModuleState($dataModule['state']),
         );
 
-        if (isset($data['position'])) {
-            $module->position()->setValue($data['position']);
+        if (isset($dataModule['position'])) {
+            $module->position()->setValue($dataModule['position']);
         }
 
-        if (isset($data['createdAt'])) {
-            $module->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($dataModule['createdAt'])) {
+            $module->createdAt()->setValue($this->getDateTime($dataModule['createdAt']));
         }
 
-        if (isset($data['updatedAt'])) {
-            $module->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        if (isset($dataModule['updatedAt'])) {
+            $module->updatedAt()->setValue($this->getDateTime($dataModule['updatedAt']));
         }
 
         return $module;
@@ -78,7 +92,7 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleId($id);
     }
 
-    public function buildModuleMenuKey(?string $key = null): ModuleMenuKey
+    public function buildModuleMenuKey(string $key = ''): ModuleMenuKey
     {
         return new ModuleMenuKey($key);
     }
@@ -88,7 +102,7 @@ class ModuleFactory implements ModuleFactoryContract
         return new ModuleName($name);
     }
 
-    public function buildModuleRoute(?string $route = null): ModuleRoute
+    public function buildModuleRoute(string $route = ''): ModuleRoute
     {
         return new ModuleRoute($route);
     }
@@ -101,7 +115,7 @@ class ModuleFactory implements ModuleFactoryContract
     /**
      * @throws Exception
      */
-    public function buildModuleState(?int $state = null): ModuleState
+    public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState
     {
         return new ModuleState($state);
     }
@@ -128,13 +142,14 @@ class ModuleFactory implements ModuleFactoryContract
      */
     public function buildModulesFromArray(array $data): Modules
     {
-        $data = $data[Modules::TYPE];
+        /** @var array<string|int, array<string, mixed>> $dataModules */
+        $dataModules = $data[Modules::TYPE];
 
         $modules = new Modules;
-        foreach ($data as $item) {
-            $modules->addItem(
-                $this->buildModuleFromArray($item)
-            );
+        foreach ($dataModules as $item) {
+
+            $module = $this->buildModuleFromArray($item);
+            $modules->addItem($module);
         }
 
         return $modules;

@@ -118,7 +118,10 @@ class Module extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('mod_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('mod_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -129,7 +132,10 @@ class Module extends Model
 
     public function menuKey(): ?string
     {
-        return $this->getAttribute('mod_menu_key');
+        /** @var string|null $menuKey */
+        $menuKey = $this->getAttribute('mod_menu_key');
+
+        return $menuKey;
     }
 
     public function changeMenuKey(string $key): self
@@ -140,7 +146,10 @@ class Module extends Model
 
     public function name(): string
     {
-        return $this->getAttribute('mod_name');
+        /** @var string $name */
+        $name = $this->getAttribute('mod_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
@@ -151,7 +160,10 @@ class Module extends Model
 
     public function route(): ?string
     {
-        return $this->getAttribute('mod_route');
+        /** @var string|null $route */
+        $route = $this->getAttribute('mod_route');
+
+        return $route;
     }
 
     public function changeRoute(?string $route): self
@@ -162,7 +174,10 @@ class Module extends Model
 
     public function icon(): ?string
     {
-        return $this->getAttribute('mod_icon');
+        /** @var string|null $icon */
+        $icon = $this->getAttribute('mod_icon');
+
+        return $icon;
     }
 
     public function changeIcon(?string $icon): self
@@ -173,7 +188,10 @@ class Module extends Model
 
     public function search(): ?string
     {
-        return $this->getAttribute('mod_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('mod_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search): self
@@ -184,7 +202,10 @@ class Module extends Model
 
     public function state(): int
     {
-        return $this->getAttribute('mod_state');
+        /** @var int $state */
+        $state = $this->getAttribute('mod_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -198,7 +219,9 @@ class Module extends Model
      */
     public function createdAt(): DateTime
     {
+        /** @var string $datetime */
         $datetime = $this->getAttribute('created_at');
+
         return $this->getDateTime($datetime);
     }
 
@@ -213,8 +236,10 @@ class Module extends Model
      */
     public function updatedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeUpdatedAt(DateTime $datetime): self
@@ -228,8 +253,10 @@ class Module extends Model
      */
     public function deletedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeDeletedAt(DateTime $datetime): self
@@ -243,7 +270,10 @@ class Module extends Model
      */
     public function position(): int
     {
-        return $this->getAttribute('mod_position');
+        /** @var int $position */
+        $position = $this->getAttribute('mod_position');
+
+        return $position;
     }
 
     public function changePosition(int $position): self
@@ -255,7 +285,7 @@ class Module extends Model
     /**
      * @throws Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): DateTime
     {
         return new DateTime($datetime);
     }

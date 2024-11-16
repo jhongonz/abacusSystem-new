@@ -14,6 +14,7 @@ use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfile;
 use Core\Profile\Application\UseCases\UpdateProfile\UpdateProfileRequest;
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
+use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\Profiles;
@@ -42,16 +43,20 @@ class ProfileService implements ProfileManagementContract
         $request = new SearchProfileByIdRequest(
             $this->profileFactory->buildProfileId($id)
         );
+
+        /** @var Profile $profile */
         $profile = $this->searchProfileById->execute($request);
 
         $modules = new Modules;
         foreach ($profile->modulesAggregator() as $item) {
             try {
+                /** @var Module $module */
                 $module = $this->moduleService->searchModuleById($item);
 
                 if ($module->state()->isActivated()) {
                     $modules->addItem($module);
                 }
+
             } catch (Exception $exception) {
                 $this->logger->warning($exception->getMessage(), $exception->getTrace());
             }
@@ -68,9 +73,13 @@ class ProfileService implements ProfileManagementContract
     {
         $request = new SearchProfilesRequest($filters);
 
+        /** @var Profiles $profiles */
         $profiles = $this->searchProfiles->execute($request);
+
         foreach ($profiles->aggregator() as $item) {
+            /** @var Profile $profile */
             $profile = $this->searchProfileById($item);
+
             $profiles->addItem($profile);
         }
 

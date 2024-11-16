@@ -4,6 +4,8 @@ namespace Core\Profile\Infrastructure\Commands;
 
 use Core\Profile\Domain\Contracts\ProfileFactoryContract;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
+use Core\Profile\Domain\Profile;
+use Core\Profile\Domain\Profiles;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
@@ -49,13 +51,18 @@ class ProfileWarmup extends Command
     public function handle(): int
     {
         $id = ($this->option('id')) ? (int) $this->option('id') : null;
+
         if ($id == 0) {
+            /** @var Profiles $profiles */
             $profiles = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
                 foreach ($profiles->aggregator() as $item) {
+
                     try {
+                        /** @var Profile $profile */
                         $profile = $this->readRepository->find($this->profileFactory->buildProfileId($item));
+
                         $repository->persistProfile($profile);
                     } catch (Exception $exception) {
                         $this->logger->error($exception->getMessage(), $exception->getTrace());
@@ -66,8 +73,11 @@ class ProfileWarmup extends Command
         } else {
 
             $profileId = $this->profileFactory->buildProfileId($id);
+
             foreach ($this->repositories as $repository) {
+
                 try {
+                    /** @var Profile $profile */
                     $profile = $this->readRepository->find($profileId);
 
                     $repository->persistProfile($profile);

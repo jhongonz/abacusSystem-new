@@ -127,7 +127,10 @@ class Profile extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('pro_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('pro_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -138,7 +141,10 @@ class Profile extends Model
 
     public function name(): ?string
     {
-        return $this->getAttribute('pro_name');
+        /** @var string|null $name */
+        $name = $this->getAttribute('pro_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
@@ -149,7 +155,10 @@ class Profile extends Model
 
     public function state(): int
     {
-        return $this->getAttribute('pro_state');
+        /** @var int $state */
+        $state = $this->getAttribute('pro_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -160,7 +169,10 @@ class Profile extends Model
 
     public function search(): ?string
     {
-        return $this->getAttribute('pro_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('pro_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search): self
@@ -171,7 +183,10 @@ class Profile extends Model
 
     public function description(): ?string
     {
-        return $this->getAttribute('pro_description');
+        /** @var string|null $description */
+        $description = $this->getAttribute('pro_description');
+
+        return $description;
     }
 
     public function changeDescription(string $description): self
@@ -185,8 +200,10 @@ class Profile extends Model
      */
     public function createdAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeCreatedAt(DateTime $datetime): self
@@ -200,8 +217,10 @@ class Profile extends Model
      */
     public function updatedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeUpdatedAt(DateTime $datetime): self
@@ -215,8 +234,10 @@ class Profile extends Model
      */
     public function deletedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeDeletedAt(DateTime $datetime): self
@@ -228,7 +249,7 @@ class Profile extends Model
     /**
      * @throws Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): DateTime
     {
         return new DateTime($datetime);
     }
