@@ -55,9 +55,13 @@ class CampusService implements CampusManagementContract
             $this->campusFactory->buildCampusInstitutionId($institutionId),
             $filters
         );
+
+        /** @var CampusCollection $campusCollection */
         $campusCollection = $this->searchCampusCollection->execute($request);
 
         foreach ($campusCollection->aggregator() as $item) {
+
+            /** @var Campus $campus */
             $campus = $this->searchCampusById($item);
             $campusCollection->addItem($campus);
         }

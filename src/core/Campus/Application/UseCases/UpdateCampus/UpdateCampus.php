@@ -98,7 +98,10 @@ class UpdateCampus extends UseCasesService
 
     private function changeUpdatedAt(Campus $campus, ?\DateTime $dateTime): Campus
     {
-        $campus->updatedAt()->setValue($dateTime);
+        if (! is_null($dateTime)) {
+            $campus->updatedAt()->setValue($dateTime);
+        }
+
         return $campus;
     }
 }

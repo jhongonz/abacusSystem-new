@@ -51,7 +51,10 @@ class CampusWarmup extends Command
             $campus = $this->readRepository->find($campusId);
 
             foreach ($this->repositories as $repository) {
-                $repository->persistCampus($campus);
+                
+                if (! is_null($campus)) {
+                    $repository->persistCampus($campus);
+                }
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());

@@ -19,13 +19,12 @@ class DeleteProfileOrchestrator extends ProfileOrchestrator
 
     /**
      * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
         $this->profileManagement->deleteProfile($request->integer('profileId'));
-
-        return true;
+        return [];
     }
 
     /**

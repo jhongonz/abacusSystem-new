@@ -19,13 +19,12 @@ class DeleteModuleOrchestrator extends ModuleOrchestrator
 
     /**
      * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
         $this->moduleManagement->deleteModule($request->integer('moduleId'));
-
-        return true;
+        return [];
     }
 
     /**

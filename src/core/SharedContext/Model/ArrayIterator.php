@@ -13,7 +13,7 @@ abstract class ArrayIterator extends \ArrayIterator
     protected array $items = [];
 
     /**
-     * @var array<int, int|null>
+     * @var array<int, int>
      */
     protected array $aggregator = [];
 
@@ -30,7 +30,7 @@ abstract class ArrayIterator extends \ArrayIterator
     abstract public function addId(int $id): ArrayIterator;
 
     /**
-     * @return array<int, int|null>
+     * @return array<int, int>
      */
     abstract public function aggregator(): array;
 

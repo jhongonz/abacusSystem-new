@@ -26,8 +26,10 @@ class CampusEmail
 
     public function setValue(?string $value): self
     {
-        $this->validate($value);
-        $this->value = $value;
+        if (! is_null($value)) {
+            $this->validate($value);
+            $this->value = $value;
+        }
 
         return $this;
     }

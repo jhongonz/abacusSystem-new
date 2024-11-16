@@ -45,26 +45,38 @@ class CampusFactory implements CampusFactoryContract
      */
     public function buildCampusFromArray(array $data): Campus
     {
-        $data = $data[Campus::TYPE];
+        /** @var array{
+         *     id: int|null,
+         *     institutionId: int,
+         *     name: string,
+         *     address: string|null,
+         *     phone: string,
+         *     email: string,
+         *     observations: string|null,
+         *     state: int,
+         *     createdAt: string|null,
+         *     updatedAt: string|null
+         *     } $dataCampus */
+        $dataCampus = $data[Campus::TYPE];
 
         $campus = $this->buildCampus(
-            $this->buildCampusId($data['id']),
-            $this->buildCampusInstitutionId($data['institutionId']),
-            $this->buildCampusName($data['name'])
+            $this->buildCampusId($dataCampus['id']),
+            $this->buildCampusInstitutionId($dataCampus['institutionId']),
+            $this->buildCampusName($dataCampus['name'])
         );
 
-        $campus->address()->setValue($data['address']);
-        $campus->phone()->setValue($data['phone']);
-        $campus->email()->setValue($data['email']);
-        $campus->observations()->setValue($data['observations']);
-        $campus->state()->setValue($data['state']);
+        $campus->address()->setValue($dataCampus['address']);
+        $campus->phone()->setValue($dataCampus['phone']);
+        $campus->email()->setValue($dataCampus['email']);
+        $campus->observations()->setValue($dataCampus['observations']);
+        $campus->state()->setValue($dataCampus['state']);
 
-        if (isset($data['createdAt'])) {
-            $campus->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($dataCampus['createdAt'])) {
+            $campus->createdAt()->setValue($this->getDateTime($dataCampus['createdAt']));
         }
 
-        if (isset($data['updatedAt'])) {
-            $campus->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        if (isset($dataCampus['updatedAt'])) {
+            $campus->updatedAt()->setValue($this->getDateTime($dataCampus['updatedAt']));
         }
 
         return $campus;

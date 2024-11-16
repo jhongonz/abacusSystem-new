@@ -104,7 +104,10 @@ class Campus extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('cam_id');
+        /** @var int|string|null $id */
+        $id = $this->getAttribute('cam_id');
+
+        return null !== $id ? intval($id) : null;
     }
 
     public function changeId(?int $id): self
@@ -115,7 +118,10 @@ class Campus extends Model
 
     public function institutionId(): int
     {
-        return $this->getAttribute('cam__inst_id');
+        /** @var int $id */
+        $id = $this->getAttribute('cam__inst_id');
+
+        return $id;
     }
 
     public function changeInstitutionId(int $id): self
@@ -126,7 +132,10 @@ class Campus extends Model
 
     public function name(): string
     {
-        return $this->getAttribute('cam_name');
+        /** @var string $name */
+        $name = $this->getAttribute('cam_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
@@ -137,7 +146,10 @@ class Campus extends Model
 
     public function address(): ?string
     {
-        return $this->getAttribute('cam_address');
+        /** @var string|null $address */
+        $address = $this->getAttribute('cam_address');
+
+        return $address;
     }
 
     public function changeAddress(string $address): self
@@ -148,7 +160,10 @@ class Campus extends Model
 
     public function phone(): ?string
     {
-        return $this->getAttribute('cam_phone');
+        /** @var string|null $phone */
+        $phone = $this->getAttribute('cam_phone');
+
+        return $phone;
     }
 
     public function changePhone(?string $phone = null): self
@@ -159,7 +174,10 @@ class Campus extends Model
 
     public function email(): ?string
     {
-        return $this->getAttribute('cam_email');
+        /** @var string|null $email */
+        $email = $this->getAttribute('cam_email');
+
+        return $email;
     }
 
     public function changeEmail(?string $email = null): self
@@ -170,7 +188,10 @@ class Campus extends Model
 
     public function observations(): ?string
     {
-        return $this->getAttribute('cam_observations');
+        /** @var string|null $observations */
+        $observations = $this->getAttribute('cam_observations');
+
+        return $observations;
     }
 
     public function changeObservations(?string $observations = null): self
@@ -181,7 +202,10 @@ class Campus extends Model
 
     public function search(): ?string
     {
-        return $this->getAttribute('cam_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('cam_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search = null): self
@@ -192,7 +216,10 @@ class Campus extends Model
 
     public function state(): int
     {
-        return $this->getAttribute('cam_state');
+        /** @var int $state */
+        $state = $this->getAttribute('cam_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -206,8 +233,10 @@ class Campus extends Model
      */
     public function createdAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeCreatedAt(?DateTime $datetime): self
@@ -221,8 +250,10 @@ class Campus extends Model
      */
     public function updatedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): self
@@ -236,8 +267,10 @@ class Campus extends Model
      */
     public function deletedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeDeletedAt(?DateTime $datetime): self
@@ -251,6 +284,6 @@ class Campus extends Model
      */
     private function getDateTime(?string $datetime = null): DateTime
     {
-        return new DateTime($datetime);
+        return new DateTime($datetime ?? 'now');
     }
 }

@@ -18,12 +18,12 @@ class DeleteUserOrchestrator extends UserOrchestrator
 
     /**
      * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
         $this->userManagement->deleteUser($request->integer('userId'));
-        return true;
+        return [];
     }
 
     /**
