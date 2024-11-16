@@ -31,7 +31,10 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
     public function find(InstitutionId $id): ?Institution
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var Institution|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (Exception $exception) {
             throw new InstitutionNotFoundException('Institution not found by id '. $id->value());
         }
@@ -45,7 +48,10 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $filters);
+            /** @var Institutions|null $result */
+            $result = $this->read(__FUNCTION__, $filters);
+
+            return $result;
         } catch (Exception $exception) {
             throw new InstitutionsNotFoundException('Institutions not found');
         }
@@ -64,6 +70,9 @@ class ChainInstitutionRepository extends AbstractChainRepository implements Inst
      */
     public function persistInstitution(Institution $institution): Institution
     {
-        return $this->write(__FUNCTION__, $institution);
+        /** @var Institution $result */
+        $result = $this->write(__FUNCTION__, $institution);
+
+        return $result;
     }
 }

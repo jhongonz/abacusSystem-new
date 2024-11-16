@@ -4,6 +4,7 @@ namespace Core\Institution\Infrastructure\Commands;
 
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
+use Core\Institution\Domain\Institution;
 use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
@@ -54,7 +55,10 @@ class InstitutionWarmup extends Command
             $institution = $this->readRepository->find($institutionId);
 
             foreach ($this->repositories as $repository) {
-                $repository->persistInstitution($institution);
+
+                if (! is_null($institution)) {
+                    $repository->persistInstitution($institution);
+                }
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());

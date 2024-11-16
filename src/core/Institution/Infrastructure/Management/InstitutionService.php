@@ -54,9 +54,13 @@ class InstitutionService implements InstitutionManagementContract
     public function searchInstitutions(array $filters = []): Institutions
     {
         $request = new SearchInstitutionsRequest($filters);
+
+        /** @var Institutions $institutions */
         $institutions = $this->searchInstitutions->execute($request);
 
         foreach ($institutions->aggregator() as $item) {
+
+            /** @var Institution $institution */
             $institution = $this->searchInstitutionById($item);
             $institutions->addItem($institution);
         }

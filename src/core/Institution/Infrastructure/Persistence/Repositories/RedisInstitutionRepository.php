@@ -54,13 +54,15 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
     public function find(InstitutionId $id): ?Institution
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->institutionKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new InstitutionsNotFoundException('Institution not found by id '. $id->value());
         }
 
-        if (isset($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             /**@var Institution*/

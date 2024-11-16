@@ -104,10 +104,10 @@ class Campus extends Model
 
     public function id(): ?int
     {
-        /** @var int|string|null $id */
+        /** @var int|null $id */
         $id = $this->getAttribute('cam_id');
 
-        return null !== $id ? intval($id) : null;
+        return $id;
     }
 
     public function changeId(?int $id): self

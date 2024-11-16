@@ -21,6 +21,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
+use Core\SharedContext\Model\ValueObjectStatus;
 
 interface InstitutionFactoryContract
 {
@@ -50,11 +51,11 @@ interface InstitutionFactoryContract
 
     public function buildInstitutionEmail(?string $email = null): InstitutionEmail;
 
-    public function buildInstitutionState(int $state = null): InstitutionState;
+    public function buildInstitutionState(int $state = ValueObjectStatus::STATE_NEW): InstitutionState;
 
     public function buildInstitutionSearch(?string $search = null): InstitutionSearch;
 
-    public function buildInstitutionCreatedAt(?\DateTime $dateTime = null): InstitutionCreatedAt;
+    public function buildInstitutionCreatedAt(\DateTime $dateTime = new \DateTime('now')): InstitutionCreatedAt;
 
     public function buildInstitutionUpdatedAt(?\DateTime $dateTime = null): InstitutionUpdatedAt;
 

@@ -107,7 +107,10 @@ class Institution extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('inst_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('inst_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -118,7 +121,10 @@ class Institution extends Model
 
     public function code(): ?string
     {
-        return $this->getAttribute('inst_code');
+        /** @var string|null $code */
+        $code = $this->getAttribute('inst_code');
+
+        return $code;
     }
 
     public function changeCode(?string $code): self
@@ -129,7 +135,10 @@ class Institution extends Model
 
     public function name(): ?string
     {
-        return $this->getAttribute('inst_name');
+        /** @var string|null $name */
+        $name = $this->getAttribute('inst_name');
+
+        return $name;
     }
 
     public function changeName(?string $name): self
@@ -140,7 +149,10 @@ class Institution extends Model
 
     public function shortname(): ?string
     {
-        return $this->getAttribute('inst_shortname');
+        /** @var string|null $shortname */
+        $shortname = $this->getAttribute('inst_shortname');
+
+        return $shortname;
     }
 
     public function changeShortname(?string $shortname): self
@@ -151,7 +163,10 @@ class Institution extends Model
 
     public function logo(): ?string
     {
-        return $this->getAttribute('inst_logo');
+        /** @var string|null $logo */
+        $logo = $this->getAttribute('inst_logo');
+
+        return $logo;
     }
 
     public function changeLogo(?string $logo): self
@@ -162,7 +177,10 @@ class Institution extends Model
 
     public function observations(): ?string
     {
-        return $this->getAttribute('inst_observations');
+        /** @var string|null $observations */
+        $observations = $this->getAttribute('inst_observations');
+
+        return $observations;
     }
 
     public function changeObservations(?string $observations): self
@@ -173,7 +191,10 @@ class Institution extends Model
 
     public function address(): ?string
     {
-        return $this->getAttribute('inst_address');
+        /** @var string|null $address */
+        $address = $this->getAttribute('inst_address');
+
+        return $address;
     }
 
     public function changeAddress(?string $address): self
@@ -184,7 +205,10 @@ class Institution extends Model
 
     public function phone(): ?string
     {
-        return $this->getAttribute('inst_phone');
+        /** @var string|null $phone */
+        $phone = $this->getAttribute('inst_phone');
+
+        return $phone;
     }
 
     public function changePhone(string $phone): self
@@ -195,7 +219,10 @@ class Institution extends Model
 
     public function email(): ?string
     {
-        return $this->getAttribute('inst_email');
+        /** @var string|null $email */
+        $email = $this->getAttribute('inst_email');
+
+        return $email;
     }
 
     public function changeEmail(?string $email): self
@@ -206,7 +233,10 @@ class Institution extends Model
 
     public function search(): ?string
     {
-        return $this->getAttribute('inst_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('inst_search');
+
+        return $search;
     }
 
     public function changeSearch(string $search): self
@@ -217,7 +247,10 @@ class Institution extends Model
 
     public function state(): int
     {
-        return $this->getAttribute('inst_state');
+        /** @var int $state */
+        $state = $this->getAttribute('inst_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -231,9 +264,10 @@ class Institution extends Model
      */
     public function createdAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeCreatedAt(?DateTime $datetime): self
@@ -248,9 +282,10 @@ class Institution extends Model
      */
     public function updatedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeUpdatedAt(?DateTime $datetime): self
@@ -265,9 +300,10 @@ class Institution extends Model
      */
     public function deletedAt(): ?DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
     public function changeDeletedAt(?DateTime $datetime): self
@@ -280,7 +316,7 @@ class Institution extends Model
     /**
      * @throws Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): DateTime
     {
         return new DateTime($datetime);
     }

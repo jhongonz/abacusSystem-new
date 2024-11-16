@@ -66,6 +66,8 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     }
 
     /**
+     * @param array{q?: string|null} $filters
+     * @return Institutions|null
      * @throws InstitutionsNotFoundException
      */
     public function getAll(array $filters = []): ?Institutions
@@ -85,7 +87,10 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $collection = [];
         foreach ($institutionCollection as $item) {
             $institutionModel = $this->updateAttributesModelInstitution((array) $item);
-            $collection[] = $institutionModel->id();
+
+            if (!is_null($institutionModel->id())) {
+                $collection[] = $institutionModel->id();
+            }
         }
 
         $institutions = $this->institutionTranslator->setCollection($collection)->toDomainCollection();
@@ -157,11 +162,11 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $model->changeShortname($domain->shortname()->value());
         $model->changeCode($domain->code()->value());
         $model->changeLogo($domain->logo()->value());
-        $model->changeObservations($domain->observations()->value());
+        $model->changeObservations($domain->observations()->value() ?? '');
         $model->changeAddress($domain->address()->value());
-        $model->changePhone($domain->phone()->value());
+        $model->changePhone($domain->phone()->value() ?? '');
         $model->changeEmail($domain->email()->value());
-        $model->changeSearch($domain->search()->value());
+        $model->changeSearch($domain->search()->value() ?? '');
         $model->changeState($domain->state()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 

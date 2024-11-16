@@ -16,7 +16,7 @@ class InstitutionTranslator
 {
     private InstitutionModel $institution;
 
-    /** @var array<int<0, max>, int|null>  */
+    /** @var array<int<0, max>, int>  */
     private array $collection = [];
 
     public function __construct(
@@ -37,7 +37,7 @@ class InstitutionTranslator
     {
         $institution = $this->institutionFactory->buildInstitution(
             $this->institutionFactory->buildInstitutionId($this->institution->id()),
-            $this->institutionFactory->buildInstitutionName($this->institution->name())
+            $this->institutionFactory->buildInstitutionName($this->institution->name() ?? '')
         );
 
         $institution->setShortname($this->institutionFactory->buildInstitutionShortname($this->institution->shortname()));
@@ -46,17 +46,23 @@ class InstitutionTranslator
         $institution->setState($this->institutionFactory->buildInstitutionState($this->institution->state()));
         $institution->setObservations($this->institutionFactory->buildInstitutionObservations($this->institution->observations()));
         $institution->setAddress($this->institutionFactory->buildInstitutionAddress($this->institution->address()));
-        $institution->setPhone($this->institutionFactory->buildInstitutionPhone($this->institution->phone()));
+        $institution->setPhone($this->institutionFactory->buildInstitutionPhone($this->institution->phone() ?? ''));
         $institution->setEmail($this->institutionFactory->buildInstitutionEmail($this->institution->email()));
-        $institution->setCreatedAt($this->institutionFactory->buildInstitutionCreatedAt($this->institution->createdAt()));
-        $institution->setUpdatedAt($this->institutionFactory->buildInstitutionUpdatedAt($this->institution->updatedAt()));
         $institution->setSearch($this->institutionFactory->buildInstitutionSearch($this->institution->search()));
+
+        if (! is_null($this->institution->createdAt())) {
+            $institution->setCreatedAt($this->institutionFactory->buildInstitutionCreatedAt($this->institution->createdAt()));
+        }
+
+        if (!is_null($this->institution->updatedAt())) {
+            $institution->setUpdatedAt($this->institutionFactory->buildInstitutionUpdatedAt($this->institution->updatedAt()));
+        }
 
         return $institution;
     }
 
     /**
-     * @param array<int<0, max>, int|null> $collection
+     * @param array<int<0, max>, int> $collection
      * @return $this
      */
     public function setCollection(array $collection): self

@@ -52,11 +52,13 @@ class EmployeeWarmup extends Command
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
 
         try {
-            /** @var Employee $employee */
             $employee = $this->readRepository->find($employeeId);
 
             foreach ($this->repositories as $repository) {
-                $repository->persistEmployee($employee);
+
+                if (! is_null($employee)) {
+                    $repository->persistEmployee($employee);
+                }
             }
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());

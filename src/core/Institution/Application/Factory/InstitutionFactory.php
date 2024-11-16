@@ -22,6 +22,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionSearch;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
+use Core\SharedContext\Model\ValueObjectStatus;
 use DateTime;
 use Exception;
 
@@ -34,55 +35,71 @@ class InstitutionFactory implements InstitutionFactoryContract
      */
     public function buildInstitutionFromArray(array $data): Institution
     {
-        $data = $data[Institution::TYPE];
+        /** @var array{
+         *     id: int,
+         *     name: string,
+         *     shortname: string|null,
+         *     code: string|null,
+         *     observations: string|null,
+         *     state: int,
+         *     createdAt: string|null,
+         *     updatedAt: string|null,
+         *     address: string|null,
+         *     phone: string,
+         *     email: string|null,
+         *     logo: string|null
+         * } $dataInstitution
+         */
+        $dataInstitution = $data[Institution::TYPE];
+
         $institution = $this->buildInstitution(
-            $this->buildInstitutionId($data['id']),
-            $this->buildInstitutionName($data['name'])
+            $this->buildInstitutionId($dataInstitution['id']),
+            $this->buildInstitutionName($dataInstitution['name'])
         );
 
         $institution->setShortname(
-            $this->buildInstitutionShortname($data['shortname'])
+            $this->buildInstitutionShortname($dataInstitution['shortname'])
         );
 
         $institution->setCode(
-            $this->buildInstitutionCode($data['code'])
+            $this->buildInstitutionCode($dataInstitution['code'])
         );
 
         $institution->setObservations(
-            $this->buildInstitutionObservations($data['observations'])
+            $this->buildInstitutionObservations($dataInstitution['observations'])
         );
 
         $institution->setState(
-            $this->buildInstitutionState($data['state'])
+            $this->buildInstitutionState($dataInstitution['state'])
         );
 
-        if (isset($data['createdAt'])) {
+        if (isset($dataInstitution['createdAt'])) {
             $institution->setCreatedAt(
-                $this->buildInstitutionCreatedAt($this->getDateTime($data['createdAt']))
+                $this->buildInstitutionCreatedAt($this->getDateTime($dataInstitution['createdAt']))
             );
         }
 
         $institution->setAddress(
-            $this->buildInstitutionAddress($data['address'])
+            $this->buildInstitutionAddress($dataInstitution['address'])
         );
 
         $institution->setPhone(
-            $this->buildInstitutionPhone($data['phone'])
+            $this->buildInstitutionPhone($dataInstitution['phone'])
         );
 
         $institution->setEmail(
-            $this->buildInstitutionEmail($data['email'])
+            $this->buildInstitutionEmail($dataInstitution['email'])
         );
 
-        if (isset($data['logo'])) {
+        if (isset($dataInstitution['logo'])) {
             $institution->setLogo(
-                $this->buildInstitutionLogo($data['logo'])
+                $this->buildInstitutionLogo($dataInstitution['logo'])
             );
         }
 
-        if (isset($data['updatedAt'])) {
+        if (isset($dataInstitution['updatedAt'])) {
             $institution->setUpdatedAt(
-                $this->buildInstitutionUpdatedAt($this->getDateTime($data['updatedAt']))
+                $this->buildInstitutionUpdatedAt($this->getDateTime($dataInstitution['updatedAt']))
             );
         }
 
@@ -127,7 +144,7 @@ class InstitutionFactory implements InstitutionFactoryContract
     /**
      * @throws Exception
      */
-    public function buildInstitutionState(int $state = null): InstitutionState
+    public function buildInstitutionState(int $state = ValueObjectStatus::STATE_NEW): InstitutionState
     {
         return new InstitutionState($state);
     }
@@ -137,7 +154,7 @@ class InstitutionFactory implements InstitutionFactoryContract
         return new InstitutionSearch($search);
     }
 
-    public function buildInstitutionCreatedAt(?DateTime $dateTime = null): InstitutionCreatedAt
+    public function buildInstitutionCreatedAt(DateTime $dateTime = new DateTime('now')): InstitutionCreatedAt
     {
         return new InstitutionCreatedAt($dateTime);
     }
