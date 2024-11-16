@@ -63,6 +63,9 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
     }
 
     /**
+     * @param CampusInstitutionId $id
+     * @param array{q?: string|null} $filters
+     * @return CampusCollection|null
      * @throws CampusCollectionNotFoundException
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
@@ -71,7 +74,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $builder->where('cam__inst_id', $id->value());
         $builder->where('cam_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (! empty($filters['q'])) {
             $builder->whereFullText($this->campusModel->getSearchField(), $filters['q']);
         }
         $campusCollectionResult = $builder->get(['cam_id']);
@@ -83,7 +86,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $collection = [];
         foreach ($campusCollectionResult as $item) {
             $campusModel = $this->updateAttributesModel((array) $item);
-            $collection[] = $campusModel->id();
+            $collection[] = intval($campusModel->id());
         }
 
         $campusCollection = $this->campusTranslator->setCollection($collection)->toDomainCollection();
@@ -159,7 +162,7 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         $model->changeName($domain->name()->value());
         $model->changePhone($domain->phone()->value());
         $model->changeEmail($domain->email()->value());
-        $model->changeAddress($domain->address()->value());
+        $model->changeAddress($domain->address()->value() ?? '');
         $model->changeObservations($domain->observations()->value());
         $model->changeSearch($domain->search()->value());
         $model->changeState($domain->state()->value());

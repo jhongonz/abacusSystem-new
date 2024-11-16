@@ -31,7 +31,10 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
     public function find(CampusId $id): ?Campus
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var Campus|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (\Exception $exception) {
             throw new CampusNotFoundException(sprintf('Campus not found by id %s', $id->value()));
         }
@@ -46,7 +49,10 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $id, $filters);
+            /** @var CampusCollection|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (\Exception $exception) {
             throw new CampusCollectionNotFoundException('Campus collection not found');
         }
@@ -65,6 +71,9 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function persistCampus(Campus $campus): Campus
     {
-        return $this->write(__FUNCTION__, $campus);
+        /** @var Campus $result */
+        $result = $this->write(__FUNCTION__, $campus);
+
+        return $result;
     }
 }

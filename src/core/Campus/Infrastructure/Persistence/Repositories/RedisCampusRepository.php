@@ -51,13 +51,15 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
     public function find(CampusId $id): ?Campus
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->campusKey($id));
         } catch (Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new CampusNotFoundException(sprintf('Campus not found by id %s', $id->value()));
         }
 
-        if (isset($data)) {
+        if (! empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             return $this->campusFactory->buildCampusFromArray($dataArray);
