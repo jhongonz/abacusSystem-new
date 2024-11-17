@@ -50,7 +50,7 @@ class DetailModuleOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(1);
 
@@ -84,12 +84,13 @@ class DetailModuleOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(null);
 
-        $this->moduleManagement->expects(self::never())
-            ->method('searchModuleById');
+        $this->moduleManagement->expects(self::once())
+            ->method('searchModuleById')
+            ->willReturn(null);
 
         $this->config->expects(self::once())
             ->method('get')

@@ -22,7 +22,6 @@ class ChangeStateUserOrchestrator extends UserOrchestrator
     public function make(Request $request): array
     {
         $dataUpdate['state'] = $request->integer('state');
-
         $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdate);
 
         return ['user' => $user];

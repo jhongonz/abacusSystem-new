@@ -150,7 +150,7 @@ class User extends Authenticatable
     public function employeeId(): ?int
     {
         /** @var int|null $employeeId */
-        $employeeId = $this->getAttribute('user_emp_id');
+        $employeeId = $this->getAttribute('user__emp_id');
 
         return $employeeId;
     }
@@ -165,7 +165,7 @@ class User extends Authenticatable
     public function profileId(): ?int
     {
         /** @var int|null $profileId */
-        $profileId = $this->getAttribute('user_pro_id');
+        $profileId = $this->getAttribute('user__pro_id');
 
         return $profileId;
     }

@@ -12,7 +12,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,9 +52,8 @@ class CampusController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
         $dataCampus = $this->orchestrators->handler('retrieve-campus-collection', $request);
-        $collection = new Collection((array) $dataCampus);
 
-        $dataTable = $this->datatables->collection((array) $collection);
+        $dataTable = $this->datatables->collection($dataCampus);
         $dataTable->addColumn('tools', function (array $element): string {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -85,8 +83,9 @@ class CampusController extends Controller implements HasMiddleware
         try {
             $method = (!$request->filled('campusId')) ? 'create-campus' : 'update-campus';
 
-            /** @var Campus $campus */
-            $campus = $this->orchestrators->handler($method, $request);
+            /** @var array{campus: Campus} $dataCampus */
+            $dataCampus = $this->orchestrators->handler($method, $request);
+            $campus = $dataCampus['campus'];
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

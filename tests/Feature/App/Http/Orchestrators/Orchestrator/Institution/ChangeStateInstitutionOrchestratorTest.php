@@ -46,7 +46,7 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -84,8 +84,10 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
     /**
@@ -95,7 +97,7 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -141,8 +143,10 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

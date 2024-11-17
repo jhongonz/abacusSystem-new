@@ -43,13 +43,15 @@ class UpdateEmployeeOrchestratorTest extends TestCase
     public function testMakeShouldReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(2))
-            ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                '{"birthdate":"2024-06-04 12:34:56"}',
-                1
-            );
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('dataUpdate')
+            ->willReturn('{"birthdate":"2024-06-04 12:34:56"}');
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('employeeId')
+            ->willReturn(1);
 
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
@@ -59,8 +61,10 @@ class UpdateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

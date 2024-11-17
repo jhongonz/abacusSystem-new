@@ -46,7 +46,7 @@ class DetailInstitutionOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -80,17 +80,20 @@ class DetailInstitutionOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->institutionManagement->expects(self::never())
-            ->method('searchInstitutionById');
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutionById')
+            ->with(0)
+            ->willReturn(null);
 
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
-        $this->assertNull($result['institutionId']);
+        $this->assertIsInt($result['institutionId']);
+        $this->assertEquals(0, $result['institutionId']);
         $this->assertNull($result['institution']);
         $this->assertNull($result['image']);
     }

@@ -228,7 +228,7 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with((array) $modelMock)
             ->willReturnSelf();
 
-        $this->campusModel->expects(self::once())
+        $this->campusModel->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 

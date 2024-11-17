@@ -41,12 +41,13 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Core\Campus\Exceptions\CampusNotFoundException
      */
     public function testMakeShouldActiveWhenIsNewAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -80,18 +81,21 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
     /**
      * @throws Exception
+     * @throws \Core\Campus\Exceptions\CampusNotFoundException
      */
     public function testMakeShouldInactiveWhenIsActiveAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -136,8 +140,10 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

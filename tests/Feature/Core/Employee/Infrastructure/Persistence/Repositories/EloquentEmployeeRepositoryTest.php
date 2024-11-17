@@ -494,10 +494,10 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
-        $institutionIdMock->expects(self::once())
+        $institutionIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $employeeMock->expects(self::once())
+        $employeeMock->expects(self::exactly(2))
             ->method('institutionId')
             ->willReturn($institutionIdMock);
         $this->model->expects(self::once())
@@ -725,10 +725,10 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
-        $institutionIdMock->expects(self::once())
+        $institutionIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $employeeMock->expects(self::once())
+        $employeeMock->expects(self::exactly(2))
             ->method('institutionId')
             ->willReturn($institutionIdMock);
         $this->model->expects(self::once())
@@ -862,7 +862,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->with((array) $modelMock)
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 

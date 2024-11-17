@@ -232,7 +232,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
             ->with([1])
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 
@@ -284,7 +284,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $builderMock->shouldReceive('get')
             ->once()
             ->with(['inst_id'])
-            ->andReturn(null);
+            ->andReturn([]);
 
         $this->model->expects(self::once())
             ->method('getTable')

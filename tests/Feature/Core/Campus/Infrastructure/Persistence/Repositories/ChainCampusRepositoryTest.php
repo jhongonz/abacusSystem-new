@@ -115,7 +115,7 @@ class ChainCampusRepositoryTest extends TestCase
 
         $this->repository->expects(self::once())
             ->method('read')
-            ->with('getAll', $institutionIdMock, [])
+            ->with('getAll', $institutionIdMock)
             ->willReturn($campusCollection);
 
         $result = $this->repository->getAll($institutionIdMock);
@@ -135,7 +135,7 @@ class ChainCampusRepositoryTest extends TestCase
 
         $this->repository->expects(self::once())
             ->method('read')
-            ->with('getAll', $institutionIdMock, [])
+            ->with('getAll', $institutionIdMock)
             ->willReturn(null);
 
         $result = $this->repository->getAll($institutionIdMock);
@@ -155,7 +155,7 @@ class ChainCampusRepositoryTest extends TestCase
 
         $this->repository->expects(self::once())
             ->method('read')
-            ->with('getAll', $institutionIdMock, [])
+            ->with('getAll', $institutionIdMock)
             ->willThrowException(new \Exception());
 
         $this->expectException(CampusCollectionNotFoundException::class);

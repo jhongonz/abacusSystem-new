@@ -28,16 +28,19 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(EmployeeController::class)]
 #[CoversClass(Controller::class)]
 class EmployeeControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
-    private ViewFactory|MockObject $viewFactory;
-    private ImageManagerInterface|MockObject $imageManager;
-    private LoggerInterface|MockObject $logger;
     private ActionExecutorHandler|MockObject $actionExecutorHandler;
+    private DataTables|MockObject $datatables;
+    private ImageManagerInterface|MockObject $imageManager;
+    private ViewFactory|MockObject $viewFactory;
+    private LoggerInterface|MockObject $logger;
     private EmployeeController $controller;
 
     /**
@@ -47,14 +50,16 @@ class EmployeeControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
-        $this->viewFactory = $this->createMock(ViewFactory::class);
-        $this->imageManager = $this->createMock(ImageManagerInterface::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
+        $this->datatables = $this->createMock(DataTables::class);
+        $this->imageManager = $this->createMock(ImageManagerInterface::class);
+        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->controller = new EmployeeController(
             $this->orchestrator,
             $this->actionExecutorHandler,
+            $this->datatables,
             $this->imageManager,
             $this->viewFactory,
             $this->logger
@@ -69,7 +74,8 @@ class EmployeeControllerTest extends TestCase
             $this->imageManager,
             $this->logger,
             $this->controller,
-            $this->actionExecutorHandler
+            $this->actionExecutorHandler,
+            $this->datatables
         );
 
         parent::tearDown();
@@ -166,16 +172,59 @@ class EmployeeControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
     public function testGetEmployeesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $jsonResponseMock = $this->createMock(JsonResponse::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-employees', $requestMock)
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $jsonResponseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
             ->willReturn($jsonResponseMock);
+
+        $this->datatables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getEmployees($requestMock);
 
@@ -213,7 +262,10 @@ class EmployeeControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(2))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+            ->willReturnOnConsecutiveCalls(
+                ['employee' => $employeeMock],
+                ['user' => $userMock]
+            );
 
         $requestMock->expects(self::once())
             ->method('merge')
@@ -266,7 +318,11 @@ class EmployeeControllerTest extends TestCase
 
         $this->orchestrator->expects(self::exactly(2))
             ->method('handler')
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(
+                ['employee' => $employeeMock],
+                ['user' => $userMock]
+            );
 
         $result = $this->controller->changeStateEmployee($request);
 
@@ -507,7 +563,7 @@ class EmployeeControllerTest extends TestCase
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $request->expects(self::exactly(2))
+        $request->expects(self::once())
             ->method('file')
             ->with('file')
             ->willReturn($fileMock);
@@ -588,7 +644,7 @@ class EmployeeControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, true, true);
+            ->willReturnOnConsecutiveCalls(['employee' => $employeeMock], [], []);
 
         $result = $this->controller->deleteEmployee($requestMock, 10);
 
@@ -612,7 +668,7 @@ class EmployeeControllerTest extends TestCase
             ->method('handler')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                $employeeMock,
+                ['employee' => $employeeMock],
                 $this->throwException(new \Exception('Can not delete employee'))
             );
 

@@ -124,7 +124,7 @@ class UserTranslatorTest extends TestCase
             ->willReturn($stateMock);
 
         $datetime = new \DateTime('2024-04-22 22:05:00');
-        $this->userModel->expects(self::once())
+        $this->userModel->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($datetime);
 
@@ -149,7 +149,7 @@ class UserTranslatorTest extends TestCase
             ->with($photoMock)
             ->willReturnSelf();
 
-        $this->userModel->expects(self::once())
+        $this->userModel->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($datetime);
 
@@ -171,8 +171,7 @@ class UserTranslatorTest extends TestCase
                 $profileIdMock,
                 $loginMock,
                 $passwordMock,
-                $stateMock,
-                $createdAtMock
+                $stateMock
             )
             ->willReturn($userMock);
 

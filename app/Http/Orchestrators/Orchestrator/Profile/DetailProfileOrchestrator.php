@@ -8,7 +8,6 @@ namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
 use Illuminate\Config\Repository as Config;
@@ -67,7 +66,6 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
                 $privileges[$index]['children'] = [];
             }
 
-            /** @var Module $module */
             foreach ($modulesParent as $module) {
                 if ($module->state()->isActivated()) {
                     $privileges[$index]['children'][] = [

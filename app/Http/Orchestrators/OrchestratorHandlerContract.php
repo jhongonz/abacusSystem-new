@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 interface OrchestratorHandlerContract
 {
     /**
-     * @return array<int|string, mixed>|bool
+     * @return array<int|string, mixed>
      */
-    public function handler(string $actionType, Request $request): array|bool;
+    public function handler(string $actionType, Request $request): array;
 
     public function addOrchestrator(Orchestrator $orchestrator): OrchestratorHandlerContract;
 }

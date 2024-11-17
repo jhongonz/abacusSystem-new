@@ -44,7 +44,7 @@ class ChangeStateUserOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::exactly(2))
-            ->method('input')
+            ->method('integer')
             ->willReturnOnConsecutiveCalls(2, 1);
 
         $userMock = $this->createMock(User::class);
@@ -55,8 +55,10 @@ class ChangeStateUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertSame($userMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user', $result);
+        $this->assertInstanceOf(User::class, $result['user']);
+        $this->assertSame($userMock, $result['user']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

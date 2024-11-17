@@ -39,12 +39,13 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
      */
     public function testMakeShouldChangeStateWhenIsNewAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -81,18 +82,21 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     /**
      * @throws Exception
+     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
      */
     public function testMakeShouldChangeStateWhenIsActivatedAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -137,8 +141,10 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

@@ -60,7 +60,7 @@ class DetailProfileOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -135,12 +135,14 @@ class DetailProfileOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->profileManagement->expects(self::never())
-            ->method('searchProfileById');
+        $this->profileManagement->expects(self::once())
+            ->method('searchProfileById')
+            ->with(0)
+            ->willReturn(null);
 
         $moduleMock = $this->createMock(Module::class);
 
@@ -163,7 +165,8 @@ class DetailProfileOrchestratorTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('profileId', $result);
-        $this->assertNull($result['profileId']);
+        $this->assertIsInt($result['profileId']);
+        $this->assertEquals(0, $result['profileId']);
         $this->assertArrayHasKey('profile', $result);
         $this->assertNull($result['profile']);
         $this->assertArrayHasKey('modules', $result);

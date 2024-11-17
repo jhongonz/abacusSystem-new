@@ -51,12 +51,10 @@ class CreateEmployeeOrchestratorTest extends TestCase
     public function testMakeShouldCreateAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(11))
+        $requestMock->expects(self::exactly(8))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                1,
-                1,
                 'identification',
                 'name',
                 'lastname',
@@ -64,9 +62,18 @@ class CreateEmployeeOrchestratorTest extends TestCase
                 'observations',
                 'email',
                 'phone',
-                'address',
-                'token',
+                'address'
             );
+
+        $requestMock->expects(self::exactly(2))
+            ->method('integer')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(1, 1);
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('token')
+            ->willReturn('token');
 
         $requestMock->expects(self::once())
             ->method('filled')
@@ -108,8 +115,10 @@ class CreateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

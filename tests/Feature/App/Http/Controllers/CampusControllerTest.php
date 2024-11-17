@@ -22,6 +22,8 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(CampusController::class)]
 #[CoversClass(Controller::class)]
@@ -29,8 +31,9 @@ class CampusControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandlerMock;
     private Session|MockObject $sessionMock;
-    private LoggerInterface|MockObject $loggerMock;
+    private DataTables|MockObject $dataTablesMock;
     private ViewFactory|MockObject $viewFactoryMock;
+    private LoggerInterface|MockObject $loggerMock;
     private CampusController $controller;
 
     /**
@@ -41,14 +44,16 @@ class CampusControllerTest extends TestCase
         parent::setUp();
         $this->orchestratorHandlerMock = $this->createMock(OrchestratorHandlerContract::class);
         $this->sessionMock = $this->createMock(Session::class);
+        $this->dataTablesMock = $this->createMock(DataTables::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
         $this->viewFactoryMock = $this->createMock(ViewFactory::class);
 
         $this->controller = new CampusController(
             $this->orchestratorHandlerMock,
             $this->sessionMock,
-            $this->loggerMock,
-            $this->viewFactoryMock
+            $this->dataTablesMock,
+            $this->viewFactoryMock,
+            $this->loggerMock
         );
     }
 
@@ -59,7 +64,8 @@ class CampusControllerTest extends TestCase
             $this->sessionMock,
             $this->loggerMock,
             $this->viewFactoryMock,
-            $this->controller
+            $this->controller,
+            $this->dataTablesMock
         );
         parent::tearDown();
     }
@@ -155,6 +161,7 @@ class CampusControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
     public function testGetCampusCollectionShouldReturnJsonResponse(): void
     {
@@ -179,16 +186,58 @@ class CampusControllerTest extends TestCase
             ->with(['institutionId' => 2])
             ->willReturnSelf();
 
-        $jsonResponseMock = $this->createMock(JsonResponse::class);
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('retrieve-campus-collection', $requestMock)
-            ->willReturn($jsonResponseMock);
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactoryMock->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
+            ->willReturn($responseMock);
+
+        $this->dataTablesMock->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getCampusCollection($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertSame($jsonResponseMock, $result);
+        $this->assertSame($responseMock, $result);
     }
 
     /**
@@ -307,7 +356,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('create-campus', $request)
-            ->willReturn($campusMock);
+            ->willReturn(['campus' => $campusMock]);
 
         $result = $this->controller->storeCampus($request);
 
@@ -351,7 +400,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('update-campus', $request)
-            ->willReturn($campusMock);
+            ->willReturn(['campus' => $campusMock]);
 
         $result = $this->controller->storeCampus($request);
 
@@ -462,7 +511,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('delete-campus', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
 
         $result = $this->controller->deleteCampus($requestMock, $campusId);
 

@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -58,9 +57,8 @@ class EmployeeController extends Controller implements HasMiddleware
     public function getEmployees(Request $request): JsonResponse
     {
         $dataEmployees = $this->orchestrators->handler('retrieve-employees', $request);
-        $collection = new Collection((array) $dataEmployees);
 
-        $datatable = $this->dataTables->collection((array) $collection);
+        $datatable = $this->dataTables->collection($dataEmployees);
         $datatable->addColumn('tools', function (array $element): string {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -71,8 +69,9 @@ class EmployeeController extends Controller implements HasMiddleware
     public function changeStateEmployee(Request $request): JsonResponse
     {
         try {
-            /** @var Employee $employee */
-            $employee = $this->orchestrators->handler('change-state-employee', $request);
+            /** @var array{employee: Employee} $dataEmployee */
+            $dataEmployee = $this->orchestrators->handler('change-state-employee', $request);
+            $employee = $dataEmployee['employee'];
         } catch (\Exception $exception) {
             $this->logger->error('Employee can not be updated with id: '.$request->input('id'), $exception->getTrace());
 
@@ -151,8 +150,9 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $request->merge(['employeeId' => $employeeId]);
 
-        /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('retrieve-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestrators->handler('retrieve-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         try {
             $this->orchestrators->handler('delete-employee', $request);
