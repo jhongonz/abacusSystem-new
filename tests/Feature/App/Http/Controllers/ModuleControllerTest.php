@@ -20,12 +20,14 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(ModuleController::class)]
 #[CoversClass(Controller::class)]
 class ModuleControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
+    private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
     private ModuleController $controller;
@@ -37,11 +39,13 @@ class ModuleControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
+        $this->dataTables   = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->controller = new ModuleController(
             $this->orchestrator,
+            $this->dataTables,
             $this->viewFactory,
             $this->logger,
         );

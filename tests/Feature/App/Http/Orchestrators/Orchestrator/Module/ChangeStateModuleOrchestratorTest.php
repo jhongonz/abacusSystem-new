@@ -38,13 +38,15 @@ class ChangeStateModuleOrchestratorTest extends TestCase
     }
 
     /**
+     * @return void
      * @throws Exception
+     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
      */
     public function testMakeShouldReturnModuleWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(1);
 
@@ -82,18 +84,22 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($moduleMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('module', $result);
+        $this->assertInstanceOf(Module::class, $result['module']);
+        $this->assertSame($moduleMock, $result['module']);
     }
 
     /**
+     * @return void
      * @throws Exception
+     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
      */
     public function testMakeShouldReturnModuleWhenIsInactivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(1);
 
@@ -139,8 +145,10 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($moduleMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('module', $result);
+        $this->assertInstanceOf(Module::class, $result['module']);
+        $this->assertSame($moduleMock, $result['module']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

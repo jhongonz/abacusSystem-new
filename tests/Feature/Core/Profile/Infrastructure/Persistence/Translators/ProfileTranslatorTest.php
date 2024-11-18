@@ -97,7 +97,7 @@ class ProfileTranslatorTest extends TestCase
             ->willReturn($state);
 
         $datetime = new \DateTime('2024-05-14 13:08:00');
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($datetime);
         $createdAt = $this->createMock(ProfileCreatedAt::class);
@@ -124,7 +124,7 @@ class ProfileTranslatorTest extends TestCase
             ->with('test')
             ->willReturn($search);
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($datetime);
         $updatedAt = $this->createMock(ProfileUpdatedAt::class);

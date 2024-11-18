@@ -20,12 +20,14 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(ProfileController::class)]
 #[CoversClass(Controller::class)]
 class ProfileControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandler;
+    private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
     private ProfileController $controller;
@@ -37,10 +39,12 @@ class ProfileControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestratorHandler = $this->createMock(OrchestratorHandlerContract::class);
+        $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->controller = new ProfileController(
             $this->orchestratorHandler,
+            $this->dataTables,
             $this->viewFactory,
             $this->logger
         );
@@ -52,7 +56,8 @@ class ProfileControllerTest extends TestCase
             $this->controller,
             $this->orchestratorHandler,
             $this->viewFactory,
-            $this->logger
+            $this->logger,
+            $this->dataTables
         );
         parent::tearDown();
     }

@@ -48,7 +48,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('userId')
             ->willReturn(1);
 
@@ -76,7 +76,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(true);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('login')
             ->willReturn('test');
 
@@ -88,8 +88,10 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertSame($userMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user', $result);
+        $this->assertInstanceOf(User::class, $result['user']);
+        $this->assertSame($userMock, $result['user']);
     }
 
     /**
@@ -104,7 +106,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('userId')
             ->willReturn(1);
 
@@ -115,8 +117,8 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertNotInstanceOf(User::class, $result);
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(User::class, $result['user']);
+        $this->assertNull($result['user']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

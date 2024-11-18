@@ -45,7 +45,7 @@ class DetailCampusOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -71,12 +71,14 @@ class DetailCampusOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->campusManagementMock->expects(self::never())
-            ->method('searchCampusById');
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusById')
+            ->with(0)
+            ->willReturn(null);
 
         $result = $this->orchestrator->make($requestMock);
 
@@ -84,7 +86,7 @@ class DetailCampusOrchestratorTest extends TestCase
         $this->assertArrayHasKey('campusId', $result);
         $this->assertArrayHasKey('campus', $result);
         $this->assertNull($result['campus']);
-        $this->assertNull($result['campusId']);
+        $this->assertEquals(0, $result['campusId']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

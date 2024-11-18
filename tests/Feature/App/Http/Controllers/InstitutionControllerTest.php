@@ -23,15 +23,18 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(InstitutionController::class)]
 #[CoversClass(Controller::class)]
 class InstitutionControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
-    private LoggerInterface|MockObject $logger;
-    private ViewFactory|MockObject $viewFactory;
+    private DataTables|MockObject $datatables;
     private ImageManagerInterface|MockObject $imageManager;
+    private ViewFactory|MockObject $viewFactory;
+    private LoggerInterface|MockObject $logger;
     private InstitutionController $controller;
 
     /**
@@ -41,15 +44,17 @@ class InstitutionControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->datatables = $this->createMock(DataTables::class);
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
+        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->controller = new InstitutionController(
             $this->orchestrator,
+            $this->datatables,
             $this->imageManager,
-            $this->logger,
-            $this->viewFactory
+            $this->viewFactory,
+            $this->logger
         );
     }
 
@@ -60,7 +65,8 @@ class InstitutionControllerTest extends TestCase
             $this->controller,
             $this->logger,
             $this->viewFactory,
-            $this->imageManager
+            $this->imageManager,
+            $this->datatables
         );
         parent::tearDown();
     }
@@ -166,7 +172,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('change-state-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->changeStateInstitution($requestMock);
 
@@ -199,16 +205,59 @@ class InstitutionControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
     public function testGetInstitutionsShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $responseMock = $this->createMock(JsonResponse::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-institutions', $requestMock)
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
             ->willReturn($responseMock);
+
+        $this->datatables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getInstitutions($requestMock);
 
@@ -311,7 +360,7 @@ class InstitutionControllerTest extends TestCase
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('file')
             ->with('file')
             ->willReturn($uploadFileMock);
@@ -383,7 +432,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('create-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->storeInstitution($requestMock);
 
@@ -443,7 +492,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->storeInstitution($requestMock);
 
@@ -466,7 +515,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('delete-institution', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
 
         $result = $this->controller->deleteInstitution($requestMock, 1);
 
