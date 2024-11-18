@@ -79,17 +79,19 @@ class CreateEmployeeActionExecutorTest extends TestCase
         $userMock = $this->createMock(User::class);
 
         $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
+        $userIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($userIdMock);
 
         $this->orchestratorHandler->expects(self::exactly(2))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+            ->willReturnOnConsecutiveCalls(
+                ['employee' => $employeeMock], ['user' => $userMock]
+            );
 
         $result = $this->actionExecutor->invoke($requestMock);
 

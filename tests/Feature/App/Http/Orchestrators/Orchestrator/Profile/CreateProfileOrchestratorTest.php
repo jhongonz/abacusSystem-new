@@ -65,8 +65,10 @@ class CreateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

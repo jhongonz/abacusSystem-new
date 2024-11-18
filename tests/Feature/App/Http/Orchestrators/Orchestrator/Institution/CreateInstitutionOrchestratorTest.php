@@ -52,11 +52,10 @@ class CreateInstitutionOrchestratorTest extends TestCase
     public function testMakeShouldReturnInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(9))
+        $requestMock->expects(self::exactly(7))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                null,
                 'name',
                 'code',
                 'shortname',
@@ -64,8 +63,15 @@ class CreateInstitutionOrchestratorTest extends TestCase
                 'address',
                 'phone',
                 'email',
-                'token'
             );
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->willReturn(0);
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->willReturn('token');
 
         $requestMock->expects(self::once())
             ->method('filled')
@@ -96,8 +102,10 @@ class CreateInstitutionOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

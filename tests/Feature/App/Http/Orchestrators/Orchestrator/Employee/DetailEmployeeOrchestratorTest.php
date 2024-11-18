@@ -7,6 +7,7 @@ use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
+use Core\Institution\Domain\Institutions;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profiles;
 use Core\User\Domain\Contracts\UserManagementContract;
@@ -63,7 +64,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('employeeId')
             ->willReturn(1);
 
@@ -88,6 +89,11 @@ class DetailEmployeeOrchestratorTest extends TestCase
             ->with(1)
             ->willReturn($userMock);
 
+        $institutionsMock = $this->createMock(Institutions::class);
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutions')
+            ->willReturn($institutionsMock);
+
         $profilesMock = $this->createMock(Profiles::class);
         $this->profileManagement->expects(self::once())
             ->method('searchProfiles')
@@ -100,6 +106,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $this->assertSame(1, $result['employeeId']);
         $this->assertSame($employeeMock, $result['employee']);
         $this->assertSame($userMock, $result['user']);
+        $this->assertSame($institutionsMock, $result['institutions']);
         $this->assertSame($profilesMock, $result['profiles']);
         $this->assertIsString($result['image']);
     }
@@ -111,15 +118,22 @@ class DetailEmployeeOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('employeeId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->employeeManagement->expects(self::never())
-            ->method('searchEmployeeById');
+        $this->employeeManagement->expects(self::once())
+            ->method('searchEmployeeById')
+            ->with(0)
+            ->willReturn(null);
 
         $this->userManagement->expects(self::never())
             ->method('searchUserById');
+
+        $institutionsMock = $this->createMock(Institutions::class);
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutions')
+            ->willReturn($institutionsMock);
 
         $profilesMock = $this->createMock(Profiles::class);
         $this->profileManagement->expects(self::once())
@@ -130,9 +144,10 @@ class DetailEmployeeOrchestratorTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertNull($result['userId']);
-        $this->assertNull($result['employeeId']);
+        $this->assertEquals(0, $result['employeeId']);
         $this->assertNull($result['employee']);
         $this->assertNull($result['user']);
+        $this->assertSame($institutionsMock, $result['institutions']);
         $this->assertSame($profilesMock, $result['profiles']);
         $this->assertNull($result['image']);
     }

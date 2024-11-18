@@ -21,14 +21,16 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
 
     public function invoke(Request $request): Employee
     {
-        /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('create-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestratorHandler->handler('create-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $request->merge(['image' => $employee->image()->value()]);
         $request->merge(['employeeId' => $employee->id()->value()]);
 
-        /** @var User $user */
-        $user = $this->orchestratorHandler->handler('create-user', $request);
+        /** @var array{user: User} $dataUser */
+        $dataUser = $this->orchestratorHandler->handler('create-user', $request);
+        $user = $dataUser['user'];
 
         if (!is_null($user->id()->value())) {
             $employee->userId()->setValue($user->id()->value());

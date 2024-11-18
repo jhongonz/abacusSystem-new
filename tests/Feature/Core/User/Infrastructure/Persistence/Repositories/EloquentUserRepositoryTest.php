@@ -302,10 +302,10 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $employeeId = $this->createMock(UserEmployeeId::class);
-        $employeeId->expects(self::once())
+        $employeeId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('employeeId')
             ->willReturn($employeeId);
         $this->model->expects(self::once())
@@ -314,10 +314,10 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $profileId = $this->createMock(UserProfileId::class);
-        $profileId->expects(self::once())
+        $profileId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('profileId')
             ->willReturn($profileId);
         $this->model->expects(self::once())
@@ -469,11 +469,11 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $employeeId = $this->createMock(UserEmployeeId::class);
-        $employeeId->expects(self::once())
+        $employeeId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(5);
 
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('employeeId')
             ->willReturn($employeeId);
 
@@ -483,11 +483,11 @@ class EloquentUserRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $profileId = $this->createMock(UserProfileId::class);
-        $profileId->expects(self::once())
+        $profileId->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
 
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('profileId')
             ->willReturn($profileId);
 
