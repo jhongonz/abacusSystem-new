@@ -68,7 +68,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->with('birthdate', 'd/m/Y')
             ->willReturn($carbonMock);
 
-        $requestMock->expects(self::exactly(12))
+        $requestMock->expects(self::exactly(11))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
@@ -80,11 +80,15 @@ class UpdateEmployeeActionExecutorTest extends TestCase
                 'phone',
                 'address',
                 'observations',
-                'token',
                 'profile',
                 'login',
                 'password'
             );
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('token')
+            ->willReturn('token');
 
         $requestMock->expects(self::exactly(3))
             ->method('filled')

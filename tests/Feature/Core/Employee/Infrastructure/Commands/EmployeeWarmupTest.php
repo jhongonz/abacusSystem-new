@@ -73,7 +73,7 @@ class EmployeeWarmupTest extends TestCase
     public function testHandleShouldUpdateEmployeeInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);
@@ -112,7 +112,7 @@ class EmployeeWarmupTest extends TestCase
     public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);

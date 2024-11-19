@@ -39,7 +39,7 @@ class DeleteEmployeeOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->willReturn(1);
 
         $this->employeeManagement->expects(self::once())
@@ -47,7 +47,7 @@ class DeleteEmployeeOrchestratorTest extends TestCase
             ->with(1);
 
         $result = $this->orchestrator->make($requestMock);
-        $this->assertTrue($result);
+        $this->assertIsArray($result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

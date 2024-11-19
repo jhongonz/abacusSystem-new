@@ -59,8 +59,9 @@ class ModuleController extends Controller implements HasMiddleware
     public function changeStateModule(Request $request): JsonResponse
     {
         try {
-            /** @var Module $module */
-            $module = $this->orchestrators->handler('change-state-module', $request);
+            /** @var array{module: Module} $dataModule */
+            $dataModule = $this->orchestrators->handler('change-state-module', $request);
+            $module = $dataModule['module'];
 
             ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
         } catch (\Exception $exception) {

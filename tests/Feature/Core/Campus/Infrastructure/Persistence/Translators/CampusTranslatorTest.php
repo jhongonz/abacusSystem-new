@@ -94,7 +94,7 @@ class CampusTranslatorTest extends TestCase
             ->method('createdAt')
             ->willReturn($datetime);
 
-        $modelMock->expects(self::once())
+        $modelMock->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($datetime);
 

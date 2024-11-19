@@ -78,8 +78,10 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     /**
@@ -134,8 +136,10 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void
