@@ -236,7 +236,7 @@ class UserControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-employee', $requestMock)
-            ->willReturn($employeeMock);
+            ->willReturn(['employee' => $employeeMock]);
 
         $link = 'http://localhost/reset-account/1';
         $this->urlGenerator->expects(self::once())
@@ -303,7 +303,7 @@ class UserControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-user', $requestMock)
-            ->willReturn($userMock);
+            ->willReturn(['user' => $userMock]);
 
         $result = $this->controller->resetPassword($requestMock);
 

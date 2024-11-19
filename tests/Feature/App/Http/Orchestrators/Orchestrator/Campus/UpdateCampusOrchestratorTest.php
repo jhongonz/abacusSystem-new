@@ -44,7 +44,7 @@ class UpdateCampusOrchestratorTest extends TestCase
     public function testMakeShouldReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(6))
+        $requestMock->expects(self::exactly(5))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
@@ -52,9 +52,13 @@ class UpdateCampusOrchestratorTest extends TestCase
                 '123456789',
                 'sandbox@test.com',
                 'address',
-                'observations',
-                1
+                'observations'
             );
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('campusId')
+            ->willReturn(1);
 
         $campusMock = $this->createMock(Campus::class);
         $this->campusManagementMock->expects(self::once())
@@ -70,8 +74,10 @@ class UpdateCampusOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

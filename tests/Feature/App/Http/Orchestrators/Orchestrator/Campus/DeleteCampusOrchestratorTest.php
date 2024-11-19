@@ -53,7 +53,7 @@ class DeleteCampusOrchestratorTest extends TestCase
             ->with(1);
 
         $result = $this->orchestrator->make($requestMock);
-        $this->assertTrue($result);
+        $this->assertIsArray($result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

@@ -163,7 +163,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-modules', $requestMock)
-            ->willReturn($responseMock);
+            ->willReturn(['module' => $responseMock]);
 
         $result = $this->controller->getModules($requestMock);
 
@@ -190,7 +190,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('change-state-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
 
         $result = $this->controller->changeStateModule($requestMock);
 
@@ -288,7 +288,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('create-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -347,7 +347,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -396,7 +396,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('delete-module', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
 
         $result = $this->controller->deleteModule($requestMock, 1);
 

@@ -41,7 +41,7 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('id')
             ->willReturn(1);
 
@@ -89,7 +89,7 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('id')
             ->willReturn(1);
 

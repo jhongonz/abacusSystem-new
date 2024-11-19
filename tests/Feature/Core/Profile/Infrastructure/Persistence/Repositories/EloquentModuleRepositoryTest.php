@@ -574,7 +574,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with((array) $modelMock)
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 

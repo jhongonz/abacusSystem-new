@@ -48,15 +48,19 @@ class UpdateProfileOrchestratorTest extends TestCase
         ];
 
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(4))
+        $requestMock->expects(self::exactly(3))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
                 'name',
                 'description',
-                $modulesExpected,
-                1
+                $modulesExpected
             );
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('profileId')
+            ->willReturn(1);
 
         $profileMock = $this->createMock(Profile::class);
         $this->profileManagement->expects(self::once())
@@ -66,8 +70,10 @@ class UpdateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

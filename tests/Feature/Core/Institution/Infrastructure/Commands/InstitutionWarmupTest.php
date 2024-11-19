@@ -67,7 +67,7 @@ class InstitutionWarmupTest extends TestCase
     public function testHandleShouldUpdateInstitutionInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);
@@ -106,7 +106,7 @@ class InstitutionWarmupTest extends TestCase
     public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);

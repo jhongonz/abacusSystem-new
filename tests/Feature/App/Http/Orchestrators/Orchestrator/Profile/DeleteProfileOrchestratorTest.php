@@ -42,7 +42,7 @@ class DeleteProfileOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -51,7 +51,7 @@ class DeleteProfileOrchestratorTest extends TestCase
             ->with(1);
 
         $result = $this->orchestrator->make($requestMock);
-        $this->assertTrue($result);
+        $this->assertIsArray($result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

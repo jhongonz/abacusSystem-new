@@ -59,7 +59,7 @@ class EmployeeTranslator
         /** @var User|null $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);
 
-        $userId = $user ? $user->id() : null;
+        $userId = $user?->id();
         $employee->setUserId($this->employeeFactory->buildEmployeeUserId($userId));
 
         return $employee;
