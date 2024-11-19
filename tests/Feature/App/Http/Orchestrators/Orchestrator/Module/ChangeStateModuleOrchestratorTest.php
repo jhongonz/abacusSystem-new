@@ -38,7 +38,6 @@ class ChangeStateModuleOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Core\Profile\Exceptions\ModuleNotFoundException
      */
@@ -91,7 +90,6 @@ class ChangeStateModuleOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Core\Profile\Exceptions\ModuleNotFoundException
      */

@@ -24,8 +24,8 @@ class CreateCampusOrchestrator extends CampusOrchestrator
     public function make(Request $request): array
     {
         $dataCampus = [
-            'id' => $request->input('campusId'),
-            'institutionId' => $request->input('institutionId'),
+            'id' => $request->integer('campusId'),
+            'institutionId' => $request->integer('institutionId'),
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),

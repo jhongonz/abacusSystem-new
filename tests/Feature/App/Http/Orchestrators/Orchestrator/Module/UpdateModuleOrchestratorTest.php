@@ -10,6 +10,7 @@ use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Routing\RouteCollectionInterface;
 use Illuminate\Routing\Router;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -59,17 +60,25 @@ class UpdateModuleOrchestratorTest extends TestCase
     public function testMakeShouldUpdateAndReturnModule(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(6))
+        $requestMock->expects(self::exactly(4))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                'localhost',
                 'name',
                 'icon',
                 'position',
-                'key',
-                1,
+                'key'
             );
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('route')
+            ->willReturn('localhost');
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('moduleId')
+            ->willReturn(1);
 
         $routeMock = $this->createMock(Route::class);
         $routeMock->expects(self::once())
@@ -80,9 +89,14 @@ class UpdateModuleOrchestratorTest extends TestCase
             ->method('uri')
             ->willReturn('localhost');
 
-        $this->routerMock->expects(self::once())
+        $routeCollectionMock = $this->createMock(RouteCollectionInterface::class);
+        $routeCollectionMock->expects(self::once())
             ->method('getRoutes')
             ->willReturn([$routeMock]);
+
+        $this->routerMock->expects(self::once())
+            ->method('getRoutes')
+            ->willReturn($routeCollectionMock);
 
         $moduleMock = $this->createMock(Module::class);
         $this->moduleManagement->expects(self::once())
@@ -92,8 +106,10 @@ class UpdateModuleOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($moduleMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('module', $result);
+        $this->assertInstanceOf(Module::class, $result['module']);
+        $this->assertSame($moduleMock, $result['module']);
     }
 
     /**
@@ -103,7 +119,7 @@ class UpdateModuleOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('route')
             ->willReturn('localhost');
 
@@ -116,9 +132,14 @@ class UpdateModuleOrchestratorTest extends TestCase
             ->method('uri')
             ->willReturn('testing');
 
-        $this->routerMock->expects(self::once())
+        $routeCollectionMock = $this->createMock(RouteCollectionInterface::class);
+        $routeCollectionMock->expects(self::once())
             ->method('getRoutes')
             ->willReturn([$routeMock]);
+
+        $this->routerMock->expects(self::once())
+            ->method('getRoutes')
+            ->willReturn($routeCollectionMock);
 
         $this->moduleManagement->expects(self::never())
             ->method('updateModule');

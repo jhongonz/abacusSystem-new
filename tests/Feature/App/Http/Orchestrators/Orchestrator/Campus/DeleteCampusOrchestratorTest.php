@@ -44,7 +44,7 @@ class DeleteCampusOrchestratorTest extends TestCase
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 

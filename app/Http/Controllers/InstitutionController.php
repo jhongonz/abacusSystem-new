@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -111,7 +110,6 @@ class InstitutionController extends Controller implements HasMiddleware
             /** @var array{institution: Institution} $dataInstitution */
             $dataInstitution = $this->orchestrators->handler($method, $request);
             $institution = $dataInstitution['institution'];
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

@@ -61,7 +61,7 @@ class GetEmployeeOrchestratorTest extends TestCase
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('identification', $result);
+        $this->assertArrayHasKey('employee', $result);
         $this->assertInstanceOf(Employee::class, $result['employee']);
         $this->assertSame($employeeMock, $result['employee']);
     }

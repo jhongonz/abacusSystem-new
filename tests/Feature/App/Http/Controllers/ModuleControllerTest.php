@@ -39,7 +39,7 @@ class ModuleControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
-        $this->dataTables   = $this->createMock(DataTables::class);
+        $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 

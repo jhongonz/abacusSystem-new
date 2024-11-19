@@ -167,7 +167,11 @@ class SecurityControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+            ->willReturnOnConsecutiveCalls(
+                ['user' => $userMock],
+                ['employee' => $employeeMock],
+                ['profile' => $profileMock]
+            );
 
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
@@ -265,7 +269,11 @@ class SecurityControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+            ->willReturnOnConsecutiveCalls(
+                ['user' => $userMock],
+                ['employee' => $employeeMock],
+                ['profile' => $profileMock]
+            );
 
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
@@ -353,7 +361,11 @@ class SecurityControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+            ->willReturnOnConsecutiveCalls(
+                ['user' => $userMock],
+                ['employee' => $employeeMock],
+                ['profile' => $profileMock]
+            );
 
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
@@ -441,7 +453,11 @@ class SecurityControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+            ->willReturnOnConsecutiveCalls(
+                ['user' => $userMock],
+                ['employee' => $employeeMock],
+                ['profile' => $profileMock]
+            );
 
         $this->statefulGuard->expects(self::once())
             ->method('attempt')
@@ -515,7 +531,11 @@ class SecurityControllerTest extends TestCase
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($userMock, $employeeMock, $profileMock);
+            ->willReturnOnConsecutiveCalls(
+                ['user' => $userMock],
+                ['employee' => $employeeMock],
+                ['profile' => $profileMock]
+            );
 
         $this->logger->expects(self::once())
             ->method('warning')
