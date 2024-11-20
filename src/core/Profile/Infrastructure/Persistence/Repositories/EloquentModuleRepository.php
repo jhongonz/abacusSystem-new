@@ -7,7 +7,6 @@ use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
-use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
@@ -89,8 +88,6 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @param array{q?: string|null} $filters
-     *
-     * @throws ModulesNotFoundException
      */
     public function getAll(array $filters = []): ?Modules
     {
@@ -103,10 +100,6 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
         $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
-
-        if (0 === count($moduleCollection)) {
-            throw new ModulesNotFoundException('Modules not found');
-        }
 
         $collection = [];
         foreach ($moduleCollection as $item) {

@@ -361,55 +361,6 @@ class EloquentProfileRepositoryTest extends TestCase
     }
 
     /**
-     * @throws ProfilesNotFoundException
-     * @throws Exception
-     */
-    public function testGetAllShouldReturnException(): void
-    {
-        $filters = ['q' => 'test'];
-
-        $this->model->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('pro_search');
-
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('pro_state', '>', -1)
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('pro_search', 'test')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['pro_id'])
-            ->andReturn([]);
-
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('profiles');
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('profiles')
-            ->andReturn($builderMock);
-
-        $this->translator->expects(self::never())
-            ->method('setCollection');
-
-        $this->translator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(ProfilesNotFoundException::class);
-        $this->expectExceptionMessage('Profiles not found');
-
-        $this->repository->getAll($filters);
-    }
-
-    /**
      * @throws Exception
      * @throws ProfileNotFoundException
      */

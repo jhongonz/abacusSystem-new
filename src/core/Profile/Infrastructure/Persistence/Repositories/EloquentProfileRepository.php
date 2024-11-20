@@ -8,7 +8,6 @@ use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
-use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ProfileTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
@@ -71,8 +70,6 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     /**
      * @param array{q?: string|null} $filters
-     *
-     * @throws ProfilesNotFoundException
      */
     public function getAll(array $filters = []): Profiles
     {
@@ -84,10 +81,6 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         }
 
         $profileCollection = $builder->get(['pro_id']);
-
-        if (0 === count($profileCollection)) {
-            throw new ProfilesNotFoundException('Profiles not found');
-        }
 
         $collection = [];
         foreach ($profileCollection as $item) {

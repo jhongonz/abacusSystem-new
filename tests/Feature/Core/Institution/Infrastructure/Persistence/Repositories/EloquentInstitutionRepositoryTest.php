@@ -258,62 +258,6 @@ class EloquentInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @throws InstitutionsNotFoundException
-     * @throws Exception
-     */
-    public function testGetAllShouldReturnException(): void
-    {
-        $filters = ['q' => 'testing'];
-
-        $builderMock = $this->mock(Builder::class);
-
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('inst_state', '>', -1)
-            ->andReturnSelf();
-
-        $this->model->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('inst_search');
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('inst_search', 'testing')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['inst_id'])
-            ->andReturn([]);
-
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('institutions');
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('institutions')
-            ->andReturn($builderMock);
-
-        $this->model->expects(self::never())
-            ->method('fill');
-
-        $this->model->expects(self::never())
-            ->method('id');
-
-        $this->translator->expects(self::never())
-            ->method('setCollection');
-
-        $this->translator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(InstitutionsNotFoundException::class);
-        $this->expectExceptionMessage('Institutions not found');
-
-        $this->repository->getAll($filters);
-    }
-
-    /**
      * @throws Exception
      * @throws InstitutionNotFoundException
      */

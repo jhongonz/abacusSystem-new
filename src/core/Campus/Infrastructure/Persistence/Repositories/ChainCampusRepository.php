@@ -49,7 +49,7 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
 
         try {
             /** @var CampusCollection|null $result */
-            $result = $this->read(__FUNCTION__, $id);
+            $result = $this->read(__FUNCTION__, $id, $filters);
 
             return $result;
         } catch (\Exception $exception) {

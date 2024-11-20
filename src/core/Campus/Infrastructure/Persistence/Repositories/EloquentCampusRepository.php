@@ -11,7 +11,6 @@ use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
-use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
 use Core\Campus\Infrastructure\Persistence\Translators\CampusTranslator;
@@ -64,8 +63,6 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
 
     /**
      * @param array{q?: string|null} $filters
-     *
-     * @throws CampusCollectionNotFoundException
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
@@ -76,11 +73,8 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         if (!empty($filters['q'])) {
             $builder->whereFullText($this->campusModel->getSearchField(), $filters['q']);
         }
-        $campusCollectionResult = $builder->get(['cam_id']);
 
-        if (0 === count($campusCollectionResult)) {
-            throw new CampusCollectionNotFoundException('Campus collection not found');
-        }
+        $campusCollectionResult = $builder->get(['cam_id']);
 
         $collection = [];
         foreach ($campusCollectionResult as $item) {

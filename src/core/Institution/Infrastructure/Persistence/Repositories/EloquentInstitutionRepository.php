@@ -79,9 +79,6 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         }
 
         $institutionCollection = $builder->get(['inst_id']);
-        if (0 === count($institutionCollection)) {
-            throw new InstitutionsNotFoundException('Institutions not found');
-        }
 
         $collection = [];
         foreach ($institutionCollection as $item) {

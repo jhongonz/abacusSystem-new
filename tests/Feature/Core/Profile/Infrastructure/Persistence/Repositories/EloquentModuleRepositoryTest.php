@@ -600,60 +600,6 @@ class EloquentModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @throws ModulesNotFoundException
-     * @throws Exception
-     */
-    public function testGetAllShouldReturnException(): void
-    {
-        $filters = ['q' => 'test'];
-
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('mod_state', '>', -1)
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('mod_search', 'test')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('orderBy')
-            ->once()
-            ->with('mod_position')
-            ->andReturnSelf();
-
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('modules');
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('modules')
-            ->andReturn($builderMock);
-
-        $this->model->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('mod_search');
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['mod_id'])
-            ->andReturn([]);
-
-        $this->translator->expects(self::never())
-            ->method('setCollection');
-
-        $this->translator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(ModulesNotFoundException::class);
-        $this->expectExceptionMessage('Modules not found');
-
-        $this->repository->getAll($filters);
-    }
-
-    /**
      * @throws Exception
      * @throws ModuleNotFoundException
      */

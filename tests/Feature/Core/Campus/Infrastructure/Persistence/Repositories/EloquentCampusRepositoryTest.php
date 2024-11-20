@@ -254,66 +254,6 @@ class EloquentCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @throws Exception
-     * @throws CampusCollectionNotFoundException
-     */
-    public function testGetAllShouldReturnException(): void
-    {
-        $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
-        $campusInstitutionIdMock->expects(self::once())
-            ->method('value')
-            ->willReturn(1);
-
-        $this->campusModel->expects(self::once())
-            ->method('getTable')
-            ->willReturn('campus');
-
-        $this->campusModel->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('cam_search');
-
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('cam__inst_id', 1)
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('cam_state', '>', -1)
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('cam_search', 'test')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['cam_id'])
-            ->andReturn([]);
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('campus')
-            ->andReturn($builderMock);
-
-        $this->campusModel->expects(self::never())
-            ->method('fill');
-
-        $this->campusTranslator->expects(self::never())
-            ->method('setCollection');
-
-        $this->campusTranslator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(CampusCollectionNotFoundException::class);
-        $this->expectExceptionMessage('Campus collection not found');
-
-        $this->repository->getAll($campusInstitutionIdMock, ['q' => 'test']);
-    }
-
-    /**
      * @throws CampusNotFoundException
      * @throws Exception
      */

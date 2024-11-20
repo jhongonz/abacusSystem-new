@@ -8,7 +8,6 @@ use Core\Employee\Domain\Employees;
 use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
-use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
@@ -131,8 +130,6 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
     /**
      * @param array{q?: string|null} $filters
-     *
-     * @throws EmployeesNotFoundException
      */
     public function getAll(array $filters = []): ?Employees
     {
@@ -142,11 +139,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         if (array_key_exists('q', $filters) && isset($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
-        $employeeCollection = $builder->get(['emp_id']);
 
-        if (0 === count($employeeCollection)) {
-            throw new EmployeesNotFoundException('Employees not found');
-        }
+        $employeeCollection = $builder->get(['emp_id']);
 
         $collection = [];
         foreach ($employeeCollection as $item) {
