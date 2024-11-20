@@ -150,7 +150,7 @@ class CampusTranslatorTest extends TestCase
             ->method('setValue')
             ->with($datetime)
             ->willReturnSelf();
-        $campusMock->expects(self::exactly(2))
+        $campusMock->expects(self::once())
             ->method('createdAt')
             ->willReturn($createdAtMock);
 

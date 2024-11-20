@@ -51,8 +51,9 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         }
         $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
 
-        /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('update-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestratorHandler->handler('update-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $dataUpdateUser = [
             'profileId' => $request->input('profile'),
@@ -71,8 +72,9 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
 
         $actionUser = ($request->filled('userId')) ? 'update-user' : 'create-user';
 
-        /** @var User $user */
-        $user = $this->orchestratorHandler->handler($actionUser, $request);
+        /** @var array{user: User} $dataUser */
+        $dataUser = $this->orchestratorHandler->handler($actionUser, $request);
+        $user = $dataUser['user'];
 
         if (!is_null($user->id()->value())) {
             $employee->userId()->setValue($user->id()->value());

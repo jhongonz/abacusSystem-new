@@ -42,12 +42,13 @@ class OrchestratorHandlerTest extends TestCase
         $orchestratorMock->expects(self::once())
             ->method('make')
             ->with($requestMock)
-            ->willReturn('testing');
+            ->willReturn(['testing']);
         $this->orchestratorHandler->addOrchestrator($orchestratorMock);
 
         $result = $this->orchestratorHandler->handler('testing', $requestMock);
 
-        $this->assertSame('testing', $result);
+        $this->assertIsArray($result);
+        $this->assertSame(['testing'], $result);
     }
 
     /**

@@ -60,8 +60,10 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertSame($userMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user', $result);
+        $this->assertInstanceOf(User::class, $result['user']);
+        $this->assertSame($userMock, $result['user']);
     }
 
     /**

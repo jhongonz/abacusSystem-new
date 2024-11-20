@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,9 +45,8 @@ class ProfileController extends Controller implements HasMiddleware
     public function getProfiles(Request $request): JsonResponse
     {
         $dataProfiles = $this->orchestrators->handler('retrieve-profiles', $request);
-        $collection = new Collection((array) $dataProfiles);
 
-        $datatable = $this->dataTables->collection((array) $collection);
+        $datatable = $this->dataTables->collection($dataProfiles);
         $datatable->addColumn('tools', function (array $element) {
             return $this->retrieveMenuOptionHtml($element);
         });
@@ -59,8 +57,9 @@ class ProfileController extends Controller implements HasMiddleware
     public function changeStateProfile(Request $request): JsonResponse
     {
         try {
-            /** @var Profile $profile */
-            $profile = $this->orchestrators->handler('change-state-profile', $request);
+            /** @var array{profile: Profile} $dataProfile */
+            $dataProfile = $this->orchestrators->handler('change-state-profile', $request);
+            $profile = $dataProfile['profile'];
 
             ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
         } catch (\Exception $exception) {
@@ -106,8 +105,9 @@ class ProfileController extends Controller implements HasMiddleware
         try {
             $method = (is_null($request->input('profileId'))) ? 'create-profile' : 'update-profile';
 
-            /** @var Profile $profile */
-            $profile = $this->orchestrators->handler($method, $request);
+            /** @var array{profile: Profile} $dataProfile */
+            $dataProfile = $this->orchestrators->handler($method, $request);
+            $profile = $dataProfile['profile'];
 
             ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
         } catch (\Exception $exception) {

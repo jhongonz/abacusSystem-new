@@ -68,7 +68,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->with('birthdate', 'd/m/Y')
             ->willReturn($carbonMock);
 
-        $requestMock->expects(self::exactly(11))
+        $requestMock->expects(self::exactly(10))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
@@ -81,14 +81,13 @@ class UpdateEmployeeActionExecutorTest extends TestCase
                 'address',
                 'observations',
                 'profile',
-                'login',
-                'password'
+                'login'
             );
 
-        $requestMock->expects(self::once())
+        $requestMock->expects(self::exactly(2))
             ->method('string')
-            ->with('token')
-            ->willReturn('token');
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls('token', 'password');
 
         $requestMock->expects(self::exactly(3))
             ->method('filled')
@@ -133,19 +132,22 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->willReturn($employeeUserIdMock);
 
         $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
+        $userIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
 
         $userMock = $this->createMock(User::class);
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($userIdMock);
 
         $this->orchestratorHandler->expects(self::exactly(2))
             ->method('handler')
             ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+            ->willReturnOnConsecutiveCalls(
+                ['employee' => $employeeMock],
+                ['user' => $userMock]
+            );
 
         $result = $this->actionExecutor->invoke($requestMock);
 

@@ -285,7 +285,7 @@ class UserControllerTest extends TestCase
     {
         $requestMock = $this->createMock(ResetPasswordRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('password')
             ->willReturn('password');
 

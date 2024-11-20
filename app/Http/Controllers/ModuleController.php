@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,9 +45,8 @@ class ModuleController extends Controller implements HasMiddleware
     public function getModules(Request $request): JsonResponse
     {
         $dataModules = $this->orchestrators->handler('retrieve-modules', $request);
-        $collection = new Collection((array) $dataModules);
 
-        $datatable = $this->dataTables->collection((array) $collection);
+        $datatable = $this->dataTables->collection($dataModules);
         $datatable->addColumn('tools', function (array $item) {
             return $this->retrieveMenuOptionHtml($item);
         });
@@ -91,8 +89,9 @@ class ModuleController extends Controller implements HasMiddleware
         try {
             $method = (!$request->filled('moduleId')) ? 'create-module' : 'update-module';
 
-            /** @var Module $module */
-            $module = $this->orchestrators->handler($method, $request);
+            /** @var array{module: Module} $dataModule */
+            $dataModule = $this->orchestrators->handler($method, $request);
+            $module = $dataModule['module'];
 
             ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
         } catch (\Exception $exception) {

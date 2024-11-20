@@ -51,8 +51,9 @@ class UserController extends Controller implements HasMiddleware
 
     public function validateAccount(RecoveryAccountRequest $request): JsonResponse
     {
-        /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('retrieve-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestrators->handler('retrieve-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $link = $this->urlGenerator->route('user.reset-account', ['id' => $employee->userId()->value()]);
 

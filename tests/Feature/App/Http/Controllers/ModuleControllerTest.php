@@ -20,6 +20,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
 use Yajra\DataTables\DataTables;
 
 #[CoversClass(ModuleController::class)]
@@ -154,16 +155,59 @@ class ModuleControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
     public function testGetModulesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $responseMock = $this->createMock(JsonResponse::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-modules', $requestMock)
-            ->willReturn(['module' => $responseMock]);
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
+            ->willReturn($responseMock);
+
+        $this->dataTables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getModules($requestMock);
 
