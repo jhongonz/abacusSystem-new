@@ -7,18 +7,12 @@
 namespace App\Traits;
 
 use Illuminate\Support\Str;
-use Intervention\Image\Interfaces\ImageManagerInterface;
 
 trait MultimediaTrait
 {
     private const IMAGE_PATH_TMP = '/images/tmp/';
     private const IMAGE_PATH_FULL = '/images/full/';
     private const IMAGE_PATH_SMALL = '/images/small/';
-
-    public function setImageManager(ImageManagerInterface $multimediaImageManager): void
-    {
-        $this->imageManager = $multimediaImageManager;
-    }
 
     private function saveImage(string $token): string
     {

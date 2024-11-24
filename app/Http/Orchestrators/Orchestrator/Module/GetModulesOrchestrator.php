@@ -25,9 +25,10 @@ class GetModulesOrchestrator extends ModuleOrchestrator
      */
     public function make(Request $request): array
     {
-        $modules = $this->moduleManagement->searchModules(
-            (array) $request->input('filters')
-        );
+        /** @var array<string, mixed> $filters */
+        $filters = $request->input('filters');
+
+        $modules = $this->moduleManagement->searchModules($filters);
 
         $dataModules = [];
         if ($modules->count()) {

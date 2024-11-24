@@ -62,25 +62,64 @@ class GetCampusCollectionOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $campusMock = $this->createMock(Campus::class);
-        $campusCollectionMock = new CampusCollection([$campusMock]);
-
-        $this->campusDataTransformerMock->expects(self::once())
-            ->method('write')
-            ->with($campusMock)
-            ->willReturnSelf();
-
-        $this->campusDataTransformerMock->expects(self::once())
-            ->method('readToShare')
-            ->willReturn([]);
+        $campusMock2 = $this->createMock(Campus::class);
+        $campusCollectionMock = new CampusCollection([$campusMock, $campusMock2]);
 
         $this->campusManagementMock->expects(self::once())
             ->method('searchCampusCollection')
             ->with(1, [])
             ->willReturn($campusCollectionMock);
 
+        $this->campusDataTransformerMock->expects(self::exactly(2))
+            ->method('write')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $data1 = ['name' => 'data1'];
+        $data2 = ['name' => 'data2'];
+        $this->campusDataTransformerMock->expects(self::exactly(2))
+            ->method('readToShare')
+            ->willReturnOnConsecutiveCalls($data1, $data2);
+
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        $this->assertEquals([$data1, $data2], $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnArrayWithCollectionNull(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('institutionId')
+            ->willReturn(1);
+
+        $requestMock->expects(self::once())
+            ->method('input')
+            ->with('filters')
+            ->willReturn([]);
+
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusCollection')
+            ->with(1, [])
+            ->willReturn(null);
+
+        $this->campusDataTransformerMock->expects(self::never())
+            ->method('write');
+
+        $this->campusDataTransformerMock->expects(self::never())
+            ->method('readToShare');
+
+        $result = $this->orchestrator->make($requestMock);
+
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+        $this->assertEquals([], $result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

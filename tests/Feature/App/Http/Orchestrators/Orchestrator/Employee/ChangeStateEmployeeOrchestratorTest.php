@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Employee\ChangeStateEmployeeOrchestrator
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
+use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -140,6 +141,28 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
         $this->assertArrayHasKey('employee', $result);
         $this->assertInstanceOf(Employee::class, $result['employee']);
         $this->assertSame($employeeMock, $result['employee']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('id')
+            ->willReturn(1);
+
+        $this->employeeManagement->expects(self::once())
+            ->method('searchEmployeeById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->expectException(EmployeeNotFoundException::class);
+        $this->expectExceptionMessage('Employee with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

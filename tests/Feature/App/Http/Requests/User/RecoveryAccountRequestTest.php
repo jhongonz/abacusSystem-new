@@ -31,17 +31,30 @@ class RecoveryAccountRequestTest extends TestCase
 
     public function testRulesShouldReturnArray(): void
     {
+        $expected = [
+            'identification' => ['required', 'string'],
+            'email' => ['required', 'email:rfc'],
+        ];
+
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testMessagesShouldReturnArray(): void
     {
+        $expected = [
+            'identification.required' => 'El campo identification es requerido',
+            'email.email' => 'El campo email debe ser una dirección valida',
+            'email.required' => 'El campo email es requerido',
+        ];
+
         $result = $this->request->messages();
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+        $this->assertEquals($expected, $result);
     }
 }

@@ -37,6 +37,7 @@ class CampusUpdatedOrDeleteEventTest extends TestCase
         $result = $this->event->broadcastOn();
 
         $this->assertIsArray($result);
+        $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(PrivateChannel::class, $result);
     }
 }

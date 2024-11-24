@@ -5,6 +5,7 @@ namespace Tests\Feature\App\Http\Orchestrators\Orchestrator\Employee;
 use App\Http\Orchestrators\Orchestrator\Employee\DetailEmployeeOrchestrator;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
+use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institutions;
@@ -13,6 +14,8 @@ use Core\Profile\Domain\Profiles;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -25,6 +28,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
     private ProfileManagementContract|MockObject $profileManagement;
     private EmployeeManagementContract|MockObject $employeeManagement;
     private InstitutionManagementContract|MockObject $institutionManagement;
+    private UrlGenerator|MockObject $urlGenerator;
     private DetailEmployeeOrchestrator $orchestrator;
 
     /**
@@ -37,11 +41,14 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $this->profileManagement = $this->createMock(ProfileManagementContract::class);
         $this->employeeManagement = $this->createMock(EmployeeManagementContract::class);
         $this->institutionManagement = $this->createMock(InstitutionManagementContract::class);
+        $this->urlGenerator = $this->createMock(UrlGenerator::class);
+
         $this->orchestrator = new DetailEmployeeOrchestrator(
             $this->employeeManagement,
             $this->userManagement,
             $this->profileManagement,
-            $this->institutionManagement
+            $this->institutionManagement,
+            $this->urlGenerator
         );
     }
 
@@ -52,7 +59,8 @@ class DetailEmployeeOrchestratorTest extends TestCase
             $this->employeeManagement,
             $this->profileManagement,
             $this->userManagement,
-            $this->institutionManagement
+            $this->institutionManagement,
+            $this->urlGenerator
         );
         parent::tearDown();
     }
@@ -78,6 +86,14 @@ class DetailEmployeeOrchestratorTest extends TestCase
             ->method('userId')
             ->willReturn($employeeUserIdMock);
 
+        $imageMock = $this->createMock(EmployeeImage::class);
+        $imageMock->expects(self::once())
+            ->method('value')
+            ->willReturn('testing.jpg');
+        $employeeMock->expects(self::once())
+            ->method('image')
+            ->willReturn($imageMock);
+
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployeeById')
             ->with(1)
@@ -88,6 +104,15 @@ class DetailEmployeeOrchestratorTest extends TestCase
             ->method('searchUserById')
             ->with(1)
             ->willReturn($userMock);
+
+        Str::createRandomStringsUsing(function () {
+            return 'OLl3rUybNy';
+        });
+
+        $this->urlGenerator->expects(self::once())
+            ->method('asset')
+            ->with('/images/full/testing.jpg?v=OLl3rUybNy')
+            ->willReturn('http://localhost/images/full/testing.jpg?v=OLl3rUybNy');
 
         $institutionsMock = $this->createMock(Institutions::class);
         $this->institutionManagement->expects(self::once())
@@ -108,7 +133,7 @@ class DetailEmployeeOrchestratorTest extends TestCase
         $this->assertSame($userMock, $result['user']);
         $this->assertSame($institutionsMock, $result['institutions']);
         $this->assertSame($profilesMock, $result['profiles']);
-        $this->assertIsString($result['image']);
+        $this->assertSame('http://localhost/images/full/testing.jpg?v=OLl3rUybNy', $result['image']);
     }
 
     /**

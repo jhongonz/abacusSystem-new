@@ -25,7 +25,9 @@ class GetProfilesOrchestrator extends ProfileOrchestrator
      */
     public function make(Request $request): array
     {
-        $filters = (array) $request->input('filters', []);
+        /** @var array<string, mixed> $filters */
+        $filters = $request->input('filters');
+
         $profiles = $this->profileManagement->searchProfiles($filters);
 
         $dataProfiles = [];

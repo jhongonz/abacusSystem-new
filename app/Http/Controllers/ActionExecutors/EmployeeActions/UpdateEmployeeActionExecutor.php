@@ -26,7 +26,6 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         protected Hasher $hasher,
     ) {
         parent::__construct($orchestratorHandler);
-        $this->setImageManager($imageManager);
         $this->setHasher($hasher);
     }
 

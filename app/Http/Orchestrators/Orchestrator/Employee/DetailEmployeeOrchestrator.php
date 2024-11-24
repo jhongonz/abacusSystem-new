@@ -12,6 +12,7 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Str;
 
 class DetailEmployeeOrchestrator extends EmployeeOrchestrator
@@ -23,6 +24,7 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
         private readonly UserManagementContract $userManagement,
         private readonly ProfileManagementContract $profileManagement,
         private readonly InstitutionManagementContract $institutionManagement,
+        private readonly UrlGenerator $urlGenerator
     ) {
         parent::__construct($employeeManagement);
     }
@@ -39,7 +41,12 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
             $userId = $employee->userId()->value();
             $user = $this->userManagement->searchUserById($userId);
 
-            $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
+            $path = sprintf('%s%s?v=%s',
+                self::IMAGE_PATH_FULL,
+                $employee->image()->value(),
+                Str::random()
+            );
+            $urlFile = $this->urlGenerator->asset($path);
         }
 
         $institutions = $this->institutionManagement->searchInstitutions();

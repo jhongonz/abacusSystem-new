@@ -60,10 +60,23 @@ class CreateCampusOrchestratorTest extends TestCase
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(1, 2);
 
+        $paramsExpected = [
+            Campus::TYPE => [
+                'id' => 1,
+                'institutionId' => 2,
+                'name' => 'name',
+                'phone' => '123456789',
+                'email' => 'sandbox@local.com',
+                'address' => 'address',
+                'observations' => 'observations',
+                'state' => 1,
+            ],
+        ];
+
         $campusMock = $this->createMock(Campus::class);
         $this->campusManagementMock->expects(self::once())
             ->method('createCampus')
-            ->withAnyParameters()
+            ->with($paramsExpected)
             ->willReturn($campusMock);
 
         $result = $this->orchestrator->make($requestMock);

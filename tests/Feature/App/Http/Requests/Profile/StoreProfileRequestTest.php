@@ -31,17 +31,36 @@ class StoreProfileRequestTest extends TestCase
 
     public function testRulesShouldReturnArray(): void
     {
+        $expected = [
+            'id' => ['nullable', 'numeric'],
+            'name' => ['required'],
+            'modules' => ['required', 'array'],
+            'description' => ['nullable', 'string'],
+        ];
+
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testMessagesShouldReturnArray(): void
     {
+        $expected = [
+            'id.nullable' => 'El campo id, puede ser null o numerico',
+            'id.numeric' => 'El campo id, puede ser null o numerico',
+            'name.required' => 'El campo nombre es requerido',
+            'modules.required' => 'El campo modules es requerido',
+            'modules.array' => 'El campo modules debe ser un array',
+            'description.string' => 'El campo description pueder ser texto o nulo',
+            'description.nullable' => 'El campo description pueder ser texto o nulo',
+        ];
+
         $result = $this->request->messages();
 
         $this->assertIsArray($result);
         $this->assertCount(7, $result);
+        $this->assertEquals($expected, $result);
     }
 }

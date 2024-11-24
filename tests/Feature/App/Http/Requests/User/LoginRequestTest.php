@@ -31,17 +31,30 @@ class LoginRequestTest extends TestCase
 
     public function testRulesShouldReturnArray(): void
     {
+        $expected = [
+            'login' => ['required', 'max:150'],
+            'password' => ['required'],
+        ];
+
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testMessagesShouldReturnArray(): void
     {
+        $expected = [
+            'login.required' => 'El campo login es requerido',
+            'login.max' => 'El campo login debe tener maximo 255 caracteres',
+            'password.required' => 'El campo password es requerido',
+        ];
+
         $result = $this->request->messages();
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+        $this->assertEquals($expected, $result);
     }
 }

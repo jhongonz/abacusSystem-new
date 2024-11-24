@@ -35,6 +35,13 @@ class StoreModuleRequestTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result);
+
+        foreach ($result as $index => $item) {
+            $this->assertIsString($index);
+
+            $this->assertIsArray($item);
+            $this->assertNotEmpty($item);
+        }
     }
 
     public function testMessagesShouldReturnArray(): void

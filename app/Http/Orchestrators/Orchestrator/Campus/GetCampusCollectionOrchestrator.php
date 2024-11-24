@@ -25,9 +25,12 @@ class GetCampusCollectionOrchestrator extends CampusOrchestrator
      */
     public function make(Request $request): array
     {
+        /** @var array<string, mixed> $filters */
+        $filters = $request->input('filters');
+
         $campusCollection = $this->campusManagement->searchCampusCollection(
             $request->integer('institutionId'),
-            (array) $request->input('filters')
+            $filters
         );
 
         $dataCampus = [];

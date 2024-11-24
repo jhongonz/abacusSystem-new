@@ -38,6 +38,6 @@ class UserUpdateOrDeleteEventTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(PrivateChannel::class, $result[0]);
+        $this->assertContainsOnlyInstancesOf(PrivateChannel::class, $result);
     }
 }

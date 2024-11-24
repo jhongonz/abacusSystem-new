@@ -28,7 +28,7 @@ class ChangeStateEmployeeOrchestrator extends EmployeeOrchestrator
         $employee = $this->employeeManagement->searchEmployeeById($employeeId);
 
         if (is_null($employee)) {
-            throw new EmployeeNotFoundException(sprintf('Employee with id %s not found', $employeeId));
+            throw new EmployeeNotFoundException(sprintf('Employee with id %d not found', $employeeId));
         }
 
         $employeeState = $employee->state();

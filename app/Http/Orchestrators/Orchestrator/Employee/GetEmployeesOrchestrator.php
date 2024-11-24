@@ -25,9 +25,10 @@ class GetEmployeesOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): array
     {
-        $employees = $this->employeeManagement->searchEmployees(
-            (array) $request->input('filters')
-        );
+        /** @var array<string, mixed> $filters */
+        $filters = $request->input('filters');
+
+        $employees = $this->employeeManagement->searchEmployees($filters);
 
         $dataEmployees = [];
         if ($employees->count()) {

@@ -28,7 +28,7 @@ class ChangeStateCampusOrchestrator extends CampusOrchestrator
         $campus = $this->campusManagement->searchCampusById($campusId);
 
         if (is_null($campus)) {
-            throw new CampusNotFoundException(sprintf('Campus not found with id %s', $campusId));
+            throw new CampusNotFoundException(sprintf('Campus not found with id %d', $campusId));
         }
 
         $campusState = $campus->state();

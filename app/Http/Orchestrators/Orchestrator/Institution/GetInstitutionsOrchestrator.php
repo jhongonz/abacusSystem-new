@@ -25,9 +25,10 @@ class GetInstitutionsOrchestrator extends InstitutionOrchestrator
      */
     public function make(Request $request): array
     {
-        $institutions = $this->institutionManagement->searchInstitutions(
-            (array) $request->input('filters')
-        );
+        /** @var array<string ,mixed> $filters */
+        $filters = $request->input('filters');
+
+        $institutions = $this->institutionManagement->searchInstitutions($filters);
 
         $dataInstitutions = [];
         if ($institutions->count()) {

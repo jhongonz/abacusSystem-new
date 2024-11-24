@@ -22,7 +22,6 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
         protected ImageManagerInterface $imageManager,
     ) {
         parent::__construct($institutionManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**

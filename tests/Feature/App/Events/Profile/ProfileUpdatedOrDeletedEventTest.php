@@ -38,8 +38,6 @@ class ProfileUpdatedOrDeletedEventTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        foreach ($result as $item) {
-            $this->assertInstanceOf(PrivateChannel::class, $item);
-        }
+        $this->assertContainsOnlyInstancesOf(PrivateChannel::class, $result);
     }
 }

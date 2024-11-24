@@ -21,10 +21,9 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        protected ImageManagerInterface $imageManager,
+        private readonly ImageManagerInterface $imageManager,
     ) {
         parent::__construct($employeeManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**

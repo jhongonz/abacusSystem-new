@@ -35,6 +35,13 @@ class ResetPasswordRequestTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+
+        foreach ($result as $index => $item) {
+            $this->assertIsString($index);
+
+            $this->assertIsArray($item);
+            $this->assertNotEmpty($item);
+        }
     }
 
     public function testMessagesShouldReturnArray(): void

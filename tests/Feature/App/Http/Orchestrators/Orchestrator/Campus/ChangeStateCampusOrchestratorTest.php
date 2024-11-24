@@ -7,6 +7,7 @@ use App\Http\Orchestrators\Orchestrator\Campus\ChangeStateCampusOrchestrator;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Core\Campus\Domain\ValueObjects\CampusState;
+use Core\Campus\Exceptions\CampusNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -41,7 +42,7 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Campus\Exceptions\CampusNotFoundException
+     * @throws CampusNotFoundException
      */
     public function testMakeShouldActiveWhenIsNewAndReturnCampus(): void
     {
@@ -89,7 +90,7 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Campus\Exceptions\CampusNotFoundException
+     * @throws CampusNotFoundException
      */
     public function testMakeShouldInactiveWhenIsActiveAndReturnCampus(): void
     {
@@ -144,6 +145,29 @@ class ChangeStateCampusOrchestratorTest extends TestCase
         $this->assertArrayHasKey('campus', $result);
         $this->assertInstanceOf(Campus::class, $result['campus']);
         $this->assertSame($campusMock, $result['campus']);
+    }
+
+    /**
+     * @throws CampusNotFoundException
+     * @throws Exception
+     */
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('campusId')
+            ->willReturn(1);
+
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->expectException(CampusNotFoundException::class);
+        $this->expectExceptionMessage('Campus not found with id 1');
+
+        $this->orchestrator->make($requestMock);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

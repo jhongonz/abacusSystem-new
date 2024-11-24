@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(CreateEmployeeOrchestrator::class)]
@@ -47,6 +49,7 @@ class CreateEmployeeOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
     public function testMakeShouldCreateAndReturnEmployee(): void
     {
@@ -91,6 +94,10 @@ class CreateEmployeeOrchestratorTest extends TestCase
             ->with('birthdate', 'd/m/Y')
             ->willReturn($carbonMock);
 
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('46aa4b5e-615d-466c-ab38-6674ec52637b');
+        });
+
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
             ->method('save')
@@ -107,10 +114,27 @@ class CreateEmployeeOrchestratorTest extends TestCase
             ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
             ->willReturn($imageMock);
 
+        $dataExpected = [
+            'id' => 1,
+            'userId' => null,
+            'institutionId' => 1,
+            'identification' => 'identification',
+            'name' => 'name',
+            'lastname' => 'lastname',
+            'identification_type' => 'identification_type',
+            'observations' => 'observations',
+            'email' => 'email',
+            'phone' => 'phone',
+            'address' => 'address',
+            'state' => 1,
+            'birthdate' => '2024-06-11 00:00:00',
+            'image' => '46aa4b5e-615d-466c-ab38-6674ec52637b.jpg',
+        ];
+
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('createEmployee')
-            ->withAnyParameters()
+            ->with([Employee::TYPE => $dataExpected])
             ->willReturn($employeeMock);
 
         $result = $this->orchestrator->make($requestMock);

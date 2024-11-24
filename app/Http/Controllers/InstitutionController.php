@@ -32,7 +32,6 @@ class InstitutionController extends Controller implements HasMiddleware
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
-        $this->setImageManager($imageManager);
         $this->setViewFactory($this->viewFactory);
     }
 

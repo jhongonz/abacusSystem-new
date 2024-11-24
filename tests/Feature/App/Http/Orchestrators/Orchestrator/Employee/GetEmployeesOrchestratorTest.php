@@ -56,28 +56,29 @@ class GetEmployeesOrchestratorTest extends TestCase
             ->with('filters')
             ->willReturn([]);
 
-        $employeesMock = new Employees();
         $employeeMock = $this->createMock(Employee::class);
-        $employeesMock->addItem($employeeMock);
+        $employeeMock2 = $this->createMock(Employee::class);
+        $employeesMock = new Employees([$employeeMock, $employeeMock2]);
 
         $this->employeeManagement->expects(self::once())
             ->method('searchEmployees')
             ->with([])
             ->willReturn($employeesMock);
 
-        $this->employeeDataTransformer->expects(self::once())
+        $this->employeeDataTransformer->expects(self::exactly(2))
             ->method('write')
-            ->with($employeeMock)
+            ->withAnyParameters()
             ->willReturnSelf();
 
-        $this->employeeDataTransformer->expects(self::once())
+        $this->employeeDataTransformer->expects(self::exactly(2))
             ->method('readToShare')
-            ->willReturn([]);
+            ->willReturnOnConsecutiveCalls(['sandbox' => 'testing'], ['sandbox' => 'testing']);
 
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
-        $this->assertSame([[]], $result);
+        $this->assertCount(2, $result);
+        $this->assertSame([['sandbox' => 'testing'], ['sandbox' => 'testing']], $result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void
