@@ -7,11 +7,13 @@ use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(CreateInstitutionOrchestrator::class)]
@@ -78,6 +80,10 @@ class CreateInstitutionOrchestratorTest extends TestCase
             ->with('token')
             ->willReturn(true);
 
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('eadbfeac-5258-45c2-bab7-ccb9b5ef74f9');
+        });
+
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
             ->method('save')
@@ -94,10 +100,23 @@ class CreateInstitutionOrchestratorTest extends TestCase
             ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
             ->willReturn($imageMock);
 
+        $dataInstitutionExpected = [
+            'id' => 0,
+            'name' => 'name',
+            'code' => 'code',
+            'shortname' => 'shortname',
+            'observations' => 'observations',
+            'address' => 'address',
+            'phone' => 'phone',
+            'email' => 'email',
+            'state' => 1,
+            'logo' => 'eadbfeac-5258-45c2-bab7-ccb9b5ef74f9.jpg',
+        ];
+
         $institutionMock = $this->createMock(Institution::class);
         $this->institutionManagement->expects(self::once())
             ->method('createInstitution')
-            ->withAnyParameters()
+            ->with([Institution::TYPE => $dataInstitutionExpected])
             ->willReturn($institutionMock);
 
         $result = $this->orchestrator->make($requestMock);

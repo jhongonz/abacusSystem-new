@@ -59,25 +59,30 @@ class GetInstitutionsOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $institutionMock = $this->createMock(Institution::class);
-        $institutions = new Institutions([$institutionMock]);
+        $institutionMock2 = $this->createMock(Institution::class);
+        $institutions = new Institutions([$institutionMock, $institutionMock2]);
 
         $this->institutionManagement->expects(self::once())
             ->method('searchInstitutions')
             ->with([])
             ->willReturn($institutions);
 
-        $this->institutionDataTransformer->expects(self::once())
+        $this->institutionDataTransformer->expects(self::exactly(2))
             ->method('write')
-            ->with($institutionMock)
+            ->withAnyParameters()
             ->willReturnSelf();
 
-        $this->institutionDataTransformer->expects(self::once())
+        $this->institutionDataTransformer->expects(self::exactly(2))
             ->method('readToShare')
-            ->willReturn([]);
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(['sandbox1' => 'testing'], ['sandbox2' => 'testing']);
 
         $result = $this->orchestrator->make($requestMock);
 
+        $dataExpected = [['sandbox1' => 'testing'], ['sandbox2' => 'testing']];
         $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

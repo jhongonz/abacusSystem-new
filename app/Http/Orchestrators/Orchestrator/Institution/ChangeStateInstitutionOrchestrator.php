@@ -29,7 +29,7 @@ class ChangeStateInstitutionOrchestrator extends InstitutionOrchestrator
         $institution = $this->institutionManagement->searchInstitutionById($institutionId);
 
         if (is_null($institution)) {
-            throw new InstitutionNotFoundException(sprintf('Institution with id %s not found', $institutionId));
+            throw new InstitutionNotFoundException(sprintf('Institution with id %d not found', $institutionId));
         }
 
         $institutionState = $institution->state();

@@ -30,7 +30,8 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
         $institution = $this->institutionManagement->searchInstitutionById($institutionId);
 
         if ($institution instanceof Institution) {
-            $urlFile = url(self::IMAGE_PATH_FULL.$institution->logo()->value().'?v='.Str::random(10));
+            $path = sprintf('%s%s?v=%s', self::IMAGE_PATH_FULL, $institution->logo()->value(), Str::random());
+            $urlFile = url($path);
         }
 
         return [

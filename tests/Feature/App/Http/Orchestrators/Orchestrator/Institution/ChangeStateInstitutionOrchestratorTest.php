@@ -7,6 +7,7 @@ use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
+use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -91,7 +92,7 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|InstitutionNotFoundException
      */
     public function testMakeShouldReturnInstitutionWhenIsInactivate(): void
     {
@@ -147,6 +148,31 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
         $this->assertArrayHasKey('institution', $result);
         $this->assertInstanceOf(Institution::class, $result['institution']);
         $this->assertSame($institutionMock, $result['institution']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('institutionId')
+            ->willReturn(1);
+
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutionById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->institutionManagement->expects(self::never())
+            ->method('updateInstitution');
+
+        $this->expectException(InstitutionNotFoundException::class);
+        $this->expectExceptionMessage('Institution with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

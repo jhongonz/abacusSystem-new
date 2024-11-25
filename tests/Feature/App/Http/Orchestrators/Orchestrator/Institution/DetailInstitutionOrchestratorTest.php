@@ -8,6 +8,7 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -59,6 +60,10 @@ class DetailInstitutionOrchestratorTest extends TestCase
         $institutionMock->expects(self::once())
             ->method('logo')
             ->willReturn($logoMock);
+
+        Str::createRandomStringsUsing(function () {
+            return '248ec6063c';
+        });
 
         $this->institutionManagement->expects(self::once())
             ->method('searchInstitutionById')
