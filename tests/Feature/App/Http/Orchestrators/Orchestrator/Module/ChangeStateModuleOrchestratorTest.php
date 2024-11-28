@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Module\ChangeStateModuleOrchestrator;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\ValueObjects\ModuleState;
+use Core\Profile\Exceptions\ModuleNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -39,7 +40,7 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
+     * @throws ModuleNotFoundException
      */
     public function testMakeShouldReturnModuleWhenIsActivate(): void
     {
@@ -91,7 +92,7 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Profile\Exceptions\ModuleNotFoundException
+     * @throws ModuleNotFoundException
      */
     public function testMakeShouldReturnModuleWhenIsInactivate(): void
     {
@@ -147,6 +148,23 @@ class ChangeStateModuleOrchestratorTest extends TestCase
         $this->assertArrayHasKey('module', $result);
         $this->assertInstanceOf(Module::class, $result['module']);
         $this->assertSame($moduleMock, $result['module']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnExceptionWhenModuleIsNull(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('moduleId')
+            ->willReturn(1);
+
+        $this->expectException(ModuleNotFoundException::class);
+        $this->expectExceptionMessage('Module with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

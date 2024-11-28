@@ -29,7 +29,7 @@ class VerifySession
                     [
                         'error' => 'unauthorized',
                         'error_description' => 'Failed authentication',
-                        'reason' => 401,
+                        'reason' => Response::HTTP_UNAUTHORIZED,
                     ],
                     Response::HTTP_UNAUTHORIZED
                 );

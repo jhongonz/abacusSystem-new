@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Profile\ChangeStateProfileOrchestrator;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\Profile\Exceptions\ProfileNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -39,7 +40,7 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      */
     public function testMakeShouldChangeStateWhenIsNewAndReturnProfile(): void
     {
@@ -90,7 +91,7 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws \Core\Profile\Exceptions\ProfileNotFoundException
+     * @throws ProfileNotFoundException
      */
     public function testMakeShouldChangeStateWhenIsActivatedAndReturnProfile(): void
     {
@@ -145,6 +146,23 @@ class ChangeStateProfileOrchestratorTest extends TestCase
         $this->assertArrayHasKey('profile', $result);
         $this->assertInstanceOf(Profile::class, $result['profile']);
         $this->assertSame($profileMock, $result['profile']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnExceptionWhenProfileISNotFound(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('profileId')
+            ->willReturn(1);
+
+        $this->expectException(ProfileNotFoundException::class);
+        $this->expectExceptionMessage('Profile with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

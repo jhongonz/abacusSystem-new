@@ -24,13 +24,12 @@ class UserController extends Controller implements HasMiddleware
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        Hasher $hasher,
+        protected Hasher $hasher,
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
         private readonly UrlGenerator $urlGenerator,
     ) {
         parent::__construct($logger);
-        $this->setHasher($hasher);
     }
 
     public function index(): JsonResponse|string

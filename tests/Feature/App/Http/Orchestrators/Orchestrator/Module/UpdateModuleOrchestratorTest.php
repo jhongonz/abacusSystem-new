@@ -98,10 +98,18 @@ class UpdateModuleOrchestratorTest extends TestCase
             ->method('getRoutes')
             ->willReturn($routeCollectionMock);
 
+        $dataExpected = [
+            'name' => 'name',
+            'route' => 'localhost',
+            'icon' => 'icon',
+            'position' => 'position',
+            'key' => 'key',
+        ];
+
         $moduleMock = $this->createMock(Module::class);
         $this->moduleManagement->expects(self::once())
             ->method('updateModule')
-            ->withAnyParameters()
+            ->with(1, $dataExpected)
             ->willReturn($moduleMock);
 
         $result = $this->orchestrator->make($requestMock);

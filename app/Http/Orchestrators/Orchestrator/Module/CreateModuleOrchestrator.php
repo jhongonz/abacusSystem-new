@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 17:53:22
@@ -27,7 +28,6 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
         private readonly LoggerInterface $logger,
     ) {
         parent::__construct($moduleManagement);
-        $this->setRouter($router);
     }
 
     /**

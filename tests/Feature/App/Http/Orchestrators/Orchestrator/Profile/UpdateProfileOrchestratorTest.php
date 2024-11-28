@@ -45,6 +45,7 @@ class UpdateProfileOrchestratorTest extends TestCase
     {
         $modulesExpected = [
             ['id' => 1],
+            ['id' => 2],
         ];
 
         $requestMock = $this->createMock(Request::class);
@@ -62,10 +63,16 @@ class UpdateProfileOrchestratorTest extends TestCase
             ->with('profileId')
             ->willReturn(1);
 
+        $dataExpected = [
+            'name' => 'name',
+            'description' => 'description',
+            'modules' => [1, 2],
+        ];
+
         $profileMock = $this->createMock(Profile::class);
         $this->profileManagement->expects(self::once())
             ->method('updateProfile')
-            ->withAnyParameters()
+            ->with(1, $dataExpected)
             ->willReturn($profileMock);
 
         $result = $this->orchestrator->make($requestMock);

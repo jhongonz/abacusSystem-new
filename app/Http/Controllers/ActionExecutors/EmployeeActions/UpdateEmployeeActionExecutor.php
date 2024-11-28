@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-09 22:04:33
@@ -26,7 +27,6 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         protected Hasher $hasher,
     ) {
         parent::__construct($orchestratorHandler);
-        $this->setHasher($hasher);
     }
 
     public function invoke(Request $request): Employee

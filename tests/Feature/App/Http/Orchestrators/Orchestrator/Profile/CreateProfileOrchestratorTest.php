@@ -45,6 +45,7 @@ class CreateProfileOrchestratorTest extends TestCase
     {
         $modulesExpected = [
             ['id' => 1],
+            ['id' => 2],
         ];
 
         $requestMock = $this->createMock(Request::class);
@@ -57,10 +58,18 @@ class CreateProfileOrchestratorTest extends TestCase
                 $modulesExpected
             );
 
+        $dataExpected = [
+            'id' => null,
+            'name' => 'name',
+            'description' => 'description',
+            'modulesAggregator' => [1, 2],
+            'state' => 1,
+        ];
+
         $profileMock = $this->createMock(Profile::class);
         $this->profileManagement->expects(self::once())
             ->method('createProfile')
-            ->withAnyParameters()
+            ->with([Profile::TYPE => $dataExpected])
             ->willReturn($profileMock);
 
         $result = $this->orchestrator->make($requestMock);

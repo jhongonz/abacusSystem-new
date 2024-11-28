@@ -8,11 +8,6 @@ trait UserTrait
 {
     protected Hasher $hasher;
 
-    public function setHasher(Hasher $hasher): void
-    {
-        $this->hasher = $hasher;
-    }
-
     public function makeHashPassword(string $password): string
     {
         return $this->hasher->make($password);

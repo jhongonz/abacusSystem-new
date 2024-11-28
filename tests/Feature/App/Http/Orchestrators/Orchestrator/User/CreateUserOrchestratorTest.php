@@ -49,19 +49,18 @@ class CreateUserOrchestratorTest extends TestCase
     public function testMakeShouldCreateAndReturnUser(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(3))
+        $requestMock->expects(self::exactly(2))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                1,
                 'login',
                 'image'
             );
 
-        $requestMock->expects(self::once())
+        $requestMock->expects(self::exactly(2))
             ->method('integer')
-            ->with('employeeId')
-            ->willReturn(1);
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(1, 1);
 
         $requestMock->expects(self::once())
             ->method('string')
@@ -73,10 +72,20 @@ class CreateUserOrchestratorTest extends TestCase
             ->with('password')
             ->willReturn('password');
 
+        $dataExpected = [
+            'id' => null,
+            'employeeId' => 1,
+            'profileId' => 1,
+            'login' => 'login',
+            'password' => 'password',
+            'photo' => 'image',
+            'state' => 1,
+        ];
+
         $userMock = $this->createMock(User::class);
         $this->userManagement->expects(self::once())
             ->method('createUser')
-            ->withAnyParameters()
+            ->with([User::TYPE => $dataExpected])
             ->willReturn($userMock);
 
         $result = $this->orchestrator->make($requestMock);

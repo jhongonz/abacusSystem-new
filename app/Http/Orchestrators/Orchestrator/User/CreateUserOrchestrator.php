@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 16:08:51
@@ -22,7 +23,6 @@ class CreateUserOrchestrator extends UserOrchestrator
         protected Hasher $hasher,
     ) {
         parent::__construct($userManagement);
-        $this->setHasher($hasher);
     }
 
     /**
@@ -33,7 +33,7 @@ class CreateUserOrchestrator extends UserOrchestrator
         $dataUser = [
             'id' => null,
             'employeeId' => $request->integer('employeeId'),
-            'profileId' => $request->input('profile'),
+            'profileId' => $request->integer('profile'),
             'login' => $request->input('login'),
             'password' => $this->makeHashPassword($request->string('password')),
             'photo' => $request->input('image') ?? null,

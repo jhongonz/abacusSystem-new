@@ -56,25 +56,29 @@ class GetProfilesOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $profileMock = $this->createMock(Profile::class);
-        $profilesMock = new Profiles([$profileMock]);
+        $profileMock2 = $this->createMock(Profile::class);
+        $profilesMock = new Profiles([$profileMock, $profileMock2]);
 
         $this->profileManagement->expects(self::once())
             ->method('searchProfiles')
             ->with([])
             ->willReturn($profilesMock);
 
-        $this->profileDataTransformer->expects(self::once())
+        $this->profileDataTransformer->expects(self::exactly(2))
             ->method('write')
             ->with($profileMock)
             ->willReturnSelf();
 
-        $this->profileDataTransformer->expects(self::once())
+        $this->profileDataTransformer->expects(self::exactly(2))
             ->method('readToShare')
-            ->willReturn([]);
+            ->willReturnOnConsecutiveCalls(['sandbox' => 'testing'], ['sandbox2' => 'testing']);
 
         $result = $this->orchestrator->make($requestMock);
 
+        $dataExpected = [['sandbox' => 'testing'], ['sandbox2' => 'testing']];
         $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void

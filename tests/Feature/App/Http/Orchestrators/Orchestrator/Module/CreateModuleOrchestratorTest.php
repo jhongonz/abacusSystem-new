@@ -95,10 +95,20 @@ class CreateModuleOrchestratorTest extends TestCase
             ->method('getRoutes')
             ->willReturn($routeCollectionMock);
 
+        $dataExpected = [
+            'id' => null,
+            'key' => 'key',
+            'name' => 'name',
+            'route' => 'localhost',
+            'icon' => 'icon',
+            'position' => 'position',
+            'state' => 1,
+        ];
+
         $moduleMock = $this->createMock(Module::class);
         $this->moduleManagement->expects(self::once())
             ->method('createModule')
-            ->withAnyParameters()
+            ->with([Module::TYPE => $dataExpected])
             ->willReturn($moduleMock);
 
         $result = $this->orchestrator->make($requestMock);

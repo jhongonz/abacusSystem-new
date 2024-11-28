@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-08 00:03:46
@@ -61,7 +62,7 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         foreach ($parents as $index => $item) {
             $modulesParent = $modules->moduleElementsOfKey($index);
 
-            if (count($modulesParent) > 0) {
+            if (!empty($modulesParent)) {
                 $privileges[$index]['menu'] = $item;
                 $privileges[$index]['children'] = [];
             }

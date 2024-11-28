@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-07 23:50:52
@@ -29,7 +30,7 @@ class ChangeStateProfileOrchestrator extends ProfileOrchestrator
         $profile = $this->profileManagement->searchProfileById($profileId);
 
         if (is_null($profile)) {
-            throw new ProfileNotFoundException(sprintf('Profile with id %s not found', $profileId));
+            throw new ProfileNotFoundException(sprintf('Profile with id %d not found', $profileId));
         }
 
         $state = $profile->state();

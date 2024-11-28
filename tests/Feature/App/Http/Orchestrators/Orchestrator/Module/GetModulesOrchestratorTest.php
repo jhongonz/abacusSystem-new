@@ -56,25 +56,29 @@ class GetModulesOrchestratorTest extends TestCase
             ->willReturn([]);
 
         $moduleMock = $this->createMock(Module::class);
-        $modulesMock = new Modules([$moduleMock]);
+        $moduleMock2 = $this->createMock(Module::class);
+        $modulesMock = new Modules([$moduleMock, $moduleMock2]);
 
         $this->moduleManagement->expects(self::once())
             ->method('searchModules')
             ->with([])
             ->willReturn($modulesMock);
 
-        $this->moduleDataTransformer->expects(self::once())
+        $this->moduleDataTransformer->expects(self::exactly(2))
             ->method('write')
             ->with($moduleMock)
             ->willReturnSelf();
 
-        $this->moduleDataTransformer->expects(self::once())
+        $this->moduleDataTransformer->expects(self::exactly(2))
             ->method('readToShare')
-            ->willReturn([]);
+            ->willReturnOnConsecutiveCalls(['sandbox' => 'testing'], ['sandbox2' => 'testing']);
 
         $result = $this->orchestrator->make($requestMock);
 
+        $dataExpected = [['sandbox' => 'testing'], ['sandbox2' => 'testing']];
         $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 
     public function testCanOrchestrateShouldReturnString(): void
