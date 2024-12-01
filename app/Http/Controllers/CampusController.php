@@ -30,7 +30,6 @@ class CampusController extends Controller implements HasMiddleware
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
-        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string

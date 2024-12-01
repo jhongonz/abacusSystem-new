@@ -20,6 +20,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -568,10 +569,14 @@ class EmployeeControllerTest extends TestCase
             ->with('file')
             ->willReturn($fileMock);
 
+        Str::createRandomStringsUsing(function () {
+            return '248ec6063c';
+        });
+
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::once())
             ->method('save')
-            ->withAnyParameters()
+            ->with('/var/www/abacusSystem-new/public/images/tmp/248ec6063c.jpg')
             ->willReturnSelf();
 
         $this->imageManager->expects(self::once())
@@ -580,11 +585,13 @@ class EmployeeControllerTest extends TestCase
             ->willReturn($imageMock);
 
         $result = $this->controller->setImageEmployee($request);
+        $dataResult = $result->getData(true);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(201, $result->getStatusCode());
-        $this->assertArrayHasKey('token', $result->getData(true));
-        $this->assertArrayHasKey('url', $result->getData(true));
+        $this->assertCount(2, $dataResult);
+        $this->assertEquals('248ec6063c', $dataResult['token']);
+        $this->assertEquals('http://localhost/images/tmp/248ec6063c.jpg', $dataResult['url']);
     }
 
     /**
@@ -629,6 +636,46 @@ class EmployeeControllerTest extends TestCase
         $imageMock->expects(self::once())
             ->method('value')
             ->willReturn('image.jpg');
+        $employeeMock->expects(self::once())
+            ->method('image')
+            ->willReturn($imageMock);
+
+        $userIdMock = $this->createMock(EmployeeUserId::class);
+        $userIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $employeeMock->expects(self::once())
+            ->method('userId')
+            ->willReturn($userIdMock);
+
+        $this->orchestrator->expects(self::exactly(3))
+            ->method('handler')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(['employee' => $employeeMock], [], []);
+
+        $result = $this->controller->deleteEmployee($requestMock, 10);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(200, $result->getStatusCode());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testDeleteEmployeeShouldReturnJsonResponseWhenImageIsNull(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::exactly(2))
+            ->method('merge')
+            ->withAnyParameters()
+            ->willReturnSelf();
+
+        $employeeMock = $this->createMock(Employee::class);
+
+        $imageMock = $this->createMock(EmployeeImage::class);
+        $imageMock->expects(self::once())
+            ->method('value')
+            ->willReturn(null);
         $employeeMock->expects(self::once())
             ->method('image')
             ->willReturn($imageMock);
@@ -753,10 +800,17 @@ class EmployeeControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getEmployees', 'setImageEmployee', 'deleteEmployee', 'changeStateEmployee', 'storeEmployee',
+            ]),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

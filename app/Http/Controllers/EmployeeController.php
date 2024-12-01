@@ -38,7 +38,6 @@ class EmployeeController extends Controller implements HasMiddleware
         LoggerInterface $logger,
     ) {
         parent::__construct($logger);
-        $this->setViewFactory($this->viewFactory);
     }
 
     public function index(): JsonResponse|string
@@ -136,7 +135,7 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $uploadedFile = $request->file('file');
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-            $random = Str::random(10);
+            $random = Str::random();
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
@@ -157,7 +156,7 @@ class EmployeeController extends Controller implements HasMiddleware
             $this->orchestrators->handler('delete-employee', $request);
 
             $image = $employee->image()->value();
-            if (!is_null($image)) {
+            if (!empty($image)) {
                 $this->deleteImage($image);
             }
         } catch (\Exception $exception) {

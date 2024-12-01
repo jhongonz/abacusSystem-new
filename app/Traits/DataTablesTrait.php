@@ -7,15 +7,8 @@
 
 namespace App\Traits;
 
-use Illuminate\View\Factory as ViewFactory;
-
 trait DataTablesTrait
 {
-    public function setViewFactory(ViewFactory $viewFactory): void
-    {
-        $this->viewFactory = $viewFactory;
-    }
-
     /**
      * @param array<string, mixed> $item
      */
