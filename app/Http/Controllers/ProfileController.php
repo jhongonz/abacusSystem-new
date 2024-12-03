@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
@@ -23,6 +24,7 @@ class ProfileController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
@@ -60,7 +62,7 @@ class ProfileController extends Controller implements HasMiddleware
             $dataProfile = $this->orchestrators->handler('change-state-profile', $request);
             $profile = $dataProfile['profile'];
 
-            ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent((int) $profile->id()->value()));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -76,7 +78,8 @@ class ProfileController extends Controller implements HasMiddleware
             $request->merge(['profileId' => $id]);
 
             $this->orchestrators->handler('delete-profile', $request);
-            ProfileUpdatedOrDeletedEvent::dispatch($id);
+
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($id));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -108,7 +111,7 @@ class ProfileController extends Controller implements HasMiddleware
             $dataProfile = $this->orchestrators->handler($method, $request);
             $profile = $dataProfile['profile'];
 
-            ProfileUpdatedOrDeletedEvent::dispatch((int) $profile->id()->value());
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent((int) $profile->id()->value()));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

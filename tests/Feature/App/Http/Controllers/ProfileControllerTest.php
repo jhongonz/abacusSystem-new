@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -31,6 +32,7 @@ class ProfileControllerTest extends TestCase
     private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EventDispatcher|MockObject $eventDispatcher;
     private ProfileController $controller;
 
     /**
@@ -43,9 +45,12 @@ class ProfileControllerTest extends TestCase
         $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
+
         $this->controller = new ProfileController(
             $this->orchestratorHandler,
             $this->dataTables,
+            $this->eventDispatcher,
             $this->viewFactory,
             $this->logger
         );
@@ -58,7 +63,8 @@ class ProfileControllerTest extends TestCase
             $this->orchestratorHandler,
             $this->viewFactory,
             $this->logger,
-            $this->dataTables
+            $this->dataTables,
+            $this->eventDispatcher
         );
         parent::tearDown();
     }

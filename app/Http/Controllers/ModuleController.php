@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
@@ -23,6 +24,7 @@ class ModuleController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
     ) {
@@ -60,7 +62,7 @@ class ModuleController extends Controller implements HasMiddleware
             $dataModule = $this->orchestrators->handler('change-state-module', $request);
             $module = $dataModule['module'];
 
-            ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent((int) $module->id()->value()));
         } catch (\Exception $exception) {
             $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
 
@@ -92,7 +94,7 @@ class ModuleController extends Controller implements HasMiddleware
             $dataModule = $this->orchestrators->handler($method, $request);
             $module = $dataModule['module'];
 
-            ModuleUpdatedOrDeletedEvent::dispatch((int) $module->id()->value());
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent((int) $module->id()->value()));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -111,7 +113,7 @@ class ModuleController extends Controller implements HasMiddleware
             $request->merge(['moduleId' => $id]);
             $this->orchestrators->handler('delete-module', $request);
 
-            ModuleUpdatedOrDeletedEvent::dispatch((int) $id);
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($id));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

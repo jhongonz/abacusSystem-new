@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
+use App\Events\EventDispatcher;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -33,6 +34,7 @@ class EmployeeController extends Controller implements HasMiddleware
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly ActionExecutorHandler $actionExecutorHandler,
         private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
         protected ImageManagerInterface $imageManager,
         protected ViewFactory $viewFactory,
         LoggerInterface $logger,
@@ -84,7 +86,7 @@ class EmployeeController extends Controller implements HasMiddleware
             ]);
 
             $this->orchestrators->handler('change-state-user', $request);
-            UserUpdateOrDeleteEvent::dispatch($userId);
+            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
         }
 
         return new JsonResponse(status: Response::HTTP_CREATED);
@@ -111,8 +113,8 @@ class EmployeeController extends Controller implements HasMiddleware
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);
 
-            EmployeeUpdateOrDeletedEvent::dispatch((int) $employee->id()->value());
-            UserUpdateOrDeleteEvent::dispatch((int) $employee->userId()->value());
+            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent((int) $employee->id()->value()));
+            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent((int) $employee->userId()->value()));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

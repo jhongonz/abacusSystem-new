@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmployeeController;
@@ -39,6 +40,7 @@ class EmployeeControllerTest extends TestCase
     private OrchestratorHandlerContract|MockObject $orchestrator;
     private ActionExecutorHandler|MockObject $actionExecutorHandler;
     private DataTables|MockObject $datatables;
+    private EventDispatcher|MockObject $eventDispatcher;
     private ImageManagerInterface|MockObject $imageManager;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
@@ -56,11 +58,13 @@ class EmployeeControllerTest extends TestCase
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $this->controller = new EmployeeController(
             $this->orchestrator,
             $this->actionExecutorHandler,
             $this->datatables,
+            $this->eventDispatcher,
             $this->imageManager,
             $this->viewFactory,
             $this->logger
@@ -76,7 +80,8 @@ class EmployeeControllerTest extends TestCase
             $this->logger,
             $this->controller,
             $this->actionExecutorHandler,
-            $this->datatables
+            $this->datatables,
+            $this->eventDispatcher
         );
 
         parent::tearDown();

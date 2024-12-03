@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -31,6 +32,7 @@ class ModuleControllerTest extends TestCase
     private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EventDispatcher|MockObject $eventDispatcher;
     private ModuleController $controller;
 
     /**
@@ -43,10 +45,12 @@ class ModuleControllerTest extends TestCase
         $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $this->controller = new ModuleController(
             $this->orchestrator,
             $this->dataTables,
+            $this->eventDispatcher,
             $this->viewFactory,
             $this->logger,
         );
@@ -59,7 +63,8 @@ class ModuleControllerTest extends TestCase
             $this->viewFactory,
             $this->logger,
             $this->controller,
-            $this->actionExecutorHandler
+            $this->actionExecutorHandler,
+            $this->eventDispatcher
         );
         parent::tearDown();
     }
