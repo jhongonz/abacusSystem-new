@@ -64,7 +64,13 @@ class ModuleController extends Controller implements HasMiddleware
 
             $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent((int) $module->id()->value()));
         } catch (\Exception $exception) {
-            $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
+            /** @var string $moduleId */
+            $moduleId = $request->input('moduleId');
+
+            $this->logger->error(
+                sprintf('Module can not be updated with id: %s', $moduleId),
+                $exception->getTrace()
+            );
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }

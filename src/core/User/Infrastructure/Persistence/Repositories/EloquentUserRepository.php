@@ -173,9 +173,6 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         return $this->model->getTable();
     }
 
-    /**
-     * @throws \Exception
-     */
     private function getDateTime(): \DateTime
     {
         return new \DateTime('now');

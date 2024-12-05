@@ -120,8 +120,10 @@ class SecurityController extends Controller implements HasMiddleware
         $dataProfile = $this->orchestrators->handler('retrieve-profile', $request);
         $profile = $dataProfile['profile'];
 
-        if ($profile instanceof Profile && $profile->state()->isInactivated()) {
-            $this->logger->warning("User's profile with id: ".$profile->id()->value().' is not active');
+        if ($profile->state()->isInactivated()) {
+            $this->logger->warning(
+                sprintf("User's profile with id: %s is not active", $profile->id()->value())
+            );
             throw new ProfileNotActiveException('User is not authorized, contact with administrator');
         }
 

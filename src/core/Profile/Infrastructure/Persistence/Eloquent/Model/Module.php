@@ -27,7 +27,7 @@ class Module extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array<string, int>
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'mod_state' => 1,
@@ -37,7 +37,7 @@ class Module extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'mod_id',

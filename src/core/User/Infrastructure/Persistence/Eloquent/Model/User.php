@@ -32,7 +32,7 @@ class User extends Authenticatable
     /**
      * The model's default values for attributes.
      *
-     * @var array<string, int>
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'user_state' => 1,
@@ -41,7 +41,7 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -59,7 +59,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'user_remember_token',

@@ -28,7 +28,7 @@ class Campus extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array<string, int>
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'cam_state' => 1,
@@ -37,7 +37,7 @@ class Campus extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'cam_id',

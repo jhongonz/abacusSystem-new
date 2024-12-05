@@ -73,7 +73,13 @@ class EmployeeController extends Controller implements HasMiddleware
             $dataEmployee = $this->orchestrators->handler('change-state-employee', $request);
             $employee = $dataEmployee['employee'];
         } catch (\Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$request->input('id'), $exception->getTrace());
+            /** @var string $id */
+            $id = $request->input('id');
+
+            $this->logger->error(
+                sprintf('Employee can not be updated with id: %s', $id),
+                $exception->getTrace()
+            );
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
