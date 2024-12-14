@@ -26,10 +26,8 @@ class UserController extends Controller implements HasMiddleware
         private readonly OrchestratorHandlerContract $orchestrators,
         protected Hasher $hasher,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger,
         private readonly UrlGenerator $urlGenerator,
     ) {
-        parent::__construct($logger);
     }
 
     public function index(): JsonResponse|string
@@ -90,7 +88,7 @@ class UserController extends Controller implements HasMiddleware
     {
         return [
             new Middleware(['auth', 'verify-session']),
-            new Middleware('only.ajax-request', only: ['recoveryAccout', 'resetPassword']),
+            new Middleware('only.ajax-request', only: ['recoveryAccount', 'resetPassword']),
         ];
     }
 }

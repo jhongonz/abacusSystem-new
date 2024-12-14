@@ -32,7 +32,6 @@ class UserControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
     private ViewFactory|MockObject $viewFactory;
-    private LoggerInterface|MockObject $logger;
     private Hasher|MockObject $hasher;
     private UrlGenerator|MockObject $urlGenerator;
     private UserController $controller;
@@ -45,14 +44,12 @@ class UserControllerTest extends TestCase
         parent::setUp();
         $this->hasher = $this->createMock(Hasher::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
         $this->urlGenerator = $this->createMock(UrlGenerator::class);
         $this->controller = new UserController(
             $this->orchestrator,
             $this->hasher,
             $this->viewFactory,
-            $this->logger,
             $this->urlGenerator
         );
     }
@@ -62,7 +59,6 @@ class UserControllerTest extends TestCase
         unset(
             $this->controller,
             $this->viewFactory,
-            $this->logger,
             $this->orchestrator,
             $this->hasher,
             $this->urlGenerator
@@ -291,7 +287,10 @@ class UserControllerTest extends TestCase
 
         $requestMock->expects(self::once())
             ->method('merge')
-            ->withAnyParameters()
+            ->with(['dataUpdate' => [
+                'state' => 2,
+                'password' => 'password'
+            ]])
             ->willReturnSelf();
 
         $this->hasher->expects(self::once())
@@ -313,10 +312,15 @@ class UserControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: ['recoveryAccount', 'resetPassword']),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

@@ -28,11 +28,10 @@ class SecurityController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
         private readonly StatefulGuard $guard,
         private readonly Session $session,
     ) {
-        parent::__construct($logger);
     }
 
     public function index(): Response
@@ -124,6 +123,7 @@ class SecurityController extends Controller implements HasMiddleware
             $this->logger->warning(
                 sprintf("User's profile with id: %s is not active", $profile->id()->value())
             );
+
             throw new ProfileNotActiveException('User is not authorized, contact with administrator');
         }
 

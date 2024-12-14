@@ -37,9 +37,8 @@ class EmployeeController extends Controller implements HasMiddleware
         private readonly EventDispatcher $eventDispatcher,
         protected ImageManagerInterface $imageManager,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger);
     }
 
     public function index(): JsonResponse|string

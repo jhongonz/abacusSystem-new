@@ -26,9 +26,8 @@ class ProfileController extends Controller implements HasMiddleware
         private readonly DataTables $dataTables,
         private readonly EventDispatcher $eventDispatcher,
         protected ViewFactory $viewFactory,
-        LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger);
     }
 
     public function index(): JsonResponse|string

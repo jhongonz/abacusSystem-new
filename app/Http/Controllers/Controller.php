@@ -10,12 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class Controller
 {
-    public function __construct(
-        protected readonly LoggerInterface $logger,
-    ) {
-    }
-
-    public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
+    protected function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
     {
         /** @var Request $requestService */
         $requestService = app(Request::class);
@@ -31,7 +26,7 @@ abstract class Controller
         return $html;
     }
 
-    public function getPagination(?string $route = null): string
+    protected function getPagination(?string $route = null): string
     {
         if (is_null($route)) {
             /** @var Router $routerService */
@@ -41,10 +36,13 @@ abstract class Controller
             $route = ($routeCurrent) ? $routeCurrent->uri() : '';
         }
 
-        return (string) json_encode([
+        /** @var string $dataResponse */
+        $dataResponse = json_encode([
             'start' => 0,
             'filters' => [],
             'uri' => $route,
         ]);
+
+        return $dataResponse;
     }
 }
