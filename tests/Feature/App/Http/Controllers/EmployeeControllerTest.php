@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Events\EventDispatcher;
+use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmployeeController;
@@ -44,6 +45,7 @@ class EmployeeControllerTest extends TestCase
     private ImageManagerInterface|MockObject $imageManager;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EmployeeController|MockObject $controllerMock;
     private EmployeeController $controller;
 
     /**
@@ -59,6 +61,19 @@ class EmployeeControllerTest extends TestCase
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->eventDispatcher = $this->createMock(EventDispatcher::class);
+
+        $this->controllerMock = $this->getMockBuilder(EmployeeController::class)
+            ->setConstructorArgs([
+                $this->orchestrator,
+                $this->actionExecutorHandler,
+                $this->datatables,
+                $this->eventDispatcher,
+                $this->imageManager,
+                $this->viewFactory,
+                $this->logger,
+            ])
+            ->onlyMethods(['deleteImage'])
+            ->getMock();
 
         $this->controller = new EmployeeController(
             $this->orchestrator,
@@ -79,6 +94,7 @@ class EmployeeControllerTest extends TestCase
             $this->imageManager,
             $this->logger,
             $this->controller,
+            $this->controllerMock,
             $this->actionExecutorHandler,
             $this->datatables,
             $this->eventDispatcher
@@ -273,6 +289,11 @@ class EmployeeControllerTest extends TestCase
                 ['user' => $userMock]
             );
 
+        $eventMock = new UserUpdateOrDeleteEvent(10);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
+
         $requestMock->expects(self::once())
             ->method('merge')
             ->with([
@@ -329,6 +350,11 @@ class EmployeeControllerTest extends TestCase
                 ['employee' => $employeeMock],
                 ['user' => $userMock]
             );
+
+        $eventMock = new UserUpdateOrDeleteEvent(10);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->changeStateEmployee($request);
 
@@ -518,6 +544,10 @@ class EmployeeControllerTest extends TestCase
             ->with('create-employee-action', $request)
             ->willReturn($employeeMock);
 
+        $this->eventDispatcher->expects(self::exactly(2))
+            ->method('dispatch')
+            ->withAnyParameters();
+
         $result = $this->controller->storeEmployee($request);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -590,13 +620,15 @@ class EmployeeControllerTest extends TestCase
             ->willReturn($imageMock);
 
         $result = $this->controller->setImageEmployee($request);
-        $dataResult = $result->getData(true);
 
+        $dataResponseExpected = [
+            'token' => '248ec6063c',
+            'url' => 'http://localhost/images/tmp/248ec6063c.jpg',
+        ];
+        $dataResult = $result->getData(true);
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(201, $result->getStatusCode());
-        $this->assertCount(2, $dataResult);
-        $this->assertEquals('248ec6063c', $dataResult['token']);
-        $this->assertEquals('http://localhost/images/tmp/248ec6063c.jpg', $dataResult['url']);
+        $this->assertSame($dataResponseExpected, $dataResult);
     }
 
     /**
@@ -626,14 +658,46 @@ class EmployeeControllerTest extends TestCase
     /**
      * @throws Exception
      */
+    public function testSetImageEmployeeShouldReturnInternalErrorWhenFileIsNotValid(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $fileMock = $this->createMock(\stdClass::class);
+        $request->expects(self::once())
+            ->method('file')
+            ->with('file')
+            ->willReturn($fileMock);
+
+        $result = $this->controller->setImageEmployee($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testDeleteEmployeeShouldReturnJsonResponse(): void
     {
+        $employeeId = 10;
+        $userId = 1;
         $requestMock = $this->createMock(Request::class);
 
+        $callIndex = 0;
         $requestMock->expects(self::exactly(2))
             ->method('merge')
-            ->withAnyParameters()
-            ->willReturnSelf();
+            ->willReturnCallback(function ($input) use (&$callIndex, &$userId, &$employeeId){
+
+                $this->assertIsArray($input);
+                if ($callIndex === 0) {
+                    $this->assertEquals(['employeeId' => $employeeId], $input);
+                } elseif ($callIndex === 1) {
+                    $this->assertSame(['userId' => $userId], $input);
+                }
+
+                $callIndex++;
+            });
 
         $employeeMock = $this->createMock(Employee::class);
 
@@ -648,7 +712,7 @@ class EmployeeControllerTest extends TestCase
         $userIdMock = $this->createMock(EmployeeUserId::class);
         $userIdMock->expects(self::once())
             ->method('value')
-            ->willReturn(1);
+            ->willReturn($userId);
         $employeeMock->expects(self::once())
             ->method('userId')
             ->willReturn($userIdMock);
@@ -658,7 +722,11 @@ class EmployeeControllerTest extends TestCase
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(['employee' => $employeeMock], [], []);
 
-        $result = $this->controller->deleteEmployee($requestMock, 10);
+        $this->controllerMock->expects(self::once())
+            ->method('deleteImage')
+            ->with('image.jpg');
+
+        $result = $this->controllerMock->deleteEmployee($requestMock, $employeeId);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(200, $result->getStatusCode());

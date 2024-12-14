@@ -39,7 +39,7 @@ trait MultimediaTrait
         return url(self::IMAGE_PATH_TMP.$filename);
     }
 
-    private function deleteImage(string $photo): void
+    protected function deleteImage(string $photo): void
     {
         @unlink(public_path(self::IMAGE_PATH_FULL.$photo));
         @unlink(public_path(self::IMAGE_PATH_SMALL.$photo));

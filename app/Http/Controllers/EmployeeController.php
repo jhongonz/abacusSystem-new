@@ -119,8 +119,15 @@ class EmployeeController extends Controller implements HasMiddleware
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);
 
-            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent((int) $employee->id()->value()));
-            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent((int) $employee->userId()->value()));
+            /** @var int $employeeId */
+            $employeeId = $employee->id()->value();
+
+            /** @var int $userId */
+            $userId = $employee->userId()->value();
+
+            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
+            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
+
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -142,6 +149,7 @@ class EmployeeController extends Controller implements HasMiddleware
     public function setImageEmployee(Request $request): JsonResponse
     {
         $uploadedFile = $request->file('file');
+
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
             $random = Str::random();
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
