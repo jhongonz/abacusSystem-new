@@ -62,7 +62,9 @@ class ModuleController extends Controller implements HasMiddleware
             $dataModule = $this->orchestrators->handler('change-state-module', $request);
             $module = $dataModule['module'];
 
-            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent((int) $module->id()->value()));
+            /** @var int $moduleId */
+            $moduleId = $module->id()->value();
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($moduleId));
         } catch (\Exception $exception) {
             /** @var string $moduleId */
             $moduleId = $request->input('moduleId');
@@ -100,7 +102,9 @@ class ModuleController extends Controller implements HasMiddleware
             $dataModule = $this->orchestrators->handler($method, $request);
             $module = $dataModule['module'];
 
-            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent((int) $module->id()->value()));
+            /** @var int $moduleId */
+            $moduleId = $module->id()->value();
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($moduleId));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

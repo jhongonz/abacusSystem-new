@@ -103,12 +103,22 @@ class SecurityControllerTest extends TestCase
      */
     public function testAuthenticateShouldReturnJsonResponseWhenAttemptTrueAndRequestIsAjax(): void
     {
+        $profileId = 2;
+        $employeeId = 1;
         $request = $this->createMock(LoginRequest::class);
 
+        $callIndex = 0;
         $request->expects(self::exactly(2))
             ->method('merge')
-            ->withAnyParameters()
-            ->willReturnSelf();
+            ->willReturnCallback(function ($input) use (&$callIndex, &$profileId, &$employeeId) {
+                if (0 === $callIndex) {
+                    $this->assertEquals(['employeeId' => $employeeId], $input);
+                } elseif (1 === $callIndex) {
+                    $this->assertEquals(['profileId' => $profileId], $input);
+                }
+
+                ++$callIndex;
+            });
 
         $request->expects(self::once())
             ->method('input')
@@ -140,7 +150,7 @@ class SecurityControllerTest extends TestCase
         $employeeIdMock = $this->createMock(UserEmployeeId::class);
         $employeeIdMock->expects(self::once())
             ->method('value')
-            ->willReturn(1);
+            ->willReturn($employeeId);
         $userMock->expects(self::once())
             ->method('employeeId')
             ->willReturn($employeeIdMock);
@@ -148,7 +158,7 @@ class SecurityControllerTest extends TestCase
         $profileIdMock = $this->createMock(UserProfileId::class);
         $profileIdMock->expects(self::once())
             ->method('value')
-            ->willReturn(2);
+            ->willReturn($profileId);
         $userMock->expects(self::once())
             ->method('profileId')
             ->willReturn($profileIdMock);
@@ -633,10 +643,15 @@ class SecurityControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware('auth', only: ['home']),
+        ];
+
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Events\EventDispatcher;
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -240,6 +241,11 @@ class ProfileControllerTest extends TestCase
             ->with('change-state-profile', $requestMock)
             ->willReturn(['profile' => $profileMock]);
 
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
+
         $result = $this->controller->changeStateProfile($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -287,6 +293,11 @@ class ProfileControllerTest extends TestCase
             ->method('handler')
             ->with('delete-profile', $requestMock)
             ->willReturn([]);
+
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->deleteProfile($requestMock, 1);
 
@@ -386,6 +397,11 @@ class ProfileControllerTest extends TestCase
             ->with('create-profile')
             ->willReturn(['profile' => $profileMock]);
 
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
+
         $result = $this->controller->storeProfile($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -453,10 +469,18 @@ class ProfileControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getProfiles', 'getProfile',
+            ]),
+        ];
+
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

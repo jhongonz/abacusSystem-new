@@ -62,7 +62,9 @@ class ProfileController extends Controller implements HasMiddleware
             $dataProfile = $this->orchestrators->handler('change-state-profile', $request);
             $profile = $dataProfile['profile'];
 
-            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent((int) $profile->id()->value()));
+            /** @var int $profileId */
+            $profileId = $profile->id()->value();
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($profileId));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -111,7 +113,9 @@ class ProfileController extends Controller implements HasMiddleware
             $dataProfile = $this->orchestrators->handler($method, $request);
             $profile = $dataProfile['profile'];
 
-            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent((int) $profile->id()->value()));
+            /** @var int $profileId */
+            $profileId = $profile->id()->value();
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($profileId));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

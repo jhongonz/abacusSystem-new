@@ -15,6 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -365,6 +366,10 @@ class InstitutionControllerTest extends TestCase
             ->with('file')
             ->willReturn($uploadFileMock);
 
+        Str::createRandomStringsUsing(function () {
+            return '248ec6063c';
+        });
+
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::once())
             ->method('save')
@@ -391,15 +396,25 @@ class InstitutionControllerTest extends TestCase
     {
         $request = $this->createMock(Request::class);
 
-        $fileMock = $this->createMock(UploadedFile::class);
-        $fileMock->expects(self::once())
-            ->method('isValid')
-            ->willReturn(false);
-
+        $uploadFileMock = $this->createMock(\stdClass::class);
         $request->expects(self::once())
             ->method('file')
             ->with('file')
-            ->willReturn($fileMock);
+            ->willReturn($uploadFileMock);
+
+        $result = $this->controller->setLogoInstitution($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testSetLogoInstitutionShouldReturnInternalErrorWhenObjectIsNotValid(): void
+    {
+        $request = $this->createMock(Request::class);
 
         $result = $this->controller->setLogoInstitution($request);
 
@@ -551,10 +566,14 @@ class InstitutionControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

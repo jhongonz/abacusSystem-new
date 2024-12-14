@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Events\EventDispatcher;
+use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -241,6 +242,11 @@ class ModuleControllerTest extends TestCase
             ->with('change-state-module', $requestMock)
             ->willReturn(['module' => $moduleMock]);
 
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
+
         $result = $this->controller->changeStateModule($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -338,6 +344,11 @@ class ModuleControllerTest extends TestCase
             ->method('handler')
             ->with('create-module', $requestMock)
             ->willReturn(['module' => $moduleMock]);
+
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -447,6 +458,11 @@ class ModuleControllerTest extends TestCase
             ->with('delete-module', $requestMock)
             ->willReturn([]);
 
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
+
         $result = $this->controller->deleteModule($requestMock, 1);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -481,10 +497,22 @@ class ModuleControllerTest extends TestCase
 
     public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getModules',
+                'changeStateModule',
+                'deleteModule',
+                'getModule',
+                'storeModule',
+            ]),
+        ];
+
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

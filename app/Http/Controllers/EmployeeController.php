@@ -127,7 +127,6 @@ class EmployeeController extends Controller implements HasMiddleware
 
             $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
             $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

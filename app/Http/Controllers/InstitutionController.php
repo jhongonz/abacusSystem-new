@@ -91,7 +91,7 @@ class InstitutionController extends Controller implements HasMiddleware
     {
         $uploadedFile = $request->file('file');
         if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
-            $random = Str::random(10);
+            $random = Str::random();
             $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);

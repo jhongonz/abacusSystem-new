@@ -687,16 +687,15 @@ class EmployeeControllerTest extends TestCase
         $callIndex = 0;
         $requestMock->expects(self::exactly(2))
             ->method('merge')
-            ->willReturnCallback(function ($input) use (&$callIndex, &$userId, &$employeeId){
-
+            ->willReturnCallback(function ($input) use (&$callIndex, &$userId, &$employeeId) {
                 $this->assertIsArray($input);
-                if ($callIndex === 0) {
+                if (0 === $callIndex) {
                     $this->assertEquals(['employeeId' => $employeeId], $input);
-                } elseif ($callIndex === 1) {
+                } elseif (1 === $callIndex) {
                     $this->assertSame(['userId' => $userId], $input);
                 }
 
-                $callIndex++;
+                ++$callIndex;
             });
 
         $employeeMock = $this->createMock(Employee::class);
