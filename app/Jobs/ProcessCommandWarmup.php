@@ -3,20 +3,17 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
 
-class ProcessCommandWarmup implements ShouldQueue
+class ProcessCommandWarmup extends CommandWarmup
 {
     use Dispatchable;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-
-    private string $command;
 
     /**
      * The number of times the job may be attempted.
@@ -43,9 +40,9 @@ class ProcessCommandWarmup implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        string $command,
+        private readonly string $command
     ) {
-        $this->command = $command;
+        parent::__construct();
     }
 
     /**
@@ -54,8 +51,8 @@ class ProcessCommandWarmup implements ShouldQueue
     public function handle(): void
     {
         try {
-            Artisan::call($this->command);
-        } catch (\Exception $exception) {
+            $this->artisan->call($this->command);
+        } catch (CommandNotFoundException $exception) {
             $this->fail($exception);
         }
     }

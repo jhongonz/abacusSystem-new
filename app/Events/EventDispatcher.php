@@ -3,8 +3,6 @@
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-12-03 20:35:11
- *
- * @codeCoverageIgnore
  */
 
 namespace App\Events;
