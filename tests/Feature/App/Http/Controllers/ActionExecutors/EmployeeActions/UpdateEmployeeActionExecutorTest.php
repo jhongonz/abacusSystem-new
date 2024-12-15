@@ -12,11 +12,13 @@ use Core\User\Domain\ValueObjects\UserId;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployeeActionExecutor::class)]
@@ -94,10 +96,38 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->withAnyParameters()
             ->willReturn(true);
 
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('4d2cf8c5-831f-40b5-b552-8f29c3277042');
+        });
+
+        $callIndexRequest = 0;
         $requestMock->expects(self::exactly(2))
             ->method('merge')
-            ->withAnyParameters()
-            ->willReturnSelf();
+            ->willReturnCallback(function ($input) use (&$callIndexRequest) {
+                if (0 === $callIndexRequest) {
+                    $this->assertEquals(['dataUpdate' => json_encode([
+                        'identification' => 'identifier',
+                        'identification_type' => 'typeDocument',
+                        'name' => 'name',
+                        'lastname' => 'lastname',
+                        'email' => 'email',
+                        'phone' => 'phone',
+                        'address' => 'address',
+                        'observations' => 'observations',
+                        'birthdate' => null,
+                        'image' => '4d2cf8c5-831f-40b5-b552-8f29c3277042.jpg',
+                    ])], $input);
+                } elseif (1 === $callIndexRequest) {
+                    $this->assertEquals(['dataUpdate' => json_encode([
+                        'profileId' => 'profile',
+                        'login' => 'login',
+                        'image' => '4d2cf8c5-831f-40b5-b552-8f29c3277042.jpg',
+                        'password' => 'password',
+                    ])], $input);
+                }
+
+                ++$callIndexRequest;
+            });
 
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
@@ -141,13 +171,23 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->method('id')
             ->willReturn($userIdMock);
 
+        $callIndexHandler = 0;
         $this->orchestratorHandler->expects(self::exactly(2))
             ->method('handler')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                ['employee' => $employeeMock],
-                ['user' => $userMock]
-            );
+            ->willReturnCallback(function ($input) use (&$callIndexHandler, &$employeeMock, &$userMock) {
+                $return = [];
+                if (0 === $callIndexHandler) {
+                    $this->assertEquals('update-employee', $input);
+                    $return = ['employee' => $employeeMock];
+                } elseif (1 === $callIndexHandler) {
+                    $this->assertEquals('update-user', $input);
+                    $return = ['user' => $userMock];
+                }
+
+                ++$callIndexHandler;
+
+                return $return;
+            });
 
         $result = $this->actionExecutor->invoke($requestMock);
 

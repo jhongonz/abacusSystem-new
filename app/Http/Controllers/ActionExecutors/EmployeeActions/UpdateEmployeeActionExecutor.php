@@ -68,8 +68,7 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         }
 
         $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);
-
-        $actionUser = ($request->filled('userId')) ? 'update-user' : 'create-user';
+        $actionUser = $request->filled('userId') ? 'update-user' : 'create-user';
 
         /** @var array{user: User} $dataUser */
         $dataUser = $this->orchestratorHandler->handler($actionUser, $request);

@@ -48,13 +48,16 @@ class CreateEmployeeActionExecutorTest extends TestCase
      */
     public function testInvokeShouldReturnEmployee(): void
     {
+        $image = 'image.jpg';
+        $employeeId = 1;
+
         $requestMock = $this->createMock(Request::class);
         $employeeMock = $this->createMock(Employee::class);
 
         $imageMock = $this->createMock(EmployeeImage::class);
         $imageMock->expects(self::once())
             ->method('value')
-            ->willReturn('image.jpg');
+            ->willReturn($image);
         $employeeMock->expects(self::once())
             ->method('image')
             ->willReturn($imageMock);
@@ -62,7 +65,7 @@ class CreateEmployeeActionExecutorTest extends TestCase
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
             ->method('value')
-            ->willReturn(1);
+            ->willReturn($employeeId);
         $employeeMock->expects(self::once())
             ->method('id')
             ->willReturn($employeeIdMock);
@@ -92,6 +95,19 @@ class CreateEmployeeActionExecutorTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 ['employee' => $employeeMock], ['user' => $userMock]
             );
+
+        $callIndex = 0;
+        $requestMock->expects(self::exactly(2))
+            ->method('merge')
+            ->willReturnCallback(function ($input) use (&$callIndex, &$image, &$employeeId) {
+                if (0 === $callIndex) {
+                    $this->assertEquals(['image' => $image], $input);
+                } elseif (1 === $callIndex) {
+                    $this->assertEquals(['employeeId' => $employeeId], $input);
+                }
+
+                ++$callIndex;
+            });
 
         $result = $this->actionExecutor->invoke($requestMock);
 
