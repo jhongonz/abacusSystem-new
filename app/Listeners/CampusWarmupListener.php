@@ -19,6 +19,7 @@ class CampusWarmupListener
      */
     public function handle(CampusUpdatedOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch(sprintf('campus:warmup %d', $event->campusId()));
+        $processCommand = new ProcessCommandWarmup(sprintf('campus:warmup %d', $event->campusId()));
+        $processCommand->handle();
     }
 }

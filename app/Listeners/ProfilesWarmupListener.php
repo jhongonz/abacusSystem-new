@@ -20,7 +20,7 @@ class ProfilesWarmupListener
      */
     public function handle(ProfileUpdatedOrDeletedEvent|ModuleUpdatedOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch('profile:warmup');
-        ProcessCommandWarmup::dispatch('module:warmup');
+        $processCommandWarmup = new ProcessCommandWarmup(['profile:warmup', 'module:warmup']);
+        $processCommandWarmup->handle();
     }
 }

@@ -19,6 +19,7 @@ class UserWarmupListener
      */
     public function handle(UserUpdateOrDeleteEvent $event): void
     {
-        ProcessCommandWarmup::dispatch(sprintf('user:warmup %d', $event->userId()));
+        $processCommand = new ProcessCommandWarmup(sprintf('user:warmup %d', $event->userId()));
+        $processCommand->handle();
     }
 }

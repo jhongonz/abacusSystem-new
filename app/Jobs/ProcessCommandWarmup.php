@@ -37,10 +37,10 @@ class ProcessCommandWarmup extends CommandWarmup
     public $failOnTimeout = true;
 
     /**
-     * Create a new job instance.
+     * @param string|array<string> $command
      */
     public function __construct(
-        private readonly string $command
+        private readonly string|array $command
     ) {
         parent::__construct();
     }
@@ -51,7 +51,14 @@ class ProcessCommandWarmup extends CommandWarmup
     public function handle(): void
     {
         try {
-            $this->artisan->call($this->command);
+            if (is_array($this->command)) {
+                /** @var string $command */
+                foreach ($this->command as $command) {
+                    $this->artisan->call($command);
+                }
+            } else {
+                $this->artisan->call($this->command);
+            }
         } catch (CommandNotFoundException $exception) {
             $this->fail($exception);
         }

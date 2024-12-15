@@ -19,6 +19,7 @@ class EmployeeWarmupListener
      */
     public function handle(EmployeeUpdateOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch(sprintf('employee:warmup %d', $event->employeeId()));
+        $processCommand = new ProcessCommandWarmup(sprintf('employee:warmup %d', $event->employeeId()));
+        $processCommand->handle();
     }
 }

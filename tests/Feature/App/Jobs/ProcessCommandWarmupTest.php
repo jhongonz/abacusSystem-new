@@ -19,7 +19,8 @@ use Tests\TestCase;
 #[CoversClass(CommandWarmup::class)]
 class ProcessCommandWarmupTest extends TestCase
 {
-    private string $command;
+    /** @var string|array<string> */
+    private string|array $command;
     private ProcessCommandWarmup $warmup;
 
     protected function setUp(): void
@@ -45,6 +46,38 @@ class ProcessCommandWarmupTest extends TestCase
             ->method('call')
             ->with($this->command)
             ->willReturn(1);
+
+        $this->app->instance(Kernel::class, $kernelMock);
+        $this->warmup = new ProcessCommandWarmup($this->command);
+
+        $this->warmup->handle();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testHandleCommandWarmupWithArray(): void
+    {
+        $this->command = ['testing-command-one', 'testing-command-two'];
+
+        $kernelMock = $this->createMock(Kernel::class);
+
+        $callIndex = 0;
+        $kernelMock->expects(self::exactly(2))
+            ->method('call')
+            ->willReturnCallback(function (string $command, array $parameters = []) use (&$callIndex) {
+                if (0 === $callIndex) {
+                    $this->assertEquals('testing-command-one', $command);
+                } else {
+                    $this->assertEquals('testing-command-two', $command);
+                }
+
+                $this->assertEmpty($parameters);
+
+                ++$callIndex;
+
+                return 1;
+            });
 
         $this->app->instance(Kernel::class, $kernelMock);
         $this->warmup = new ProcessCommandWarmup($this->command);
