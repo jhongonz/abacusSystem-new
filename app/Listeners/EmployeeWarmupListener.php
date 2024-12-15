@@ -3,9 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
-use App\Jobs\ProcessCommandWarmup;
 
-class EmployeeWarmupListener
+class EmployeeWarmupListener extends WarmupListener
 {
     /**
      * Create the event listener.
@@ -19,7 +18,7 @@ class EmployeeWarmupListener
      */
     public function handle(EmployeeUpdateOrDeletedEvent $event): void
     {
-        $processCommand = new ProcessCommandWarmup(sprintf('employee:warmup %d', $event->employeeId()));
+        $processCommand = $this->callCommandWarmup(sprintf('employee:warmup %d', $event->employeeId()));
         $processCommand->handle();
     }
 }
