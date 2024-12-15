@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class Controller
@@ -26,7 +25,7 @@ abstract class Controller
         return $html;
     }
 
-    protected function getPagination(?string $route = null): string
+    protected function getPagination(?string $route = null): string|false
     {
         if (is_null($route)) {
             /** @var Router $routerService */
@@ -36,7 +35,7 @@ abstract class Controller
             $route = ($routeCurrent) ? $routeCurrent->uri() : '';
         }
 
-        /** @var string $dataResponse */
+        /** @var non-empty-string|false $dataResponse */
         $dataResponse = json_encode([
             'start' => 0,
             'filters' => [],

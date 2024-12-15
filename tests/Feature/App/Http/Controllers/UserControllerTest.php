@@ -23,7 +23,6 @@ use Illuminate\View\Factory as ViewFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(UserController::class)]
@@ -289,7 +288,7 @@ class UserControllerTest extends TestCase
             ->method('merge')
             ->with(['dataUpdate' => [
                 'state' => 2,
-                'password' => 'password'
+                'password' => 'password',
             ]])
             ->willReturnSelf();
 

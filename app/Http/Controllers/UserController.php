@@ -15,7 +15,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseFoundation;
 
 class UserController extends Controller implements HasMiddleware
