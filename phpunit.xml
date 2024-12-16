@@ -13,9 +13,6 @@
             <directory>app</directory>
             <directory>src</directory>
         </include>
-        <exclude>
-            <directory>app/Providers</directory>
-        </exclude>
     </source>
     <coverage>
         <report>

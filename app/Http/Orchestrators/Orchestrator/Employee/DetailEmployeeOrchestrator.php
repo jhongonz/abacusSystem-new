@@ -40,7 +40,10 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
 
         if ($employee instanceof Employee) {
             $userId = $employee->userId()->value();
-            $user = $this->userManagement->searchUserById($userId);
+
+            if (!is_null($userId)) {
+                $user = $this->userManagement->searchUserById($userId);
+            }
 
             $path = sprintf('%s%s?v=%s',
                 self::IMAGE_PATH_FULL,

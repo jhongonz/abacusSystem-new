@@ -41,8 +41,8 @@ class StoreEmployeeRequest extends FormRequest
             'login' => ['required'],
         ];
 
-        $userId = $this->request->getInt('userId');
-        $password = $this->request->getString('password');
+        $userId = $this->request->get('userId');
+        $password = $this->request->get('password');
 
         if (empty($userId) || !empty($password)) {
             $rules['password'] = ['required', 'confirmed', 'min:7'];
