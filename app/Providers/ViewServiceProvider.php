@@ -8,7 +8,6 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -40,6 +39,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->viewFactory->composer('layouts.home', HomeComposer::class);
+
         $this->viewFactory->composer('*', function ($view) {
             /** @var Request $requestService */
             $requestService = $this->app->make(Request::class);
