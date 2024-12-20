@@ -1,12 +1,14 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-12-18 01:29:38
  */
+
 namespace Tests\Feature\App\Providers;
 
 use App\Providers\EventServiceProvider;
-use Illuminate\Config\Repository as Configuration;
+use Illuminate\Contracts\Config\Repository as Configuration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
@@ -32,13 +34,13 @@ class EventServiceProviderTest extends TestCase
         $this->configuration = $this->createMock(Configuration::class);
         $this->dispatcher = $this->createMock(Dispatcher::class);
 
-        $this->application->method('make')
+        $this->application->expects(self::exactly(2))
+            ->method('make')
             ->willReturnCallback(function (string $class) {
-
                 $result = null;
-                if ($class === Configuration::class) {
+                if (Configuration::class === $class) {
                     $result = $this->configuration;
-                } elseif ($class === Dispatcher::class) {
+                } elseif (Dispatcher::class === $class) {
                     $result = $this->dispatcher;
                 }
 
@@ -83,17 +85,16 @@ class EventServiceProviderTest extends TestCase
         $callIndex = 0;
         $this->dispatcher->expects(self::exactly(2))
             ->method('listen')
-            ->willReturnCallback(function ($event, $listener) use ($eventListenerMock, &$callIndex) {
-
-                if ($callIndex === 0) {
+            ->willReturnCallback(function ($event, $listener) use (&$callIndex) {
+                if (0 === $callIndex) {
                     $this->assertEquals('event1', $event);
                     $this->assertEquals('listener1', $listener);
-                } elseif ($callIndex === 1) {
+                } elseif (1 === $callIndex) {
                     $this->assertEquals('event2', $event);
                     $this->assertEquals('listener2', $listener);
                 }
 
-                $callIndex++;
+                ++$callIndex;
             });
 
         $serviceProvider = new EventServiceProvider($this->application);

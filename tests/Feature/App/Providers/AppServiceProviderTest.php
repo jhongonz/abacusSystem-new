@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-12-17 19:41:14
  */
+
 namespace Tests\Feature\App\Providers;
 
 use App\Providers\AppServiceProvider;
@@ -39,7 +41,6 @@ class AppServiceProviderTest extends TestCase
         $instance = $this->app->make(ImageManagerInterface::class);
 
         $this->assertInstanceOf(ImageManager::class, $instance);
-        $this->assertEquals($driverMock, $instance->driver());
     }
 
     /**

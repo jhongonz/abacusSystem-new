@@ -12,6 +12,11 @@ use Intervention\Image\Interfaces\ImageManagerInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public function __construct($app)
+    {
+        parent::__construct($app);
+    }
+
     /**
      * Register any application services.
      */

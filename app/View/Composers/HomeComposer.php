@@ -9,7 +9,7 @@ class HomeComposer
 {
     public function compose(View $view): void
     {
-        $random = Str::random(10);
+        $random = Str::random();
         $view->with('versionRandom', $random);
     }
 }

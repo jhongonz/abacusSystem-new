@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
 use App\Events\EventDispatcher;
 use App\Events\User\UserUpdateOrDeleteEvent;
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandlerContract;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Traits\DataTablesTrait;
@@ -32,7 +32,7 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
+        private readonly ActionExecutorHandlerContract $actionExecutorHandler,
         private readonly DataTables $dataTables,
         private readonly EventDispatcher $eventDispatcher,
         protected ImageManagerInterface $imageManager,

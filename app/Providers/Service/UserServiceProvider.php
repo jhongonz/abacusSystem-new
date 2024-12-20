@@ -13,6 +13,7 @@ use Core\User\Infrastructure\Management\UserService;
 use Core\User\Infrastructure\Persistence\Repositories\ChainUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\RedisUserRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -37,16 +38,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register(): void
     {
         $this->app->singletonIf(UserRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainUserRepository();
-
-            $chainRepository->addRepository(
-                $app->make(RedisUserRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentUserRepository::class)
-                );
-
-            return $chainRepository;
+            return new ChainUserRepository();
         });
 
         // Commands
@@ -61,6 +53,18 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     }
 
     /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $userRepository = $this->app->make(UserRepositoryContract::class);
+        $userRepository->addRepository($this->app->make(RedisUserRepository::class));
+        $userRepository->addRepository($this->app->make(EloquentUserRepository::class));
+    }
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array<int, string>
@@ -72,12 +76,5 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             UserManagementContract::class,
             UserDataTransformerContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
     }
 }

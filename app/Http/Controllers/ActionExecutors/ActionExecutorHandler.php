@@ -10,7 +10,7 @@ namespace App\Http\Controllers\ActionExecutors;
 use App\Http\Exceptions\ActionExecutorNotFoundException;
 use Illuminate\Http\Request;
 
-class ActionExecutorHandler
+class ActionExecutorHandler implements ActionExecutorHandlerContract
 {
     /** @var ActionExecutor[] */
     private array $actionExecutors;

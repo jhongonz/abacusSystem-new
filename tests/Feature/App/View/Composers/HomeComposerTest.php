@@ -3,6 +3,8 @@
 namespace Tests\Feature\App\View\Composers;
 
 use App\View\Composers\HomeComposer;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use Tests\TestCase;
@@ -29,10 +31,14 @@ class HomeComposerTest extends TestCase
      */
     public function testComposeShouldReturnVoid(): void
     {
-        $view = $this->createMock(\Illuminate\View\View::class);
+        Str::createRandomStringsUsing(function () {
+            return 'OLl3rUybNy';
+        });
+
+        $view = $this->createMock(View::class);
         $view->expects(self::once())
             ->method('with')
-            ->with('versionRandom')
+            ->with('versionRandom', 'OLl3rUybNy')
             ->willReturnSelf();
 
         $this->composer->compose($view);

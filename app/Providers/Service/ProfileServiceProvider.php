@@ -24,6 +24,7 @@ use Core\Profile\Infrastructure\Persistence\Repositories\EloquentModuleRepositor
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisModuleRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisProfileRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -53,29 +54,11 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     public function register(): void
     {
         $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainProfileRepository();
-
-            $chainRepository->addRepository(
-                $app->make(RedisProfileRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentProfileRepository::class)
-                );
-
-            return $chainRepository;
+            return new ChainProfileRepository();
         });
 
         $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainModuleRepository();
-
-            $chainRepository->addRepository(
-                $app->make(RedisModuleRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentModuleRepository::class)
-                );
-
-            return $chainRepository;
+            return new ChainModuleRepository();
         });
 
         // Commands
@@ -99,6 +82,22 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     }
 
     /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $profileRepository = $this->app->make(ProfileRepositoryContract::class);
+        $profileRepository->addRepository($this->app->make(RedisProfileRepository::class));
+        $profileRepository->addRepository($this->app->make(EloquentProfileRepository::class));
+
+        $moduleRepository = $this->app->make(ModuleRepositoryContract::class);
+        $moduleRepository->addRepository($this->app->make(RedisModuleRepository::class));
+        $moduleRepository->addRepository($this->app->make(EloquentModuleRepository::class));
+    }
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array<int, string>
@@ -106,20 +105,15 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     public function provides(): array
     {
         return [
+            // Profile Provides
             ProfileFactoryContract::class,
             ProfileDataTransformerContract::class,
             ProfileManagementContract::class,
 
+            // Module Provides
             ModuleFactoryContract::class,
             ModuleDataTransformerContract::class,
             ModuleManagementContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
     }
 }

@@ -13,6 +13,7 @@ use Core\Employee\Infrastructure\Management\EmployeeService;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\RedisEmployeeRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -37,16 +38,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
     public function register(): void
     {
         $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainEmployeeRepository();
-
-            $chainRepository->addRepository(
-                $app->make(RedisEmployeeRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentEmployeeRepository::class)
-                );
-
-            return $chainRepository;
+            return new ChainEmployeeRepository();
         });
 
         // Commands
@@ -61,6 +53,18 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
     }
 
     /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $employeeRepository = $this->app->make(EmployeeRepositoryContract::class);
+        $employeeRepository->addRepository($this->app->make(RedisEmployeeRepository::class));
+        $employeeRepository->addRepository($this->app->make(EloquentEmployeeRepository::class));
+    }
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array<int, string>
@@ -72,12 +76,5 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
     }
 }

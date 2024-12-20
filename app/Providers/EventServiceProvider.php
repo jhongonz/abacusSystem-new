@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Config\Repository as Configuration;
+use Illuminate\Contracts\Config\Repository as Configuration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;

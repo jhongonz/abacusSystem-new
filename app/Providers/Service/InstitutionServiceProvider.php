@@ -13,6 +13,7 @@ use Core\Institution\Infrastructure\Management\InstitutionService;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\EloquentInstitutionRepository;
 use Core\Institution\Infrastructure\Persistence\Repositories\RedisInstitutionRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
@@ -36,17 +37,7 @@ class InstitutionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singletonIf(InstitutionRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainInstitutionRepository();
-
-            $chainRepository->addRepository(
-                $app->make(RedisInstitutionRepository::class)
-            );
-
-            $chainRepository->addRepository(
-                $app->make(EloquentInstitutionRepository::class)
-            );
-
-            return $chainRepository;
+            return new ChainInstitutionRepository();
         });
 
         // Commands
@@ -62,8 +53,13 @@ class InstitutionServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap services.
+     *
+     * @throws BindingResolutionException
      */
     public function boot(): void
     {
+        $institutionRepository = $this->app->make(InstitutionRepositoryContract::class);
+        $institutionRepository->addRepository($this->app->make(RedisInstitutionRepository::class));
+        $institutionRepository->addRepository($this->app->make(EloquentInstitutionRepository::class));
     }
 }
