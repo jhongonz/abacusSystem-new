@@ -30,6 +30,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
         UserFactoryContract::class => UserFactory::class,
         UserManagementContract::class => UserService::class,
         UserDataTransformerContract::class => UserDataTransformer::class,
+        UserRepositoryContract::class => ChainUserRepository::class,
     ];
 
     /**
@@ -37,10 +38,6 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register(): void
     {
-        $this->app->singletonIf(UserRepositoryContract::class, function (Application $app) {
-            return new ChainUserRepository();
-        });
-
         // Commands
         $this->app->singletonIf(UserWarmup::class, function (Application $app) {
             return new UserWarmup(
@@ -75,6 +72,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             UserFactoryContract::class,
             UserManagementContract::class,
             UserDataTransformerContract::class,
+            UserRepositoryContract::class,
         ];
     }
 }

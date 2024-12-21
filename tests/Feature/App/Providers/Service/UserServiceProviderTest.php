@@ -91,6 +91,7 @@ class UserServiceProviderTest extends TestCase
             UserFactoryContract::class,
             UserManagementContract::class,
             UserDataTransformerContract::class,
+            UserRepositoryContract::class,
         ];
         $this->assertISArray($provides);
         $this->assertEquals($dataExpected, $provides);

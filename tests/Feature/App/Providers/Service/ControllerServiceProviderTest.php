@@ -53,7 +53,7 @@ class ControllerServiceProviderTest extends TestCase
      */
     public function testBootShouldAddActionExecutorCorrectly(): void
     {
-        $handlerMock = $this->createMock(actionExecutorHandler::class);
+        $handlerMock = $this->createMock(ActionExecutorHandler::class);
         $handlerMock->expects(self::exactly(2))
             ->method('addActionExecutor')
             ->withAnyParameters()
@@ -65,5 +65,17 @@ class ControllerServiceProviderTest extends TestCase
 
         $serviceProvider = new ControllerServiceProvider($this->app);
         $serviceProvider->boot();
+    }
+
+    public function testProvidesShouldReturnArrayCorrectly(): void
+    {
+        $serviceProvider = new ControllerServiceProvider($this->app);
+        $provides = $serviceProvider->provides();
+
+        $dataExpected = [
+            ActionExecutorHandlerContract::class,
+        ];
+        $this->assertIsArray($provides);
+        $this->assertEquals($dataExpected, $provides);
     }
 }

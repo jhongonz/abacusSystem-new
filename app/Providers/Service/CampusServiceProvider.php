@@ -14,11 +14,12 @@ use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\EloquentCampusRepository;
 use Core\Campus\Infrastructure\Persistence\Repositories\RedisCampusRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
 
-class CampusServiceProvider extends ServiceProvider
+class CampusServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * All the container bindings that should be registered.
@@ -29,6 +30,7 @@ class CampusServiceProvider extends ServiceProvider
         CampusFactoryContract::class => CampusFactory::class,
         CampusDataTransformerContract::class => CampusDataTransformer::class,
         CampusManagementContract::class => CampusService::class,
+        CampusRepositoryContract::class => ChainCampusRepository::class,
     ];
 
     /**
@@ -36,10 +38,6 @@ class CampusServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singletonIf(CampusRepositoryContract::class, function (Application $app) {
-            return new ChainCampusRepository();
-        });
-
         // Commands
         $this->app->singletonIf(CampusWarmup::class, function (Application $app) {
             return new CampusWarmup(
@@ -61,5 +59,20 @@ class CampusServiceProvider extends ServiceProvider
         $campusRepository = $this->app->make(CampusRepositoryContract::class);
         $campusRepository->addRepository($this->app->make(RedisCampusRepository::class));
         $campusRepository->addRepository($this->app->make(EloquentCampusRepository::class));
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<int, string>
+     */
+    public function provides(): array
+    {
+        return [
+            CampusRepositoryContract::class,
+            CampusDataTransformerContract::class,
+            CampusManagementContract::class,
+            CampusRepositoryContract::class,
+        ];
     }
 }

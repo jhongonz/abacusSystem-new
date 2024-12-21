@@ -93,10 +93,10 @@ class EmployeeServiceProviderTest extends TestCase
             EmployeeFactoryContract::class,
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
+            EmployeeRepositoryContract::class,
         ];
 
         $this->assertIsArray($result);
-        $this->assertCount(3, $result);
         $this->assertEquals($dataExpected, $result);
     }
 

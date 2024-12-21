@@ -9,7 +9,9 @@ namespace Tests\Feature\App\Providers\Service;
 
 use App\Providers\Service\InstitutionServiceProvider;
 use Core\Institution\Application\Factory\InstitutionFactory;
+use Core\Institution\Domain\Contracts\InstitutionDataTransformerContract;
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
+use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Infrastructure\Commands\InstitutionWarmup;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
@@ -99,5 +101,20 @@ class InstitutionServiceProviderTest extends TestCase
 
         $serviceProvider = new InstitutionServiceProvider($this->app);
         $serviceProvider->boot();
+    }
+
+    public function testProvidesShouldReturnArrayCorrectly(): void
+    {
+        $serviceProvider = new InstitutionServiceProvider($this->app);
+        $provides = $serviceProvider->provides();
+
+        $dataExpected = [
+            InstitutionFactoryContract::class,
+            InstitutionDataTransformerContract::class,
+            InstitutionManagementContract::class,
+            InstitutionRepositoryContract::class,
+        ];
+        $this->assertIsArray($provides);
+        $this->assertEquals($dataExpected, $provides);
     }
 }

@@ -17,13 +17,13 @@ trait MultimediaTrait
 
     private function saveImage(string $token): string
     {
-        $imageTmp = public_path(self::IMAGE_PATH_TMP.$token.'.jpg');
-        $filename = Str::uuid()->toString().'.jpg';
+        $imageTmp = public_path(sprintf('%s%s.jpg', self::IMAGE_PATH_TMP, $token));
+        $filename = sprintf('%s.jpg', Str::uuid()->toString());
 
         $image = $this->imageManager->read($imageTmp);
-        $image->save(public_path(self::IMAGE_PATH_FULL.$filename));
+        $image->save(public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $filename)));
         $image->resize(150, 150);
-        $image->save(public_path(self::IMAGE_PATH_SMALL.$filename));
+        $image->save(public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $filename)));
         @unlink($imageTmp);
 
         return $filename;
@@ -34,14 +34,14 @@ trait MultimediaTrait
         $filename = $random.'.jpg';
 
         $image = $this->imageManager->read($path);
-        $image->save(public_path(self::IMAGE_PATH_TMP).$filename, quality: 70);
+        $image->save(sprintf('%s%s', public_path(self::IMAGE_PATH_TMP), $filename), quality: 70);
 
         return url(self::IMAGE_PATH_TMP.$filename);
     }
 
     protected function deleteImage(string $photo): void
     {
-        @unlink(public_path(self::IMAGE_PATH_FULL.$photo));
-        @unlink(public_path(self::IMAGE_PATH_SMALL.$photo));
+        @unlink(public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $photo)));
+        @unlink(public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $photo)));
     }
 }

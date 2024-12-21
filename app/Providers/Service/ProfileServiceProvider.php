@@ -41,11 +41,13 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
         ProfileFactoryContract::class => ProfileFactory::class,
         ProfileDataTransformerContract::class => ProfileDataTransformer::class,
         ProfileManagementContract::class => ProfileService::class,
+        ProfileRepositoryContract::class => ChainProfileRepository::class,
 
         /* Modules */
         ModuleFactoryContract::class => ModuleFactory::class,
         ModuleDataTransformerContract::class => ModuleDataTransformer::class,
         ModuleManagementContract::class => ModuleService::class,
+        ModuleRepositoryContract::class => ChainModuleRepository::class,
     ];
 
     /**
@@ -53,14 +55,6 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register(): void
     {
-        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
-            return new ChainProfileRepository();
-        });
-
-        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
-            return new ChainModuleRepository();
-        });
-
         // Commands
         $this->app->singletonIf(ProfileWarmup::class, function (Application $app) {
             return new ProfileWarmup(
@@ -109,11 +103,13 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
             ProfileFactoryContract::class,
             ProfileDataTransformerContract::class,
             ProfileManagementContract::class,
+            ProfileRepositoryContract::class,
 
             // Module Provides
             ModuleFactoryContract::class,
             ModuleDataTransformerContract::class,
             ModuleManagementContract::class,
+            ModuleRepositoryContract::class,
         ];
     }
 }

@@ -146,9 +146,11 @@ class ProfileServiceProviderTest extends TestCase
             ProfileFactoryContract::class,
             ProfileDataTransformerContract::class,
             ProfileManagementContract::class,
+            ProfileRepositoryContract::class,
             ModuleFactoryContract::class,
             ModuleDataTransformerContract::class,
             ModuleManagementContract::class,
+            ModuleRepositoryContract::class,
         ];
         $this->assertIsArray($provides);
         $this->assertEquals($dataExpected, $provides);

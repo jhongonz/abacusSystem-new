@@ -105,4 +105,16 @@ class OrchestratorServiceProviderTest extends TestCase
         $serviceProvider = new OrchestratorServiceProvider($this->application);
         $serviceProvider->boot();
     }
+
+    public function testProvidesShouldReturnArrayCorrectly(): void
+    {
+        $serviceProvider = new OrchestratorServiceProvider($this->application);
+        $provides = $serviceProvider->provides();
+
+        $dataExpected = [
+            OrchestratorHandlerContract::class,
+        ];
+        $this->assertIsArray($provides);
+        $this->assertEquals($dataExpected, $provides);
+    }
 }

@@ -30,6 +30,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
         EmployeeFactoryContract::class => EmployeeFactory::class,
         EmployeeManagementContract::class => EmployeeService::class,
         EmployeeDataTransformerContract::class => EmployeeDataTransformer::class,
+        EmployeeRepositoryContract::class => ChainEmployeeRepository::class,
     ];
 
     /**
@@ -37,10 +38,6 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function register(): void
     {
-        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
-            return new ChainEmployeeRepository();
-        });
-
         // Commands
         $this->app->singletonIf(EmployeeWarmup::class, function (Application $app) {
             return new EmployeeWarmup(
@@ -75,6 +72,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             EmployeeFactoryContract::class,
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
+            EmployeeRepositoryContract::class,
         ];
     }
 }

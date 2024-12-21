@@ -9,7 +9,9 @@ namespace Tests\Feature\App\Providers\Service;
 
 use App\Providers\Service\CampusServiceProvider;
 use Core\Campus\Application\Factory\CampusFactory;
+use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
+use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
 use Core\Campus\Infrastructure\Commands\CampusWarmup;
 use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
@@ -99,5 +101,21 @@ class CampusServiceProviderTest extends TestCase
 
         $serviceProvider = new CampusServiceProvider($this->app);
         $serviceProvider->boot();
+    }
+
+    public function testProvidesShouldReturnArrayCorrectly(): void
+    {
+        $serviceProvider = new CampusServiceProvider($this->app);
+        $provides = $serviceProvider->provides();
+
+        $dataExpected = [
+            CampusRepositoryContract::class,
+            CampusDataTransformerContract::class,
+            CampusManagementContract::class,
+            CampusRepositoryContract::class,
+        ];
+
+        $this->assertIsArray($provides);
+        $this->assertEquals($dataExpected, $provides);
     }
 }
