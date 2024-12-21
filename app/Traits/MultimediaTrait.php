@@ -34,12 +34,12 @@ trait MultimediaTrait
         $filename = $random.'.jpg';
 
         $image = $this->imageManager->read($path);
-        $image->save(sprintf('%s%s', public_path(self::IMAGE_PATH_TMP), $filename), quality: 70);
+        $image->save(sprintf('%s%s', public_path(self::IMAGE_PATH_TMP), $filename));
 
         return url(self::IMAGE_PATH_TMP.$filename);
     }
 
-    protected function deleteImage(string $photo): void
+    private function deleteImage(string $photo): void
     {
         @unlink(public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $photo)));
         @unlink(public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $photo)));

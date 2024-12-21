@@ -8,7 +8,7 @@ trait UserTrait
 {
     protected Hasher $hasher;
 
-    public function makeHashPassword(string $password): string
+    private function makeHashPassword(string $password): string
     {
         return $this->hasher->make($password);
     }

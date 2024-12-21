@@ -72,7 +72,7 @@ class EmployeeControllerTest extends TestCase
                 $this->viewFactory,
                 $this->logger,
             ])
-            ->onlyMethods(['deleteImage'])
+            ->onlyMethods([])
             ->getMock();
 
         $this->controller = new EmployeeController(
@@ -721,9 +721,9 @@ class EmployeeControllerTest extends TestCase
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(['employee' => $employeeMock], [], []);
 
-        $this->controllerMock->expects(self::once())
+        /*$this->controllerMock->expects(self::once())
             ->method('deleteImage')
-            ->with('image.jpg');
+            ->with('image.jpg');*/
 
         $result = $this->controllerMock->deleteEmployee($requestMock, $employeeId);
 

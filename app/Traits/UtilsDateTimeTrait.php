@@ -9,7 +9,7 @@ namespace App\Traits;
 
 trait UtilsDateTimeTrait
 {
-    public function getCurrentTime(): \DateTime
+    private function getCurrentTime(): \DateTime
     {
         return new \DateTime();
     }
@@ -17,7 +17,7 @@ trait UtilsDateTimeTrait
     /**
      * @throws \Exception
      */
-    public function getDateTime(string $datetime): \DateTime
+    private function getDateTime(string $datetime): \DateTime
     {
         return new \DateTime($datetime);
     }

@@ -78,18 +78,18 @@ class CreateModuleOrchestratorTest extends TestCase
             ->willReturn('localhost');
 
         $routeMock = $this->createMock(Route::class);
-        $routeMock->expects(self::once())
+        $routeMock->expects(self::exactly(2))
             ->method('methods')
-            ->willReturn(['GET']);
+            ->willReturnOnConsecutiveCalls(['GET'], ['GET']);
 
-        $routeMock->expects(self::once())
+        $routeMock->expects(self::exactly(2))
             ->method('uri')
             ->willReturn('localhost');
 
         $routeCollectionMock = $this->createMock(RouteCollectionInterface::class);
         $routeCollectionMock->expects(self::once())
             ->method('getRoutes')
-            ->willReturn([$routeMock]);
+            ->willReturn([$routeMock, $routeMock]);
 
         $this->routerMock->expects(self::once())
             ->method('getRoutes')

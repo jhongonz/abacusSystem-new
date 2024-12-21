@@ -17,7 +17,7 @@ trait RouterTrait
      * @throws RouteNotFoundException
      * @throws AssertionFailedException
      */
-    protected function validateRoute(string $route): void
+    private function validateRoute(string $route): bool
     {
         $routesCollection = $this->router->getRoutes();
         $routes = $routesCollection->getRoutes();
@@ -31,7 +31,6 @@ trait RouterTrait
             }
         }
 
-        $slugs = array_unique($slugs);
-        Assertion::inArray($route, $slugs);
+        return Assertion::inArray($route, $slugs);
     }
 }
