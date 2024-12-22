@@ -1,12 +1,15 @@
 <?php
-
+/**
+ * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
+ * Date: 2024-12-22 12:47:14
+ */
 namespace Core\Profile\Domain\ValueObjects;
 
-class ModuleMenuKey
+class MenuName
 {
     public function __construct(
-        private string $value,
-    ) {}
+        private string $value
+    ){}
 
     public function value(): string
     {
@@ -16,7 +19,6 @@ class ModuleMenuKey
     public function setValue(string $value): self
     {
         $this->value = $value;
-
         return $this;
     }
 }

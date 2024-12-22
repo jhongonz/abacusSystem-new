@@ -210,4 +210,9 @@ class Module
 
         return $this;
     }
+
+    public function isParent(): bool
+    {
+        return empty($this->route()->value());
+    }
 }

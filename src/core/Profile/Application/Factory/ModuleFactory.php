@@ -46,8 +46,11 @@ class ModuleFactory implements ModuleFactoryContract
             $this->buildModuleName($dataModule['name']),
             $this->buildModuleRoute($dataModule['route']),
             $this->buildModuleIcon($dataModule['icon']),
-            $this->buildModuleState($dataModule['state']),
         );
+
+        if (isset($dataModule['state'])) {
+            $module->state()->setValue($dataModule['state']);
+        }
 
         if (isset($dataModule['position'])) {
             $module->position()->setValue($dataModule['position']);

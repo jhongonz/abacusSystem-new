@@ -64,10 +64,10 @@ class Modules extends ArrayIterator
         $this->rewind();
         $modulesKeys = [];
 
-        /** @var Module $item */
-        foreach ($this as $item) {
-            if ($item->menuKey()->value() === $menuKey) {
-                $modulesKeys[] = $item;
+        /** @var Module $module */
+        foreach ($this as $module) {
+            if ($module->menuKey()->value() === $menuKey) {
+                $modulesKeys[] = $module;
             }
         }
 

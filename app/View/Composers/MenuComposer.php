@@ -20,8 +20,6 @@ use Illuminate\View\View;
 
 class MenuComposer
 {
-    use UtilsDateTimeTrait;
-
     private ModuleFactoryContract $moduleFactory;
     private Config $config;
     private Router $router;
@@ -44,6 +42,9 @@ class MenuComposer
         $this->imagePathFull = '/images/full/';
     }
 
+    /**
+     * @throws \Exception
+     */
     public function compose(View $view): void
     {
         /** @var User $user */
@@ -56,7 +57,7 @@ class MenuComposer
         $employee = $this->session->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
-        $image = $this->urlGenerator->to($this->imagePathFull.$user->photo()->value().'?v='.Str::random(10));
+        $image = $this->urlGenerator->to(sprintf('%s%s?v=%s', $this->imagePathFull, $user->photo()->value(), Str::random()));
 
         $view->with('menu', $menu);
         $view->with('user', $user);
@@ -67,34 +68,38 @@ class MenuComposer
 
     /**
      * @return array<int, mixed>
+     * @throws \Exception
      */
     private function prepareMenu(Modules $modules): array
     {
         $menuWithChildren = [];
         $menuUnique = [];
 
-        /**
-         * @var string                   $index
-         * @var array<int|string, mixed> $item
-         */
-        foreach ((array) $this->config->get('menu.options') as $index => $item) {
-            $item['id'] = 0;
-            $item['state'] = ValueObjectStatus::STATE_ACTIVE;
-            $item['createdAt'] = $this->getCurrentTime()->format('Y-m-d H:i:s');
+        /** @var array<string> $menuOptions */
+        $menuOptions = $this->config->get('menu.options');
 
-            if (empty($item['route'])) {
-                $options = $modules->moduleElementsOfKey($index);
+        /**
+         * @var array<string, mixed> $item
+         */
+        foreach ($menuOptions as $item) {
+
+            $module = $this->getModuleMenu($item);
+            $module->id()->setValue(0);
+            $module->state()->setValue(ValueObjectStatus::STATE_ACTIVE);
+
+            if ($module->isParent()) {
+                $options = $modules->moduleElementsOfKey($module->menuKey()->value());
 
                 if (count($options) > 0) {
-                    $item['key'] = $index;
-                    $item['route'] = '';
+                    $module->menuKey()->setValue($module->menuKey()->value());
+                    $module->route()->setValue('');
 
-                    $mainModule = $this->changeExpandedToModule($options, $this->getModuleMenu($item));
-                    $menuWithChildren[] = $mainModule;
+                    $module = $this->changeExpandedToModule($options, $module);
+                    $menuWithChildren[] = $module;
                 }
             } else {
-                $item['key'] = '';
-                $menuUnique[] = $this->getModuleMenu($item);
+                $module->menuKey()->setValue('');
+                $menuUnique[] = $module;
             }
         }
 
