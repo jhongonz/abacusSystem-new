@@ -6,7 +6,8 @@ class ModuleMenuKey
 {
     public function __construct(
         private string $value,
-    ) {}
+    ) {
+    }
 
     public function value(): string
     {

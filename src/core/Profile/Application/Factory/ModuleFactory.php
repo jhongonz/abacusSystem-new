@@ -32,7 +32,7 @@ class ModuleFactory implements ModuleFactoryContract
          *     name: string,
          *     route: string,
          *     icon: string|null,
-         *     state: int,
+         *     state: int|null,
          *     position: int|null,
          *     createdAt: string|null,
          *     updatedAt: string|null

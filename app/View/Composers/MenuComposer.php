@@ -2,7 +2,6 @@
 
 namespace App\View\Composers;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Employee;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
@@ -57,7 +56,9 @@ class MenuComposer
         $employee = $this->session->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
-        $image = $this->urlGenerator->to(sprintf('%s%s?v=%s', $this->imagePathFull, $user->photo()->value(), Str::random()));
+        $image = $this->urlGenerator->to(
+            sprintf('%s%s?v=%s', $this->imagePathFull, $user->photo()->value(), Str::random())
+        );
 
         $view->with('menu', $menu);
         $view->with('user', $user);
@@ -68,6 +69,7 @@ class MenuComposer
 
     /**
      * @return array<int, mixed>
+     *
      * @throws \Exception
      */
     private function prepareMenu(Modules $modules): array
@@ -82,16 +84,16 @@ class MenuComposer
          * @var array<string, mixed> $item
          */
         foreach ($menuOptions as $item) {
-
-            $module = $this->getModuleMenu($item);
+            $module = $this->moduleFactory->buildModuleFromArray([Module::TYPE => $item]);
             $module->id()->setValue(0);
             $module->state()->setValue(ValueObjectStatus::STATE_ACTIVE);
+            $menuKey = $module->menuKey()->value();
 
             if ($module->isParent()) {
-                $options = $modules->moduleElementsOfKey($module->menuKey()->value());
+                $options = $modules->moduleElementsOfKey($menuKey);
 
-                if (count($options) > 0) {
-                    $module->menuKey()->setValue($module->menuKey()->value());
+                if (!empty($options)) {
+                    $module->menuKey()->setValue($menuKey);
                     $module->route()->setValue('');
 
                     $module = $this->changeExpandedToModule($options, $module);
@@ -107,14 +109,6 @@ class MenuComposer
     }
 
     /**
-     * @param array<string, mixed> $data
-     */
-    private function getModuleMenu(array $data): Module
-    {
-        return $this->moduleFactory->buildModuleFromArray([Module::TYPE => $data]);
-    }
-
-    /**
      * @param array<Module> $modules
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
@@ -123,9 +117,9 @@ class MenuComposer
         $routeCurrent = $this->router->current();
         $uriCurrent = $routeCurrent->uri();
 
-        foreach ($modules as $item) {
-            if ($item->route()->value() === $uriCurrent) {
-                $item->setExpanded(true);
+        foreach ($modules as $module) {
+            if ($module->route()->value() === $uriCurrent) {
+                $module->setExpanded(true);
                 $mainModule->setExpanded(true);
             }
         }
