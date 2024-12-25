@@ -28,8 +28,9 @@ class UpdateCampus extends UseCasesService
 
         /** @var UpdateCampusRequest $request */
         $campus = $this->campusRepository->find($request->id());
+
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $campus = $this->{$methodName}($campus, $value);
@@ -39,6 +40,11 @@ class UpdateCampus extends UseCasesService
         $campus->refreshSearch();
 
         return $this->campusRepository->persistCampus($campus);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeInstitutionId(Campus $campus, int $institutionId): Campus

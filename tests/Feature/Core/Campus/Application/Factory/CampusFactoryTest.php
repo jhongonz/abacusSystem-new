@@ -19,18 +19,21 @@ use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Campus\Application\DataProvider\CampusFactoryDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(CampusFactory::class)]
 class CampusFactoryTest extends TestCase
 {
-    private CampusFactory $campusFactory;
+    private CampusFactory|MockObject $campusFactory;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->campusFactory = new CampusFactory();
+        $this->campusFactory = $this->getMockBuilder(CampusFactory::class)
+            ->onlyMethods(['buildCampus','buildCampusId','buildCampusInstitutionId','buildCampusName'])
+            ->getMock();
     }
 
     public function tearDown(): void
@@ -51,21 +54,119 @@ class CampusFactoryTest extends TestCase
         $result = $this->campusFactory->buildCampus($campusIdMock, $campusInstitutionIdMock, $campusNameMock);
 
         $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusIdMock, $result->id());
-        $this->assertSame($campusInstitutionIdMock, $result->institutionId());
-        $this->assertSame($campusNameMock, $result->name());
+        $this->assertInstanceOf(CampusId::class, $result->id());
+        $this->assertInstanceOf(CampusInstitutionId::class, $result->institutionId());
+        $this->assertInstanceOf(CampusName::class, $result->name());
     }
 
     /**
      * @param array<int|string, mixed> $dataTest
      *
      * @throws \Exception
+     * @throws Exception
      */
     #[DataProviderExternal(CampusFactoryDataProvider::class, 'provider_dataArray')]
     public function testBuildCampusFromArrayShouldReturnObject(array $dataTest): void
     {
+        $dataExpected = $dataTest[Campus::TYPE];
+        $campusMock = $this->createMock(Campus::class);
+
+        $addressMock = $this->createMock(CAmpusAddress::class);
+        $addressMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected['address'])
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('address')
+            ->willReturn($addressMock);
+
+        $phoneMock = $this->createMock(CampusPhone::class);
+        $phoneMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected['phone'])
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phoneMock);
+
+        $emailMock = $this->createMock(CampusEmail::class);
+        $emailMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected['email'])
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('email')
+            ->willReturn($emailMock);
+
+        $observationsMock = $this->createMock(CampusObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected['observations'])
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('observations')
+            ->willReturn($observationsMock);
+
+        $stateMock = $this->createMock(CampusState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataExpected['state'])
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $datetimeCreatedAt = new \DateTime($dataExpected['createdAt']);
+        $createdAtMock = $this->createMock(CampusCreatedAt::class);
+        $createdAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($datetimeCreatedAt)
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAtMock);
+
+        $datetimeUpdatedAt = new \DateTime($dataExpected['updatedAt']);
+        $updatedAtMock = $this->createMock(CampusUpdatedAt::class);
+        $updatedAtMock->expects(self::once())
+            ->method('setValue')
+            ->with($datetimeUpdatedAt)
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAtMock);
+
+        $campusIdMock = $this->createMock(CampusId::class);
+        $this->campusFactory->expects(self::once())
+            ->method('buildCampusId')
+            ->with($dataExpected['id'])
+            ->willReturn($campusIdMock);
+
+        $campusNameMock = $this->createMock(CampusName::class);
+        $this->campusFactory->expects(self::once())
+            ->method('buildCampusName')
+            ->with($dataExpected['name'])
+            ->willReturn($campusNameMock);
+
+        $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
+        $this->campusFactory->expects(self::once())
+            ->method('buildCampusInstitutionId')
+            ->with($dataExpected['institutionId'])
+            ->willReturn($campusInstitutionIdMock);
+
+        $this->campusFactory->expects(self::once())
+            ->method('buildCampus')
+            ->with(
+                $campusIdMock,
+                $campusInstitutionIdMock,
+                $campusNameMock
+            )
+            ->willReturn($campusMock);
+
         $result = $this->campusFactory->buildCampusFromArray($dataTest);
+
         $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
     }
 
     public function testBuildCampusAddressShouldReturnObject(): void

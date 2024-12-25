@@ -25,8 +25,8 @@ final class UpdateCampusDataProvider
                     'observations' => 'observations',
                     'search' => 'search',
                     'state' => 1,
-                    'createdAt' => new \DateTime(),
-                    'updatedAt' => new \DateTime(),
+                    'createdAt' => new \DateTime('2024-12-25 18:28:00'),
+                    'updatedAt' => new \DateTime('2024-12-25 18:28:00'),
                 ],
             ],
         ];
