@@ -265,25 +265,25 @@ class MenuComposerTest extends TestCase
             ->willReturnCallback(function (string $key, mixed $data) use (
                 $moduleFirstMock, $moduleSecondMock, $userMock, $employeeMock, $profileMock, &$callIndexView
             ) {
-                if ($key === 'menu'){
+                if ('menu' === $key) {
                     $this->assertIsArray($data);
                     $this->assertContainsOnlyInstancesOf(Module::class, $data);
                     $this->assertEquals([$moduleFirstMock, $moduleSecondMock], $data);
-                } elseif ($key === 'user'){
+                } elseif ('user' === $key) {
                     $this->assertInstanceOf(User::class, $data);
                     $this->assertEquals($userMock, $data);
-                } elseif ($key === 'employee'){
+                } elseif ('employee' === $key) {
                     $this->assertInstanceOf(Employee::class, $data);
                     $this->assertEquals($employeeMock, $data);
-                } elseif ($key === 'profile'){
+                } elseif ('profile' === $key) {
                     $this->assertInstanceOf(Profile::class, $data);
                     $this->assertEquals($profileMock, $data);
-                } elseif ($key == 'image') {
+                } elseif ('image' == $key) {
                     $this->assertIsString($data);
                     $this->assertEquals('http://localhost', $data);
                 }
 
-                $callIndexView++;
+                ++$callIndexView;
             });
 
         $this->composer->compose($viewMock);

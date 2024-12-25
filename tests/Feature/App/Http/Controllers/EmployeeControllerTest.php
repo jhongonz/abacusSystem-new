@@ -16,6 +16,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use Core\User\Domain\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -45,7 +46,7 @@ class EmployeeControllerTest extends TestCase
     private ImageManagerInterface|MockObject $imageManager;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
-    private EmployeeController|MockObject $controllerMock;
+    private Filesystem|MockObject $filesystem;
     private EmployeeController $controller;
 
     /**
@@ -61,25 +62,14 @@ class EmployeeControllerTest extends TestCase
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->eventDispatcher = $this->createMock(EventDispatcher::class);
-
-        $this->controllerMock = $this->getMockBuilder(EmployeeController::class)
-            ->setConstructorArgs([
-                $this->orchestrator,
-                $this->actionExecutorHandler,
-                $this->datatables,
-                $this->eventDispatcher,
-                $this->imageManager,
-                $this->viewFactory,
-                $this->logger,
-            ])
-            ->onlyMethods([])
-            ->getMock();
+        $this->filesystem = $this->createMock(Filesystem::class);
 
         $this->controller = new EmployeeController(
             $this->orchestrator,
             $this->actionExecutorHandler,
             $this->datatables,
             $this->eventDispatcher,
+            $this->filesystem,
             $this->imageManager,
             $this->viewFactory,
             $this->logger
@@ -94,10 +84,10 @@ class EmployeeControllerTest extends TestCase
             $this->imageManager,
             $this->logger,
             $this->controller,
-            $this->controllerMock,
             $this->actionExecutorHandler,
             $this->datatables,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $this->filesystem
         );
 
         parent::tearDown();
@@ -716,16 +706,20 @@ class EmployeeControllerTest extends TestCase
             ->method('userId')
             ->willReturn($userIdMock);
 
+        $this->filesystem->expects(self::once())
+            ->method('delete')
+            ->with([
+                '/var/www/abacusSystem-new/public/images/full/image.jpg',
+                '/var/www/abacusSystem-new/public/images/small/image.jpg',
+            ])
+            ->willReturn(true);
+
         $this->orchestrator->expects(self::exactly(3))
             ->method('handler')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(['employee' => $employeeMock], [], []);
 
-        /*$this->controllerMock->expects(self::once())
-            ->method('deleteImage')
-            ->with('image.jpg');*/
-
-        $result = $this->controllerMock->deleteEmployee($requestMock, $employeeId);
+        $result = $this->controller->deleteEmployee($requestMock, $employeeId);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertSame(200, $result->getStatusCode());

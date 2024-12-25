@@ -12,6 +12,7 @@ use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -35,6 +36,7 @@ class EmployeeController extends Controller implements HasMiddleware
         private readonly ActionExecutorHandlerContract $actionExecutorHandler,
         private readonly DataTables $dataTables,
         private readonly EventDispatcher $eventDispatcher,
+        private readonly Filesystem $filesystem,
         protected ImageManagerInterface $imageManager,
         protected ViewFactory $viewFactory,
         private readonly LoggerInterface $logger,
@@ -171,7 +173,13 @@ class EmployeeController extends Controller implements HasMiddleware
 
             $image = $employee->image()->value();
             if (!empty($image)) {
-                $this->deleteImage($image);
+                /** @var array<string> $files */
+                $files = [
+                    public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $image)),
+                    public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $image)),
+                ];
+
+                $this->filesystem->delete($files);
             }
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
