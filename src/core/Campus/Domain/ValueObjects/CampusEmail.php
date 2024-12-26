@@ -9,13 +9,16 @@ namespace Core\Campus\Domain\ValueObjects;
 
 class CampusEmail
 {
+    private ?string $value;
+
     public function __construct(
-        private ?string $value = null,
+        ?string $value = null,
     ) {
         if (!is_null($value)) {
             $this->validate($value);
-            $this->setValue($value);
         }
+
+        $this->value = $value;
     }
 
     public function value(): ?string
@@ -23,13 +26,13 @@ class CampusEmail
         return $this->value;
     }
 
-    public function setValue(?string $value): self
+    public function setValue(?string $value = null): self
     {
         if (!is_null($value)) {
             $this->validate($value);
-            $this->value = $value;
         }
 
+        $this->value = $value;
         return $this;
     }
 

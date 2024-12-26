@@ -14,7 +14,6 @@ class CampusInstitutionIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusInstitutionId(1);
     }
 
     public function tearDown(): void
@@ -25,6 +24,8 @@ class CampusInstitutionIdTest extends TestCase
 
     public function testValueShouldReturnInt(): void
     {
+
+        $this->valueObject = new CampusInstitutionId(1);
         $result = $this->valueObject->value();
 
         $this->assertIsInt($result);
@@ -33,18 +34,30 @@ class CampusInstitutionIdTest extends TestCase
 
     public function testSetValueShouldReturnObject(): void
     {
-        $result = $this->valueObject->setValue(2);
+        $this->valueObject = new CampusInstitutionId(1);
 
-        $this->assertInstanceOf(CampusInstitutionId::class, $result);
-        $this->assertSame($this->valueObject, $result);
-        $this->assertSame(2, $result->value());
+        $this->valueObject->setValue(2);
+        $this->assertSame(2, $this->valueObject->value());
+
+        $this->valueObject->setValue(20);
+        $this->assertSame(20, $this->valueObject->value());
     }
 
     public function testSetValueShouldReturnException(): void
     {
+        $this->valueObject = new CampusInstitutionId(1);
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusInstitutionId> does not allow the value <0>.');
 
         $this->valueObject->setValue(0);
+    }
+
+    public function testSetValueShouldReturnExceptionWhenConstructValueError(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusInstitutionId> does not allow the value <0>.');
+
+        $this->valueObject = new CampusInstitutionId(0);
     }
 }

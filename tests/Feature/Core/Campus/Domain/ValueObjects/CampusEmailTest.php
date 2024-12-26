@@ -14,7 +14,6 @@ class CampusEmailTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusEmail();
     }
 
     public function tearDown(): void
@@ -25,17 +24,23 @@ class CampusEmailTest extends TestCase
 
     public function testValueShouldReturnNull(): void
     {
+        $this->valueObject = new CampusEmail();
+
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
     public function testSetValueShouldReturnObject(): void
     {
-        $result = $this->valueObject->setValue('test@test.com');
+        $this->valueObject = new CampusEmail();
+        $this->valueObject->setValue('test@test.com');
+        $this->assertSame('test@test.com', $this->valueObject->value());
 
-        $this->assertInstanceOf(CampusEmail::class, $result);
-        $this->assertSame($this->valueObject, $result);
-        $this->assertSame('test@test.com', $result->value());
+        $this->valueObject->setValue('test2@test.com');
+        $this->assertSame('test2@test.com', $this->valueObject->value());
+
+        $this->valueObject->setValue();
+        $this->assertNull($this->valueObject->value());
     }
 
     public function testValueShouldReturnString(): void
@@ -53,5 +58,15 @@ class CampusEmailTest extends TestCase
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusEmail> does not allow the invalid email: <testing>.');
 
         $this->valueObject = new CampusEmail('testing');
+    }
+
+    public function testValueShouldReturnExceptionWhenSetValueIsNotValid(): void
+    {
+        $this->valueObject = new CampusEmail();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusEmail> does not allow the invalid email: <testing>.');
+
+        $this->valueObject->setValue('testing');
     }
 }
