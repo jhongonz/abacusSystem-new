@@ -276,30 +276,30 @@ class CampusTest extends TestCase
     {
         $this->campusName->expects(self::once())
             ->method('value')
-            ->willReturn('name');
+            ->willReturn(' Name ');
 
         $address = $this->createMock(CampusAddress::class);
         $address->expects(self::once())
             ->method('value')
-            ->willReturn('address');
+            ->willReturn(' addreSS ');
         $this->campus->setAddress($address);
 
         $phone = $this->createMock(CampusPhone::class);
         $phone->expects(self::once())
             ->method('value')
-            ->willReturn('phone');
+            ->willReturn(' phOne');
         $this->campus->setPhone($phone);
 
         $email = $this->createMock(CampusEmail::class);
         $email->expects(self::once())
             ->method('value')
-            ->willReturn('email');
+            ->willReturn('emAil ');
         $this->campus->setEmail($email);
 
         $observations = $this->createMock(CampusObservations::class);
         $observations->expects(self::once())
             ->method('value')
-            ->willReturn('observations');
+            ->willReturn('oBservations ');
         $this->campus->setObservations($observations);
 
         $search = $this->createMock(CampusSearch::class);

@@ -24,7 +24,6 @@ class CampusInstitutionIdTest extends TestCase
 
     public function testValueShouldReturnInt(): void
     {
-
         $this->valueObject = new CampusInstitutionId(1);
         $result = $this->valueObject->value();
 

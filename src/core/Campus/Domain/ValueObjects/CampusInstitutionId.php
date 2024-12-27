@@ -10,6 +10,7 @@ namespace Core\Campus\Domain\ValueObjects;
 class CampusInstitutionId
 {
     private int $value;
+
     public function __construct(
         int $value,
     ) {

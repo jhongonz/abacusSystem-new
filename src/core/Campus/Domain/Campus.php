@@ -179,15 +179,27 @@ class Campus
 
     public function refreshSearch(): self
     {
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
         $data = [
-            $this->name->value(),
-            $this->address->value(),
-            $this->phone->value(),
-            $this->email->value(),
-            $this->observations->value(),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($address)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
+            trim(strtolower($observations)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

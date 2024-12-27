@@ -33,6 +33,7 @@ class CampusEmail
         }
 
         $this->value = $value;
+
         return $this;
     }
 

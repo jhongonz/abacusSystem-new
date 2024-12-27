@@ -77,7 +77,7 @@ class UpdateCampusTest extends TestCase
 
         $this->useCase->expects(self::exactly(10))
             ->method('getFunctionName')
-            ->willReturnCallback(function (string $field){
+            ->willReturnCallback(function (string $field) {
                 return match ($field) {
                     'institutionId' => 'changeInstitutionId',
                     'name' => 'changeName',
@@ -223,7 +223,6 @@ class UpdateCampusTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \ReflectionException
      */
     public function testGetFunctionNameShouldReturnNameValid(): void

@@ -32,7 +32,7 @@ class CampusFactoryTest extends TestCase
     {
         parent::setUp();
         $this->campusFactory = $this->getMockBuilder(CampusFactory::class)
-            ->onlyMethods(['buildCampus','buildCampusId','buildCampusInstitutionId','buildCampusName'])
+            ->onlyMethods(['buildCampus', 'buildCampusId', 'buildCampusInstitutionId', 'buildCampusName'])
             ->getMock();
     }
 
@@ -71,7 +71,7 @@ class CampusFactoryTest extends TestCase
         $dataExpected = $dataTest[Campus::TYPE];
         $campusMock = $this->createMock(Campus::class);
 
-        $addressMock = $this->createMock(CAmpusAddress::class);
+        $addressMock = $this->createMock(CampusAddress::class);
         $addressMock->expects(self::once())
             ->method('setValue')
             ->with($dataExpected['address'])

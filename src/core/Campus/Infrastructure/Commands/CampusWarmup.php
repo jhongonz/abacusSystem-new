@@ -28,22 +28,23 @@ class CampusWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'campus:warmup
-                                {id : The ID campus}';
+    protected $signature = 'campus:warmup {id : The ID campus}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Warmup campus in memory';
+    protected $description = 'Warmup campus in memory redis';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        /** @var int|null $id */
+        $id = is_numeric($this->argument('id')) ? intval($this->argument('id')) : null;
+
         $campusId = $this->campusFactory->buildCampusId($id);
 
         try {

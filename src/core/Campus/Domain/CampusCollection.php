@@ -27,8 +27,6 @@ class CampusCollection extends ArrayIterator
 
     public function addItem(Campus $item): self
     {
-        $this->validateInstanceElement(Campus::class, $item);
-
         $this->append($item);
 
         return $this;

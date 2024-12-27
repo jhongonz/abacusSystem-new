@@ -56,7 +56,7 @@ class CampusWarmupTest extends TestCase
     public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('campus:warmup', $this->command->getName());
-        $this->assertSame('Warmup campus in memory', $this->command->getDescription());
+        $this->assertSame('Warmup campus in memory redis', $this->command->getDescription());
     }
 
     /**
@@ -68,13 +68,17 @@ class CampusWarmupTest extends TestCase
         $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
-            ->willReturn(1);
+            ->willReturn('1');
 
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
             ->method('buildCampusId')
             ->with(1)
-            ->willReturn($campusIdMock);
+            ->willReturnCallback(function ($id) use ($campusIdMock) {
+                $this->assertIsInt($id);
+
+                return $campusIdMock;
+            });
 
         $campusMock = $this->createMock(Campus::class);
         $this->readRepository->expects(self::once())
@@ -107,13 +111,17 @@ class CampusWarmupTest extends TestCase
         $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
-            ->willReturn(1);
+            ->willReturn('1');
 
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
             ->method('buildCampusId')
             ->with(1)
-            ->willReturn($campusIdMock);
+            ->willReturnCallback(function ($id) use ($campusIdMock) {
+                $this->assertIsInt($id);
+
+                return $campusIdMock;
+            });
 
         $this->readRepository->expects(self::once())
             ->method('find')
