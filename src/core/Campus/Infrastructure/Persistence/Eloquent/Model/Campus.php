@@ -292,8 +292,8 @@ class Campus extends Model
     /**
      * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): \DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new \DateTime($datetime ?? 'now');
+        return new \DateTime($datetime);
     }
 }

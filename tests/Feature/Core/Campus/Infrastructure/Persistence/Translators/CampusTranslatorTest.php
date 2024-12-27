@@ -11,7 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusEmail;
 use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Domain\ValueObjects\CampusName;
+use Core\Campus\Domain\ValueObjects\CampusObservations;
 use Core\Campus\Domain\ValueObjects\CampusPhone;
+use Core\Campus\Domain\ValueObjects\CampusSearch;
+use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
 use Core\Campus\Infrastructure\Persistence\Translators\CampusTranslator;
@@ -89,6 +92,18 @@ class CampusTranslatorTest extends TestCase
             ->method('phone')
             ->willReturn('phone');
 
+        $modelMock->expects(self::once())
+            ->method('observations')
+            ->willReturn('Observations');
+
+        $modelMock->expects(self::once())
+            ->method('state')
+            ->willReturn(1);
+
+        $modelMock->expects(self::once())
+            ->method('search')
+            ->willReturn('search');
+
         $datetime = new \DateTime();
         $modelMock->expects(self::exactly(2))
             ->method('createdAt')
@@ -144,6 +159,33 @@ class CampusTranslatorTest extends TestCase
         $campusMock->expects(self::once())
             ->method('phone')
             ->willReturn($phoneMock);
+
+        $observationsMock = $this->createMock(CampusObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('setValue')
+            ->with('Observations')
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('observations')
+            ->willReturn($observationsMock);
+
+        $stateMock = $this->createMock(CampusState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $searchMock = $this->createMock(CampusSearch::class);
+        $searchMock->expects(self::once())
+            ->method('setValue')
+            ->with('search')
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
 
         $createdAtMock = $this->createMock(CampusCreatedAt::class);
         $createdAtMock->expects(self::once())

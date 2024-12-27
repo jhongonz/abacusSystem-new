@@ -670,4 +670,25 @@ class CampusTest extends TestCase
         $this->assertInstanceOf(Campus::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArrayWithCasts(): void
+    {
+        $reflection = new \ReflectionClass(Campus::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->model, []);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+
+        $this->assertIsArray($result);
+        $this->assertEquals($dataExpected, $result);
+    }
 }

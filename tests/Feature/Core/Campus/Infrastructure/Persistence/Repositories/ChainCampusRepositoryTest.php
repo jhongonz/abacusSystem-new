@@ -166,6 +166,26 @@ class ChainCampusRepositoryTest extends TestCase
     }
 
     /**
+     * @throws CampusCollectionNotFoundException
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Throwable
+     */
+    public function testGetAllShouldChangePropertyToFalse(): void
+    {
+        $institutionIdMock = $this->createMock(CampusInstitutionId::class);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $this->repository->getAll($institutionIdMock);
+        $result = $method->invoke($this->repository, []);
+
+        $this->assertFalse($result);
+    }
+
+    /**
      * @throws \Exception
      * @throws Exception
      */
