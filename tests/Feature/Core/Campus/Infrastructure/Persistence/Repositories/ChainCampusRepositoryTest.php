@@ -174,14 +174,13 @@ class ChainCampusRepositoryTest extends TestCase
     public function testGetAllShouldChangePropertyToFalse(): void
     {
         $institutionIdMock = $this->createMock(CampusInstitutionId::class);
+        $this->repository->getAll($institutionIdMock);
 
         $reflection = new \ReflectionClass(ChainCampusRepository::class);
         $method = $reflection->getMethod('canPersist');
         $this->assertTrue($method->isProtected());
 
-        $this->repository->getAll($institutionIdMock);
         $result = $method->invoke($this->repository, []);
-
         $this->assertFalse($result);
     }
 

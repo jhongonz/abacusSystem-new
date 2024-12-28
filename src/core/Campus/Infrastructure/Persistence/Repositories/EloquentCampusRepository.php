@@ -179,11 +179,8 @@ class EloquentCampusRepository implements ChainPriority, CampusRepositoryContrac
         return $this->campusModel->getTable();
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function getDateTime(string $datetime = 'now'): \DateTime
+    private function getDateTime(): \DateTime
     {
-        return new \DateTime($datetime);
+        return new \DateTime('now');
     }
 }

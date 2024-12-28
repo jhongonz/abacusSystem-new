@@ -148,6 +148,10 @@ class RedisCampusRepositoryTest extends TestCase
                 'Campus not found by id 1'
             );
 
+        $this->loggerMock->expects(self::once())
+            ->method('error')
+            ->with('Campus not found by id 1');
+
         $this->campusFactoryMock->expects(self::never())
             ->method('buildCampusFromArray');
 

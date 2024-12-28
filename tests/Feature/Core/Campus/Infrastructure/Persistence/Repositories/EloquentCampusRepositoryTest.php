@@ -14,6 +14,7 @@ use Core\Campus\Domain\ValueObjects\CampusObservations;
 use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
+use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
@@ -274,14 +275,25 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with('cam_id', 1)
             ->andReturnSelf();
 
+        $objectMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn($objectMock);
 
         $this->databaseManager->shouldReceive('table')
             ->once()
             ->with('campus')
             ->andReturn($builderMock);
+
+        $this->campusModel->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->campusModel->expects(self::once())
+            ->method('changeDeletedAt')
+            ->withAnyParameters()
+            ->willReturnSelf();
 
         $this->campusModel->expects(self::once())
             ->method('fill')
@@ -494,7 +506,7 @@ class EloquentCampusRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn(null);
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
@@ -650,6 +662,18 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with($createAt)
             ->willReturnSelf();
 
+        $updatedMock = $this->createMock(CampusUpdatedAt::class);
+        $updatedMock->expects(self::once())
+            ->method('value')
+            ->willReturn(null);
+        $updatedMock->expects(self::once())
+            ->method('setValue')
+            ->withAnyParameters()
+            ->willReturnSelf();
+        $campusMock->expects(self::exactly(2))
+            ->method('updatedAt')
+            ->willReturn($updatedMock);
+
         $this->campusModel->expects(self::once())
             ->method('toArray')
             ->willReturn([]);
@@ -660,16 +684,24 @@ class EloquentCampusRepositoryTest extends TestCase
             ->with('cam_id', 1)
             ->andReturnSelf();
 
+        $objectMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn($objectMock);
 
         $builderMock->shouldReceive('insertGetId')
             ->never();
 
         $builderMock->shouldReceive('update')
+            ->once()
             ->withAnyArgs()
-            ->andReturn(1);
+            ->andReturnUsing(function ($parameters) {
+                $this->assertIsArray($parameters);
+                $this->assertArrayHasKey('updated_at', $parameters);
+                $this->assertInstanceOf(\DateTime::class, $parameters['updated_at']);
+
+                return 1;
+            });
 
         $this->campusModel->expects(self::exactly(2))
             ->method('getTable')
