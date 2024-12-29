@@ -14,11 +14,13 @@ use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
+use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
+#[CoversClass(ArrayIterator::class)]
 #[CoversClass(Campus::class)]
 class CampusTest extends TestCase
 {
@@ -302,16 +304,14 @@ class CampusTest extends TestCase
             ->willReturn('oBservations ');
         $this->campus->setObservations($observations);
 
-        $search = $this->createMock(CampusSearch::class);
-        $search->expects(self::once())
-            ->method('setValue')
-            ->with('name address phone email observations')
-            ->willReturnSelf();
+        $search = new CampusSearch();
         $this->campus->setSearch($search);
 
+        $dataExpected = 'name address phone email observations';
         $result = $this->campus->refreshSearch();
 
         $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($this->campus, $result);
+        $this->assertSame($search, $result->search());
+        $this->assertSame($dataExpected, $result->search()->value());
     }
 }

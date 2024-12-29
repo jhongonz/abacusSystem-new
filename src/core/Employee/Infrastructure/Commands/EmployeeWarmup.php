@@ -20,10 +20,7 @@ class EmployeeWarmup extends Command
         EmployeeRepositoryContract ...$repositories,
     ) {
         parent::__construct();
-
-        foreach ($repositories as $repository) {
-            $this->repositories[] = $repository;
-        }
+        $this->repositories = $repositories;
     }
 
     /**
@@ -31,8 +28,7 @@ class EmployeeWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'employee:warmup
-                                {id : The ID employee}';
+    protected $signature = 'employee:warmup {id : The ID employee}';
 
     /**
      * The console command description.
@@ -46,7 +42,9 @@ class EmployeeWarmup extends Command
      */
     public function handle(): int
     {
-        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        /** @var int|null $id */
+        $id = is_numeric($this->argument('id')) ? intval($this->argument('id')) : null;
+
         $employeeId = $this->employeeFactory->buildEmployeeId($id);
 
         try {

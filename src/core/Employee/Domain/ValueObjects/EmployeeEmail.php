@@ -4,13 +4,15 @@ namespace Core\Employee\Domain\ValueObjects;
 
 class EmployeeEmail
 {
-    public function __construct(
-        private ?string $value = null,
-    ) {
+    private ?string $value;
+
+    public function __construct(?string $value = null)
+    {
         if (!is_null($value)) {
             $this->validate($value);
-            $this->setValue($value);
         }
+
+        $this->value = $value;
     }
 
     public function value(): ?string

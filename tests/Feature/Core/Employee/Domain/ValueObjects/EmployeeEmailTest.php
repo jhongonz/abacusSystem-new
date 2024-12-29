@@ -14,7 +14,6 @@ class EmployeeEmailTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeEmail();
     }
 
     public function tearDown(): void
@@ -25,6 +24,8 @@ class EmployeeEmailTest extends TestCase
 
     public function testValueShouldReturnNull(): void
     {
+        $this->valueObject = new EmployeeEmail();
+
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
@@ -40,6 +41,7 @@ class EmployeeEmailTest extends TestCase
 
     public function testSetValueShouldChangeAndReturnSelf(): void
     {
+        $this->valueObject = new EmployeeEmail();
         $result = $this->valueObject->setValue('test@test.com');
 
         $this->assertInstanceOf(EmployeeEmail::class, $result);
@@ -48,9 +50,19 @@ class EmployeeEmailTest extends TestCase
 
     public function testSetValueShouldException(): void
     {
+        $this->valueObject = new EmployeeEmail();
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeEmail> does not allow the invalid email: <test>.');
 
         $this->valueObject->setValue('test');
+    }
+
+    public function testSetValueShouldExceptionWhenConstructWithDataError(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeEmail> does not allow the invalid email: <test>.');
+
+        $this->valueObject = new EmployeeEmail('test');
     }
 }

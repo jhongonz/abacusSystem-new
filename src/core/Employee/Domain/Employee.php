@@ -203,17 +203,39 @@ class Employee
      */
     public function refreshSearch(): self
     {
+        /** @var string $identification */
+        $identification = $this->identification->value();
+
+        /** @var string $lastname */
+        $lastname = $this->lastname->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
+        /** @var string $image */
+        $image = $this->image->value();
+
         $data = [
-            $this->identification->value(),
-            $this->name->value(),
-            $this->lastname->value(),
-            $this->phone->value(),
-            $this->email->value(),
-            $this->address->value(),
-            $this->observations->value(),
+            trim(strtolower($identification)),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($lastname)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
+            trim(strtolower($address)),
+            trim(strtolower($observations)),
+            trim(strtolower($image)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

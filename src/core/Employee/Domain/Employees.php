@@ -22,8 +22,6 @@ class Employees extends ArrayIterator
 
     public function addItem(Employee $item): self
     {
-        $this->validateInstanceElement(Employee::class, $item);
-
         $this->append($item);
 
         return $this;

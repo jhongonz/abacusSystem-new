@@ -916,4 +916,25 @@ class EmployeeTest extends TestCase
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertSame($result, $this->modelMock);
     }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnCastsCorrectly(): void
+    {
+        $reflexion = new \ReflectionClass(Employee::class);
+        $method = $reflexion->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->model);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+
+        $this->assertIsArray($result);
+        $this->assertEquals($dataExpected, $result);
+    }
 }

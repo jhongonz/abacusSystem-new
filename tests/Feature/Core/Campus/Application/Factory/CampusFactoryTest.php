@@ -32,7 +32,12 @@ class CampusFactoryTest extends TestCase
     {
         parent::setUp();
         $this->campusFactory = $this->getMockBuilder(CampusFactory::class)
-            ->onlyMethods(['buildCampus', 'buildCampusId', 'buildCampusInstitutionId', 'buildCampusName'])
+            ->onlyMethods([
+                'buildCampus',
+                'buildCampusId',
+                'buildCampusInstitutionId',
+                'buildCampusName',
+            ])
             ->getMock();
     }
 
@@ -51,6 +56,7 @@ class CampusFactoryTest extends TestCase
         $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
         $campusNameMock = $this->createMock(CampusName::class);
 
+        $this->campusFactory = new CampusFactory();
         $result = $this->campusFactory->buildCampus($campusIdMock, $campusInstitutionIdMock, $campusNameMock);
 
         $this->assertInstanceOf(Campus::class, $result);
@@ -167,6 +173,42 @@ class CampusFactoryTest extends TestCase
 
         $this->assertInstanceOf(Campus::class, $result);
         $this->assertSame($campusMock, $result);
+    }
+
+    public function testBuildCampusIdShouldReturnObjectWhenValueIsInt(): void
+    {
+        $this->campusFactory = new CampusFactory();
+
+        $result = $this->campusFactory->buildCampusId(1);
+        $this->assertInstanceOf(CampusId::class, $result);
+        $this->assertSame(1, $result->value());
+    }
+
+    public function testBuildCampusIdShouldReturnObjectWhenValueIsNull(): void
+    {
+        $this->campusFactory = new CampusFactory();
+
+        $result = $this->campusFactory->buildCampusId();
+        $this->assertInstanceOf(CampusId::class, $result);
+        $this->assertNull($result->value());
+    }
+
+    public function testBuildCampusInstitutionIdShouldReturnObject(): void
+    {
+        $this->campusFactory = new CampusFactory();
+
+        $result = $this->campusFactory->buildCampusInstitutionId(1);
+        $this->assertInstanceOf(CampusInstitutionId::class, $result);
+        $this->assertSame(1, $result->value());
+    }
+
+    public function testBuildCampusNameShouldReturnObject(): void
+    {
+        $this->campusFactory = new CampusFactory();
+
+        $result = $this->campusFactory->buildCampusName('testing');
+        $this->assertInstanceOf(CampusName::class, $result);
+        $this->assertEquals('testing', $result->value());
     }
 
     public function testBuildCampusAddressShouldReturnObject(): void

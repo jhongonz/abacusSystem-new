@@ -24,7 +24,7 @@ class UpdateEmployee extends UseCasesService
         /** @var UpdateEmployeeRequest $request */
         $employee = $this->employeeRepository->find($request->employeeId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $employee = $this->{$methodName}($employee, $value);
@@ -34,6 +34,11 @@ class UpdateEmployee extends UseCasesService
         $employee->refreshSearch();
 
         return $this->employeeRepository->persistEmployee($employee);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeIdentifier(Employee $employee, string $identifier): Employee
@@ -112,6 +117,20 @@ class UpdateEmployee extends UseCasesService
     private function changeImage(Employee $employee, string $image): Employee
     {
         $employee->image()->setValue($image);
+
+        return $employee;
+    }
+
+    private function changeUserId(Employee $employee, int $userId): Employee
+    {
+        $employee->userId()->setValue($userId);
+
+        return $employee;
+    }
+
+    private function changeInstitutionId(Employee $employee, int $id): Employee
+    {
+        $employee->institutionId()->setValue($id);
 
         return $employee;
     }

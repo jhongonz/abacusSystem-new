@@ -389,10 +389,12 @@ class Employee extends Model
     }
 
     /**
-     * @throws \Exception
+     * @param string $datetime
+     * @return \DateTime
+     * @throws \DateMalformedStringException
      */
-    private function getDateTime(?string $datetime = null): \DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new \DateTime($datetime ?? 'now');
+        return new \DateTime($datetime);
     }
 }

@@ -19,6 +19,9 @@ test:
 test-coverage:
 	$(PHPUNIT) --coverage-text
 
+test-debug:
+	$(PHPUNIT) --debug
+
 analyse:
 	$(PHPSTAN) analyse
 
