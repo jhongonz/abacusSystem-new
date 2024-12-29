@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataProvider\DataProviderUpdateEmployee;
+use Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataProvider\UpdateEmployeeDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployee::class)]
@@ -69,7 +69,7 @@ class UpdateEmployeeTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderUpdateEmployee::class, 'provider')]
+    #[DataProviderExternal(UpdateEmployeeDataProvider::class, 'provider')]
     public function testExecuteShouldChangeAndReturnObject(array $dataUpdate): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);

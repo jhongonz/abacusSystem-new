@@ -40,27 +40,47 @@ class EmployeeTranslator
             $this->employeeFactory->buildEmployeeState($this->employee->state())
         );
 
-        $employee->setIdentificationType($this->employeeFactory->buildEmployeeIdentificationType($this->employee->identificationType()));
-        $employee->setUpdatedAt($this->employeeFactory->buildEmployeeUpdatedAt($this->employee->updatedAt()));
+        $employee->identificationType()->setValue($this->employee->identificationType());
 
         if (!is_null($this->employee->createdAt())) {
-            $employee->setCreatedAt($this->employeeFactory->buildEmployeeCreatedAt($this->employee->createdAt()));
+            $employee->createdAt()->setValue($this->employee->createdAt());
         }
 
-        $employee->setAddress($this->employeeFactory->buildEmployeeAddress($this->employee->address()));
-        $employee->setPhone($this->employeeFactory->buildEmployeePhone($this->employee->phone()));
-        $employee->setEmail($this->employeeFactory->buildEmployeeEmail($this->employee->email()));
-        $employee->setSearch($this->employeeFactory->buildEmployeeSearch($this->employee->search()));
-        $employee->setBirthdate($this->employeeFactory->buildEmployeeBirthdate($this->employee->birthdate()));
-        $employee->setObservations($this->employeeFactory->buildEmployeeObservations($this->employee->observations()));
-        $employee->setImage($this->employeeFactory->buildEmployeeImage($this->employee->image()));
-        $employee->setInstitutionId($this->employeeFactory->buildEmployeeInstitutionId($this->employee->institutionId()));
+        if (!is_null($this->employee->updatedAt())) {
+            $employee->updatedAt()->setValue($this->employee->updatedAt());
+        }
+
+        $employee->address()->setValue($this->employee->address());
+
+        /** @var string $phone */
+        $phone = $this->employee->phone();
+        $employee->phone()->setValue($phone);
+
+        /** @var string $email */
+        $email = $this->employee->email();
+        $employee->email()->setValue($email);
+
+        $employee->search()->setValue($this->employee->search());
+        $employee->birthdate()->setValue($this->employee->birthdate());
+        $employee->observations()->setValue($this->employee->observations());
+
+        /** @var string $image */
+        $image = $this->employee->image();
+        $employee->image()->setValue($image);
+
+        /** @var int $institutionId */
+        $institutionId = $this->employee->institutionId();
+        $employee->institutionId()->setValue($institutionId);
 
         /** @var User|null $user */
         $user = $this->employee->relationWithUser()->first(['user_id']);
 
+        /** @var int|null $userId */
         $userId = $user?->id();
-        $employee->setUserId($this->employeeFactory->buildEmployeeUserId($userId));
+
+        if (!is_null($userId)) {
+            $employee->userId()->setValue($userId);
+        }
 
         return $employee;
     }

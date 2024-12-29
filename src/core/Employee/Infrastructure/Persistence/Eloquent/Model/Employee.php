@@ -389,8 +389,6 @@ class Employee extends Model
     }
 
     /**
-     * @param string $datetime
-     * @return \DateTime
      * @throws \DateMalformedStringException
      */
     private function getDateTime(string $datetime = 'now'): \DateTime

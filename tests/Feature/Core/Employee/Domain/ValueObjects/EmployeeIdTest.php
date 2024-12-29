@@ -14,7 +14,6 @@ class EmployeeIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeId();
     }
 
     public function tearDown(): void
@@ -25,6 +24,8 @@ class EmployeeIdTest extends TestCase
 
     public function testValueShouldReturnNull(): void
     {
+        $this->valueObject = new EmployeeId();
+
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
@@ -40,6 +41,7 @@ class EmployeeIdTest extends TestCase
 
     public function testSetValueShouldChangeAndReturnSelf(): void
     {
+        $this->valueObject = new EmployeeId(1);
         $result = $this->valueObject->setValue(2);
 
         $this->assertInstanceOf(EmployeeId::class, $result);
@@ -49,9 +51,19 @@ class EmployeeIdTest extends TestCase
 
     public function testSetValueShouldReturnException(): void
     {
+        $this->valueObject = new EmployeeId(1);
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeId> does not allow the value <0>.');
 
         $this->valueObject->setValue(0);
+    }
+
+    public function testSetValueShouldReturnExceptionWhenIsConstructWithIdIncorrectly(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Employee\Domain\ValueObjects\EmployeeId> does not allow the value <0>.');
+
+        $this->valueObject = new EmployeeId(0);
     }
 }

@@ -7,7 +7,7 @@
 
 namespace Tests\Feature\Core\Employee\Application\Factory\DataProvider;
 
-final class DataProviderEmployeeFactory
+final class EmployeeFactoryDataProvider
 {
     /**
      * @return array<int, array<string, mixed>>

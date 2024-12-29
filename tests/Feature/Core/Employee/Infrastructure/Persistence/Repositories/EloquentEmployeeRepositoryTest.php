@@ -14,13 +14,13 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
 use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
+use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
-use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee as EmployeeModel;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Translators\EmployeeTranslator;
@@ -300,15 +300,30 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->willReturn('employees');
 
         $builderMock = $this->mock(Builder::class);
-
         $builderMock->shouldReceive('where')
             ->once()
             ->with('emp_id', 1)
             ->andReturnSelf();
 
+        $objectMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn($objectMock);
+
+        $this->model->expects(self::once())
+            ->method('fill')
+            ->with([])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeDeletedAt')
+            ->withAnyParameters()
+            ->willReturnSelf();
 
         $builderMock->shouldReceive('update')
             ->once()
@@ -406,6 +421,18 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->model->expects(self::once())
             ->method('changeIdentificationType')
             ->with('type')
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(EmployeeName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('name');
+        $employeeMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->model->expects(self::once())
+            ->method('changeName')
+            ->with('name')
             ->willReturnSelf();
 
         $lastnameMock = $this->createMock(EmployeeLastname::class);
@@ -573,7 +600,7 @@ class EloquentEmployeeRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn(null);
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
@@ -637,6 +664,18 @@ class EloquentEmployeeRepositoryTest extends TestCase
         $this->model->expects(self::once())
             ->method('changeIdentificationType')
             ->with('type')
+            ->willReturnSelf();
+
+        $nameMock = $this->createMock(EmployeeName::class);
+        $nameMock->expects(self::once())
+            ->method('value')
+            ->willReturn('name');
+        $employeeMock->expects(self::once())
+            ->method('name')
+            ->willReturn($nameMock);
+        $this->model->expects(self::once())
+            ->method('changeName')
+            ->with('name')
             ->willReturnSelf();
 
         $lastnameMock = $this->createMock(EmployeeLastname::class);
@@ -796,10 +835,11 @@ class EloquentEmployeeRepositoryTest extends TestCase
             ->method('toArray')
             ->willReturn([]);
 
+        $objectMock = new \stdClass();
         $builderMock = $this->mock(Builder::class);
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn($objectMock);
 
         $builderMock->shouldReceive('insertGetId')
             ->never();
@@ -829,7 +869,6 @@ class EloquentEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @throws EmployeesNotFoundException
      * @throws Exception
      */
     public function testGetAllShouldReturnEmployeesObject(): void

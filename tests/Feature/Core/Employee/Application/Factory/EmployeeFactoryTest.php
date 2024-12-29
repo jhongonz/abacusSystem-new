@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tests\Feature\Core\Employee\Application\Factory\DataProvider\DataProviderEmployeeFactory;
+use Tests\Feature\Core\Employee\Application\Factory\DataProvider\EmployeeFactoryDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(EmployeeFactory::class)]
@@ -53,7 +53,7 @@ class EmployeeFactoryTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    #[DataProviderExternal(DataProviderEmployeeFactory::class, 'provider')]
+    #[DataProviderExternal(EmployeeFactoryDataProvider::class, 'provider')]
     public function testBuildEmployeeFromArrayShouldReturnEmployeeObject(array $dataObject): void
     {
         $data = $dataObject[Employee::TYPE];

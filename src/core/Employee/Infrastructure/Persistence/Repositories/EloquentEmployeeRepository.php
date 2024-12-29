@@ -54,7 +54,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
-        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
+        $employeeModel = $this->updateAttributesModel((array) $data);
 
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
@@ -74,7 +74,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$identification->value());
         }
 
-        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
+        $employeeModel = $this->updateAttributesModel((array) $data);
 
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
@@ -93,7 +93,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
             throw new EmployeeNotFoundException('Employee not found with id: '.$id->value());
         }
 
-        $employeeModel = $this->updateAttributesModelEmployee((array) $data);
+        $employeeModel = $this->updateAttributesModel((array) $data);
         $employeeModel->changeState(ValueObjectStatus::STATE_DELETE);
         $employeeModel->changeDeletedAt($this->getDateTime());
 
@@ -136,7 +136,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $builder = $this->database->table($this->getTable())
             ->where('emp_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 
@@ -144,7 +144,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
 
         $collection = [];
         foreach ($employeeCollection as $item) {
-            $employeeModel = $this->updateAttributesModelEmployee((array) $item);
+            $employeeModel = $this->updateAttributesModel((array) $item);
 
             if (!is_null($employeeModel->id())) {
                 $collection[] = $employeeModel->id();
@@ -163,7 +163,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $builder->where('emp_id', $domain->id()->value());
         $data = $builder->first();
 
-        $model = $this->updateAttributesModelEmployee((array) $data);
+        $model = $this->updateAttributesModel((array) $data);
 
         $model->changeId($domain->id()->value());
         $model->changeIdentification($domain->identification()->value() ?? '');
@@ -194,7 +194,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
     /**
      * @param array<string, mixed> $data
      */
-    private function updateAttributesModelEmployee(array $data = []): EmployeeModel
+    private function updateAttributesModel(array $data = []): EmployeeModel
     {
         $this->model->fill($data);
 
@@ -206,11 +206,8 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         return $this->model->getTable();
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function getDateTime(string $datetime = 'now'): \DateTime
+    private function getDateTime(): \DateTime
     {
-        return new \DateTime($datetime);
+        return new \DateTime('now');
     }
 }

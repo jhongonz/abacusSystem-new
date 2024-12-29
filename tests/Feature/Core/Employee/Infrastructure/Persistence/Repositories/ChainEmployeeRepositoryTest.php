@@ -14,11 +14,13 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainEmployeeRepository::class)]
 class ChainEmployeeRepositoryTest extends TestCase
 {
@@ -231,6 +233,22 @@ class ChainEmployeeRepositoryTest extends TestCase
 
         $this->assertNotInstanceOf(Employees::class, $result);
         $this->assertNull($result);
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws EmployeesNotFoundException
+     */
+    public function testGetAllShouldChangePropertyToFalse(): void
+    {
+        $this->repository->getAll();
+
+        $reflection = new \ReflectionClass(ChainEmployeeRepository::class);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->repository);
+        $this->assertFalse($result);
     }
 
     /**
