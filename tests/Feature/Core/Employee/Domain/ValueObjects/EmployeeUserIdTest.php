@@ -38,6 +38,16 @@ class EmployeeUserIdTest extends TestCase
         $this->assertSame(1, $result);
     }
 
+    public function testValueShouldReturnNullWhenIsChange(): void
+    {
+        $this->valueObject = new EmployeeUserId(1);
+        $this->valueObject->setValue(null);
+
+        $result = $this->valueObject->value();
+
+        $this->assertNull($result);
+    }
+
     public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue(1);

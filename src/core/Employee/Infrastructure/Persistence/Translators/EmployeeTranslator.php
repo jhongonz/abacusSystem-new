@@ -77,10 +77,7 @@ class EmployeeTranslator
 
         /** @var int|null $userId */
         $userId = $user?->id();
-
-        if (!is_null($userId)) {
-            $employee->userId()->setValue($userId);
-        }
+        $employee->userId()->setValue($userId);
 
         return $employee;
     }

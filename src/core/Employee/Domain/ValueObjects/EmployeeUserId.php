@@ -14,7 +14,7 @@ class EmployeeUserId
         return $this->value;
     }
 
-    public function setValue(int $value): self
+    public function setValue(?int $value): self
     {
         $this->value = $value;
 
