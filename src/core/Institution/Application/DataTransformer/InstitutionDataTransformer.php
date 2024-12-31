@@ -63,7 +63,7 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         ];
 
         $updatedAt = $this->institution->updatedAt()->toFormattedString();
-        $data['updatedAt'] = (empty($updatedAt)) ? $updatedAt : null;
+        $data['updatedAt'] = (!empty($updatedAt)) ? $updatedAt : null;
 
         return $data;
     }
