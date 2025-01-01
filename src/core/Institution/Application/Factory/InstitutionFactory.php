@@ -37,15 +37,15 @@ class InstitutionFactory implements InstitutionFactoryContract
         /** @var array{
          *     id: int,
          *     name: string,
-         *     shortname: string|null,
-         *     code: string|null,
-         *     observations: string|null,
+         *     shortname: string,
+         *     code: string,
+         *     observations: string,
          *     state: int,
          *     createdAt: string|null,
          *     updatedAt: string|null,
-         *     address: string|null,
+         *     address: string,
          *     phone: string,
-         *     email: string|null,
+         *     email: string,
          *     logo: string|null
          * } $dataInstitution
          */
@@ -56,50 +56,24 @@ class InstitutionFactory implements InstitutionFactoryContract
             $this->buildInstitutionName($dataInstitution['name'])
         );
 
-        $institution->setShortname(
-            $this->buildInstitutionShortname($dataInstitution['shortname'])
-        );
-
-        $institution->setCode(
-            $this->buildInstitutionCode($dataInstitution['code'])
-        );
-
-        $institution->setObservations(
-            $this->buildInstitutionObservations($dataInstitution['observations'])
-        );
-
-        $institution->setState(
-            $this->buildInstitutionState($dataInstitution['state'])
-        );
-
-        if (isset($dataInstitution['createdAt'])) {
-            $institution->setCreatedAt(
-                $this->buildInstitutionCreatedAt($this->getDateTime($dataInstitution['createdAt']))
-            );
-        }
-
-        $institution->setAddress(
-            $this->buildInstitutionAddress($dataInstitution['address'])
-        );
-
-        $institution->setPhone(
-            $this->buildInstitutionPhone($dataInstitution['phone'])
-        );
-
-        $institution->setEmail(
-            $this->buildInstitutionEmail($dataInstitution['email'])
-        );
+        $institution->shortname()->setValue($dataInstitution['shortname']);
+        $institution->code()->setValue($dataInstitution['code']);
+        $institution->observations()->setValue($dataInstitution['observations']);
+        $institution->state()->setValue($dataInstitution['state']);
+        $institution->address()->setValue($dataInstitution['address']);
+        $institution->phone()->setValue($dataInstitution['phone']);
+        $institution->email()->setValue($dataInstitution['email']);
 
         if (isset($dataInstitution['logo'])) {
-            $institution->setLogo(
-                $this->buildInstitutionLogo($dataInstitution['logo'])
-            );
+            $institution->logo()->setValue($dataInstitution['logo']);
+        }
+
+        if (isset($dataInstitution['createdAt'])) {
+            $institution->createdAt()->setValue($this->getDateTime($dataInstitution['createdAt']));
         }
 
         if (isset($dataInstitution['updatedAt'])) {
-            $institution->setUpdatedAt(
-                $this->buildInstitutionUpdatedAt($this->getDateTime($dataInstitution['updatedAt']))
-            );
+            $institution->updatedAt()->setValue($this->getDateTime($dataInstitution['updatedAt']));
         }
 
         return $institution;

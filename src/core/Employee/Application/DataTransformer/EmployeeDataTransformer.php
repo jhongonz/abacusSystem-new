@@ -63,10 +63,10 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         ];
 
         $birthdate = $this->employee->birthdate()->toFormattedString();
-        $data['birthdate'] = (!empty($birthdate)) ? $birthdate : null;
+        $data['birthdate'] = !empty($birthdate) ? $birthdate : null;
 
         $updatedAt = $this->employee->updatedAt()->toFormattedString();
-        $data['updatedAt'] = (!empty($updatedAt)) ? $updatedAt : null;
+        $data['updatedAt'] = !empty($updatedAt) ? $updatedAt : null;
 
         return $data;
     }

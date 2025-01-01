@@ -33,6 +33,23 @@ final class DataProviderInstitutionFactory
                         'updatedAt' => '2024-04-21 10:24:00',
                     ],
                 ],
+                'dataWithNull' => [
+                    'institution' => [
+                        'id' => 1,
+                        'name' => 'Testing',
+                        'shortname' => 'Testing',
+                        'code' => 'code',
+                        'logo' => null,
+                        'search' => 'search',
+                        'observations' => 'observations',
+                        'state' => 1,
+                        'address' => 'address',
+                        'phone' => 'phone',
+                        'email' => 'algo@algo.com',
+                        'createdAt' => null,
+                        'updatedAt' => null,
+                    ],
+                ],
             ],
         ];
     }
