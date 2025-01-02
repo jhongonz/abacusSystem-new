@@ -27,8 +27,6 @@ class Institutions extends ArrayIterator
 
     public function addItem(Institution $item): self
     {
-        $this->validateInstanceElement(Institution::class, $item);
-
         $this->append($item);
 
         return $this;

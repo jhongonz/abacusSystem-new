@@ -184,17 +184,35 @@ class Institution
 
     public function refreshSearch(): self
     {
+        /** @var string $code */
+        $code = $this->code->value();
+
+        /** @var string $shortname */
+        $shortname = $this->shortname->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
         $data = [
-            $this->code->value(),
-            $this->name->value(),
-            $this->shortname->value(),
-            $this->observations->value(),
-            $this->address->value(),
-            $this->phone->value(),
-            $this->email->value(),
+            trim(strtolower($code)),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($shortname)),
+            trim(strtolower($observations)),
+            trim(strtolower($address)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

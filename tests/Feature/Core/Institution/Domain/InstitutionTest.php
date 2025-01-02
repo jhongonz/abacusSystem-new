@@ -283,43 +283,43 @@ class InstitutionTest extends TestCase
         $codeMock = $this->createMock(InstitutionCode::class);
         $codeMock->expects(self::once())
             ->method('value')
-            ->willReturn('code');
+            ->willReturn('coDe ');
         $this->institution->setCode($codeMock);
 
         $nameMock = $this->createMock(InstitutionName::class);
         $nameMock->expects(self::once())
             ->method('value')
-            ->willReturn('name');
+            ->willReturn('  Name');
         $this->institution->setName($nameMock);
 
         $shortname = $this->createMock(InstitutionShortname::class);
         $shortname->expects(self::once())
             ->method('value')
-            ->willReturn('shortname');
+            ->willReturn(' shorTname ');
         $this->institution->setShortname($shortname);
 
         $observations = $this->createMock(InstitutionObservations::class);
         $observations->expects(self::once())
             ->method('value')
-            ->willReturn('observations');
+            ->willReturn(' oBservations');
         $this->institution->setObservations($observations);
 
         $address = $this->createMock(InstitutionAddress::class);
         $address->expects(self::once())
             ->method('value')
-            ->willReturn('address');
+            ->willReturn('  adDRess ');
         $this->institution->setAddress($address);
 
         $phone = $this->createMock(InstitutionPhone::class);
         $phone->expects(self::once())
             ->method('value')
-            ->willReturn('phone');
+            ->willReturn('Phone  ');
         $this->institution->setPhone($phone);
 
         $email = $this->createMock(InstitutionEmail::class);
         $email->expects(self::once())
             ->method('value')
-            ->willReturn('email');
+            ->willReturn('  EmAil');
         $this->institution->setEmail($email);
 
         $searchMock = $this->createMock(InstitutionSearch::class);
