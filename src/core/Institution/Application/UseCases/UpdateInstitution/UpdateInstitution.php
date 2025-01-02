@@ -29,7 +29,7 @@ class UpdateInstitution extends UseCasesService
         /** @var UpdateInstitutionRequest $request */
         $institution = $this->institutionRepository->find($request->id());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $institution = $this->{$methodName}($institution, $value);
@@ -39,6 +39,11 @@ class UpdateInstitution extends UseCasesService
         $institution->refreshSearch();
 
         return $this->institutionRepository->persistInstitution($institution);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeCode(Institution $institution, string $code): Institution

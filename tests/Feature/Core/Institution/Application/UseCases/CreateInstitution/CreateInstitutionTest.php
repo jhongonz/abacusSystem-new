@@ -43,6 +43,9 @@ class CreateInstitutionTest extends TestCase
     public function testExecuteShouldSaveAndReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
+        $institutionMock->expects(self::once())
+            ->method('refreshSearch')
+            ->willReturnSelf();
 
         $requestMock = $this->createMock(CreateInstitutionRequest::class);
         $requestMock->expects(self::once())
