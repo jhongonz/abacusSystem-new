@@ -145,7 +145,7 @@ class EmployeeTranslatorTest extends TestCase
             ->method('identificationType')
             ->willReturn($identificationTypeMock);
 
-        $modelMock->expects(self::exactly(2))
+        $modelMock->expects(self::once())
             ->method('createdAt')
             ->willReturn($dateTime);
 
@@ -158,7 +158,7 @@ class EmployeeTranslatorTest extends TestCase
             ->method('createdAt')
             ->willReturn($createdAtMock);
 
-        $modelMock->expects(self::exactly(2))
+        $modelMock->expects(self::once())
             ->method('updatedAt')
             ->willReturn($dateTime);
 

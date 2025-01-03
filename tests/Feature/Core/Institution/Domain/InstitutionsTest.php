@@ -7,7 +7,6 @@ use Core\Institution\Domain\Institutions;
 use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(ArrayIterator::class)]

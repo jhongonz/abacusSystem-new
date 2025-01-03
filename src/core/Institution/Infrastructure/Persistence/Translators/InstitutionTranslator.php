@@ -41,22 +41,46 @@ class InstitutionTranslator
             $this->institutionFactory->buildInstitutionName($this->institution->name() ?? '')
         );
 
-        $institution->setShortname($this->institutionFactory->buildInstitutionShortname($this->institution->shortname()));
-        $institution->setCode($this->institutionFactory->buildInstitutionCode($this->institution->code()));
-        $institution->setLogo($this->institutionFactory->buildInstitutionLogo($this->institution->logo()));
-        $institution->setState($this->institutionFactory->buildInstitutionState($this->institution->state()));
-        $institution->setObservations($this->institutionFactory->buildInstitutionObservations($this->institution->observations()));
-        $institution->setAddress($this->institutionFactory->buildInstitutionAddress($this->institution->address()));
-        $institution->setPhone($this->institutionFactory->buildInstitutionPhone($this->institution->phone() ?? ''));
-        $institution->setEmail($this->institutionFactory->buildInstitutionEmail($this->institution->email()));
-        $institution->setSearch($this->institutionFactory->buildInstitutionSearch($this->institution->search()));
+        /** @var string $shortname */
+        $shortname = $this->institution->shortname();
+        $institution->shortname()->setValue($shortname);
 
-        if (!is_null($this->institution->createdAt())) {
-            $institution->setCreatedAt($this->institutionFactory->buildInstitutionCreatedAt($this->institution->createdAt()));
+        /** @var string $code */
+        $code = $this->institution->code();
+        $institution->code()->setValue($code);
+
+        /** @var string $logo */
+        $logo = $this->institution->logo();
+        $institution->logo()->setValue($logo);
+
+        $institution->state()->setValue($this->institution->state());
+
+        /** @var string $observations */
+        $observations = $this->institution->observations();
+        $institution->observations()->setValue($observations);
+
+        /** @var string $address */
+        $address = $this->institution->address();
+        $institution->address()->setValue($address);
+
+        /** @var string $phone */
+        $phone = $this->institution->phone();
+        $institution->phone()->setValue($phone);
+
+        /** @var string $email */
+        $email = $this->institution->email();
+        $institution->email()->setValue($email);
+
+        $institution->search()->setValue($this->institution->search());
+
+        $createdAt = $this->institution->createdAt();
+        if (!is_null($createdAt)) {
+            $institution->createdAt()->setValue($createdAt);
         }
 
-        if (!is_null($this->institution->updatedAt())) {
-            $institution->setUpdatedAt($this->institutionFactory->buildInstitutionUpdatedAt($this->institution->updatedAt()));
+        $updatedAt = $this->institution->updatedAt();
+        if (!is_null($updatedAt)) {
+            $institution->updatedAt()->setValue($updatedAt);
         }
 
         return $institution;

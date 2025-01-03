@@ -42,12 +42,14 @@ class EmployeeTranslator
 
         $employee->identificationType()->setValue($this->employee->identificationType());
 
-        if (!is_null($this->employee->createdAt())) {
-            $employee->createdAt()->setValue($this->employee->createdAt());
+        $createdAt = $this->employee->createdAt();
+        if (!is_null($createdAt)) {
+            $employee->createdAt()->setValue($createdAt);
         }
 
-        if (!is_null($this->employee->updatedAt())) {
-            $employee->updatedAt()->setValue($this->employee->updatedAt());
+        $updatedAt = $this->employee->updatedAt();
+        if (!is_null($updatedAt)) {
+            $employee->updatedAt()->setValue($updatedAt);
         }
 
         $employee->address()->setValue($this->employee->address());

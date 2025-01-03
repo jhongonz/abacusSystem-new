@@ -279,4 +279,24 @@ class InstitutionTest extends TestCase
         $this->assertSame($this->model, $result);
         $this->assertInstanceOf(\DateTime::class, $result->deletedAt());
     }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArrayCorrectly(): void
+    {
+        $reflection = new \ReflectionClass(Institution::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->model);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+        $this->assertIsArray($result);
+        $this->assertSame($dataExpected, $result);
+    }
 }

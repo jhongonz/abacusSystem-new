@@ -12,7 +12,6 @@ use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
-use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
@@ -67,15 +66,13 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     /**
      * @param array{q?: string|null} $filters
-     *
-     * @throws InstitutionsNotFoundException
      */
     public function getAll(array $filters = []): ?Institutions
     {
         $builder = $this->databaseManager->table($this->getTable())
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 

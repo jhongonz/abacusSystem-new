@@ -54,4 +54,12 @@ class InstitutionEmailTest extends TestCase
 
         $this->valueObject->setValue('testing');
     }
+
+    public function testConstructShouldReturnException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Institution\Domain\ValueObjects\InstitutionEmail> does not allow the invalid email: <testing>.');
+
+        $this->valueObject = new InstitutionEmail('testing');
+    }
 }

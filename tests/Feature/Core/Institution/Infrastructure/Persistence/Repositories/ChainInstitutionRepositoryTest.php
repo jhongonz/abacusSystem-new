@@ -143,6 +143,22 @@ class ChainInstitutionRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Throwable
      */
+    public function testGetAllShouldChangeCanPersist(): void
+    {
+        $reflection = new \ReflectionClass(ChainInstitutionRepository::class);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $this->repository->getAll();
+        $result = $method->invoke($this->repository);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Throwable
+     */
     public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())

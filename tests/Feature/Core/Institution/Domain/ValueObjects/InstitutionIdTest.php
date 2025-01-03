@@ -51,4 +51,12 @@ class InstitutionIdTest extends TestCase
 
         $this->valueObject->setValue(0);
     }
+
+    public function testConstructShouldReturnException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Institution\Domain\ValueObjects\InstitutionId> does not allow the value <0>.');
+
+        $this->valueObject = new InstitutionId(0);
+    }
 }

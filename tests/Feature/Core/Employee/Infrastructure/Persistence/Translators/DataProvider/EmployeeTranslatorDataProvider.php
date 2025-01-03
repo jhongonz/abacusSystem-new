@@ -12,7 +12,7 @@ use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
 final class EmployeeTranslatorDataProvider
 {
     /**
-     * @return array<int. array<string, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     public static function provider(): array
     {
