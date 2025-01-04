@@ -17,7 +17,7 @@ class ModulesTest extends TestCase
 {
     private Module|MockObject $module;
 
-    private Modules $modules;
+    private Modules|MockObject $modules;
 
     /**
      * @throws Exception
@@ -38,6 +38,14 @@ class ModulesTest extends TestCase
         parent::tearDown();
     }
 
+    public function testConstructShouldReturnExceptionWhenItemIsNotValid(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Item is not valid to collection Core\Profile\Domain\Modules');
+
+        $this->modules = new Modules(['testing']);
+    }
+
     /**
      * @throws Exception
      */
@@ -48,6 +56,8 @@ class ModulesTest extends TestCase
 
         $this->assertInstanceOf(Modules::class, $result);
         $this->assertSame($result, $this->modules);
+        $this->assertCount(2, $result->items());
+        $this->assertSame([$this->module, $moduleMock], $result->items());
     }
 
     public function testItemsShouldReturnArray(): void
@@ -77,19 +87,39 @@ class ModulesTest extends TestCase
      */
     public function testModuleElementsOfKeyShouldReturnArray(): void
     {
+        $keyExpected = 'test';
+
         $menuKeyMock = $this->createMock(ModuleMenuKey::class);
-        $menuKeyMock->expects(self::once())
+        $menuKeyMock->expects(self::exactly(2))
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($keyExpected);
 
         $this->module->expects(self::once())
             ->method('menuKey')
             ->willReturn($menuKeyMock);
 
-        $result = $this->modules->moduleElementsOfKey('test');
+        $moduleMock = $this->createMock(Module::class);
+        $moduleMock->expects(self::once())
+            ->method('menuKey')
+            ->willReturn($menuKeyMock);
+
+        $moduleCollectionMock = [$moduleMock, $this->module];
+        $this->modules = $this->getMockBuilder(Modules::class)
+            ->setConstructorArgs([
+                $moduleCollectionMock,
+            ])
+            ->onlyMethods(['items'])
+            ->getMock();
+
+        $this->modules->expects(self::once())
+            ->method('items')
+            ->willReturn($moduleCollectionMock);
+
+        $result = $this->modules->moduleElementsOfKey($keyExpected);
 
         $this->assertIsArray($result);
-        $this->assertSame([$this->module], $result);
+        $this->assertCount(2, $result);
+        $this->assertSame([$moduleMock, $this->module], $result);
     }
 
     public function testAddIdShouldReturnSelf(): void

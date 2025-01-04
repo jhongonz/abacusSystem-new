@@ -28,11 +28,16 @@ class ProfilesTest extends TestCase
 
     public function tearDown(): void
     {
-        unset(
-            $this->profiles,
-            $this->profile
-        );
+        unset($this->profiles, $this->profile);
         parent::tearDown();
+    }
+
+    public function testConstructShouldReturnExceptionWhenIsNotValid(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Item is not valid to collection Core\Profile\Domain\Profiles');
+
+        $this->profiles = new Profiles(['testing']);
     }
 
     /**
@@ -45,12 +50,16 @@ class ProfilesTest extends TestCase
 
         $this->assertInstanceOf(Profiles::class, $result);
         $this->assertSame($result, $this->profiles);
+        $this->assertCount(2, $result->items());
+        $this->assertSame([$this->profile, $profile], $result->items());
     }
 
     public function testItemsShouldReturnArray(): void
     {
         $result = $this->profiles->items();
+
         $this->assertIsArray($result);
+        $this->assertSame([$this->profile], $result);
     }
 
     public function testFiltersShouldReturnArray(): void

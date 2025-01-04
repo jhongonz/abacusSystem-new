@@ -24,7 +24,7 @@ class UpdateProfile extends UseCasesService
         /** @var UpdateProfileRequest $request */
         $profile = $this->profileRepository->find($request->profileId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.\ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $profile = $this->{$methodName}($profile, $value);
@@ -34,6 +34,11 @@ class UpdateProfile extends UseCasesService
         $profile->refreshSearch();
 
         return $this->profileRepository->persistProfile($profile);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     /**

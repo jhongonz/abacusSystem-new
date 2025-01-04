@@ -38,12 +38,11 @@ class ProfileFactory implements ProfileFactoryContract
         $profile = $this->buildProfile(
             $this->buildProfileId($dataProfile['id']),
             $this->buildProfileName($dataProfile['name']),
-            $this->buildProfileState($dataProfile['state'])
         );
 
-        $profile->setDescription(
-            $this->buildProfileDescription($dataProfile['description'])
-        );
+        /** @var string $description */
+        $description = $dataProfile['description'];
+        $profile->description()->setValue($description);
 
         $profile->setModulesAggregator($dataProfile['modulesAggregator']);
 

@@ -22,7 +22,6 @@ class Modules extends ArrayIterator
 
     public function addItem(Module $item): self
     {
-        $this->validateInstanceElement(Module::class, $item);
         $this->append($item);
 
         return $this;
@@ -61,11 +60,10 @@ class Modules extends ArrayIterator
      */
     public function moduleElementsOfKey(string $menuKey): array
     {
-        $this->rewind();
         $modulesKeys = [];
 
         /** @var Module $module */
-        foreach ($this as $module) {
+        foreach ($this->items() as $module) {
             if ($module->menuKey()->value() === $menuKey) {
                 $modulesKeys[] = $module;
             }

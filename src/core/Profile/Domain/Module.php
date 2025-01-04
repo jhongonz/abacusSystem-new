@@ -198,14 +198,17 @@ class Module
 
     public function refreshSearch(): self
     {
+        /** @var string $icon */
+        $icon = $this->icon->value();
+
         $data = [
-            $this->menuKey->value(),
-            $this->name->value(),
-            $this->route->value(),
-            $this->icon->value(),
+            trim(strtolower($this->menuKey->value())),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($this->route->value())),
+            trim(strtolower($icon)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

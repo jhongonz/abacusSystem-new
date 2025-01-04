@@ -154,12 +154,15 @@ class Profile
 
     public function refreshSearch(): self
     {
+        /** @var string $description */
+        $description = $this->description->value();
+
         $data = [
-            $this->name->value(),
-            $this->description->value(),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($description)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

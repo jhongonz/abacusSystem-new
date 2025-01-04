@@ -22,7 +22,6 @@ class Profiles extends ArrayIterator
 
     public function addItem(Profile $item): self
     {
-        $this->validateInstanceElement(Profile::class, $item);
         $this->append($item);
 
         return $this;

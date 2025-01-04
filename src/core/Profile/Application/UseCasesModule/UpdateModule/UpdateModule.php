@@ -24,7 +24,7 @@ class UpdateModule extends UseCasesService
         /** @var UpdateModuleRequest $request */
         $module = $this->moduleRepository->find($request->moduleId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.\ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (\is_callable([$this, $methodName])) {
                 $module = $this->{$methodName}($module, $value);
@@ -34,6 +34,11 @@ class UpdateModule extends UseCasesService
         $module->refreshSearch();
 
         return $this->moduleRepository->persistModule($module);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeName(Module $module, string $value): Module

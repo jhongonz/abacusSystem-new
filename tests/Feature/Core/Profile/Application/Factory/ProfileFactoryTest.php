@@ -15,13 +15,14 @@ use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Profile\Application\Factory\DataProvider\DataProviderFactory;
 use Tests\TestCase;
 
 #[CoversClass(ProfileFactory::class)]
 class ProfileFactoryTest extends TestCase
 {
-    private ProfileFactory $factory;
+    private ProfileFactory|MockObject $factory;
 
     public function setUp(): void
     {
@@ -39,33 +40,145 @@ class ProfileFactoryTest extends TestCase
      * @param array<string, mixed> $dataObject
      *
      * @throws \Exception
+     * @throws Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerProfile')]
     public function testBuildProfileFromArrayShouldReturnProfileObject(array $dataObject): void
     {
+        $dataProvider = $dataObject[Profile::TYPE];
+        $this->factory = $this->getMockBuilder(ProfileFactory::class)
+            ->onlyMethods([
+                'buildProfile',
+                'buildProfileId',
+                'buildProfileName',
+            ])
+            ->getMock();
+
+        $idMock = $this->createMock(ProfileId::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileId')
+            ->with($dataProvider['id'])
+            ->willReturn($idMock);
+
+        $nameMock = $this->createMock(ProfileName::class);
+        $this->factory->expects(self::once())
+            ->method('buildProfileName')
+            ->with($dataProvider['name'])
+            ->willReturn($nameMock);
+
+        $profileMock = $this->createMock(Profile::class);
+
+        $descriptionMock = $this->createMock(ProfileDescription::class);
+        $descriptionMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataProvider['description'])
+            ->willReturnSelf();
+        $profileMock->expects(self::once())
+            ->method('description')
+            ->willReturn($descriptionMock);
+
+        $profileMock->expects(self::once())
+            ->method('setModulesAggregator')
+            ->with($dataProvider['modulesAggregator'])
+            ->willReturnSelf();
+
+        $createdAtMock = $this->createMock(ProfileCreatedAt::class);
+        $createdAtMock->expects(self::once())
+            ->method('setValue')
+            ->with(new \DateTime($dataProvider['createdAt']))
+            ->willReturnSelf();
+        $profileMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAtMock);
+
+        $updatedAtMock = $this->createMock(ProfileUpdatedAt::class);
+        $updatedAtMock->expects(self::once())
+            ->method('setValue')
+            ->with(new \DateTime($dataProvider['updatedAt']))
+            ->willReturnSelf();
+        $profileMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAtMock);
+
+        $this->factory->expects(self::once())
+            ->method('buildProfile')
+            ->withAnyParameters()
+            ->willReturn($profileMock);
+
         $result = $this->factory->buildProfileFromArray($dataObject);
-        $data = $dataObject[Profile::TYPE];
-
-        $this->assertInstanceOf(ProfileId::class, $result->id());
-        $this->assertSame($data['id'], $result->id()->value());
-
-        $this->assertInstanceOf(ProfileName::class, $result->name());
-        $this->assertSame($data['name'], $result->name()->value());
-
-        $this->assertInstanceOf(ProfileState::class, $result->state());
-        $this->assertSame($data['state'], $result->state()->value());
-
-        $this->assertInstanceOf(ProfileCreatedAt::class, $result->createdAt());
-
-        $this->assertInstanceOf(ProfileDescription::class, $result->description());
-        $this->assertSame($data['description'], $result->description()->value());
-
-        $this->assertIsArray($result->modulesAggregator());
-        $this->assertSame($data['modulesAggregator'], $result->modulesAggregator());
-
-        $this->assertInstanceOf(ProfileUpdatedAt::class, $result->updatedAt());
 
         $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testBuildProfileShouldReturnObject(): void
+    {
+        $profileIdMock = $this->createMock(ProfileId::class);
+        $profileNameMock = $this->createMock(ProfileName::class);
+        $profileStateMock = $this->createMock(ProfileState::class);
+        $profileCreatedAtMock = $this->createMock(ProfileCreatedAt::class);
+
+        $result = $this->factory->buildProfile(
+            $profileIdMock,
+            $profileNameMock,
+            $profileStateMock,
+            $profileCreatedAtMock
+        );
+
+        $this->assertInstanceOf(Profile::class, $result);
+        $this->assertSame($profileIdMock, $result->id());
+        $this->assertSame($profileNameMock, $result->name());
+        $this->assertSame($profileStateMock, $result->state());
+        $this->assertSame($profileCreatedAtMock, $result->createdAt());
+    }
+
+    public function testBuildProfileIdShouldReturnObject(): void
+    {
+        $result = $this->factory->buildProfileId(10);
+
+        $this->assertInstanceOf(ProfileId::class, $result);
+        $this->assertSame(10, $result->value());
+    }
+
+    public function testBuildProfileIdShouldReturnObjectWithNull(): void
+    {
+        $result = $this->factory->buildProfileId();
+
+        $this->assertInstanceOf(ProfileId::class, $result);
+        $this->assertNull($result->value());
+    }
+
+    public function testBuildProfileNameShouldReturnObject(): void
+    {
+        $result = $this->factory->buildProfileName('name');
+
+        $this->assertInstanceOf(ProfileName::class, $result);
+        $this->assertSame('name', $result->value());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testBuildProfileStateShouldReturnObject(): void
+    {
+        $result = $this->factory->buildProfileState();
+
+        $this->assertInstanceOf(ProfileState::class, $result);
+        $this->assertSame(1, $result->value());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testBuildProfileStateShouldReturnObjectWithState(): void
+    {
+        $result = $this->factory->buildProfileState(2);
+
+        $this->assertInstanceOf(ProfileState::class, $result);
+        $this->assertSame(2, $result->value());
     }
 
     public function testBuildProfileUpdateAtShouldReturnValueObjectWithNull(): void
@@ -109,6 +222,22 @@ class ProfileFactoryTest extends TestCase
 
         $this->assertInstanceOf(ProfileSearch::class, $result);
         $this->assertSame($search, $result->value());
+    }
+
+    public function testBuildProfileDescriptionShouldReturnValueObject(): void
+    {
+        $result = $this->factory->buildProfileDescription('test');
+
+        $this->assertInstanceOf(ProfileDescription::class, $result);
+        $this->assertSame('test', $result->value());
+    }
+
+    public function testBuildProfileDescriptionShouldReturnValueObjectWithNull(): void
+    {
+        $result = $this->factory->buildProfileDescription();
+
+        $this->assertInstanceOf(ProfileDescription::class, $result);
+        $this->assertNull($result->value());
     }
 
     /**

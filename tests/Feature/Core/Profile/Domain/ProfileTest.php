@@ -226,12 +226,12 @@ class ProfileTest extends TestCase
     {
         $this->profileName->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('tesT ');
 
         $description = $this->createMock(ProfileDescription::class);
         $description->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('  TEst ');
         $this->profile->setDescription($description);
 
         $search = $this->createMock(ProfileSearch::class);

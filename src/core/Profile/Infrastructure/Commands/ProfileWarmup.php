@@ -33,8 +33,7 @@ class ProfileWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'profile:warmup
-                            {--id=0 : The ID Profile}';
+    protected $signature = 'profile:warmup {--id=0 : The ID Profile}';
 
     /**
      * The console command description.
@@ -48,7 +47,7 @@ class ProfileWarmup extends Command
      */
     public function handle(): int
     {
-        $id = ($this->option('id')) ? (int) $this->option('id') : null;
+        $id = is_numeric($this->option('id')) ? intval($this->option('id')) : null;
 
         if (0 == $id) {
             /** @var Profiles $profiles */

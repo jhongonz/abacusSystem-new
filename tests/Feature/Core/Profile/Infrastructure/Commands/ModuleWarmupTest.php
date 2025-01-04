@@ -69,7 +69,7 @@ class ModuleWarmupTest extends TestCase
     public function testHandleShouldUpdateModuleInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->with('id')
             ->willReturn(0);
@@ -117,7 +117,7 @@ class ModuleWarmupTest extends TestCase
     public function testHandleShouldReturnExceptionInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->with('id')
             ->willReturn(0);

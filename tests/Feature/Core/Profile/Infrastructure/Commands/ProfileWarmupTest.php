@@ -68,7 +68,7 @@ class ProfileWarmupTest extends TestCase
     public function testHandleShouldUpdateProfileInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->willReturn(0);
 
@@ -115,7 +115,7 @@ class ProfileWarmupTest extends TestCase
     public function testHandleShouldReturnExceptionProfileInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->willReturn(0);
 

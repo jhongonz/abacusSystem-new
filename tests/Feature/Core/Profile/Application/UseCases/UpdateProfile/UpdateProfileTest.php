@@ -146,4 +146,18 @@ class UpdateProfileTest extends TestCase
 
         $this->useCase->execute($request);
     }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetFunctionNameShouldReturnNameValid(): void
+    {
+        $reflection = new \ReflectionClass(UpdateProfile::class);
+        $method = $reflection->getMethod('getFunctionName');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->useCase, 'name');
+        $this->assertIsString($result);
+        $this->assertSame('changeName', $result);
+    }
 }

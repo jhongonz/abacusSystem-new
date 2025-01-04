@@ -31,8 +31,7 @@ class InstitutionWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'institution:warmup
-                                {id: The ID institution}';
+    protected $signature = 'institution:warmup {id: The ID institution}';
 
     /**
      * The console command description.
@@ -46,7 +45,7 @@ class InstitutionWarmup extends Command
      */
     public function handle(): int
     {
-        $id = (is_numeric($this->argument('id'))) ? intval($this->argument('id')) : null;
+        $id = is_numeric($this->argument('id')) ? intval($this->argument('id')) : null;
         $institutionId = $this->institutionFactory->buildInstitutionId($id);
 
         try {

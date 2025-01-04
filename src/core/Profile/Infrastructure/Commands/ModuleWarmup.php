@@ -33,8 +33,7 @@ class ModuleWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'module:warmup
-                            {--id=0 : The ID module}';
+    protected $signature = 'module:warmup {--id=0 : The ID module}';
 
     /**
      * The console command description.
@@ -48,7 +47,8 @@ class ModuleWarmup extends Command
      */
     public function handle(): int
     {
-        $id = ($this->option('id')) ? (int) $this->option('id') : null;
+        $id = is_numeric($this->option('id')) ? intval($this->option('id')) : null;
+
         if (0 == $id) {
             /** @var Modules $modules */
             $modules = $this->readRepository->getAll();

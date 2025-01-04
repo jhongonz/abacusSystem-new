@@ -290,19 +290,19 @@ class ModuleTest extends TestCase
     {
         $this->moduleMenuKey->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn(' teSt ');
 
         $this->moduleName->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('  Test ');
 
         $this->moduleRoute->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('teST ');
 
         $this->moduleIcon->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn(' tESt  ');
 
         $searchMock = $this->createMock(ModuleSearch::class);
         $searchMock->expects(self::once())
@@ -334,5 +334,13 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($result, $this->module);
         $this->assertSame($position, $result->position());
+    }
+
+    public function testIsParentShouldReturnBoolean(): void
+    {
+        $result = $this->module->isParent();
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
     }
 }
