@@ -94,7 +94,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $builder = $this->database->table($this->getTable())
             ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 

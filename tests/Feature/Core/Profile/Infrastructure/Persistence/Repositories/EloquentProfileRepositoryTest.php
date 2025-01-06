@@ -21,8 +21,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories\DataProvider\EloquentProfileRepositoryDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(EloquentProfileRepository::class)]
@@ -512,80 +514,84 @@ class EloquentProfileRepositoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataProvider
+     *
      * @throws Exception
+     * @throws \Exception
      */
-    public function testPersistProfileShouldReturnObject(): void
+    #[DataProviderExternal(EloquentProfileRepositoryDataProvider::class, 'providerCreateProfile')]
+    public function testPersistProfileShouldReturnObject(array $dataProvider): void
     {
         $profileMock = $this->createMock(Profile::class);
 
         $profileIdMock = $this->createMock(ProfileId::class);
-        $profileIdMock->expects(self::exactly(3))
+        $profileIdMock->expects(self::exactly(2))
             ->method('value')
-            ->willReturnOnConsecutiveCalls(null, null, 1);
+            ->willReturnOnConsecutiveCalls(null, 1);
         $profileIdMock->expects(self::once())
             ->method('setValue')
             ->with(1)
             ->willReturnSelf();
-        $profileMock->expects(self::exactly(4))
+        $profileMock->expects(self::exactly(3))
             ->method('id')
             ->willReturn($profileIdMock);
         $this->model->expects(self::once())
             ->method('changeId')
+            ->with(null)
             ->willReturnSelf();
 
         $nameMock = $this->createMock(ProfileName::class);
         $nameMock->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['name']);
         $profileMock->expects(self::once())
             ->method('name')
             ->willReturn($nameMock);
         $this->model->expects(self::once())
             ->method('changeName')
-            ->with('test')
+            ->with($dataProvider['name'])
             ->willReturnSelf();
 
         $stateMock = $this->createMock(ProfileState::class);
         $stateMock->expects(self::once())
             ->method('value')
-            ->willReturn(1);
+            ->willReturn($dataProvider['state']);
         $profileMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
         $this->model->expects(self::once())
             ->method('changeState')
-            ->with(1)
+            ->with($dataProvider['state'])
             ->willReturnSelf();
 
         $searchMock = $this->createMock(ProfileSearch::class);
         $searchMock->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['search']);
         $profileMock->expects(self::once())
             ->method('search')
             ->willReturn($searchMock);
         $this->model->expects(self::once())
             ->method('changeSearch')
-            ->with('test')
+            ->with($dataProvider['search'])
             ->willReturnSelf();
 
         $descriptionMock = $this->createMock(ProfileDescription::class);
         $descriptionMock->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['description']);
         $profileMock->expects(self::once())
             ->method('description')
             ->willReturn($descriptionMock);
         $this->model->expects(self::once())
             ->method('changeDescription')
-            ->with('test')
+            ->with($dataProvider['description'])
             ->willReturnSelf();
 
-        $datetime = new \DateTime();
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dataProvider['createdAt']);
         $createdAt->expects(self::once())
             ->method('setValue')
             ->withAnyParameters()
@@ -595,19 +601,19 @@ class EloquentProfileRepositoryTest extends TestCase
             ->willReturn($createdAt);
         $this->model->expects(self::once())
             ->method('changeCreatedAt')
-            ->with($datetime)
+            ->with($dataProvider['createdAt'])
             ->willReturnSelf();
 
         $updatedAt = $this->createMock(ProfileUpdatedAt::class);
         $updatedAt->expects(self::exactly(2))
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dataProvider['updatedAt']);
         $profileMock->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($updatedAt);
         $this->model->expects(self::once())
             ->method('changeUpdatedAt')
-            ->with($datetime)
+            ->with($dataProvider['updatedAt'])
             ->willReturnSelf();
 
         $builderMock = $this->mock(Builder::class);
@@ -618,7 +624,7 @@ class EloquentProfileRepositoryTest extends TestCase
 
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn(null);
 
         $this->model->expects(self::once())
             ->method('fill')
@@ -694,12 +700,12 @@ class EloquentProfileRepositoryTest extends TestCase
         $profileMock = $this->createMock(Profile::class);
 
         $profileIdMock = $this->createMock(ProfileId::class);
-        $profileIdMock->expects(self::exactly(3))
+        $profileIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
         $profileIdMock->expects(self::never())
             ->method('setValue');
-        $profileMock->expects(self::exactly(3))
+        $profileMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($profileIdMock);
         $this->model->expects(self::once())

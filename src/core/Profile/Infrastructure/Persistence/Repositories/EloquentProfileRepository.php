@@ -76,7 +76,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         $builder = $this->database->table($this->getTable());
         $builder->where('pro_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 
@@ -167,12 +167,14 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     private function domainToModel(Profile $domain): ProfileModel
     {
+        $profileId = $domain->id()->value();
+
         $builder = $this->database->table($this->getTable());
-        $builder->where('pro_id', $domain->id()->value());
+        $builder->where('pro_id', $profileId);
         $data = $builder->first();
         $model = $this->updateAttributesModelProfile((array) $data);
 
-        $model->changeId($domain->id()->value());
+        $model->changeId($profileId);
         $model->changeName($domain->name()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
@@ -192,7 +194,6 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     private function updateAttributesModelProfile(array $data = []): ProfileModel
     {
         $this->model->fill($data);
-        $this->model->exists = true;
 
         return $this->model;
     }
