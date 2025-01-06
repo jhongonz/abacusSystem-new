@@ -446,4 +446,26 @@ class ProfileTest extends TestCase
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
     }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArray(): void
+    {
+        $this->modelMock = new Profile();
+
+        $reflection = new \ReflectionClass(Profile::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->modelMock);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+        $this->assertIsArray($result);
+        $this->assertSame($dataExpected, $result);
+    }
 }

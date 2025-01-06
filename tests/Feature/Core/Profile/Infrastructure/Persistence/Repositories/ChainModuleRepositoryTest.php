@@ -182,6 +182,22 @@ class ChainModuleRepositoryTest extends TestCase
      * @throws ModulesNotFoundException
      * @throws \Throwable
      */
+    public function testGetAllShouldChangePropertyToFalse(): void
+    {
+        $reflection = new \ReflectionClass($this->repository);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $this->repository->getAll();
+        $result = $method->invoke($this->repository);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @throws ModulesNotFoundException
+     * @throws \Throwable
+     */
     public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())
