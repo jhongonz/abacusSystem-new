@@ -81,7 +81,7 @@ class ValueObjectStatus
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;
-        $this->changeValueLiteral(self::STATE_INACTIVE);
+        $this->changeValueLiteral(self::STATE_ACTIVE);
 
         return $this;
     }

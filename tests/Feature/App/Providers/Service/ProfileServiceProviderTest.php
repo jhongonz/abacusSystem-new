@@ -163,7 +163,7 @@ class ProfileServiceProviderTest extends TestCase
     public function testBootShouldAddRepositoryProfileCorrectly(): void
     {
         $chainRepositoryMock = $this->createMock(ChainProfileRepository::class);
-        $chainRepositoryMock->expects(self::exactly(2))
+        $chainRepositoryMock->expects(self::once())
             ->method('addRepository')
             ->withAnyParameters()
             ->willReturnSelf();
@@ -183,7 +183,7 @@ class ProfileServiceProviderTest extends TestCase
     public function testBootShouldAddRepositoryModuleCorrectly(): void
     {
         $chainRepositoryMock = $this->createMock(ChainModuleRepository::class);
-        $chainRepositoryMock->expects(self::exactly(2))
+        $chainRepositoryMock->expects(self::once())
             ->method('addRepository')
             ->withAnyParameters()
             ->willReturnSelf();

@@ -107,7 +107,7 @@ class EmployeeServiceProviderTest extends TestCase
     public function testBootShouldAddRepositoryCorrectly(): void
     {
         $chainRepositoryMock = $this->createMock(ChainEmployeeRepository::class);
-        $chainRepositoryMock->expects(self::exactly(2))
+        $chainRepositoryMock->expects(self::once())
             ->method('addRepository')
             ->withAnyParameters()
             ->willReturnSelf();

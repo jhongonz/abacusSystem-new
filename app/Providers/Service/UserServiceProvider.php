@@ -57,8 +57,10 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
     public function boot(): void
     {
         $userRepository = $this->app->make(UserRepositoryContract::class);
-        $userRepository->addRepository($this->app->make(RedisUserRepository::class));
-        $userRepository->addRepository($this->app->make(EloquentUserRepository::class));
+        $userRepository->addRepository(
+            $this->app->make(RedisUserRepository::class),
+            $this->app->make(EloquentUserRepository::class)
+        );
     }
 
     /**

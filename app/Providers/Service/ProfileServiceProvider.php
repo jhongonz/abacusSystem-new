@@ -83,12 +83,16 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     public function boot(): void
     {
         $profileRepository = $this->app->make(ProfileRepositoryContract::class);
-        $profileRepository->addRepository($this->app->make(RedisProfileRepository::class));
-        $profileRepository->addRepository($this->app->make(EloquentProfileRepository::class));
+        $profileRepository->addRepository(
+            $this->app->make(RedisProfileRepository::class),
+            $this->app->make(EloquentProfileRepository::class)
+        );
 
         $moduleRepository = $this->app->make(ModuleRepositoryContract::class);
-        $moduleRepository->addRepository($this->app->make(RedisModuleRepository::class));
-        $moduleRepository->addRepository($this->app->make(EloquentModuleRepository::class));
+        $moduleRepository->addRepository(
+            $this->app->make(RedisModuleRepository::class),
+            $this->app->make(EloquentModuleRepository::class)
+        );
     }
 
     /**

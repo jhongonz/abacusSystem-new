@@ -14,10 +14,12 @@ use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Repositories\ChainProfileRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainProfileRepository::class)]
 class ChainProfileRepositoryTest extends TestCase
 {

@@ -104,7 +104,7 @@ class UserServiceProviderTest extends TestCase
     public function testBootShouldAddRepositoryCorrectly(): void
     {
         $chainRepositoryMock = $this->createMock(ChainUserRepository::class);
-        $chainRepositoryMock->expects(self::exactly(2))
+        $chainRepositoryMock->expects(self::once())
             ->method('addRepository')
             ->withAnyParameters()
             ->willReturnSelf();

@@ -90,7 +90,7 @@ class InstitutionServiceProviderTest extends TestCase
     public function testBootShouldAddRepositoryCorrectly(): void
     {
         $chainRepositoryMock = $this->createMock(ChainInstitutionRepository::class);
-        $chainRepositoryMock->expects(self::exactly(2))
+        $chainRepositoryMock->expects(self::once())
             ->method('addRepository')
             ->withAnyParameters()
             ->willReturnSelf();

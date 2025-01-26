@@ -13,11 +13,13 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainInstitutionRepository::class)]
 class ChainInstitutionRepositoryTest extends TestCase
 {

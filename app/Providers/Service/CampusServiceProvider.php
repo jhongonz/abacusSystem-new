@@ -57,8 +57,10 @@ class CampusServiceProvider extends ServiceProvider implements DeferrableProvide
     public function boot(): void
     {
         $campusRepository = $this->app->make(CampusRepositoryContract::class);
-        $campusRepository->addRepository($this->app->make(RedisCampusRepository::class));
-        $campusRepository->addRepository($this->app->make(EloquentCampusRepository::class));
+        $campusRepository->addRepository(
+            $this->app->make(RedisCampusRepository::class),
+            $this->app->make(EloquentCampusRepository::class)
+        );
     }
 
     /**

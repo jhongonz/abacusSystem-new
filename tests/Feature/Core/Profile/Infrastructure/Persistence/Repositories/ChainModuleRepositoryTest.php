@@ -13,11 +13,13 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Repositories\ChainModuleRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainModuleRepository::class)]
 class ChainModuleRepositoryTest extends TestCase
 {

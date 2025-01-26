@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\SharedContext\Exceptions;
+namespace Core\SharedContext\Infrastructure\Persistence;
 
 class SourceNotFoundException extends \Exception
 {

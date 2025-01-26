@@ -14,11 +14,17 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Infrastructure\Persistence\Repositories\ChainCampusRepository;
+use Core\Campus\Infrastructure\Persistence\Repositories\EloquentCampusRepository;
+use Core\Campus\Infrastructure\Persistence\Repositories\RedisCampusRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
+use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
+use Core\SharedContext\Infrastructure\Persistence\SourceNotFoundException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainCampusRepository::class)]
 class ChainCampusRepositoryTest extends TestCase
 {
@@ -28,7 +34,7 @@ class ChainCampusRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainCampusRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories', 'write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write', 'canPersist', 'persistence'])
             ->getMock();
     }
 
@@ -217,4 +223,382 @@ class ChainCampusRepositoryTest extends TestCase
         $this->assertInstanceOf(Campus::class, $result);
         $this->assertSame($campusMock, $result);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testAddRepositoryShouldReturnSelfWhenPriorityAreEquals(): void
+    {
+        $chainMock1 = $this->createMock(ChainPriority::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(1);
+
+        $chainMock2 = $this->createMock(ChainPriority::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(2);
+
+        $chainMock3 = $this->createMock(ChainPriority::class);
+        $chainMock3->expects(self::any())
+            ->method('priority')
+            ->willReturn(2);
+
+        $result = $this->repository->addRepository($chainMock1, $chainMock2, $chainMock3);
+
+        $this->assertInstanceOf(AbstractChainRepository::class, $result);
+        $this->assertSame($this->repository, $result);
+
+        $reflection = new \ReflectionClass(AbstractChainRepository::class);
+        $property = $reflection->getProperty('repositories');
+        $this->assertTrue($property->isPrivate());
+
+        $repositories = $property->getValue($result);
+        $repositoriesExpected = [$chainMock2, $chainMock3, $chainMock1];
+
+        $this->assertSame($repositoriesExpected, $repositories);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAddRepositoryShouldReturnSelfWhenPriorityIsHigher(): void
+    {
+        $chainMock1 = $this->createMock(ChainPriority::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(1);
+
+        $chainMock2 = $this->createMock(ChainPriority::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+
+        $chainMock3 = $this->createMock(ChainPriority::class);
+        $chainMock3->expects(self::any())
+            ->method('priority')
+            ->willReturn(20);
+
+        $result = $this->repository->addRepository($chainMock1, $chainMock2, $chainMock3);
+
+        $this->assertInstanceOf(AbstractChainRepository::class, $result);
+        $this->assertSame($this->repository, $result);
+
+        $reflection = new \ReflectionClass(AbstractChainRepository::class);
+        $property = $reflection->getProperty('repositories');
+        $this->assertTrue($property->isPrivate());
+
+        $repositories = $property->getValue($result);
+        $repositoriesExpected = [$chainMock3, $chainMock2, $chainMock1];
+
+        $this->assertSame($repositoriesExpected, $repositories);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAddRepositoryShouldReturnSelfWhenPriorityIsLower(): void
+    {
+        $chainMock1 = $this->createMock(ChainPriority::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+
+        $chainMock2 = $this->createMock(ChainPriority::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(1);
+
+        $chainMock3 = $this->createMock(ChainPriority::class);
+        $chainMock3->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+
+        $result = $this->repository->addRepository($chainMock1, $chainMock2, $chainMock3);
+
+        $this->assertInstanceOf(AbstractChainRepository::class, $result);
+        $this->assertSame($this->repository, $result);
+
+        $reflection = new \ReflectionClass(AbstractChainRepository::class);
+        $property = $reflection->getProperty('repositories');
+        $this->assertTrue($property->isPrivate());
+
+        $repositories = $property->getValue($result);
+        $repositoriesExpected = [$chainMock1, $chainMock3, $chainMock2];
+
+        $this->assertSame($repositoriesExpected, $repositories);
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    public function testWriteShouldReturnException(): void
+    {
+        $chainMock1 = $this->createMock(ChainPriority::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(1);
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(2);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('write');
+        $this->assertTrue($method->isProtected());
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $method->invokeArgs($this->repository, ['sandbox']);
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    public function testWriteShouldExecuteCorrectly(): void
+    {
+        $campus = $this->createMock(Campus::class);
+
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(1);
+        $chainMock1->expects(self::once())
+            ->method('persistCampus')
+            ->with($campus)
+            ->willReturn($campus);
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(2);
+        $chainMock2->expects(self::once())
+            ->method('persistCampus')
+            ->with($campus)
+            ->willReturn($campus);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('write');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->repository, ['persistCampus', $campus]);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertEquals($campus, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function testReadShouldExecuteCorrectly(): void
+    {
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusMock = $this->createMock(Campus::class);
+
+        $this->repository->expects(self::once())
+            ->method('readFromRepositories')
+            ->with('find', $campusIdMock)
+            ->willReturn($campusMock);
+
+        $this->repository->expects(self::once())
+            ->method('canPersist')
+            ->willReturn(true);
+
+        $this->repository->expects(self::once())
+            ->method('persistence')
+            ->with('persistCampus',$campusMock);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('read');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->repository, ['find', $campusIdMock]);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function testReadFromRepositoriesShouldExecuteCorrectlyWithDataInRedis(): void
+    {
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusMock = $this->createMock(Campus::class);
+
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+        $chainMock1->expects(self::never())
+            ->method('find');
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+        $chainMock2->expects(self::once())
+            ->method('find')
+            ->with($campusIdMock)
+            ->willReturn($campusMock);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('readFromRepositories');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->repository, ['find', $campusIdMock]);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function testReadFromRepositoriesShouldExecuteCorrectlyWithDataInEloquent(): void
+    {
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusMock = $this->createMock(Campus::class);
+
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+        $chainMock1->expects(self::once())
+            ->method('find')
+            ->with($campusIdMock)
+            ->willReturn($campusMock);
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+        $chainMock2->expects(self::once())
+            ->method('find')
+            ->with($campusIdMock)
+            ->willReturn(null);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('readFromRepositories');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->repository, ['find', $campusIdMock]);
+
+        $this->assertInstanceOf(Campus::class, $result);
+        $this->assertSame($campusMock, $result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function testReadFromRepositoriesShouldExecuteCorrectlyAndReturnException(): void
+    {
+        $campusIdMock = $this->createMock(CampusId::class);
+
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+        $chainMock1->expects(self::once())
+            ->method('find')
+            ->with($campusIdMock)
+            ->willReturn(null);
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+        $chainMock2->expects(self::once())
+            ->method('find')
+            ->with($campusIdMock)
+            ->willReturn(null);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('readFromRepositories');
+        $this->assertTrue($method->isProtected());
+
+        $this->expectException(SourceNotFoundException::class);
+        $this->expectExceptionMessage('Source not found');
+
+        $method->invokeArgs($this->repository, ['find', $campusIdMock]);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function testReadFromRepositoriesShouldExecuteCorrectlyAndReturnExceptionInvalidArgument(): void
+    {
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $method = $reflection->getMethod('readFromRepositories');
+        $this->assertTrue($method->isProtected());
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The function sandbox is not a callable.');
+
+        $method->invokeArgs($this->repository, ['sandbox']);
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    /*public function testPersistenceShouldExecuteCorrectlyAndPriority(): void
+    {
+        $campusMock = $this->createMock(Campus::class);
+
+        $chainMock1 = $this->createMock(EloquentCampusRepository::class);
+        $chainMock1->expects(self::any())
+            ->method('priority')
+            ->willReturn(5);
+        $chainMock1->expects(self::never())
+            ->method('persistCampus');
+        $this->repository->addRepository($chainMock1);
+
+        $chainMock2 = $this->createMock(RedisCampusRepository::class);
+        $chainMock2->expects(self::any())
+            ->method('priority')
+            ->willReturn(10);
+        $chainMock2->expects(self::once())
+            ->method('persistCampus')
+            ->with($campusMock)
+            ->willReturn($campusMock);
+        $this->repository->addRepository($chainMock2);
+
+        $reflection = new \ReflectionClass(ChainCampusRepository::class);
+
+        $method = $reflection->getMethod('persistence');
+        $this->assertTrue($method->isProtected());
+
+        $method->invokeArgs($this->repository, ['persistCampus', $campusMock]);
+    }*/
 }

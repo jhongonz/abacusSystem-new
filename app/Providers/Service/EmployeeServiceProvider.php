@@ -57,8 +57,10 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
     public function boot(): void
     {
         $employeeRepository = $this->app->make(EmployeeRepositoryContract::class);
-        $employeeRepository->addRepository($this->app->make(RedisEmployeeRepository::class));
-        $employeeRepository->addRepository($this->app->make(EloquentEmployeeRepository::class));
+        $employeeRepository->addRepository(
+            $this->app->make(RedisEmployeeRepository::class),
+            $this->app->make(EloquentEmployeeRepository::class)
+        );
     }
 
     /**

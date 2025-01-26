@@ -57,8 +57,10 @@ class InstitutionServiceProvider extends ServiceProvider implements DeferrablePr
     public function boot(): void
     {
         $institutionRepository = $this->app->make(InstitutionRepositoryContract::class);
-        $institutionRepository->addRepository($this->app->make(RedisInstitutionRepository::class));
-        $institutionRepository->addRepository($this->app->make(EloquentInstitutionRepository::class));
+        $institutionRepository->addRepository(
+            $this->app->make(RedisInstitutionRepository::class),
+            $this->app->make(EloquentInstitutionRepository::class)
+        );
     }
 
     /**
