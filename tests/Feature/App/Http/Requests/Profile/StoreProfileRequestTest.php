@@ -61,6 +61,6 @@ class StoreProfileRequestTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(7, $result);
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 }

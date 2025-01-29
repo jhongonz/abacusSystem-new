@@ -37,6 +37,7 @@
     </php>
     <logging>
         <junit outputFile="./var/coverage/logfile.xml"/>
+
         <testdoxHtml outputFile="./var/coverage/test-resume.html"/>
         <testdoxText outputFile="./var/coverage/test-resume.txt"/>
     </logging>

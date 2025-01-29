@@ -18,7 +18,7 @@ final class EloquentModuleRepositoryDataProvider
 
         return [
             [
-                'case-1' => [
+                [
                     'id' => null,
                     'name' => 'test',
                     'menuKey' => 'testing',

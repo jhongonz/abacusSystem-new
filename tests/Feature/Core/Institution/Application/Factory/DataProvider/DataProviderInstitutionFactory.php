@@ -16,7 +16,7 @@ final class DataProviderInstitutionFactory
     {
         return [
             [
-                'data' => [
+                [
                     'institution' => [
                         'id' => 1,
                         'name' => 'Testing',
@@ -33,7 +33,7 @@ final class DataProviderInstitutionFactory
                         'updatedAt' => '2024-04-21 10:24:00',
                     ],
                 ],
-                'dataWithNull' => [
+                [
                     'institution' => [
                         'id' => 1,
                         'name' => 'Testing',

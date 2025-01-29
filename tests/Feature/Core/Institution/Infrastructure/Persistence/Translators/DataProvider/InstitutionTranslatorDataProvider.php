@@ -18,7 +18,7 @@ final class InstitutionTranslatorDataProvider
 
         return [
             [
-                'case-1' => [
+                [
                     'id' => 1,
                     'name' => 'Test Institution',
                     'shortname' => 'Test Institution',
@@ -35,7 +35,7 @@ final class InstitutionTranslatorDataProvider
                 ],
             ],
             [
-                'case-2 with null' => [
+                [
                     'id' => 2,
                     'name' => 'Test Institution',
                     'shortname' => 'Test Institution',

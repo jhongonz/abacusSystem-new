@@ -18,7 +18,7 @@ final class EloquentProfileRepositoryDataProvider
 
         return [
             [
-                'case-1' => [
+                [
                     'name' => 'test',
                     'state' => 1,
                     'search' => 'test test',

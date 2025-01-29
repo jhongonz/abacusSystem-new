@@ -19,6 +19,9 @@ test:
 test-coverage:
 	$(PHPUNIT) --coverage-text
 
+test-deprecations:
+	$(PHPUNIT) --display-phpunit-deprecations
+
 test-debug:
 	$(PHPUNIT) --debug
 

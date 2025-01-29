@@ -16,7 +16,7 @@ final class EmployeeDataTransformerDataProvider
     {
         return [
             [
-                'dataTest' => self::retrieveGenericDataTest(),
+                self::retrieveGenericDataTest(),
             ],
         ];
     }
@@ -28,7 +28,7 @@ final class EmployeeDataTransformerDataProvider
 
         return [
             [
-                'dataTest' => $dataExpected,
+                $dataExpected,
             ],
         ];
     }

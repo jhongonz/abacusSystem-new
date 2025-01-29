@@ -19,10 +19,10 @@ final class InstitutionDataTransformerDataProvider
 
         return [
             [
-                'dataTestWithNull' => $dataWithNull,
+                $dataWithNull,
             ],
             [
-                'dataTest' => self::retrieveGenericDataTest(),
+                self::retrieveGenericDataTest(),
             ],
         ];
     }
@@ -34,7 +34,7 @@ final class InstitutionDataTransformerDataProvider
 
         return [
             [
-                'dataTest' => $dataExpected,
+                $dataExpected,
             ],
         ];
     }

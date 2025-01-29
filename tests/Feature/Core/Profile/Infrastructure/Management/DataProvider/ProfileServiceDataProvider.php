@@ -15,11 +15,11 @@ final class ProfileServiceDataProvider
     public static function activated(): array
     {
         return [
-            'case-1' => [
-                'isActivated' => true,
+            [
+                true,
             ],
-            'case-2' => [
-                'isActivated' => false,
+            [
+                false,
             ],
         ];
     }
