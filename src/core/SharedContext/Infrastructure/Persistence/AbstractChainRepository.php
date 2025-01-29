@@ -4,7 +4,7 @@ namespace Core\SharedContext\Infrastructure\Persistence;
 
 abstract class AbstractChainRepository
 {
-    /** @var array<ChainPriority>  */
+    /** @var array<ChainPriority> */
     private array $repositories;
     protected bool $canPersist = true;
 
@@ -22,6 +22,7 @@ abstract class AbstractChainRepository
         }
 
         $this->sortingPriority();
+
         return $this;
     }
 
@@ -79,7 +80,7 @@ abstract class AbstractChainRepository
             }
 
             $repository = next($this->repositories);
-        } while ((is_null($result)) and ($repository));
+        } while (is_null($result) and $repository);
 
         if (is_null($result)) {
             throw $lastThrowable;
@@ -103,15 +104,8 @@ abstract class AbstractChainRepository
 
     private function sortingPriority(): void
     {
-        if (count($this->repositories) > 1) {
-
-            usort($this->repositories, function (ChainPriority $current, ChainPriority $next){
-                if ($current->priority() === $next->priority()) {
-                    return 0;
-                }
-
-                return ($current->priority() < $next->priority()) ? 1 : -1;
-            });
-        }
+        usort($this->repositories, function (ChainPriority $current, ChainPriority $next) {
+            return $next->priority() <=> $current->priority();
+        });
     }
 }

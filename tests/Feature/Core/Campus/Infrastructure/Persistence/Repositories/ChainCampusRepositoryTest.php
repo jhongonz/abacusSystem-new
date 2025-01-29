@@ -232,19 +232,14 @@ class ChainCampusRepositoryTest extends TestCase
         $chainMock1 = $this->createMock(ChainPriority::class);
         $chainMock1->expects(self::any())
             ->method('priority')
-            ->willReturn(1);
+            ->willReturn(2);
 
         $chainMock2 = $this->createMock(ChainPriority::class);
         $chainMock2->expects(self::any())
             ->method('priority')
             ->willReturn(2);
 
-        $chainMock3 = $this->createMock(ChainPriority::class);
-        $chainMock3->expects(self::any())
-            ->method('priority')
-            ->willReturn(2);
-
-        $result = $this->repository->addRepository($chainMock1, $chainMock2, $chainMock3);
+        $result = $this->repository->addRepository($chainMock2, $chainMock1);
 
         $this->assertInstanceOf(AbstractChainRepository::class, $result);
         $this->assertSame($this->repository, $result);
@@ -254,7 +249,7 @@ class ChainCampusRepositoryTest extends TestCase
         $this->assertTrue($property->isPrivate());
 
         $repositories = $property->getValue($result);
-        $repositoriesExpected = [$chainMock2, $chainMock3, $chainMock1];
+        $repositoriesExpected = [$chainMock2, $chainMock1];
 
         $this->assertSame($repositoriesExpected, $repositories);
     }
@@ -267,7 +262,7 @@ class ChainCampusRepositoryTest extends TestCase
         $chainMock1 = $this->createMock(ChainPriority::class);
         $chainMock1->expects(self::any())
             ->method('priority')
-            ->willReturn(1);
+            ->willReturn(15);
 
         $chainMock2 = $this->createMock(ChainPriority::class);
         $chainMock2->expects(self::any())
@@ -289,7 +284,7 @@ class ChainCampusRepositoryTest extends TestCase
         $this->assertTrue($property->isPrivate());
 
         $repositories = $property->getValue($result);
-        $repositoriesExpected = [$chainMock3, $chainMock2, $chainMock1];
+        $repositoriesExpected = [$chainMock3, $chainMock1, $chainMock2];
 
         $this->assertSame($repositoriesExpected, $repositories);
     }
@@ -302,19 +297,14 @@ class ChainCampusRepositoryTest extends TestCase
         $chainMock1 = $this->createMock(ChainPriority::class);
         $chainMock1->expects(self::any())
             ->method('priority')
-            ->willReturn(10);
+            ->willReturn(PHP_INT_MAX);
 
         $chainMock2 = $this->createMock(ChainPriority::class);
         $chainMock2->expects(self::any())
             ->method('priority')
-            ->willReturn(1);
+            ->willReturn(PHP_INT_MIN);
 
-        $chainMock3 = $this->createMock(ChainPriority::class);
-        $chainMock3->expects(self::any())
-            ->method('priority')
-            ->willReturn(5);
-
-        $result = $this->repository->addRepository($chainMock1, $chainMock2, $chainMock3);
+        $result = $this->repository->addRepository($chainMock2, $chainMock1);
 
         $this->assertInstanceOf(AbstractChainRepository::class, $result);
         $this->assertSame($this->repository, $result);
@@ -324,7 +314,7 @@ class ChainCampusRepositoryTest extends TestCase
         $this->assertTrue($property->isPrivate());
 
         $repositories = $property->getValue($result);
-        $repositoriesExpected = [$chainMock1, $chainMock3, $chainMock2];
+        $repositoriesExpected = [$chainMock1, $chainMock2];
 
         $this->assertSame($repositoriesExpected, $repositories);
     }
@@ -414,7 +404,7 @@ class ChainCampusRepositoryTest extends TestCase
 
         $this->repository->expects(self::once())
             ->method('persistence')
-            ->with('persistCampus',$campusMock);
+            ->with('persistCampus', $campusMock);
 
         $reflection = new \ReflectionClass(ChainCampusRepository::class);
         $method = $reflection->getMethod('read');
@@ -572,7 +562,7 @@ class ChainCampusRepositoryTest extends TestCase
      * @throws \ReflectionException
      * @throws Exception
      */
-    /*public function testPersistenceShouldExecuteCorrectlyAndPriority(): void
+    public function testPersistenceShouldExecuteCorrectlyAndPriority(): void
     {
         $campusMock = $this->createMock(Campus::class);
 
@@ -595,10 +585,17 @@ class ChainCampusRepositoryTest extends TestCase
         $this->repository->addRepository($chainMock2);
 
         $reflection = new \ReflectionClass(ChainCampusRepository::class);
+        $abstractRepository = $reflection->getParentClass();
+
+        $property = $abstractRepository->getProperty('repositories');
+        $repositories = $property->getValue($this->repository);
+
+        end($repositories);
+        $property->setValue($this->repository, $repositories);
 
         $method = $reflection->getMethod('persistence');
         $this->assertTrue($method->isProtected());
 
         $method->invokeArgs($this->repository, ['persistCampus', $campusMock]);
-    }*/
+    }
 }
