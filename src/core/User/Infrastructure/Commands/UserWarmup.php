@@ -51,7 +51,7 @@ class UserWarmup extends Command
      */
     public function handle(): int
     {
-        $id = ($this->argument('id')) ? (int) $this->argument('id') : null;
+        $id = (is_numeric($this->argument('id'))) ? intval($this->argument('id')) : null;
         $userId = $this->userFactory->buildId($id);
 
         try {

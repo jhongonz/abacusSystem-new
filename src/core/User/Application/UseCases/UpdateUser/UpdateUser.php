@@ -30,7 +30,7 @@ class UpdateUser extends UseCasesService
         $user = $this->userRepository->find($request->userId());
 
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.\ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (\is_callable([$this, $methodName])) {
                 $user = $this->{$methodName}($user, $value);
@@ -38,6 +38,11 @@ class UpdateUser extends UseCasesService
         }
 
         return $this->userRepository->persistUser($user);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeEmployeeId(User $user, int $value): User
