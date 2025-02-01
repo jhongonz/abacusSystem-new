@@ -8,11 +8,14 @@ use Core\Institution\Application\UseCases\UpdateInstitution\UpdateInstitutionReq
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
+use Core\Institution\Domain\ValueObjects\InstitutionAddress;
 use Core\Institution\Domain\ValueObjects\InstitutionCode;
+use Core\Institution\Domain\ValueObjects\InstitutionEmail;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Core\Institution\Domain\ValueObjects\InstitutionName;
 use Core\Institution\Domain\ValueObjects\InstitutionObservations;
+use Core\Institution\Domain\ValueObjects\InstitutionPhone;
 use Core\Institution\Domain\ValueObjects\InstitutionShortname;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
 use Core\Institution\Domain\ValueObjects\InstitutionUpdatedAt;
@@ -47,11 +50,13 @@ class UpdateInstitutionTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $data
+     *
      * @throws Exception
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderUpdateInstitution::class, 'provider')]
-    public function test_execute_should_update_and_return_object(array $data): void
+    public function testExecuteShouldUpdateAndReturnObject(array $data): void
     {
         $requestMock = $this->createMock(UpdateInstitutionRequest::class);
 
@@ -112,6 +117,33 @@ class UpdateInstitutionTest extends TestCase
             ->method('observations')
             ->willReturn($observationsMock);
 
+        $addressMock = $this->createMock(InstitutionAddress::class);
+        $addressMock->expects(self::once())
+            ->method('setValue')
+            ->with('address')
+            ->willReturnSelf();
+        $institutionMock->expects(self::once())
+            ->method('address')
+            ->willReturn($addressMock);
+
+        $phoneMock = $this->createMock(InstitutionPhone::class);
+        $phoneMock->expects(self::once())
+            ->method('setValue')
+            ->with('123456789')
+            ->willReturnSelf();
+        $institutionMock->expects(self::once())
+            ->method('phone')
+            ->willReturn($phoneMock);
+
+        $emailMock = $this->createMock(InstitutionEmail::class);
+        $emailMock->expects(self::once())
+            ->method('setValue')
+            ->with('algo@algo.com')
+            ->willReturnSelf();
+        $institutionMock->expects(self::once())
+            ->method('email')
+            ->willReturn($emailMock);
+
         $stateMock = $this->createMock(InstitutionState::class);
         $stateMock->expects(self::once())
             ->method('setValue')
@@ -154,7 +186,7 @@ class UpdateInstitutionTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(CreateInstitutionRequest::class);
 
@@ -168,5 +200,19 @@ class UpdateInstitutionTest extends TestCase
         $this->expectExceptionMessage('Request not valid');
 
         $this->useCase->execute($requestMock);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetFunctionNameShouldReturnNameValid(): void
+    {
+        $reflection = new \ReflectionClass(UpdateInstitution::class);
+        $method = $reflection->getMethod('getFunctionName');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->useCase, 'code');
+        $this->assertIsString($result);
+        $this->assertSame('changeCode', $result);
     }
 }

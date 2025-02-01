@@ -6,8 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use DateTime;
-use Exception;
 
 class UpdateEmployee extends UseCasesService
 {
@@ -17,7 +15,7 @@ class UpdateEmployee extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Employee
     {
@@ -26,7 +24,7 @@ class UpdateEmployee extends UseCasesService
         /** @var UpdateEmployeeRequest $request */
         $employee = $this->employeeRepository->find($request->employeeId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $employee = $this->{$methodName}($employee, $value);
@@ -36,6 +34,11 @@ class UpdateEmployee extends UseCasesService
         $employee->refreshSearch();
 
         return $this->employeeRepository->persistEmployee($employee);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeIdentifier(Employee $employee, string $identifier): Employee
@@ -94,7 +97,7 @@ class UpdateEmployee extends UseCasesService
         return $employee;
     }
 
-    private function changeBirthdate(Employee $employee, ?DateTime $birthdate): Employee
+    private function changeBirthdate(Employee $employee, ?\DateTime $birthdate): Employee
     {
         $employee->birthdate()->setValue($birthdate);
 
@@ -102,7 +105,7 @@ class UpdateEmployee extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Employee $employee, int $state): Employee
     {
@@ -114,6 +117,20 @@ class UpdateEmployee extends UseCasesService
     private function changeImage(Employee $employee, string $image): Employee
     {
         $employee->image()->setValue($image);
+
+        return $employee;
+    }
+
+    private function changeUserId(Employee $employee, int $userId): Employee
+    {
+        $employee->userId()->setValue($userId);
+
+        return $employee;
+    }
+
+    private function changeInstitutionId(Employee $employee, int $id): Employee
+    {
+        $employee->institutionId()->setValue($id);
 
         return $employee;
     }

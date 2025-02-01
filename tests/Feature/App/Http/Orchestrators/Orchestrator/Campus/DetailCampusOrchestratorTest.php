@@ -39,14 +39,13 @@ class DetailCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_return_array_with_campus(): void
+    public function testMakeShouldReturnArrayWithCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -66,19 +65,20 @@ class DetailCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_return_array_with_null(): void
+    public function testMakeShouldReturnArrayWithNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->campusManagementMock->expects(self::never())
-            ->method('searchCampusById');
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusById')
+            ->with(0)
+            ->willReturn(null);
 
         $result = $this->orchestrator->make($requestMock);
 
@@ -86,13 +86,10 @@ class DetailCampusOrchestratorTest extends TestCase
         $this->assertArrayHasKey('campusId', $result);
         $this->assertArrayHasKey('campus', $result);
         $this->assertNull($result['campus']);
-        $this->assertNull($result['campusId']);
+        $this->assertEquals(0, $result['campusId']);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

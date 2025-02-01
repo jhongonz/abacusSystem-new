@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Campus;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCampusRequest extends FormRequest
@@ -25,7 +24,7 @@ class StoreCampusRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -35,7 +34,7 @@ class StoreCampusRequest extends FormRequest
             'email' => ['email:rfc', 'nullable'],
             'phone' => ['nullable'],
             'address' => ['required'],
-            'observations' => ['nullable']
+            'observations' => ['nullable'],
         ];
     }
 

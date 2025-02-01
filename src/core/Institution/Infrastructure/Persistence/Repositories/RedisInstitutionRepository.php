@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-20 21:57:42
@@ -15,7 +16,6 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionPersistException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
@@ -32,7 +32,7 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
         private readonly InstitutionDataTransformerContract $dataTransformer,
         private readonly LoggerInterface $logger,
         private readonly string $keyPrefix = 'institution',
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
@@ -44,26 +44,29 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws InstitutionsNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(InstitutionId $id): ?Institution
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->institutionKey($id));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new InstitutionsNotFoundException('Institution not found by id '. $id->value());
+            throw new InstitutionsNotFoundException('Institution not found by id '.$id->value());
         }
 
-        if (isset($data)) {
+        if (!empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
-            /**@var Institution*/
+            /* @var Institution */
             return $this->institutionFactory->buildInstitutionFromArray($dataArray);
         }
 
@@ -90,11 +93,9 @@ class RedisInstitutionRepository implements InstitutionRepositoryContract, Chain
 
         try {
             Redis::set($institutionKey, json_encode($institutionData));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new InstitutionPersistException(
-                sprintf('It could not persist Institution with key %s in redis', $institutionKey)
-            );
+            throw new InstitutionPersistException(sprintf('It could not persist Institution with key %s in redis', $institutionKey));
         }
 
         return $institution;

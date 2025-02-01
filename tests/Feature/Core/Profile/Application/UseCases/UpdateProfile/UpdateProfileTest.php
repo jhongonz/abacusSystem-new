@@ -48,14 +48,14 @@ class UpdateProfileTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $data = [
             'state' => 1,
             'description' => 'test',
             'name' => 'test',
-            'modules' => [1,2,3],
+            'modules' => [1, 2, 3],
             'updateAt' => $datetime,
         ];
         $profileId = $this->createMock(ProfileId::class);
@@ -106,7 +106,7 @@ class UpdateProfileTest extends TestCase
 
         $profileMock->expects(self::once())
             ->method('setModulesAggregator')
-            ->with([1,2,3])
+            ->with([1, 2, 3])
             ->willReturnSelf();
 
         $updatedAt = $this->createMock(ProfileUpdatedAt::class);
@@ -137,7 +137,7 @@ class UpdateProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $request = $this->createMock(CreateProfileRequest::class);
 
@@ -145,5 +145,19 @@ class UpdateProfileTest extends TestCase
         $this->expectExceptionMessage('Request not valid');
 
         $this->useCase->execute($request);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetFunctionNameShouldReturnNameValid(): void
+    {
+        $reflection = new \ReflectionClass(UpdateProfile::class);
+        $method = $reflection->getMethod('getFunctionName');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->useCase, 'name');
+        $this->assertIsString($result);
+        $this->assertSame('changeName', $result);
     }
 }

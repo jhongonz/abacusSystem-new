@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Profile\ChangeStateProfileOrchestrator;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\Profile\Domain\Profile;
 use Core\Profile\Domain\ValueObjects\ProfileState;
+use Core\Profile\Exceptions\ProfileNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -39,12 +40,13 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws ProfileNotFoundException
      */
-    public function test_make_should_change_state_when_is_new_and_return_profile(): void
+    public function testMakeShouldChangeStateWhenIsNewAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -81,18 +83,21 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     /**
      * @throws Exception
+     * @throws ProfileNotFoundException
      */
-    public function test_make_should_change_state_when_is_activated_and_return_profile(): void
+    public function testMakeShouldChangeStateWhenIsActivatedAndReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -137,11 +142,30 @@ class ChangeStateProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnExceptionWhenProfileISNotFound(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('profileId')
+            ->willReturn(1);
+
+        $this->expectException(ProfileNotFoundException::class);
+        $this->expectExceptionMessage('Profile with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

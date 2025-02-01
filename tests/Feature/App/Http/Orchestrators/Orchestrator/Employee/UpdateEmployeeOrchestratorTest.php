@@ -40,30 +40,68 @@ class UpdateEmployeeOrchestratorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_make_should_return_employee(): void
+    public function testMakeShouldReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(2))
-            ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(
-                '{"birthdate":"2024-06-04 12:34:56"}',
-                1
-            );
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('dataUpdate')
+            ->willReturn('{"birthdate":"2024-06-04 12:34:56"}');
 
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('employeeId')
+            ->willReturn(1);
+
+        $dataUpdateExpected = [
+            'birthdate' => new \DateTime('2024-06-04 12:34:56'),
+        ];
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('updateEmployee')
-            ->withAnyParameters()
+            ->with(1, $dataUpdateExpected)
             ->willReturn($employeeMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function testMakeShouldReturnEmployeeWithoutBirthdate(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('dataUpdate')
+            ->willReturn('{}');
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('employeeId')
+            ->willReturn(1);
+
+        $employeeMock = $this->createMock(Employee::class);
+        $this->employeeManagement->expects(self::once())
+            ->method('updateEmployee')
+            ->with(1, [])
+            ->willReturn($employeeMock);
+
+        $result = $this->orchestrator->make($requestMock);
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

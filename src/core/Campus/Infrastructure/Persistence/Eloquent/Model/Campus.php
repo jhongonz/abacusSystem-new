@@ -3,16 +3,12 @@
 namespace Core\Campus\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
-use DateTime;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Campus extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -32,7 +28,7 @@ class Campus extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'cam_state' => 1,
@@ -41,7 +37,7 @@ class Campus extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'cam_id',
@@ -74,6 +70,9 @@ class Campus extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -88,6 +87,9 @@ class Campus extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Institution, $this>
+     */
     public function relationWithInstitution(): BelongsTo
     {
         return $this->belongsTo(Institution::class, 'cam__inst_id', 'inst_id');
@@ -100,153 +102,198 @@ class Campus extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('cam_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('cam_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
     {
         $this->setAttribute('cam_id', $id);
+
         return $this;
     }
 
     public function institutionId(): int
     {
-        return $this->getAttribute('cam__inst_id');
+        /** @var int $id */
+        $id = $this->getAttribute('cam__inst_id');
+
+        return $id;
     }
 
     public function changeInstitutionId(int $id): self
     {
         $this->setAttribute('cam__inst_id', $id);
+
         return $this;
     }
 
     public function name(): string
     {
-        return $this->getAttribute('cam_name');
+        /** @var string $name */
+        $name = $this->getAttribute('cam_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
     {
         $this->setAttribute('cam_name', $name);
+
         return $this;
     }
 
     public function address(): ?string
     {
-        return $this->getAttribute('cam_address');
+        /** @var string|null $address */
+        $address = $this->getAttribute('cam_address');
+
+        return $address;
     }
 
     public function changeAddress(string $address): self
     {
         $this->setAttribute('cam_address', $address);
+
         return $this;
     }
 
     public function phone(): ?string
     {
-        return $this->getAttribute('cam_phone');
+        /** @var string|null $phone */
+        $phone = $this->getAttribute('cam_phone');
+
+        return $phone;
     }
 
     public function changePhone(?string $phone = null): self
     {
         $this->setAttribute('cam_phone', $phone);
+
         return $this;
     }
 
     public function email(): ?string
     {
-        return $this->getAttribute('cam_email');
+        /** @var string|null $email */
+        $email = $this->getAttribute('cam_email');
+
+        return $email;
     }
 
     public function changeEmail(?string $email = null): self
     {
         $this->setAttribute('cam_email', $email);
+
         return $this;
     }
 
     public function observations(): ?string
     {
-        return $this->getAttribute('cam_observations');
+        /** @var string|null $observations */
+        $observations = $this->getAttribute('cam_observations');
+
+        return $observations;
     }
 
     public function changeObservations(?string $observations = null): self
     {
         $this->setAttribute('cam_observations', $observations);
+
         return $this;
     }
 
     public function search(): ?string
     {
-        return $this->getAttribute('cam_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('cam_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search = null): self
     {
         $this->setAttribute('cam_search', $search);
+
         return $this;
     }
 
     public function state(): int
     {
-        return $this->getAttribute('cam_state');
+        /** @var int $state */
+        $state = $this->getAttribute('cam_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
     {
         $this->setAttribute('cam_state', $state);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): self
+    public function changeCreatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

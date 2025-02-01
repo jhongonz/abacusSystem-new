@@ -21,13 +21,13 @@ class ModuleRouteTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $result = $this->valueObject->value();
         $this->assertIsString($result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue('test');
 

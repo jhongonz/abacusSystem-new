@@ -18,7 +18,7 @@ class EmployeeUpdateOrDeletedEvent
      * Create a new event instance.
      */
     public function __construct(
-        private readonly int $employeeId
+        private readonly int $employeeId,
     ) {
     }
 

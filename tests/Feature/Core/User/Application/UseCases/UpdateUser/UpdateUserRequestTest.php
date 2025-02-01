@@ -18,6 +18,7 @@ class UpdateUserRequestTest extends TestCase
 {
     private UserId|Mock $userId;
 
+    /** @var array<string, mixed> */
     private array $data;
 
     private UpdateUserRequest $request;
@@ -39,7 +40,7 @@ class UpdateUserRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_userId_should_return_value_object(): void
+    public function testUserIdShouldReturnValueObject(): void
     {
         $result = $this->request->userId();
 
@@ -47,7 +48,7 @@ class UpdateUserRequestTest extends TestCase
         $this->assertSame($result, $this->userId);
     }
 
-    public function test_data_should_return_array(): void
+    public function testDataShouldReturnArray(): void
     {
         $result = $this->request->data();
 

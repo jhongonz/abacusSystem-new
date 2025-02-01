@@ -1,14 +1,17 @@
 # Variables
 PHP_BIN := php
 COMPOSER := composer
-PHPUNIT := vendor/bin/phpunit
-PHPSTAN := vendor/bin/phpstan
-PINT := vendor/bin/pint
-INFECTION := vendor/bin/infection
+PHPUNIT := ./vendor/bin/phpunit
+PHPSTAN := ./vendor/bin/phpstan
+PHP-CS-FIXER := ./vendor/bin/php-cs-fixer
+INFECTION := ./vendor/bin/infection
 export XDEBUG_MODE=coverage
 
-install:
+c-install:
 	$(COMPOSER) install
+
+update:
+	$(COMPOSER) update
 
 test:
 	$(PHPUNIT)
@@ -16,11 +19,17 @@ test:
 test-coverage:
 	$(PHPUNIT) --coverage-text
 
-analyse:
-	$(PHPSTAN) analyse app src tests --level=6
+test-deprecations:
+	$(PHPUNIT) --display-phpunit-deprecations
 
-pint:
-	$(PINT)
+test-debug:
+	$(PHPUNIT) --debug
+
+analyse:
+	$(PHPSTAN) analyse
+
+cs-fixer:
+	$(PHP-CS-FIXER) fix
 
 clean:
 	rm -rf vendor composer.lock
@@ -29,6 +38,8 @@ clean:
 infection:
 	$(INFECTION)
 
-all: install pint analyse test infection
+install: c-install cs-fixer test-coverage
 
-tests: pint analyse test infection
+all: c-install cs-fixer analyse test infection
+
+tests: cs-fixer analyse test infection

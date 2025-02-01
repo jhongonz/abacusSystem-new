@@ -18,7 +18,7 @@ class ActionExecutorHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->executorHandler = new ActionExecutorHandler;
+        $this->executorHandler = new ActionExecutorHandler();
     }
 
     public function tearDown(): void
@@ -30,7 +30,7 @@ class ActionExecutorHandlerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_addActionExecutor_should_add_and_return_self(): void
+    public function testAddActionExecutorShouldAddAndReturnSelf(): void
     {
         $actionExecutorMock = $this->createMock(ActionExecutor::class);
         $actionExecutorMock->expects(self::once())
@@ -47,7 +47,7 @@ class ActionExecutorHandlerTest extends TestCase
      * @throws Exception
      * @throws ActionExecutorNotFoundException
      */
-    public function test_invoke_should_return_mixed(): void
+    public function testInvokeShouldReturnMixed(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -71,7 +71,7 @@ class ActionExecutorHandlerTest extends TestCase
      * @throws Exception
      * @throws ActionExecutorNotFoundException
      */
-    public function test_invoke_should_return_exception(): void
+    public function testInvokeShouldReturnException(): void
     {
         $requestMock = $this->createMock(Request::class);
 

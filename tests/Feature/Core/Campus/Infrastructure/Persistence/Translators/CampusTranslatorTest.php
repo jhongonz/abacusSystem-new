@@ -11,7 +11,10 @@ use Core\Campus\Domain\ValueObjects\CampusEmail;
 use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Domain\ValueObjects\CampusName;
+use Core\Campus\Domain\ValueObjects\CampusObservations;
 use Core\Campus\Domain\ValueObjects\CampusPhone;
+use Core\Campus\Domain\ValueObjects\CampusSearch;
+use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
 use Core\Campus\Infrastructure\Persistence\Eloquent\Model\Campus as CampusModel;
 use Core\Campus\Infrastructure\Persistence\Translators\CampusTranslator;
@@ -46,10 +49,9 @@ class CampusTranslatorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $modelMock = $this->createMock(CampusModel::class);
         $result = $this->campusTranslator->setModel($modelMock);
@@ -59,11 +61,10 @@ class CampusTranslatorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_campus_object(): void
+    public function testToDomainShouldReturnCampusObject(): void
     {
         $modelMock = $this->createMock(CampusModel::class);
 
@@ -91,12 +92,24 @@ class CampusTranslatorTest extends TestCase
             ->method('phone')
             ->willReturn('phone');
 
-        $datetime = new \DateTime;
         $modelMock->expects(self::once())
+            ->method('observations')
+            ->willReturn('Observations');
+
+        $modelMock->expects(self::once())
+            ->method('state')
+            ->willReturn(1);
+
+        $modelMock->expects(self::once())
+            ->method('search')
+            ->willReturn('search');
+
+        $datetime = new \DateTime();
+        $modelMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($datetime);
 
-        $modelMock->expects(self::once())
+        $modelMock->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($datetime);
 
@@ -147,6 +160,33 @@ class CampusTranslatorTest extends TestCase
             ->method('phone')
             ->willReturn($phoneMock);
 
+        $observationsMock = $this->createMock(CampusObservations::class);
+        $observationsMock->expects(self::once())
+            ->method('setValue')
+            ->with('Observations')
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('observations')
+            ->willReturn($observationsMock);
+
+        $stateMock = $this->createMock(CampusState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with(1)
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $searchMock = $this->createMock(CampusSearch::class);
+        $searchMock->expects(self::once())
+            ->method('setValue')
+            ->with('search')
+            ->willReturnSelf();
+        $campusMock->expects(self::once())
+            ->method('search')
+            ->willReturn($searchMock);
+
         $createdAtMock = $this->createMock(CampusCreatedAt::class);
         $createdAtMock->expects(self::once())
             ->method('setValue')
@@ -177,10 +217,7 @@ class CampusTranslatorTest extends TestCase
         $this->assertSame($campusMock, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
         $result = $this->campusTranslator->setCollection([1, 2, 3]);
 
@@ -188,12 +225,9 @@ class CampusTranslatorTest extends TestCase
         $this->assertSame($this->campusTranslator, $result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
-        $expected = [1,2,3];
+        $expected = [1, 2, 3];
         $this->campusTranslator->setCollection($expected);
 
         $result = $this->campusTranslator->toDomainCollection();

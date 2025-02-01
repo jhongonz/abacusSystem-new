@@ -8,6 +8,7 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\ValueObjects\InstitutionLogo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -42,11 +43,11 @@ class DetailInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_institution(): void
+    public function testMakeShouldReturnArrayWithInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -59,6 +60,10 @@ class DetailInstitutionOrchestratorTest extends TestCase
         $institutionMock->expects(self::once())
             ->method('logo')
             ->willReturn($logoMock);
+
+        Str::createRandomStringsUsing(function () {
+            return '248ec6063c';
+        });
 
         $this->institutionManagement->expects(self::once())
             ->method('searchInstitutionById')
@@ -76,26 +81,29 @@ class DetailInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_without_institution(): void
+    public function testMakeShouldReturnArrayWithoutInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->institutionManagement->expects(self::never())
-            ->method('searchInstitutionById');
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutionById')
+            ->with(0)
+            ->willReturn(null);
 
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
-        $this->assertNull($result['institutionId']);
+        $this->assertIsInt($result['institutionId']);
+        $this->assertEquals(0, $result['institutionId']);
         $this->assertNull($result['institution']);
         $this->assertNull($result['image']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

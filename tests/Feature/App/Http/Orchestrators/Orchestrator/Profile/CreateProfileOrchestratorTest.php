@@ -41,10 +41,11 @@ class CreateProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_create_and_return_profile(): void
+    public function testMakeShouldCreateAndReturnProfile(): void
     {
         $modulesExpected = [
-            ['id' => 1]
+            ['id' => 1],
+            ['id' => 2],
         ];
 
         $requestMock = $this->createMock(Request::class);
@@ -57,19 +58,29 @@ class CreateProfileOrchestratorTest extends TestCase
                 $modulesExpected
             );
 
+        $dataExpected = [
+            'id' => null,
+            'name' => 'name',
+            'description' => 'description',
+            'modulesAggregator' => [1, 2],
+            'state' => 1,
+        ];
+
         $profileMock = $this->createMock(Profile::class);
         $this->profileManagement->expects(self::once())
             ->method('createProfile')
-            ->withAnyParameters()
+            ->with([Profile::TYPE => $dataExpected])
             ->willReturn($profileMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

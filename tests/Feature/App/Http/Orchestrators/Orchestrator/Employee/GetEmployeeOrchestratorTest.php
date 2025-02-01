@@ -39,7 +39,7 @@ class GetEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_employee_with_identification(): void
+    public function testMakeShouldReturnEmployeeWithIdentification(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -48,7 +48,7 @@ class GetEmployeeOrchestratorTest extends TestCase
             ->willReturn(true);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('identification')
             ->willReturn('test');
 
@@ -60,14 +60,16 @@ class GetEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_return_employee_with_id(): void
+    public function testMakeShouldReturnEmployeeWithId(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -76,7 +78,7 @@ class GetEmployeeOrchestratorTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('employeeId')
             ->willReturn(1);
 
@@ -91,11 +93,13 @@ class GetEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

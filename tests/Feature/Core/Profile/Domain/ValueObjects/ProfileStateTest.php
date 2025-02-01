@@ -16,7 +16,7 @@ class ProfileStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ProfileState;
+        $this->valueObject = new ProfileState();
     }
 
     public function tearDown(): void
@@ -25,7 +25,7 @@ class ProfileStateTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $result = $this->valueObject->value();
         $this->assertIsInt($result);
@@ -34,7 +34,7 @@ class ProfileStateTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue(2);
 
@@ -43,7 +43,7 @@ class ProfileStateTest extends TestCase
         $this->assertSame(2, $result->value());
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ProfileState> does not allow the invalid state: <10>.');
@@ -51,7 +51,7 @@ class ProfileStateTest extends TestCase
         $this->valueObject->setValue(10);
     }
 
-    public function test_value_literal_should_return_with__string(): void
+    public function testValueLiteralShouldReturnWithString(): void
     {
         $result = $this->valueObject->__toString();
 

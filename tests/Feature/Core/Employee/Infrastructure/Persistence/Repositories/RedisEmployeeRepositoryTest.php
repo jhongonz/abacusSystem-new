@@ -55,7 +55,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -63,7 +63,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         $this->assertIsInt($result);
     }
 
-    public function test_changePriority_should_return_self(): void
+    public function testChangePriorityShouldReturnSelf(): void
     {
         $result = $this->repository->changePriority(50);
 
@@ -76,7 +76,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_find_should_return_employee_object(): void
+    public function testFindShouldReturnEmployeeObject(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -104,7 +104,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -128,7 +128,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::exactly(2))
@@ -157,7 +157,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_findCriteria_should_return_employee_object(): void
+    public function testFindCriteriaShouldReturnEmployeeObject(): void
     {
         $employeeIdentificationMock = $this->createMock(EmployeeIdentification::class);
         $employeeIdentificationMock->expects(self::once())
@@ -185,7 +185,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $employeeIdentificationMock = $this->createMock(EmployeeIdentification::class);
         $employeeIdentificationMock->expects(self::once())
@@ -209,7 +209,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeeNotFoundException
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $employeeIdentificationMock = $this->createMock(EmployeeIdentification::class);
         $employeeIdentificationMock->expects(self::exactly(2))
@@ -237,7 +237,7 @@ class RedisEmployeeRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -253,7 +253,7 @@ class RedisEmployeeRepositoryTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
@@ -263,7 +263,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeePersistException
      */
-    public function test_persistEmployee_should_return_object(): void
+    public function testPersistEmployeeShouldReturnObject(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -313,7 +313,7 @@ class RedisEmployeeRepositoryTest extends TestCase
      * @throws Exception
      * @throws EmployeePersistException
      */
-    public function test_persistEmployee_should_return_exception(): void
+    public function testPersistEmployeeShouldReturnException(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())

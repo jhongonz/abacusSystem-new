@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 21:58:50
@@ -10,7 +11,6 @@ use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institution;
-use Exception;
 
 class UpdateInstitution extends UseCasesService
 {
@@ -20,7 +20,7 @@ class UpdateInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Institution
     {
@@ -29,7 +29,7 @@ class UpdateInstitution extends UseCasesService
         /** @var UpdateInstitutionRequest $request */
         $institution = $this->institutionRepository->find($request->id());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $institution = $this->{$methodName}($institution, $value);
@@ -39,6 +39,11 @@ class UpdateInstitution extends UseCasesService
         $institution->refreshSearch();
 
         return $this->institutionRepository->persistInstitution($institution);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeCode(Institution $institution, string $code): Institution
@@ -98,7 +103,7 @@ class UpdateInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Institution $institution, int $state): Institution
     {

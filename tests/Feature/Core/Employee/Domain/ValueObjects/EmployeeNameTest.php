@@ -23,7 +23,7 @@ class EmployeeNameTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $result = $this->valueObject->value();
 
@@ -31,7 +31,7 @@ class EmployeeNameTest extends TestCase
         $this->assertSame('Jhon', $result);
     }
 
-    public function test_setValue_should_change_and_return_self(): void
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue('Peter');
 

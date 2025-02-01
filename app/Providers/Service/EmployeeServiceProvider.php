@@ -13,6 +13,7 @@ use Core\Employee\Infrastructure\Management\EmployeeService;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\EloquentEmployeeRepository;
 use Core\Employee\Infrastructure\Persistence\Repositories\RedisEmployeeRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -21,12 +22,15 @@ use Psr\Log\LoggerInterface;
 class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
-     * All the container bindings that should be registered
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         EmployeeFactoryContract::class => EmployeeFactory::class,
         EmployeeManagementContract::class => EmployeeService::class,
         EmployeeDataTransformerContract::class => EmployeeDataTransformer::class,
+        EmployeeRepositoryContract::class => ChainEmployeeRepository::class,
     ];
 
     /**
@@ -34,20 +38,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
      */
     public function register(): void
     {
-        $this->app->singletonIf(EmployeeRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainEmployeeRepository;
-
-            $chainRepository->addRepository(
-                $app->make(RedisEmployeeRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentEmployeeRepository::class)
-                );
-
-            return $chainRepository;
-        });
-
-        //Commands
+        // Commands
         $this->app->singletonIf(EmployeeWarmup::class, function (Application $app) {
             return new EmployeeWarmup(
                 $app->make(LoggerInterface::class),
@@ -56,6 +47,20 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
                 $app->make(RedisEmployeeRepository::class),
             );
         });
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $employeeRepository = $this->app->make(EmployeeRepositoryContract::class);
+        $employeeRepository->addRepository(
+            $this->app->make(RedisEmployeeRepository::class),
+            $this->app->make(EloquentEmployeeRepository::class)
+        );
     }
 
     /**
@@ -69,14 +74,7 @@ class EmployeeServiceProvider extends ServiceProvider implements DeferrableProvi
             EmployeeFactoryContract::class,
             EmployeeManagementContract::class,
             EmployeeDataTransformerContract::class,
+            EmployeeRepositoryContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-
     }
 }

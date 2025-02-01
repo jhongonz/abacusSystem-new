@@ -52,10 +52,7 @@ class RedisCampusRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -63,7 +60,7 @@ class RedisCampusRepositoryTest extends TestCase
         $this->assertSame(100, $result);
     }
 
-    public function test_changePriority_should_change_value_and_return_self(): void
+    public function testChangePriorityShouldChangeValueAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(150);
         $value = $result->priority();
@@ -75,11 +72,10 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws CampusNotFoundException
      */
-    public function test_find_should_return_user_object(): void
+    public function testFindShouldReturnUserObject(): void
     {
         $key = 'campus::1';
 
@@ -106,11 +102,10 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws CampusNotFoundException
      */
-    public function test_find_should_return_user_null(): void
+    public function testFindShouldReturnUserNull(): void
     {
         $key = 'campus::1';
 
@@ -133,11 +128,10 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws CampusNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $key = 'campus::1';
 
@@ -154,6 +148,10 @@ class RedisCampusRepositoryTest extends TestCase
                 'Campus not found by id 1'
             );
 
+        $this->loggerMock->expects(self::once())
+            ->method('error')
+            ->with('Campus not found by id 1');
+
         $this->campusFactoryMock->expects(self::never())
             ->method('buildCampusFromArray');
 
@@ -166,7 +164,7 @@ class RedisCampusRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $institutionIdMock = $this->createMock(CampusInstitutionId::class);
 
@@ -175,10 +173,9 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_delete_should_delete_object(): void
+    public function testDeleteShouldDeleteObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $campusIdMock->expects(self::once())
@@ -194,11 +191,10 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws CampusPersistException
      * @throws Exception
      */
-    public function test_persistCampus_should_return_value_object(): void
+    public function testPersistCampusShouldReturnValueObject(): void
     {
         $campusMock = $this->createMock(Campus::class);
 
@@ -234,11 +230,10 @@ class RedisCampusRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws CampusPersistException
      * @throws Exception
      */
-    public function test_persistCampus_should_return_exception(): void
+    public function testPersistCampusShouldReturnException(): void
     {
         $campusMock = $this->createMock(Campus::class);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-06 21:35:19
@@ -8,6 +9,9 @@ namespace Tests\Feature\Core\Profile\Application\Factory\DataProvider;
 
 final class DataProviderFactory
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModule(): array
     {
         return [
@@ -29,6 +33,9 @@ final class DataProviderFactory
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerModules(): array
     {
         return [
@@ -54,6 +61,9 @@ final class DataProviderFactory
         ];
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function providerProfile(): array
     {
         return [

@@ -8,14 +8,11 @@ use Core\Profile\Domain\Profiles;
 use Core\Profile\Domain\ValueObjects\ProfileId;
 use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
-use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile as ProfileModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ProfileTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContract
 {
@@ -31,7 +28,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     /**
      * @throws ProfileNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(ProfileId $id): Profile
     {
@@ -52,7 +49,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     /**
      * @throws ProfileNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function findCriteria(ProfileName $name): ?Profile
     {
@@ -72,29 +69,26 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     }
 
     /**
-     * @throws ProfilesNotFoundException
-     * @throws Exception
+     * @param array{q?: string|null} $filters
      */
     public function getAll(array $filters = []): Profiles
     {
-        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable());
         $builder->where('pro_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 
         $profileCollection = $builder->get(['pro_id']);
 
-        if (is_null($profileCollection)) {
-            throw new ProfilesNotFoundException('Profiles not found');
-        }
-
         $collection = [];
         foreach ($profileCollection as $item) {
             $profileModel = $this->updateAttributesModelProfile((array) $item);
-            $collection[] = $profileModel->id();
+
+            if (!is_null($profileModel->id())) {
+                $collection[] = $profileModel->id();
+            }
         }
 
         $profiles = $this->profileTranslator->setCollection($collection)->toDomainCollection();
@@ -105,7 +99,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     /**
      * @throws ProfileNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteProfile(ProfileId $id): void
     {
@@ -130,7 +124,7 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistProfile(Profile $profile): Profile
     {
@@ -173,29 +167,34 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
 
     private function domainToModel(Profile $domain): ProfileModel
     {
+        $profileId = $domain->id()->value();
+
         $builder = $this->database->table($this->getTable());
-        $builder->where('pro_id', $domain->id()->value());
+        $builder->where('pro_id', $profileId);
         $data = $builder->first();
         $model = $this->updateAttributesModelProfile((array) $data);
 
-        $model->changeId($domain->id()->value());
+        $model->changeId($profileId);
         $model->changeName($domain->name()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value());
-        $model->changeDescription($domain->description()->value());
+        $model->changeDescription($domain->description()->value() ?? '');
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (! is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function updateAttributesModelProfile(array $data = []): ProfileModel
     {
         $this->model->fill($data);
-        $this->model->exists = true;
+
         return $this->model;
     }
 
@@ -216,13 +215,13 @@ class EloquentProfileRepository implements ChainPriority, ProfileRepositoryContr
         foreach ($profile->modulesAggregator() as $item) {
             $builder->insert([
                 'pri__pro_id' => $profileId,
-                'pri__mod_id' => $item
+                'pri__mod_id' => $item,
             ]);
         }
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

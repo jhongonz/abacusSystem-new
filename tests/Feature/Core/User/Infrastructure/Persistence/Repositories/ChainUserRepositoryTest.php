@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-10-17 22:14:56
@@ -24,7 +25,7 @@ class ChainUserRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainUserRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -34,10 +35,7 @@ class ChainUserRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -46,11 +44,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userMock = $this->createMock(User::class);
@@ -67,11 +64,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $userIdMock = $this->createMock(UserId::class);
 
@@ -87,11 +83,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
@@ -101,7 +96,7 @@ class ChainUserRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $userIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('User not found by id 1');
@@ -110,11 +105,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_value_object(): void
+    public function testFindCriteriaShouldReturnValueObject(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $userMock = $this->createMock(User::class);
@@ -131,11 +125,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
 
@@ -151,11 +144,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $loginMock->expects(self::once())
@@ -165,7 +157,7 @@ class ChainUserRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('findCriteria', $loginMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(UserNotFoundException::class);
         $this->expectExceptionMessage('User not found by login test');
@@ -174,11 +166,10 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \Throwable
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $userIdMock = $this->createMock(UserId::class);
 
@@ -190,10 +181,9 @@ class ChainUserRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
-    public function test_persistUser_should_return_void(): void
+    public function testPersistUserShouldReturnVoid(): void
     {
         $userMock = $this->createMock(User::class);
 

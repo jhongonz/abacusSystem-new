@@ -56,11 +56,11 @@ class DetailProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_with_profile(): void
+    public function testMakeShouldReturnArrayWithProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -75,15 +75,23 @@ class DetailProfileOrchestratorTest extends TestCase
             ->willReturn($profileMock);
 
         $moduleMock = $this->createMock(Module::class);
+        $moduleMock2 = $this->createMock(Module::class);
 
         $menuKey = $this->createMock(ModuleMenuKey::class);
-        $menuKey->expects(self::once())
+        $menuKey->expects(self::exactly(2))
             ->method('value')
             ->willReturn('managers');
+        $menuKey2 = $this->createMock(ModuleMenuKey::class);
+        $menuKey2->expects(self::exactly(2))
+            ->method('value')
+            ->willReturn('settings');
 
-        $moduleMock->expects(self::once())
+        $moduleMock->expects(self::exactly(2))
             ->method('menuKey')
             ->willReturn($menuKey);
+        $moduleMock2->expects(self::exactly(2))
+            ->method('menuKey')
+            ->willReturn($menuKey2);
 
         $stateMock = $this->createMock(ModuleState::class);
         $stateMock->expects(self::once())
@@ -93,6 +101,14 @@ class DetailProfileOrchestratorTest extends TestCase
             ->method('state')
             ->willReturn($stateMock);
 
+        $stateMock2 = $this->createMock(ModuleState::class);
+        $stateMock2->expects(self::once())
+            ->method('isActivated')
+            ->willReturn(true);
+        $moduleMock2->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock2);
+
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
             ->method('value')
@@ -101,17 +117,32 @@ class DetailProfileOrchestratorTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $modulesMock = new Modules([$moduleMock]);
+        $moduleIdMock2 = $this->createMock(ModuleId::class);
+        $moduleIdMock2->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+        $moduleMock2->expects(self::once())
+            ->method('id')
+            ->willReturn($moduleIdMock2);
+
+        $modulesMock = new Modules([$moduleMock, $moduleMock2]);
 
         $this->moduleManagement->expects(self::once())
             ->method('searchModules')
             ->willReturn($modulesMock);
 
-        $expectedConfig = ['managers' => [
-            'name' => 'Gestión Administrativa',
-            'icon' => 'fas fa-tools',
-            'route' => null,
-        ]];
+        $expectedConfig = [
+            'managers' => [
+                'name' => 'Gestión Administrativa',
+                'icon' => 'fas fa-tools',
+                'route' => null,
+            ],
+            'settings' => [
+                'name' => 'Configuraciones',
+                'icon' => 'fas fa-tools',
+                'route' => null,
+            ],
+        ];
         $this->config->expects(self::once())
             ->method('get')
             ->with('menu.options')
@@ -119,28 +150,56 @@ class DetailProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
+        $dataExpected = [
+            'profileId' => 1,
+            'profile' => $profileMock,
+            'modules' => $modulesMock,
+            'privileges' => [
+                'managers' => [
+                    'menu' => [
+                        'name' => 'Gestión Administrativa',
+                        'icon' => 'fas fa-tools',
+                        'route' => null,
+                    ],
+                    'children' => [
+                        ['module' => $moduleMock, 'selected' => true],
+                    ],
+                ],
+                'settings' => [
+                    'menu' => [
+                        'name' => 'Configuraciones',
+                        'icon' => 'fas fa-tools',
+                        'route' => null,
+                    ],
+                    'children' => [
+                        ['module' => $moduleMock2, 'selected' => true],
+                    ],
+                ],
+            ],
+        ];
+
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('profileId', $result);
-        $this->assertSame(1, $result['profileId']);
-        $this->assertArrayHasKey('profile', $result);
-        $this->assertSame($profileMock, $result['profile']);
-        $this->assertArrayHasKey('modules', $result);
-        $this->assertArrayHasKey('privileges', $result);
+        $this->assertCount(4, $result);
+        $this->assertIsArray($result['privileges']);
+        $this->assertCount(2, $result['privileges']);
+        $this->assertEquals($dataExpected, $result);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_return_array_without_profile(): void
+    public function testMakeShouldReturnArrayWithoutProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
-            ->willReturn(null);
+            ->willReturn(0);
 
-        $this->profileManagement->expects(self::never())
-            ->method('searchProfileById');
+        $this->profileManagement->expects(self::once())
+            ->method('searchProfileById')
+            ->with(0)
+            ->willReturn(null);
 
         $moduleMock = $this->createMock(Module::class);
 
@@ -163,14 +222,15 @@ class DetailProfileOrchestratorTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('profileId', $result);
-        $this->assertNull($result['profileId']);
+        $this->assertIsInt($result['profileId']);
+        $this->assertEquals(0, $result['profileId']);
         $this->assertArrayHasKey('profile', $result);
         $this->assertNull($result['profile']);
         $this->assertArrayHasKey('modules', $result);
         $this->assertArrayHasKey('privileges', $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

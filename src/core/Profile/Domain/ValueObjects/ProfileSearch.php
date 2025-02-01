@@ -5,7 +5,7 @@ namespace Core\Profile\Domain\ValueObjects;
 class ProfileSearch
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
     }
 

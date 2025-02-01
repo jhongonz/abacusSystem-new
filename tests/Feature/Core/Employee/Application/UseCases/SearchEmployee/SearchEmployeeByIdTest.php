@@ -49,7 +49,7 @@ class SearchEmployeeByIdTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_execute_should_return_value_object(): void
+    public function testExecuteShouldReturnValueObject(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeMock = $this->createMock(Employee::class);
@@ -73,7 +73,7 @@ class SearchEmployeeByIdTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
 
@@ -95,7 +95,7 @@ class SearchEmployeeByIdTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');

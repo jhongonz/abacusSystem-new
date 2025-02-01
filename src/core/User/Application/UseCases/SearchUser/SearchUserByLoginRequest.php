@@ -12,7 +12,7 @@ use Core\User\Domain\ValueObjects\UserLogin;
 class SearchUserByLoginRequest implements RequestService
 {
     public function __construct(
-        private readonly UserLogin $login
+        private readonly UserLogin $login,
     ) {
     }
 

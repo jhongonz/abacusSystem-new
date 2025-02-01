@@ -14,7 +14,7 @@ class SearchModulesRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new SearchModulesRequest;
+        $this->request = new SearchModulesRequest();
     }
 
     public function tearDown(): void
@@ -23,7 +23,7 @@ class SearchModulesRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->request->filters();
 

@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
 use Core\Profile\Domain\Profile;
-use Exception;
 
 class UpdateProfile extends UseCasesService
 {
@@ -16,7 +15,7 @@ class UpdateProfile extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Profile
     {
@@ -25,7 +24,7 @@ class UpdateProfile extends UseCasesService
         /** @var UpdateProfileRequest $request */
         $profile = $this->profileRepository->find($request->profileId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.\ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $profile = $this->{$methodName}($profile, $value);
@@ -37,8 +36,13 @@ class UpdateProfile extends UseCasesService
         return $this->profileRepository->persistProfile($profile);
     }
 
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
+    }
+
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Profile $profile, int $value): Profile
     {
@@ -61,6 +65,9 @@ class UpdateProfile extends UseCasesService
         return $profile;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $modules
+     */
     private function changeModules(Profile $profile, array $modules): Profile
     {
         $profile->setModulesAggregator($modules);

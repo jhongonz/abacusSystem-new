@@ -7,5 +7,5 @@ use Core\Profile\Domain\Modules;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|Module|Modules;
+    public function execute(RequestService $request): Module|Modules|null;
 }

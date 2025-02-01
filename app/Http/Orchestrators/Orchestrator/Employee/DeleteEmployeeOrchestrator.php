@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 16:56:22
@@ -15,18 +16,17 @@ class DeleteEmployeeOrchestrator extends EmployeeOrchestrator
     {
         parent::__construct($employeeManagement);
     }
-    /**
-     * @inheritDoc
-     */
-    public function make(Request $request): bool
-    {
-        $this->employeeManagement->deleteEmployee($request->input('employeeId'));
-        return true;
-    }
 
     /**
-     * @inheritDoc
+     * @return array<null>
      */
+    public function make(Request $request): array
+    {
+        $this->employeeManagement->deleteEmployee($request->integer('employeeId'));
+
+        return [];
+    }
+
     public function canOrchestrate(): string
     {
         return 'delete-employee';

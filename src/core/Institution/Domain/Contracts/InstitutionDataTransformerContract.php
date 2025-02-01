@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-20 07:45:36
@@ -12,7 +13,13 @@ interface InstitutionDataTransformerContract
 {
     public function write(Institution $institution): InstitutionDataTransformerContract;
 
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
     public function read(): array;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array;
 }

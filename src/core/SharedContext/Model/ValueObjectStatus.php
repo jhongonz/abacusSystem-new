@@ -2,8 +2,6 @@
 
 namespace Core\SharedContext\Model;
 
-use Exception;
-
 class ValueObjectStatus
 {
     public const STATE_NEW = 1;
@@ -43,7 +41,7 @@ class ValueObjectStatus
     protected int $value;
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(int $value)
     {
@@ -59,7 +57,7 @@ class ValueObjectStatus
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function setValue(int $value): self
     {
@@ -83,7 +81,7 @@ class ValueObjectStatus
     public function activate(): self
     {
         $this->value = self::STATE_ACTIVE;
-        $this->changeValueLiteral(self::STATE_INACTIVE);
+        $this->changeValueLiteral(self::STATE_ACTIVE);
 
         return $this;
     }
@@ -98,17 +96,17 @@ class ValueObjectStatus
 
     public function isNew(): bool
     {
-        return $this->value() === self::STATE_NEW;
+        return self::STATE_NEW === $this->value();
     }
 
     public function isActivated(): bool
     {
-        return $this->value() === self::STATE_ACTIVE;
+        return self::STATE_ACTIVE === $this->value();
     }
 
     public function isInactivated(): bool
     {
-        return $this->value() === self::STATE_INACTIVE;
+        return self::STATE_INACTIVE === $this->value();
     }
 
     public function formatHtmlToState(): string
@@ -121,7 +119,7 @@ class ValueObjectStatus
 
     protected function changeValueLiteral(int $state): self
     {
-        if ($state !== self::STATE_DELETE) {
+        if (self::STATE_DELETE !== $state) {
             $literal = self::STYLE_LITERAL_STATE[$state]['literal'];
             $this->valueLiteral = $literal;
         }
@@ -130,14 +128,12 @@ class ValueObjectStatus
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     protected function validateState(int $value): void
     {
-        if (! in_array($value, self::REGISTRY_STATES)) {
-            throw new Exception(
-                sprintf('<%s> does not allow the invalid state: <%s>.', static::class, $value)
-            );
+        if (!in_array($value, self::REGISTRY_STATES)) {
+            throw new \Exception(sprintf('<%s> does not allow the invalid state: <%s>.', static::class, $value));
         }
     }
 }

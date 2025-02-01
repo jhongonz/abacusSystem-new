@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 07:34:51
@@ -8,7 +9,6 @@ namespace App\Http\Orchestrators\Orchestrator\Institution;
 
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
-use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 
@@ -21,14 +21,12 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
         protected ImageManagerInterface $imageManager,
     ) {
         parent::__construct($institutionManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**
-     * @param Request $request
-     * @return Institution
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Institution
+    public function make(Request $request): array
     {
         $dataUpdate = [
             'code' => $request->input('code'),
@@ -41,16 +39,15 @@ class UpdateInstitutionOrchestrator extends InstitutionOrchestrator
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataUpdate['logo'] = $filename;
         }
 
-        return $this->institutionManagement->updateInstitution($request->input('institutionId'), $dataUpdate);
+        $institution = $this->institutionManagement->updateInstitution($request->integer('institutionId'), $dataUpdate);
+
+        return ['institution' => $institution];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-institution';

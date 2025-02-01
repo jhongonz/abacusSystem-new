@@ -13,6 +13,8 @@ use Tests\TestCase;
 class UpdateProfileRequestTest extends TestCase
 {
     private ProfileId|MockObject $profileId;
+
+    /** @var array<string, mixed> */
     private array $data = [];
     private UpdateProfileRequest $request;
 
@@ -39,7 +41,7 @@ class UpdateProfileRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_profileId_should_return_object(): void
+    public function testProfileIdShouldReturnObject(): void
     {
         $result = $this->request->profileId();
 
@@ -47,7 +49,7 @@ class UpdateProfileRequestTest extends TestCase
         $this->assertSame($this->profileId, $result);
     }
 
-    public function test_data_should_return_array(): void
+    public function testDataShouldReturnArray(): void
     {
         $result = $this->request->data();
 

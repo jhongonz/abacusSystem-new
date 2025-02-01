@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 16:44:49
@@ -20,7 +21,6 @@ use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusFactoryContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
-use Exception;
 
 class CampusService implements CampusManagementContract
 {
@@ -35,7 +35,7 @@ class CampusService implements CampusManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchCampusById(int $id): ?Campus
     {
@@ -47,7 +47,7 @@ class CampusService implements CampusManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchCampusCollection(int $institutionId, array $filters = []): ?CampusCollection
     {
@@ -55,9 +55,12 @@ class CampusService implements CampusManagementContract
             $this->campusFactory->buildCampusInstitutionId($institutionId),
             $filters
         );
+
+        /** @var CampusCollection $campusCollection */
         $campusCollection = $this->searchCampusCollection->execute($request);
 
         foreach ($campusCollection->aggregator() as $item) {
+            /** @var Campus $campus */
             $campus = $this->searchCampusById($item);
             $campusCollection->addItem($campus);
         }
@@ -66,7 +69,7 @@ class CampusService implements CampusManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateCampus(int $id, array $data): Campus
     {
@@ -79,7 +82,7 @@ class CampusService implements CampusManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function createCampus(array $data): Campus
     {
@@ -91,7 +94,7 @@ class CampusService implements CampusManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteCampus(int $id): void
     {

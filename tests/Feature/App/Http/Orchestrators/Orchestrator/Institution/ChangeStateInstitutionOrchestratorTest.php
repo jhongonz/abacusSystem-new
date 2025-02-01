@@ -7,6 +7,7 @@ use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\ValueObjects\InstitutionState;
+use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -42,11 +43,11 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_institution_when_is_activate(): void
+    public function testMakeShouldReturnInstitutionWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -84,18 +85,20 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|InstitutionNotFoundException
      */
-    public function test_make_should_return_institution_when_is_inactivate(): void
+    public function testMakeShouldReturnInstitutionWhenIsInactivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('institutionId')
             ->willReturn(1);
 
@@ -141,11 +144,38 @@ class ChangeStateInstitutionOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('institutionId')
+            ->willReturn(1);
+
+        $this->institutionManagement->expects(self::once())
+            ->method('searchInstitutionById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->institutionManagement->expects(self::never())
+            ->method('updateInstitution');
+
+        $this->expectException(InstitutionNotFoundException::class);
+        $this->expectExceptionMessage('Institution with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

@@ -6,7 +6,6 @@ use Core\Employee\Application\UseCases\RequestService;
 use Core\Employee\Application\UseCases\UseCasesService;
 use Core\Employee\Domain\Contracts\EmployeeRepositoryContract;
 use Core\Employee\Domain\Employee;
-use Exception;
 
 class SearchEmployeeById extends UseCasesService
 {
@@ -16,7 +15,7 @@ class SearchEmployeeById extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Employee
     {

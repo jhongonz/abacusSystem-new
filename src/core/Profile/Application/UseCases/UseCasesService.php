@@ -3,7 +3,6 @@
 namespace Core\Profile\Application\UseCases;
 
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
-use Exception;
 
 abstract class UseCasesService implements ServiceContract
 {
@@ -13,12 +12,12 @@ abstract class UseCasesService implements ServiceContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     protected function validateRequest(RequestService $request, string $requestClass): RequestService
     {
-        if (! $request instanceof $requestClass) {
-            throw new Exception('Request not valid');
+        if (!$request instanceof $requestClass) {
+            throw new \Exception('Request not valid');
         }
 
         return $request;

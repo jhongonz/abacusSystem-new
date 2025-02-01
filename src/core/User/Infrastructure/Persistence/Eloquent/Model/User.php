@@ -2,12 +2,8 @@
 
 namespace Core\User\Infrastructure\Persistence\Eloquent\Model;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
-use DateTime;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +12,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
     use Notifiable;
     use SoftDeletes;
 
@@ -37,7 +32,7 @@ class User extends Authenticatable
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'user_state' => 1,
@@ -46,7 +41,7 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -64,7 +59,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'user_remember_token',
@@ -83,6 +78,9 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $touches = ['relationWithEmployee', 'relationWithProfile'];
 
     /**
@@ -90,6 +88,9 @@ class User extends Authenticatable
      */
     protected string $mainSearchField = 'user_login';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [
@@ -105,6 +106,9 @@ class User extends Authenticatable
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Employee, $this>
+     */
     public function relationWithEmployee(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'user__emp_id', 'emp_id');
@@ -115,6 +119,9 @@ class User extends Authenticatable
         return $this->relationWithEmployee()->getModel();
     }
 
+    /**
+     * @return BelongsTo<Profile, $this>
+     */
     public function relationWithProfile(): BelongsTo
     {
         return $this->belongsTo(Profile::class, 'user__pro_id', 'pro_id');
@@ -127,7 +134,10 @@ class User extends Authenticatable
 
     public function id(): ?int
     {
-        return $this->getAttribute('user_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('user_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -139,7 +149,10 @@ class User extends Authenticatable
 
     public function employeeId(): ?int
     {
-        return $this->getAttribute('user__emp_id');
+        /** @var int|null $employeeId */
+        $employeeId = $this->getAttribute('user__emp_id');
+
+        return $employeeId;
     }
 
     public function changeEmployeeId(int $id): self
@@ -151,7 +164,10 @@ class User extends Authenticatable
 
     public function profileId(): ?int
     {
-        return $this->getAttribute('user__pro_id');
+        /** @var int|null $profileId */
+        $profileId = $this->getAttribute('user__pro_id');
+
+        return $profileId;
     }
 
     public function changeProfileId(int $id): self
@@ -163,7 +179,10 @@ class User extends Authenticatable
 
     public function login(): ?string
     {
-        return $this->getAttribute('user_login');
+        /** @var string|null $login */
+        $login = $this->getAttribute('user_login');
+
+        return $login;
     }
 
     public function changeLogin(string $login): self
@@ -175,7 +194,10 @@ class User extends Authenticatable
 
     public function password(): ?string
     {
-        return $this->getAttribute('password');
+        /** @var string|null $password */
+        $password = $this->getAttribute('password');
+
+        return $password;
     }
 
     public function changePassword(string $password): self
@@ -187,7 +209,10 @@ class User extends Authenticatable
 
     public function state(): int
     {
-        return $this->getAttribute('user_state');
+        /** @var int $state */
+        $state = $this->getAttribute('user_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -198,17 +223,17 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
+        /** @var string|null $dateTime */
         $dateTime = $this->getAttribute('created_at');
 
-        return ($dateTime) ? $this->getDateTime($dateTime) : $dateTime;
-
+        return null !== $dateTime ? $this->getDateTime($dateTime) : null;
     }
 
-    public function changeCreatedAt(DateTime $datetime): self
+    public function changeCreatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
 
@@ -216,16 +241,17 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
 
@@ -233,16 +259,17 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
 
@@ -251,7 +278,10 @@ class User extends Authenticatable
 
     public function photo(): ?string
     {
-        return $this->getAttribute('user_photo');
+        /** @var string|null $photo */
+        $photo = $this->getAttribute('user_photo');
+
+        return $photo;
     }
 
     public function changePhoto(?string $photo): self
@@ -262,10 +292,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

@@ -4,16 +4,14 @@ namespace App\Listeners;
 
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
-use App\Jobs\ProcessCommandWarmup;
 
-class ProfilesWarmupListener
+class ProfilesWarmupListener extends WarmupListener
 {
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -21,7 +19,7 @@ class ProfilesWarmupListener
      */
     public function handle(ProfileUpdatedOrDeletedEvent|ModuleUpdatedOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch('profile:warmup');
-        ProcessCommandWarmup::dispatch('module:warmup');
+        $processCommandWarmup = $this->callCommandWarmup(['profile:warmup', 'module:warmup']);
+        $processCommandWarmup->handle();
     }
 }

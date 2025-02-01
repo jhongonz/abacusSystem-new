@@ -4,7 +4,8 @@ namespace Core\Profile\Infrastructure\Commands;
 
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
-use Exception;
+use Core\Profile\Domain\Module;
+use Core\Profile\Domain\Modules;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as CommandSymfony;
@@ -32,8 +33,7 @@ class ModuleWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'module:warmup
-                            {--id=0 : The ID module}';
+    protected $signature = 'module:warmup {--id=0 : The ID module}';
 
     /**
      * The console command description.
@@ -47,17 +47,20 @@ class ModuleWarmup extends Command
      */
     public function handle(): int
     {
-        if ($this->option('id') == 0) {
+        $id = is_numeric($this->option('id')) ? intval($this->option('id')) : null;
+
+        if (0 == $id) {
+            /** @var Modules $modules */
             $modules = $this->readRepository->getAll();
 
             foreach ($this->repositories as $repository) {
                 foreach ($modules->aggregator() as $item) {
-
                     try {
+                        /** @var Module $module */
                         $module = $this->readRepository->find($this->moduleFactory->buildModuleId($item));
 
                         $repository->persistModule($module);
-                    } catch (Exception $exception) {
+                    } catch (\Exception $exception) {
                         $this->logger->error($exception->getMessage(), $exception->getTrace());
 
                         return CommandSymfony::FAILURE;
@@ -65,14 +68,14 @@ class ModuleWarmup extends Command
                 }
             }
         } else {
-            $moduleId = $this->moduleFactory->buildModuleId($this->option('id'));
-
+            $moduleId = $this->moduleFactory->buildModuleId($id);
             foreach ($this->repositories as $repository) {
                 try {
+                    /** @var Module $module */
                     $module = $this->readRepository->find($moduleId);
 
                     $repository->persistModule($module);
-                } catch (Exception $exception) {
+                } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage(), $exception->getTrace());
 
                     return CommandSymfony::FAILURE;
@@ -81,6 +84,7 @@ class ModuleWarmup extends Command
         }
 
         $this->logger->info('Command executed');
+
         return CommandSymfony::SUCCESS;
     }
 }

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Module\StoreModuleRequest;
+use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Module;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -14,15 +15,19 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class ModuleController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        ViewFactory $viewFactory,
-        LoggerInterface $logger,
+        private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
+        protected ViewFactory $viewFactory,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
     }
 
     public function index(): JsonResponse|string
@@ -34,20 +39,39 @@ class ModuleController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getModules(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-modules', $request);
+        $dataModules = $this->orchestrators->handler('retrieve-modules', $request);
+
+        $datatable = $this->dataTables->collection($dataModules);
+        $datatable->addColumn('tools', function (array $item) {
+            return $this->retrieveMenuOptionHtml($item);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateModule(Request $request): JsonResponse
     {
         try {
-            /** @var Module $module */
-            $module = $this->orchestrators->handler('change-state-module', $request);
+            /** @var array{module: Module} $dataModule */
+            $dataModule = $this->orchestrators->handler('change-state-module', $request);
+            $module = $dataModule['module'];
 
-            ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
-        } catch (Exception $exception) {
-            $this->logger->error('Module can not be updated with id: '.$request->input('moduleId'), $exception->getTrace());
+            /** @var int $moduleId */
+            $moduleId = $module->id()->value();
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($moduleId));
+        } catch (\Exception $exception) {
+            /** @var string $moduleId */
+            $moduleId = $request->input('moduleId');
+
+            $this->logger->error(
+                sprintf('Module can not be updated with id: %s', $moduleId),
+                $exception->getTrace()
+            );
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -55,9 +79,11 @@ class ModuleController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_OK);
     }
 
-    public function getModule(Request $request, ?int $id = null): JsonResponse
+    public function getModule(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['moduleId' => $id]);
+
+        /** @var array<int|string, mixed> $dataModule */
         $dataModule = $this->orchestrators->handler('detail-module', $request);
 
         $view = $this->viewFactory->make('module.module-form', $dataModule)
@@ -69,13 +95,16 @@ class ModuleController extends Controller implements HasMiddleware
     public function storeModule(StoreModuleRequest $request): JsonResponse
     {
         try {
-            $method = (! $request->filled('moduleId')) ? 'create-module' : 'update-module';
+            $method = (!$request->filled('moduleId')) ? 'create-module' : 'update-module';
 
-            /** @var Module $module */
-            $module = $this->orchestrators->handler($method, $request);
+            /** @var array{module: Module} $dataModule */
+            $dataModule = $this->orchestrators->handler($method, $request);
+            $module = $dataModule['module'];
 
-            ModuleUpdatedOrDeletedEvent::dispatch($module->id()->value());
-        } catch (Exception $exception) {
+            /** @var int $moduleId */
+            $moduleId = $module->id()->value();
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($moduleId));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -93,11 +122,11 @@ class ModuleController extends Controller implements HasMiddleware
             $request->merge(['moduleId' => $id]);
             $this->orchestrators->handler('delete-module', $request);
 
-            ModuleUpdatedOrDeletedEvent::dispatch($id);
-        } catch (Exception $exception) {
+            $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($id));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);

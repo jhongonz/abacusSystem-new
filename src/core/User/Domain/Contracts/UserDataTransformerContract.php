@@ -12,5 +12,8 @@ interface UserDataTransformerContract
 {
     public function write(User $user): UserDataTransformerContract;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array;
 }

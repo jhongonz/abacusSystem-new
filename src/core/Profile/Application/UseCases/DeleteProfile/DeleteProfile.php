@@ -5,7 +5,6 @@ namespace Core\Profile\Application\UseCases\DeleteProfile;
 use Core\Profile\Application\UseCases\RequestService;
 use Core\Profile\Application\UseCases\UseCasesService;
 use Core\Profile\Domain\Contracts\ProfileRepositoryContract;
-use Exception;
 
 class DeleteProfile extends UseCasesService
 {
@@ -15,7 +14,7 @@ class DeleteProfile extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): null
     {

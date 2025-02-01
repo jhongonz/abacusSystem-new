@@ -15,16 +15,18 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Domain\ValueObjects\EmployeeIdentificationType;
 use Core\Employee\Domain\ValueObjects\EmployeeImage;
+use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Core\Employee\Domain\ValueObjects\EmployeeLastname;
 use Core\Employee\Domain\ValueObjects\EmployeeName;
 use Core\Employee\Domain\ValueObjects\EmployeeObservations;
 use Core\Employee\Domain\ValueObjects\EmployeePhone;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
+use Core\Employee\Domain\ValueObjects\EmployeeUserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataProvider\DataProviderUpdateEmployee;
+use Tests\Feature\Core\Employee\Application\UseCases\UpdateEmployee\DataProvider\UpdateEmployeeDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployee::class)]
@@ -35,7 +37,7 @@ class UpdateEmployeeTest extends TestCase
 
     private EmployeeRepositoryContract|MockObject $repository;
 
-    private UpdateEmployee $useCase;
+    private UpdateEmployee|MockObject $useCase;
 
     /**
      * @throws Exception
@@ -45,7 +47,10 @@ class UpdateEmployeeTest extends TestCase
         parent::setUp();
         $this->request = $this->createMock(UpdateEmployeeRequest::class);
         $this->repository = $this->createMock(EmployeeRepositoryContract::class);
-        $this->useCase = new UpdateEmployee($this->repository);
+        $this->useCase = $this->getMockBuilder(UpdateEmployee::class)
+            ->setConstructorArgs([$this->repository])
+            ->onlyMethods(['getFunctionName'])
+            ->getMock();
     }
 
     public function tearDown(): void
@@ -59,11 +64,13 @@ class UpdateEmployeeTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @param array<string, mixed> $dataUpdate
+     *
      * @throws Exception
+     * @throws \Exception
      */
-    #[DataProviderExternal(DataProviderUpdateEmployee::class, 'provider')]
-    public function test_execute_should_change_and_return_object(array $dataUpdate): void
+    #[DataProviderExternal(UpdateEmployeeDataProvider::class, 'provider')]
+    public function testExecuteShouldChangeAndReturnObject(array $dataUpdate): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
 
@@ -74,6 +81,27 @@ class UpdateEmployeeTest extends TestCase
         $this->request->expects(self::once())
             ->method('data')
             ->willReturn($dataUpdate);
+
+        $this->useCase->expects(self::exactly(13))
+            ->method('getFunctionName')
+            ->willReturnCallback(function (string $field) {
+                return match ($field) {
+                    'identifier' => 'changeIdentifier',
+                    'typeDocument' => 'changeTypeDocument',
+                    'name' => 'changeName',
+                    'lastname' => 'changeLastname',
+                    'email' => 'changeEmail',
+                    'phone' => 'changePhone',
+                    'address' => 'changeAddress',
+                    'observations' => 'changeObservations',
+                    'birthdate' => 'changeBirthdate',
+                    'state' => 'changeState',
+                    'image' => 'changeImage',
+                    'userId' => 'changeUserId',
+                    'institutionId' => 'changeInstitutionId',
+                    default => null,
+                };
+            });
 
         $employeeMock = $this->createMock(Employee::class);
 
@@ -176,6 +204,24 @@ class UpdateEmployeeTest extends TestCase
             ->method('image')
             ->willReturn($imageMock);
 
+        $userIdMock = $this->createMock(EmployeeUserId::class);
+        $userIdMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['userId'])
+            ->willReturnSelf();
+        $employeeMock->expects(self::once())
+            ->method('userId')
+            ->willReturn($userIdMock);
+
+        $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
+        $institutionIdMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataUpdate['institutionId'])
+            ->willReturnSelf();
+        $employeeMock->expects(self::once())
+            ->method('institutionId')
+            ->willReturn($institutionIdMock);
+
         $employeeMock->expects(self::once())
             ->method('refreshSearch')
             ->willReturnSelf();
@@ -193,17 +239,32 @@ class UpdateEmployeeTest extends TestCase
         $result = $this->useCase->execute($this->request);
 
         $this->assertInstanceOf(Employee::class, $result);
+        $this->assertSame($employeeMock, $result);
     }
 
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');
 
         $requestMock = $this->createMock(DeleteEmployeeRequest::class);
         $this->useCase->execute($requestMock);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetFunctionNameShouldReturnNameValid(): void
+    {
+        $reflection = new \ReflectionClass(UpdateEmployee::class);
+        $method = $reflection->getMethod('getFunctionName');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->useCase, 'name');
+        $this->assertIsString($result);
+        $this->assertSame('changeName', $result);
     }
 }

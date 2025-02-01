@@ -36,7 +36,7 @@ class CreateUserRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_user_should_return_user_domain(): void
+    public function testUserShouldReturnUserDomain(): void
     {
         $result = $this->request->user();
 

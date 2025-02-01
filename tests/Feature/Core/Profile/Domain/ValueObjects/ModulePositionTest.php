@@ -14,7 +14,7 @@ class ModulePositionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModulePosition;
+        $this->valueObject = new ModulePosition();
     }
 
     public function tearDown(): void
@@ -23,14 +23,14 @@ class ModulePositionTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertIsInt($result);
         $this->assertSame(1, $result);
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $this->valueObject = new ModulePosition(2);
         $result = $this->valueObject->value();
@@ -39,7 +39,7 @@ class ModulePositionTest extends TestCase
         $this->assertSame(2, $result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue(2);
 

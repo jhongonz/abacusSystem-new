@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-19 14:09:03
@@ -35,18 +36,18 @@ class Institution
     public function __construct(
         private InstitutionId $id,
         private InstitutionName $name,
-        private InstitutionShortname $shortname = new InstitutionShortname,
-        private InstitutionCode $code = new InstitutionCode,
-        private InstitutionState $state = new InstitutionState,
+        private InstitutionShortname $shortname = new InstitutionShortname(),
+        private InstitutionCode $code = new InstitutionCode(),
+        private InstitutionState $state = new InstitutionState(),
     ) {
-        $this->logo = new InstitutionLogo;
-        $this->search = new InstitutionSearch;
-        $this->observations = new InstitutionObservations;
-        $this->createdAt = new InstitutionCreatedAt;
-        $this->updatedAt = new InstitutionUpdatedAt;
-        $this->address = new InstitutionAddress;
-        $this->phone = new InstitutionPhone;
-        $this->email = new InstitutionEmail;
+        $this->logo = new InstitutionLogo();
+        $this->search = new InstitutionSearch();
+        $this->observations = new InstitutionObservations();
+        $this->createdAt = new InstitutionCreatedAt();
+        $this->updatedAt = new InstitutionUpdatedAt();
+        $this->address = new InstitutionAddress();
+        $this->phone = new InstitutionPhone();
+        $this->email = new InstitutionEmail();
     }
 
     public function id(): InstitutionId
@@ -57,6 +58,7 @@ class Institution
     public function setId(InstitutionId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -68,6 +70,7 @@ class Institution
     public function setName(InstitutionName $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -79,6 +82,7 @@ class Institution
     public function setShortname(InstitutionShortname $shortname): self
     {
         $this->shortname = $shortname;
+
         return $this;
     }
 
@@ -90,6 +94,7 @@ class Institution
     public function setCode(InstitutionCode $code): self
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -101,6 +106,7 @@ class Institution
     public function setLogo(InstitutionLogo $logo): self
     {
         $this->logo = $logo;
+
         return $this;
     }
 
@@ -112,6 +118,7 @@ class Institution
     public function setObservations(InstitutionObservations $observations): self
     {
         $this->observations = $observations;
+
         return $this;
     }
 
@@ -123,6 +130,7 @@ class Institution
     public function setAddress(InstitutionAddress $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -134,6 +142,7 @@ class Institution
     public function setState(InstitutionState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -145,6 +154,7 @@ class Institution
     public function setSearch(InstitutionSearch $search): self
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -156,6 +166,7 @@ class Institution
     public function setCreatedAt(InstitutionCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -167,23 +178,43 @@ class Institution
     public function setUpdatedAt(InstitutionUpdatedAt $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
     public function refreshSearch(): self
     {
+        /** @var string $code */
+        $code = $this->code->value();
+
+        /** @var string $shortname */
+        $shortname = $this->shortname->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
         $data = [
-            $this->code->value(),
-            $this->name->value(),
-            $this->shortname->value(),
-            $this->observations->value(),
-            $this->address->value(),
-            $this->phone->value(),
-            $this->email->value(),
+            trim(strtolower($code)),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($shortname)),
+            trim(strtolower($observations)),
+            trim(strtolower($address)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
+
         return $this;
     }
 
@@ -195,6 +226,7 @@ class Institution
     public function setPhone(InstitutionPhone $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -206,6 +238,7 @@ class Institution
     public function setEmail(InstitutionEmail $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 }

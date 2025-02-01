@@ -5,7 +5,7 @@ namespace Core\Profile\Domain\ValueObjects;
 class ProfileName
 {
     public function __construct(
-        private string $value
+        private string $value,
     ) {
     }
 

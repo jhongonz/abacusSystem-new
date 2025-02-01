@@ -19,7 +19,6 @@ use Core\User\Application\UseCases\UpdateUser\UpdateUserRequest;
 use Core\User\Domain\Contracts\UserFactoryContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Core\User\Domain\User;
-use Exception;
 
 class UserService implements UserManagementContract
 {
@@ -34,7 +33,7 @@ class UserService implements UserManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchUserByLogin(string $login): ?User
     {
@@ -46,7 +45,7 @@ class UserService implements UserManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchUserById(?int $id): ?User
     {
@@ -58,7 +57,9 @@ class UserService implements UserManagementContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string, mixed> $data
+     *
+     * @throws \Exception
      */
     public function updateUser(int $id, array $data): User
     {
@@ -69,7 +70,9 @@ class UserService implements UserManagementContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string, mixed> $data
+     *
+     * @throws \Exception
      */
     public function createUser(array $data): User
     {
@@ -80,7 +83,7 @@ class UserService implements UserManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteUser(int $id): void
     {

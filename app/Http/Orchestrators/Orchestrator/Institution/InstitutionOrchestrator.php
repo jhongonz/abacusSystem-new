@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 06:58:36
@@ -12,7 +13,7 @@ use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 abstract class InstitutionOrchestrator implements Orchestrator
 {
     public function __construct(
-        protected readonly InstitutionManagementContract $institutionManagement
+        protected readonly InstitutionManagementContract $institutionManagement,
     ) {
     }
 }

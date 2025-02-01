@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 12:35:31
@@ -21,24 +22,22 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
 
     public function __construct(
         EmployeeManagementContract $employeeManagement,
-        protected ImageManagerInterface $imageManager,
+        private readonly ImageManagerInterface $imageManager,
     ) {
         parent::__construct($employeeManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**
-     * @param Request $request
-     * @return Employee
+     * @return array<string, mixed>
+     *
      * @throws \Exception
      */
-    public function make(Request $request): Employee
+    public function make(Request $request): array
     {
-        $birthdate = $request->date('birthdate', 'd/m/Y');
         $dataEmployee = [
-            'id' => $request->input('employeeId'),
+            'id' => $request->integer('employeeId'),
             'userId' => null,
-            'institutionId' => $request->input('institutionId'),
+            'institutionId' => $request->integer('institutionId'),
             'identification' => $request->input('identifier'),
             'name' => $request->input('name'),
             'lastname' => $request->input('lastname'),
@@ -47,22 +46,25 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'birthdate' => $this->getDateTime($birthdate->format('Y-m-d'))->format(self::DATE_FORMAT),
             'state' => ValueObjectStatus::STATE_NEW,
-            'image' => null
+            'image' => null,
         ];
 
+        $birthdate = $request->date('birthdate', 'd/m/Y');
+        if (!is_null($birthdate)) {
+            $dataEmployee['birthdate'] = $this->getDateTime($birthdate->format('Y-m-d'))->format('Y-m-d H:i:s');
+        }
+
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataEmployee['image'] = $filename;
         }
 
-        return $this->employeeManagement->createEmployee([Employee::TYPE => $dataEmployee]);
+        $employee = $this->employeeManagement->createEmployee([Employee::TYPE => $dataEmployee]);
+
+        return ['employee' => $employee];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-employee';

@@ -41,36 +41,49 @@ class UpdateProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_update_and_return_profile(): void
+    public function testMakeShouldUpdateAndReturnProfile(): void
     {
         $modulesExpected = [
-            ['id' => 1]
+            ['id' => 1],
+            ['id' => 2],
         ];
 
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(4))
+        $requestMock->expects(self::exactly(3))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
                 'name',
                 'description',
-                $modulesExpected,
-                1
+                $modulesExpected
             );
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('profileId')
+            ->willReturn(1);
+
+        $dataExpected = [
+            'name' => 'name',
+            'description' => 'description',
+            'modules' => [1, 2],
+        ];
 
         $profileMock = $this->createMock(Profile::class);
         $this->profileManagement->expects(self::once())
             ->method('updateProfile')
-            ->withAnyParameters()
+            ->with(1, $dataExpected)
             ->willReturn($profileMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

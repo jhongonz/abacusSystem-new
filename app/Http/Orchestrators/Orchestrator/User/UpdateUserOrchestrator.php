@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 16:42:53
@@ -7,7 +8,6 @@
 namespace App\Http\Orchestrators\Orchestrator\User;
 
 use Core\User\Domain\Contracts\UserManagementContract;
-use Core\User\Domain\User;
 use Illuminate\Http\Request;
 
 class UpdateUserOrchestrator extends UserOrchestrator
@@ -19,18 +19,18 @@ class UpdateUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return User
+     * @return array<string, mixed>
      */
-    public function make(Request $request): User
+    public function make(Request $request): array
     {
-        $dataUpdateUser = json_decode($request->input('dataUpdate'), true);
-        return $this->userManagement->updateUser($request->input('userId'), $dataUpdateUser);
+        /** @var array<string, mixed> $dataUpdateUser */
+        $dataUpdateUser = json_decode($request->string('dataUpdate'), true);
+
+        $user = $this->userManagement->updateUser($request->integer('userId'), $dataUpdateUser);
+
+        return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-user';

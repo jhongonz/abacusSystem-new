@@ -34,7 +34,7 @@ class SearchProfileByIdRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_profileId_should_return_object(): void
+    public function testProfileIdShouldReturnObject(): void
     {
         $result = $this->request->profileId();
 

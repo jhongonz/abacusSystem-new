@@ -14,10 +14,13 @@ use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
 use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
-use DateTime;
+use Core\SharedContext\Model\ValueObjectStatus;
 
 interface ModuleFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function buildModuleFromArray(array $data): Module;
 
     public function buildModule(
@@ -25,31 +28,34 @@ interface ModuleFactoryContract
         ModuleMenuKey $key,
         ModuleName $name,
         ModuleRoute $route,
-        ModuleIcon $icon = new ModuleIcon,
-        ModuleState $state = new ModuleState,
-        ModuleCreatedAt $createdAt = new ModuleCreatedAt
+        ModuleIcon $icon = new ModuleIcon(),
+        ModuleState $state = new ModuleState(),
+        ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
     ): Module;
 
     public function buildModuleId(?int $id = null): ModuleId;
 
-    public function buildModuleMenuKey(?string $key = null): ModuleMenuKey;
+    public function buildModuleMenuKey(string $key = ''): ModuleMenuKey;
 
     public function buildModuleName(string $name): ModuleName;
 
-    public function buildModuleRoute(?string $route = null): ModuleRoute;
+    public function buildModuleRoute(string $route = ''): ModuleRoute;
 
     public function buildModuleIcon(?string $icon = null): ModuleIcon;
 
-    public function buildModuleState(?int $state = null): ModuleState;
+    public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState;
 
-    public function buildModuleCreatedAt(DateTime $datetime): ModuleCreatedAt;
+    public function buildModuleCreatedAt(\DateTime $datetime): ModuleCreatedAt;
 
-    public function buildModuleUpdatedAt(?DateTime $datetime = null): ModuleUpdatedAt;
+    public function buildModuleUpdatedAt(?\DateTime $datetime = null): ModuleUpdatedAt;
 
     public function buildModuleSearch(?string $search = null): ModuleSearch;
 
     public function buildModules(Module ...$modules): Modules;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function buildModulesFromArray(array $data): Modules;
 
     public function buildModulePosition(int $position = 1): ModulePosition;

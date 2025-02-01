@@ -31,7 +31,7 @@ class CreateInstitutionRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_institution_should_return_object(): void
+    public function testInstitutionShouldReturnObject(): void
     {
         $result = $this->request->institution();
 

@@ -43,7 +43,7 @@ class SearchProfilesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $requestMock = $this->createMock(SearchProfilesRequest::class);
         $requestMock->expects(self::once())
@@ -66,7 +66,7 @@ class SearchProfilesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $requestMock = $this->createMock(SearchProfilesRequest::class);
         $requestMock->expects(self::once())
@@ -86,7 +86,7 @@ class SearchProfilesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $request = $this->createMock(SearchProfileByIdRequest::class);
 

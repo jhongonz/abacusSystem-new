@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-09 21:46:50
@@ -19,28 +20,26 @@ class CreateEmployeeActionExecutor extends EmployeeActionExecutor
         parent::__construct($orchestratorHandler);
     }
 
-    /**
-     * @param Request $request
-     * @return Employee
-     */
     public function invoke(Request $request): Employee
     {
-        /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('create-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestratorHandler->handler('create-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $request->merge(['image' => $employee->image()->value()]);
         $request->merge(['employeeId' => $employee->id()->value()]);
 
-        /** @var User $user */
-        $user = $this->orchestratorHandler->handler('create-user', $request);
-        $employee->userId()->setValue($user->id()->value());
+        /** @var array{user: User} $dataUser */
+        $dataUser = $this->orchestratorHandler->handler('create-user', $request);
+        $user = $dataUser['user'];
+
+        if (!is_null($user->id()->value())) {
+            $employee->userId()->setValue($user->id()->value());
+        }
 
         return $employee;
     }
 
-    /**
-     * @return string
-     */
     public function canExecute(): string
     {
         return 'create-employee-action';

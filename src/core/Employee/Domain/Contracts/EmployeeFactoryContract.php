@@ -21,19 +21,22 @@ use Core\Employee\Domain\ValueObjects\EmployeeSearch;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
 use Core\Employee\Domain\ValueObjects\EmployeeUserId;
-use DateTime;
+use Core\SharedContext\Model\ValueObjectStatus;
 
 interface EmployeeFactoryContract
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function buildEmployeeFromArray(array $data): Employee;
 
     public function buildEmployee(
         EmployeeId $id,
         EmployeeIdentification $identification,
         EmployeeName $name,
-        EmployeeLastname $lastname = new EmployeeLastname,
-        EmployeeState $state = new EmployeeState,
-        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        EmployeeLastname $lastname = new EmployeeLastname(),
+        EmployeeState $state = new EmployeeState(),
+        EmployeeCreatedAt $createdAt = new EmployeeCreatedAt(),
     ): Employee;
 
     public function buildEmployeeId(?int $id = null): EmployeeId;
@@ -52,15 +55,15 @@ interface EmployeeFactoryContract
 
     public function buildEmployeeAddress(?string $address): EmployeeAddress;
 
-    public function buildEmployeeState(?int $state = null): EmployeeState;
+    public function buildEmployeeState(int $state = ValueObjectStatus::STATE_NEW): EmployeeState;
 
     public function buildEmployeeSearch(?string $search = null): EmployeeSearch;
 
-    public function buildEmployeeCreatedAt(?DateTime $datetime = null): EmployeeCreatedAt;
+    public function buildEmployeeCreatedAt(\DateTime $datetime = new \DateTime('now')): EmployeeCreatedAt;
 
-    public function buildEmployeeUpdatedAt(?DateTime $datetime = null): EmployeeUpdatedAt;
+    public function buildEmployeeUpdatedAt(?\DateTime $datetime = null): EmployeeUpdatedAt;
 
-    public function buildEmployeeBirthdate(?DateTime $date = null): EmployeeBirthdate;
+    public function buildEmployeeBirthdate(?\DateTime $date = null): EmployeeBirthdate;
 
     public function buildEmployeeObservations(?string $observations = null): EmployeeObservations;
 

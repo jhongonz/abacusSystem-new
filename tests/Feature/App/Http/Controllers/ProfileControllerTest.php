@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
+use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -20,14 +22,18 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(ProfileController::class)]
 #[CoversClass(Controller::class)]
 class ProfileControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandler;
+    private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EventDispatcher|MockObject $eventDispatcher;
     private ProfileController $controller;
 
     /**
@@ -37,10 +43,15 @@ class ProfileControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestratorHandler = $this->createMock(OrchestratorHandlerContract::class);
+        $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
+
         $this->controller = new ProfileController(
             $this->orchestratorHandler,
+            $this->dataTables,
+            $this->eventDispatcher,
             $this->viewFactory,
             $this->logger
         );
@@ -52,7 +63,9 @@ class ProfileControllerTest extends TestCase
             $this->controller,
             $this->orchestratorHandler,
             $this->viewFactory,
-            $this->logger
+            $this->logger,
+            $this->dataTables,
+            $this->eventDispatcher
         );
         parent::tearDown();
     }
@@ -60,7 +73,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -105,7 +118,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -150,26 +163,67 @@ class ProfileControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_getProfiles_should_return_json_response(): void
+    public function testGetProfilesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $responseMock = $this->createMock(JsonResponse::class);
         $this->orchestratorHandler->expects(self::once())
             ->method('handler')
             ->with('retrieve-profiles', $requestMock)
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
             ->willReturn($responseMock);
+
+        $this->dataTables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getProfiles($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertSame($responseMock, $result);
     }
 
     /**
      * @throws Exception
      */
-    public function test_changeStateProfile_should_return_json_response(): void
+    public function testChangeStateProfileShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $profileMock = $this->createMock(Profile::class);
@@ -185,7 +239,12 @@ class ProfileControllerTest extends TestCase
         $this->orchestratorHandler->expects(self::once())
             ->method('handler')
             ->with('change-state-profile', $requestMock)
-            ->willReturn($profileMock);
+            ->willReturn(['profile' => $profileMock]);
+
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->changeStateProfile($requestMock);
 
@@ -196,7 +255,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateProfile_should_return_json_response_when_is_exception(): void
+    public function testChangeStateProfileShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $profileMock = $this->createMock(Profile::class);
@@ -222,7 +281,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteProfile_should_return_json_response(): void
+    public function testDeleteProfileShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -233,7 +292,12 @@ class ProfileControllerTest extends TestCase
         $this->orchestratorHandler->expects(self::once())
             ->method('handler')
             ->with('delete-profile', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
+
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->deleteProfile($requestMock, 1);
 
@@ -244,7 +308,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteProfile_should_return_json_response_when_is_exception(): void
+    public function testDeleteProfileShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -270,7 +334,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getProfile_should_return_json_response_when_id_is_null(): void
+    public function testGetProfileShouldReturnJsonResponseWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -310,7 +374,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_create_profile_when_id_is_null(): void
+    public function testStoreProfileShouldCreateProfileWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -331,7 +395,12 @@ class ProfileControllerTest extends TestCase
         $this->orchestratorHandler->expects(self::once())
             ->method('handler')
             ->with('create-profile')
-            ->willReturn($profileMock);
+            ->willReturn(['profile' => $profileMock]);
+
+        $eventMock = new ProfileUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->storeProfile($requestMock);
 
@@ -342,7 +411,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_update_profile_when_id_is_not_null(): void
+    public function testStoreProfileShouldUpdateProfileWhenIdIsNotNull(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -363,7 +432,7 @@ class ProfileControllerTest extends TestCase
         $this->orchestratorHandler->expects(self::once())
             ->method('handler')
             ->with('update-profile')
-            ->willReturn($profileMock);
+            ->willReturn(['profile' => $profileMock]);
 
         $result = $this->controller->storeProfile($requestMock);
 
@@ -374,7 +443,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeProfile_should_return_exception(): void
+    public function testStoreProfileShouldReturnException(): void
     {
         $requestMock = $this->createMock(StoreProfileRequest::class);
         $requestMock->expects(self::once())
@@ -398,12 +467,20 @@ class ProfileControllerTest extends TestCase
         $this->assertArrayHasKey('msg', $result->getData(true));
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getProfiles', 'getProfile',
+            ]),
+        ];
+
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

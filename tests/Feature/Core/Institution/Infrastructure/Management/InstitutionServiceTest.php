@@ -73,7 +73,7 @@ class InstitutionServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchInstitutionById_should_return_object(): void
+    public function testSearchInstitutionByIdShouldReturnObject(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $this->factory->expects(self::once())
@@ -99,7 +99,7 @@ class InstitutionServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchInstitutionById_should_return_null(): void
+    public function testSearchInstitutionByIdShouldReturnNull(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $this->factory->expects(self::once())
@@ -124,7 +124,7 @@ class InstitutionServiceTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_searchInstitutions_should_return_object(): void
+    public function testSearchInstitutionsShouldReturnObject(): void
     {
         $request = new SearchInstitutionsRequest([]);
 
@@ -166,7 +166,7 @@ class InstitutionServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updateInstitution_should_return_object(): void
+    public function testUpdateInstitutionShouldReturnObject(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $this->factory->expects(self::once())
@@ -193,7 +193,7 @@ class InstitutionServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createInstitution_should_return_object(): void
+    public function testCreateInstitutionShouldReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
         $this->factory->expects(self::once())
@@ -218,7 +218,7 @@ class InstitutionServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_deleteInstitution_should_return_object(): void
+    public function testDeleteInstitutionShouldReturnObject(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $this->factory->expects(self::once())

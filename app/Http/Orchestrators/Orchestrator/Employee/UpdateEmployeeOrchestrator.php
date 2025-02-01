@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 16:20:17
@@ -8,7 +9,6 @@ namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
-use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
 
 class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
@@ -20,22 +20,29 @@ class UpdateEmployeeOrchestrator extends EmployeeOrchestrator
     ) {
         parent::__construct($employeeManagement);
     }
+
     /**
-     * @param Request $request
-     * @return Employee
+     * @return array<string, mixed>
+     *
      * @throws \Exception
      */
-    public function make(Request $request): Employee
+    public function make(Request $request): array
     {
-        $dataUpdate = json_decode($request->input('dataUpdate'), true);
-        $dataUpdate['birthdate'] = $this->getDateTime($dataUpdate['birthdate']);
+        /** @var array<string, mixed> $dataUpdate */
+        $dataUpdate = json_decode($request->string('dataUpdate'), true);
 
-        return $this->employeeManagement->updateEmployee($request->input('employeeId'), $dataUpdate);
+        if (array_key_exists('birthdate', $dataUpdate)) {
+            /** @var string $birthdate */
+            $birthdate = $dataUpdate['birthdate'];
+
+            $dataUpdate['birthdate'] = $this->getDateTime($birthdate);
+        }
+
+        $employee = $this->employeeManagement->updateEmployee($request->integer('employeeId'), $dataUpdate);
+
+        return ['employee' => $employee];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-employee';

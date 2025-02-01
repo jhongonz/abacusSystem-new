@@ -34,7 +34,7 @@ class CreateCampusRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_campus_should_return_object(): void
+    public function testCampusShouldReturnObject(): void
     {
         $result = $this->request->campus();
 

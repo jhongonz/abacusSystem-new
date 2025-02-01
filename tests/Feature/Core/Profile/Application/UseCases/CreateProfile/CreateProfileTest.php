@@ -43,7 +43,7 @@ class CreateProfileTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $profileMock = $this->createMock(Profile::class);
         $profileMock->expects(self::once())
@@ -68,7 +68,7 @@ class CreateProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(UpdateProfileRequest::class);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 22:23:08
@@ -9,7 +10,6 @@ namespace Core\Institution\Application\UseCases\DeleteInstitution;
 use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Exception;
 
 class DeleteInstitution extends UseCasesService
 {
@@ -19,7 +19,7 @@ class DeleteInstitution extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): null
     {

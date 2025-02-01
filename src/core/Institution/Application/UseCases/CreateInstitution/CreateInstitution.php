@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 22:18:57
@@ -29,7 +30,7 @@ class CreateInstitution extends UseCasesService
         $institution = $request->institution();
         $institution->refreshSearch();
 
-        /** @var CreateInstitutionRequest $request */
+        /* @var CreateInstitutionRequest $request */
         return $this->institutionRepository->persistInstitution($institution);
     }
 }

@@ -14,7 +14,7 @@ class EmployeeImageTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeImage;
+        $this->valueObject = new EmployeeImage();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class EmployeeImageTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject->setValue('image');
         $result = $this->valueObject->value();
@@ -38,7 +38,7 @@ class EmployeeImageTest extends TestCase
         $this->assertSame('image', $result);
     }
 
-    public function test_setValue_should_change_and_return_self(): void
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue('image');
 

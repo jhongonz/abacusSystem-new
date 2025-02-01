@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 13:01:08
@@ -19,16 +20,18 @@ use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
-use DateTime;
 
 interface CampusFactoryContract
 {
     public function buildCampus(
         CampusId $id,
         CampusInstitutionId $institutionId,
-        CampusName $name
+        CampusName $name,
     ): Campus;
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function buildCampusFromArray(array $data): Campus;
 
     public function buildCampusId(?int $id = null): CampusId;
@@ -49,9 +52,9 @@ interface CampusFactoryContract
 
     public function buildCampusState(int $state): CampusState;
 
-    public function buildCampusCreatedAt(DateTime $dateTime): CampusCreatedAt;
+    public function buildCampusCreatedAt(\DateTime $dateTime): CampusCreatedAt;
 
-    public function buildCampusUpdatedAt(?DateTime $dateTime = null): CampusUpdatedAt;
+    public function buildCampusUpdatedAt(?\DateTime $dateTime = null): CampusUpdatedAt;
 
     public function buildCampusCollection(Campus ...$campus): CampusCollection;
 }

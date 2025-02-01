@@ -14,7 +14,7 @@ class EmployeeAddressTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeAddress;
+        $this->valueObject = new EmployeeAddress();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class EmployeeAddressTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $return = $this->valueObject->value();
         $this->assertNull($return);
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject = new EmployeeAddress('address');
         $return = $this->valueObject->value();
@@ -38,7 +38,7 @@ class EmployeeAddressTest extends TestCase
         $this->assertSame('address', $return);
     }
 
-    public function test_setValue_should_change_value_and_return_self(): void
+    public function testSetValueShouldChangeValueAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue('address');
 

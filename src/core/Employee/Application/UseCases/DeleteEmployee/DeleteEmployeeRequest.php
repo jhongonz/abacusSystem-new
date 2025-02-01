@@ -8,7 +8,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeId;
 class DeleteEmployeeRequest implements RequestService
 {
     public function __construct(
-        private readonly EmployeeId $id
+        private readonly EmployeeId $id,
     ) {
     }
 

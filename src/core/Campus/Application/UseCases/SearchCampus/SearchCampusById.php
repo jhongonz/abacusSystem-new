@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 17:03:00
@@ -10,7 +11,6 @@ use Core\Campus\Application\UseCases\RequestService;
 use Core\Campus\Application\UseCases\UseCasesService;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusRepositoryContract;
-use Exception;
 
 class SearchCampusById extends UseCasesService
 {
@@ -20,7 +20,7 @@ class SearchCampusById extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?Campus
     {

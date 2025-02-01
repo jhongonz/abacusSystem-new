@@ -23,7 +23,6 @@ use Illuminate\View\Factory as ViewFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
 #[CoversClass(UserController::class)]
@@ -32,7 +31,6 @@ class UserControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
     private ViewFactory|MockObject $viewFactory;
-    private LoggerInterface|MockObject $logger;
     private Hasher|MockObject $hasher;
     private UrlGenerator|MockObject $urlGenerator;
     private UserController $controller;
@@ -45,14 +43,12 @@ class UserControllerTest extends TestCase
         parent::setUp();
         $this->hasher = $this->createMock(Hasher::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
         $this->urlGenerator = $this->createMock(UrlGenerator::class);
         $this->controller = new UserController(
             $this->orchestrator,
             $this->hasher,
             $this->viewFactory,
-            $this->logger,
             $this->urlGenerator
         );
     }
@@ -62,7 +58,6 @@ class UserControllerTest extends TestCase
         unset(
             $this->controller,
             $this->viewFactory,
-            $this->logger,
             $this->orchestrator,
             $this->hasher,
             $this->urlGenerator
@@ -73,7 +68,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -118,7 +113,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -162,7 +157,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_recoveryAccount_should_return_json_response(): void
+    public function testRecoveryAccountShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -191,7 +186,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_recoveryAccount_should_return_string(): void
+    public function testRecoveryAccountShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -219,7 +214,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_validateAccount_should_return_json_response(): void
+    public function testValidateAccountShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(RecoveryAccountRequest::class);
 
@@ -236,7 +231,7 @@ class UserControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-employee', $requestMock)
-            ->willReturn($employeeMock);
+            ->willReturn(['employee' => $employeeMock]);
 
         $link = 'http://localhost/reset-account/1';
         $this->urlGenerator->expects(self::once())
@@ -255,7 +250,7 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_resetAccount_should_return_response(): void
+    public function testResetAccountShouldReturnResponse(): void
     {
         $view = $this->createMock(View::class);
 
@@ -268,7 +263,7 @@ class UserControllerTest extends TestCase
             ->method('make')
             ->with('user.restart-password', [
                 'userId' => 1,
-                'activeLink' => true
+                'activeLink' => true,
             ])
             ->willReturn($view);
 
@@ -281,17 +276,20 @@ class UserControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_resetPassword_should_return_json_response(): void
+    public function testResetPasswordShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(ResetPasswordRequest::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('password')
             ->willReturn('password');
 
         $requestMock->expects(self::once())
             ->method('merge')
-            ->withAnyParameters()
+            ->with(['dataUpdate' => [
+                'state' => 2,
+                'password' => 'password',
+            ]])
             ->willReturnSelf();
 
         $this->hasher->expects(self::once())
@@ -303,7 +301,7 @@ class UserControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-user', $requestMock)
-            ->willReturn($userMock);
+            ->willReturn(['user' => $userMock]);
 
         $result = $this->controller->resetPassword($requestMock);
 
@@ -311,12 +309,17 @@ class UserControllerTest extends TestCase
         $this->assertSame(201, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: ['recoveryAccount', 'resetPassword']),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

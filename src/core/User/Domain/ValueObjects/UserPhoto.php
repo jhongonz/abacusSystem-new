@@ -9,7 +9,7 @@ namespace Core\User\Domain\ValueObjects;
 class UserPhoto
 {
     public function __construct(
-        private ?string $value = null
+        private ?string $value = null,
     ) {
     }
 

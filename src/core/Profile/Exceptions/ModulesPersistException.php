@@ -2,8 +2,6 @@
 
 namespace Core\Profile\Exceptions;
 
-use Exception;
-
-class ModulesPersistException extends Exception
+class ModulesPersistException extends \Exception
 {
 }

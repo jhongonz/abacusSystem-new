@@ -3,7 +3,6 @@
 namespace Tests\Feature\Core\Employee\Domain\ValueObjects;
 
 use Core\Employee\Domain\ValueObjects\EmployeeUpdatedAt;
-use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -15,7 +14,7 @@ class EmployeeUpdateAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeUpdatedAt;
+        $this->valueObject = new EmployeeUpdatedAt();
     }
 
     public function tearDown(): void
@@ -24,25 +23,25 @@ class EmployeeUpdateAtTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_DateTime(): void
+    public function testValueShouldReturnDateTime(): void
     {
-        $datetime = new DateTime;
+        $datetime = new \DateTime();
         $this->valueObject->setValue($datetime);
         $result = $this->valueObject->value();
 
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
         $this->assertSame($result, $datetime);
     }
 
-    public function test_setValue_should_change_and_return_self(): void
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
-        $datetime = new DateTime;
+        $datetime = new \DateTime();
         $result = $this->valueObject->setValue($datetime);
 
         $this->assertInstanceOf(EmployeeUpdatedAt::class, $result);
@@ -50,13 +49,13 @@ class EmployeeUpdateAtTest extends TestCase
         $this->assertSame($datetime, $this->valueObject->value());
     }
 
-    public function test___toString_should_return_string(): void
+    public function testToStringShouldReturnString(): void
     {
         $dateTime = new \DateTime('2024-04-20 21:27:00');
         $result = $this->valueObject->setValue($dateTime);
 
         $this->assertInstanceOf(EmployeeUpdatedAt::class, $result);
         $this->assertSame($this->valueObject, $result);
-        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+        $this->assertSame('2024-04-20 21:27:00', (string) $result);
     }
 }

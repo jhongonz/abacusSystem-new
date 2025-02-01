@@ -49,7 +49,7 @@ class ProfileTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->profile->id();
         $this->assertInstanceOf(ProfileId::class, $result);
@@ -59,7 +59,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setId_should_return_self(): void
+    public function testSetIdShouldReturnSelf(): void
     {
         $idMock = $this->createMock(ProfileId::class);
         $result = $this->profile->setId($idMock);
@@ -69,7 +69,7 @@ class ProfileTest extends TestCase
         $this->assertSame($idMock, $result->id());
     }
 
-    public function test_name_should_return_value_object(): void
+    public function testNameShouldReturnValueObject(): void
     {
         $result = $this->profile->name();
         $this->assertInstanceOf(ProfileName::class, $result);
@@ -79,7 +79,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setName_should_return_self(): void
+    public function testSetNameShouldReturnSelf(): void
     {
         $nameMock = $this->createMock(ProfileName::class);
         $result = $this->profile->setName($nameMock);
@@ -89,7 +89,7 @@ class ProfileTest extends TestCase
         $this->assertSame($nameMock, $result->name());
     }
 
-    public function test_state_should_return_value_object(): void
+    public function testStateShouldReturnValueObject(): void
     {
         $result = $this->profile->state();
         $this->assertInstanceOf(ProfileState::class, $result);
@@ -98,7 +98,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setState_should_return_self(): void
+    public function testSetStateShouldReturnSelf(): void
     {
         $stateMock = $this->createMock(ProfileState::class);
         $result = $this->profile->setState($stateMock);
@@ -108,7 +108,7 @@ class ProfileTest extends TestCase
         $this->assertSame($stateMock, $result->state());
     }
 
-    public function test_search_should_return_value_object(): void
+    public function testSearchShouldReturnValueObject(): void
     {
         $result = $this->profile->search();
         $this->assertInstanceOf(ProfileSearch::class, $result);
@@ -117,7 +117,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setSearch_should_return_self(): void
+    public function testSetSearchShouldReturnSelf(): void
     {
         $searchMock = $this->createMock(ProfileSearch::class);
         $result = $this->profile->setSearch($searchMock);
@@ -127,7 +127,7 @@ class ProfileTest extends TestCase
         $this->assertSame($searchMock, $result->search());
     }
 
-    public function test_description_should_return_value_object(): void
+    public function testDescriptionShouldReturnValueObject(): void
     {
         $result = $this->profile->description();
         $this->assertInstanceOf(ProfileDescription::class, $result);
@@ -136,7 +136,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setDescription_should_return_self(): void
+    public function testSetDescriptionShouldReturnSelf(): void
     {
         $descriptionMock = $this->createMock(ProfileDescription::class);
         $result = $this->profile->setDescription($descriptionMock);
@@ -146,7 +146,7 @@ class ProfileTest extends TestCase
         $this->assertSame($descriptionMock, $result->description());
     }
 
-    public function test_modules_should_return_value_object(): void
+    public function testModulesShouldReturnValueObject(): void
     {
         $result = $this->profile->modules();
         $this->assertInstanceOf(Modules::class, $result);
@@ -155,7 +155,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setModules_should_return_self(): void
+    public function testSetModulesShouldReturnSelf(): void
     {
         $modulesMock = $this->createMock(Modules::class);
         $result = $this->profile->setModules($modulesMock);
@@ -165,13 +165,13 @@ class ProfileTest extends TestCase
         $this->assertSame($modulesMock, $result->modules());
     }
 
-    public function test_modulesAggregator_should_return_array(): void
+    public function testModulesAggregatorShouldReturnArray(): void
     {
         $result = $this->profile->modulesAggregator();
         $this->assertIsArray($result);
     }
 
-    public function test_setModulesAggregator_should_return_self(): void
+    public function testSetModulesAggregatorShouldReturnSelf(): void
     {
         $modulesMock = ['hello'];
         $result = $this->profile->setModulesAggregator($modulesMock);
@@ -181,7 +181,7 @@ class ProfileTest extends TestCase
         $this->assertSame($modulesMock, $result->modulesAggregator());
     }
 
-    public function test_createdAt_should_return_value_object(): void
+    public function testCreatedAtShouldReturnValueObject(): void
     {
         $result = $this->profile->createdAt();
         $this->assertInstanceOf(ProfileCreatedAt::class, $result);
@@ -190,7 +190,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setCreatedAt_should_return_self(): void
+    public function testSetCreatedAtShouldReturnSelf(): void
     {
         $createdAt = $this->createMock(ProfileCreatedAt::class);
         $result = $this->profile->setCreatedAt($createdAt);
@@ -200,7 +200,7 @@ class ProfileTest extends TestCase
         $this->assertSame($createdAt, $result->createdAt());
     }
 
-    public function test_updatedAt_should_return_value_object(): void
+    public function testUpdatedAtShouldReturnValueObject(): void
     {
         $result = $this->profile->updatedAt();
         $this->assertInstanceOf(ProfileUpdatedAt::class, $result);
@@ -209,7 +209,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setUpdatedAt_should_return_self(): void
+    public function testSetUpdatedAtShouldReturnSelf(): void
     {
         $updatedAt = $this->createMock(ProfileUpdatedAt::class);
         $result = $this->profile->setUpdatedAt($updatedAt);
@@ -222,16 +222,16 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_refreshSearch_should_return_self(): void
+    public function testRefreshSearchShouldReturnSelf(): void
     {
         $this->profileName->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('tesT ');
 
         $description = $this->createMock(ProfileDescription::class);
         $description->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn('  TEst ');
         $this->profile->setDescription($description);
 
         $search = $this->createMock(ProfileSearch::class);

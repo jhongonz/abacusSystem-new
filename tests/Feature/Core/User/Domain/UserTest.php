@@ -90,7 +90,7 @@ class UserTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_user_id(): void
+    public function testIdShouldReturnUserId(): void
     {
         $return = $this->user->id();
 
@@ -98,7 +98,7 @@ class UserTest extends TestCase
         $this->assertSame($this->userId, $return);
     }
 
-    public function test_set_id_should_change_id_and_return_object(): void
+    public function testSetIdShouldChangeIdAndReturnObject(): void
     {
         $valueObject = new UserId(2);
         $object = $this->user->setId($valueObject);
@@ -109,7 +109,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_employee_id_should_return_employee_id(): void
+    public function testEmployeeIdShouldReturnEmployeeId(): void
     {
         $return = $this->user->employeeId();
 
@@ -117,7 +117,7 @@ class UserTest extends TestCase
         $this->assertSame($this->userEmployeeId, $return);
     }
 
-    public function test_set_employee_id_should_change_id_and_return_object(): void
+    public function testSetEmployeeIdShouldChangeIdAndReturnObject(): void
     {
         $valueObject = new UserEmployeeId(2);
         $object = $this->user->setEmployeeId($valueObject);
@@ -128,7 +128,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_profile_id_should_return_profile_id(): void
+    public function testProfileIdShouldReturnProfileId(): void
     {
         $return = $this->user->profileId();
 
@@ -136,7 +136,7 @@ class UserTest extends TestCase
         $this->assertSame($this->userProfileId, $return);
     }
 
-    public function test_set_profile_id_should_change_id_and_return_object(): void
+    public function testSetProfileIdShouldChangeIdAndReturnObject(): void
     {
         $valueObject = new UserProfileId(2);
         $object = $this->user->setProfileId($valueObject);
@@ -147,7 +147,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_login_should_return_login(): void
+    public function testLoginShouldReturnLogin(): void
     {
         $return = $this->user->login();
 
@@ -155,7 +155,7 @@ class UserTest extends TestCase
         $this->assertSame($this->userLogin, $return);
     }
 
-    public function test_set_login_should_change_id_and_return_object(): void
+    public function testSetLoginShouldChangeIdAndReturnObject(): void
     {
         $valueObject = new UserLogin('login');
         $object = $this->user->setLogin($valueObject);
@@ -166,7 +166,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_password_should_return_password(): void
+    public function testPasswordShouldReturnPassword(): void
     {
         $return = $this->user->password();
 
@@ -174,7 +174,7 @@ class UserTest extends TestCase
         $this->assertSame($this->userPassword, $return);
     }
 
-    public function test_set_password_should_change_id_and_return_object(): void
+    public function testSetPasswordShouldChangeIdAndReturnObject(): void
     {
         $valueObject = new UserPassword('login');
         $object = $this->user->setPassword($valueObject);
@@ -185,7 +185,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_state_should_return_state(): void
+    public function testStateShouldReturnState(): void
     {
         $return = $this->user->state();
 
@@ -193,9 +193,9 @@ class UserTest extends TestCase
         $this->assertSame($this->userState, $return);
     }
 
-    public function test_set_state_should_change_id_and_return_object(): void
+    public function testSetStateShouldChangeIdAndReturnObject(): void
     {
-        $valueObject = new UserState;
+        $valueObject = new UserState();
         $object = $this->user->setState($valueObject);
 
         $return = $this->user->state();
@@ -204,7 +204,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_created_at_should_return_created_at(): void
+    public function testCreatedAtShouldReturnCreatedAt(): void
     {
         $return = $this->user->createdAt();
 
@@ -212,9 +212,9 @@ class UserTest extends TestCase
         $this->assertSame($this->userCreatedAt, $return);
     }
 
-    public function test_set_created_at_should_change_id_and_return_object(): void
+    public function testSetCreatedAtShouldChangeIdAndReturnObject(): void
     {
-        $valueObject = new UserCreatedAt;
+        $valueObject = new UserCreatedAt();
         $object = $this->user->setCreatedAt($valueObject);
 
         $return = $this->user->createdAt();
@@ -223,7 +223,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_updated_at_should_return_updated_at(): void
+    public function testUpdatedAtShouldReturnUpdatedAt(): void
     {
         $this->user->setUpdatedAt($this->userUpdatedAt);
         $return = $this->user->updatedAt();
@@ -232,9 +232,9 @@ class UserTest extends TestCase
         $this->assertSame($this->userUpdatedAt, $return);
     }
 
-    public function test_set_updated_at_should_change_id_and_return_object(): void
+    public function testSetUpdatedAtShouldChangeIdAndReturnObject(): void
     {
-        $valueObject = new UserUpdatedAt;
+        $valueObject = new UserUpdatedAt();
         $object = $this->user->setUpdatedAt($valueObject);
 
         $return = $this->user->updatedAt();
@@ -243,7 +243,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $object);
     }
 
-    public function test_photo_should_return_photo(): void
+    public function testPhotoShouldReturnPhoto(): void
     {
         $this->user->setPhoto($this->userPhoto);
         $return = $this->user->photo();
@@ -252,9 +252,9 @@ class UserTest extends TestCase
         $this->assertSame($this->userPhoto, $return);
     }
 
-    public function test_set_photo_should_change_id_and_return_object(): void
+    public function testSetPhotoShouldChangeIdAndReturnObject(): void
     {
-        $valueObject = new UserPhoto;
+        $valueObject = new UserPhoto();
         $object = $this->user->setPhoto($valueObject);
 
         $return = $this->user->photo();

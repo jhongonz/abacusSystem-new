@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 12:23:21
@@ -15,11 +16,9 @@ class OrchestratorHandler implements OrchestratorHandlerContract
     private array $orchestrators;
 
     /**
-     * @param string $actionType
-     * @param Request $request
-     * @return mixed
+     * @return array<int|string, mixed>
      */
-    public function handler(string $actionType, Request $request): mixed
+    public function handler(string $actionType, Request $request): array
     {
         return $this->orchestrators[$actionType]->make($request);
     }
@@ -34,6 +33,7 @@ class OrchestratorHandler implements OrchestratorHandlerContract
         }
 
         $this->orchestrators[$orchestrator->canOrchestrate()] = $orchestrator;
+
         return $this;
     }
 }

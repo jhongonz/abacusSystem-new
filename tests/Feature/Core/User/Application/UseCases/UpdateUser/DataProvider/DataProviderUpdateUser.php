@@ -8,9 +8,12 @@ namespace Tests\Feature\Core\User\Application\UseCases\UpdateUser\DataProvider;
 
 final class DataProviderUpdateUser
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
 
         return [
             [

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-27 23:42:53
@@ -7,7 +8,6 @@
 namespace App\Traits;
 
 use Illuminate\Support\Str;
-use Intervention\Image\Interfaces\ImageManagerInterface;
 
 trait MultimediaTrait
 {
@@ -15,20 +15,15 @@ trait MultimediaTrait
     private const IMAGE_PATH_FULL = '/images/full/';
     private const IMAGE_PATH_SMALL = '/images/small/';
 
-    public function setImageManager(ImageManagerInterface $multimediaImageManager): void
-    {
-        $this->imageManager = $multimediaImageManager;
-    }
-
     private function saveImage(string $token): string
     {
-        $imageTmp = public_path(self::IMAGE_PATH_TMP.$token.'.jpg');
-        $filename = Str::uuid()->toString().'.jpg';
+        $imageTmp = public_path(sprintf('%s%s.jpg', self::IMAGE_PATH_TMP, $token));
+        $filename = sprintf('%s.jpg', Str::uuid()->toString());
 
         $image = $this->imageManager->read($imageTmp);
-        $image->save(public_path(self::IMAGE_PATH_FULL.$filename));
+        $image->save(public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $filename)));
         $image->resize(150, 150);
-        $image->save(public_path(self::IMAGE_PATH_SMALL.$filename));
+        $image->save(public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $filename)));
         @unlink($imageTmp);
 
         return $filename;
@@ -39,14 +34,8 @@ trait MultimediaTrait
         $filename = $random.'.jpg';
 
         $image = $this->imageManager->read($path);
-        $image->save(public_path(self::IMAGE_PATH_TMP).$filename, quality: 70);
+        $image->save(sprintf('%s%s', public_path(self::IMAGE_PATH_TMP), $filename));
 
         return url(self::IMAGE_PATH_TMP.$filename);
-    }
-
-    private function deleteImage(string $photo): void
-    {
-        @unlink(public_path(self::IMAGE_PATH_FULL.$photo));
-        @unlink(public_path(self::IMAGE_PATH_SMALL.$photo));
     }
 }

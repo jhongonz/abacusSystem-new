@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 14:14:35
@@ -7,10 +8,12 @@
 namespace App\Http\Orchestrators\Orchestrator\Employee;
 
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
+use Core\Employee\Domain\Employee;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
 use Core\User\Domain\Contracts\UserManagementContract;
 use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Str;
 
 class DetailEmployeeOrchestrator extends EmployeeOrchestrator
@@ -21,29 +24,35 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
         EmployeeManagementContract $employeeManagement,
         private readonly UserManagementContract $userManagement,
         private readonly ProfileManagementContract $profileManagement,
-        private readonly InstitutionManagementContract $institutionManagement
+        private readonly InstitutionManagementContract $institutionManagement,
+        private readonly UrlGenerator $urlGenerator
     ) {
         parent::__construct($employeeManagement);
     }
 
     /**
-     * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {
-        $employee = null;
+        /** @var int|null $employeeId */
         $employeeId = $request->input('employeeId');
 
-        if (! is_null($employeeId)) {
-            $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+        $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+
+        if ($employee instanceof Employee) {
             $userId = $employee->userId()->value();
 
             if (!is_null($userId)) {
                 $user = $this->userManagement->searchUserById($userId);
             }
 
-            $urlFile = url(self::IMAGE_PATH_FULL.$employee->image()->value()).'?v='.Str::random(10);
+            $path = sprintf('%s%s?v=%s',
+                self::IMAGE_PATH_FULL,
+                $employee->image()->value(),
+                Str::random()
+            );
+            $urlFile = $this->urlGenerator->asset($path);
         }
 
         $institutions = $this->institutionManagement->searchInstitutions();
@@ -60,9 +69,6 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-employee';

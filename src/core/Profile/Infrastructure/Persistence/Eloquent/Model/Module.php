@@ -2,16 +2,12 @@
 
 namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
-use DateTime;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Module extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -31,7 +27,7 @@ class Module extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'mod_state' => 1,
@@ -41,7 +37,7 @@ class Module extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'mod_id',
@@ -68,6 +64,9 @@ class Module extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $touches = ['profiles'];
 
     /**
@@ -75,6 +74,9 @@ class Module extends Model
      */
     protected string $mainSearchField = 'mod_search';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [
@@ -89,6 +91,9 @@ class Module extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsToMany<Profile, $this>
+     */
     public function profiles(): BelongsToMany
     {
         $relation = $this->belongsToMany(
@@ -111,145 +116,186 @@ class Module extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('mod_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('mod_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
     {
         $this->setAttribute('mod_id', $id);
+
         return $this;
     }
 
     public function menuKey(): ?string
     {
-        return $this->getAttribute('mod_menu_key');
+        /** @var string|null $menuKey */
+        $menuKey = $this->getAttribute('mod_menu_key');
+
+        return $menuKey;
     }
 
     public function changeMenuKey(string $key): self
     {
         $this->setAttribute('mod_menu_key', $key);
+
         return $this;
     }
 
     public function name(): string
     {
-        return $this->getAttribute('mod_name');
+        /** @var string $name */
+        $name = $this->getAttribute('mod_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
     {
         $this->setAttribute('mod_name', $name);
+
         return $this;
     }
 
     public function route(): ?string
     {
-        return $this->getAttribute('mod_route');
+        /** @var string|null $route */
+        $route = $this->getAttribute('mod_route');
+
+        return $route;
     }
 
     public function changeRoute(?string $route): self
     {
         $this->setAttribute('mod_route', $route);
+
         return $this;
     }
 
     public function icon(): ?string
     {
-        return $this->getAttribute('mod_icon');
+        /** @var string|null $icon */
+        $icon = $this->getAttribute('mod_icon');
+
+        return $icon;
     }
 
     public function changeIcon(?string $icon): self
     {
         $this->setAttribute('mod_icon', $icon);
+
         return $this;
     }
 
     public function search(): ?string
     {
-        return $this->getAttribute('mod_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('mod_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search): self
     {
         $this->setAttribute('mod_search', $search);
+
         return $this;
     }
 
     public function state(): int
     {
-        return $this->getAttribute('mod_state');
+        /** @var int $state */
+        $state = $this->getAttribute('mod_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
     {
         $this->setAttribute('mod_state', $state);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): DateTime
+    public function createdAt(): \DateTime
     {
+        /** @var string $datetime */
         $datetime = $this->getAttribute('created_at');
+
         return $this->getDateTime($datetime);
     }
 
-    public function changeCreatedAt(DateTime $datetime): self
+    public function changeCreatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(DateTime $datetime): self
+    public function changeUpdatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(DateTime $datetime): self
+    public function changeDeletedAt(\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function position(): int
     {
-        return $this->getAttribute('mod_position');
+        /** @var int $position */
+        $position = $this->getAttribute('mod_position');
+
+        return $position;
     }
 
     public function changePosition(int $position): self
     {
         $this->setAttribute('mod_position', $position);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

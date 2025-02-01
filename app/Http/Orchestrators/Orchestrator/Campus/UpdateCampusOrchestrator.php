@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-19 11:00:29
@@ -6,7 +7,6 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Campus;
 
-use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Illuminate\Http\Request;
 
@@ -18,10 +18,9 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return Campus
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Campus
+    public function make(Request $request): array
     {
         $dataUpdate = [
             'name' => $request->input('name'),
@@ -31,12 +30,11 @@ class UpdateCampusOrchestrator extends CampusOrchestrator
             'observations' => $request->input('observations'),
         ];
 
-        return $this->campusManagement->updateCampus($request->input('campusId'), $dataUpdate);
+        $campus = $this->campusManagement->updateCampus($request->integer('campusId'), $dataUpdate);
+
+        return ['campus' => $campus];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-campus';

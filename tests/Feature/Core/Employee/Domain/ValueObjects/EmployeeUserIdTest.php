@@ -14,7 +14,7 @@ class EmployeeUserIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new EmployeeUserId;
+        $this->valueObject = new EmployeeUserId();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class EmployeeUserIdTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $this->valueObject->setValue(1);
         $result = $this->valueObject->value();
@@ -38,7 +38,17 @@ class EmployeeUserIdTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_setValue_should_change_and_return_self(): void
+    public function testValueShouldReturnNullWhenIsChange(): void
+    {
+        $this->valueObject = new EmployeeUserId(1);
+        $this->valueObject->setValue(null);
+
+        $result = $this->valueObject->value();
+
+        $this->assertNull($result);
+    }
+
+    public function testSetValueShouldChangeAndReturnSelf(): void
     {
         $result = $this->valueObject->setValue(1);
 

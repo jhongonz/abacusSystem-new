@@ -43,7 +43,7 @@ class CreateModuleTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
         $moduleMock->expects(self::once())
@@ -69,7 +69,7 @@ class CreateModuleTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(DeleteModuleRequest::class);
 

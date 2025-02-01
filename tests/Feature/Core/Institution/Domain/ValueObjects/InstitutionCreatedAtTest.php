@@ -14,7 +14,7 @@ class InstitutionCreatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new InstitutionCreatedAt;
+        $this->valueObject = new InstitutionCreatedAt();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class InstitutionCreatedAtTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_object(): void
+    public function testValueShouldReturnObject(): void
     {
         $result = $this->valueObject->value();
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $datetime = new \DateTime('2024-05-19 18:05:00');
         $result = $this->valueObject->setValue($datetime);
@@ -39,13 +39,13 @@ class InstitutionCreatedAtTest extends TestCase
         $this->assertSame($datetime, $this->valueObject->value());
     }
 
-    public function test___toString_should_return_string(): void
+    public function testToStringShouldReturnString(): void
     {
         $dateTime = new \DateTime('2024-04-20 21:27:00');
         $result = $this->valueObject->setValue($dateTime);
 
         $this->assertInstanceOf(InstitutionCreatedAt::class, $result);
         $this->assertSame($this->valueObject, $result);
-        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+        $this->assertSame('2024-04-20 21:27:00', (string) $result);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 17:23:06
@@ -27,8 +28,9 @@ class UpdateCampus extends UseCasesService
 
         /** @var UpdateCampusRequest $request */
         $campus = $this->campusRepository->find($request->id());
+
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (is_callable([$this, $methodName])) {
                 $campus = $this->{$methodName}($campus, $value);
@@ -36,48 +38,61 @@ class UpdateCampus extends UseCasesService
         }
 
         $campus->refreshSearch();
+
         return $this->campusRepository->persistCampus($campus);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeInstitutionId(Campus $campus, int $institutionId): Campus
     {
         $campus->institutionId()->setValue($institutionId);
+
         return $campus;
     }
 
     private function changeName(Campus $campus, string $name): Campus
     {
         $campus->name()->setValue($name);
+
         return $campus;
     }
 
     private function changeAddress(Campus $campus, ?string $address): Campus
     {
         $campus->address()->setValue($address);
+
         return $campus;
     }
 
     private function changePhone(Campus $campus, ?string $phone): Campus
     {
         $campus->phone()->setValue($phone);
+
         return $campus;
     }
 
     private function changeEmail(Campus $campus, ?string $email): Campus
     {
         $campus->email()->setValue($email);
+
         return $campus;
     }
 
     private function changeObservations(Campus $campus, ?string $observations): Campus
     {
         $campus->observations()->setValue($observations);
+
         return $campus;
     }
 
     private function changeSearch(Campus $campus, ?string $search): Campus
     {
         $campus->search()->setValue($search);
+
         return $campus;
     }
 
@@ -87,18 +102,23 @@ class UpdateCampus extends UseCasesService
     private function changeState(Campus $campus, int $state): Campus
     {
         $campus->state()->setValue($state);
+
         return $campus;
     }
 
     private function changeCreatedAt(Campus $campus, \DateTime $dateTime): Campus
     {
         $campus->createdAt()->setValue($dateTime);
+
         return $campus;
     }
 
     private function changeUpdatedAt(Campus $campus, ?\DateTime $dateTime): Campus
     {
-        $campus->updatedAt()->setValue($dateTime);
+        if (!is_null($dateTime)) {
+            $campus->updatedAt()->setValue($dateTime);
+        }
+
         return $campus;
     }
 }

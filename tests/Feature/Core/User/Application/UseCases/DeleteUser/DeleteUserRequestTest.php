@@ -36,7 +36,7 @@ class DeleteUserRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_userId_should_return_value_object(): void
+    public function testUserIdShouldReturnValueObject(): void
     {
         $result = $this->request->userId();
 

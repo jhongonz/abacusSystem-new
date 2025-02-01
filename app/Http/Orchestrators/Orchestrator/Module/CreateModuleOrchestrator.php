@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 17:53:22
@@ -24,26 +25,25 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
     public function __construct(
         ModuleManagementContract $moduleManagement,
         protected Router $router,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($moduleManagement);
-        $this->setRouter($router);
     }
 
     /**
-     * @param Request $request
-     * @return Module
+     * @return array<string, mixed>
+     *
      * @throws RouteNotFoundException
      */
-    public function make(Request $request): Module
+    public function make(Request $request): array
     {
-        $route = $request->input('route');
+        $route = $request->string('route');
 
         try {
             $this->validateRoute($route);
         } catch (AssertionFailedException $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new RouteNotFoundException('Route <'.$route.'> not found', Response::HTTP_NOT_FOUND);
+            throw new RouteNotFoundException(sprintf('Route <%s> not found', $route), Response::HTTP_NOT_FOUND);
         }
 
         $dataModule = [
@@ -56,12 +56,11 @@ class CreateModuleOrchestrator extends ModuleOrchestrator
             'state' => ValueObjectStatus::STATE_NEW,
         ];
 
-        return $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
+        $module = $this->moduleManagement->createModule([Module::TYPE => $dataModule]);
+
+        return ['module' => $module];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-module';

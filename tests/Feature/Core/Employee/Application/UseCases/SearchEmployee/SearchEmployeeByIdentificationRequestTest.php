@@ -32,7 +32,7 @@ class SearchEmployeeByIdentificationRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_employeeId_should_return_value_object(): void
+    public function testEmployeeIdShouldReturnValueObject(): void
     {
         $result = $this->request->employeeIdentification();
 

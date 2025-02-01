@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 22:17:17
@@ -12,7 +13,7 @@ use Core\Institution\Domain\Institution;
 class CreateInstitutionRequest implements RequestService
 {
     public function __construct(
-        private readonly Institution $institution
+        private readonly Institution $institution,
     ) {
     }
 

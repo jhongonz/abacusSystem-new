@@ -24,6 +24,7 @@ use Core\Profile\Infrastructure\Persistence\Repositories\EloquentModuleRepositor
 use Core\Profile\Infrastructure\Persistence\Repositories\EloquentProfileRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisModuleRepository;
 use Core\Profile\Infrastructure\Persistence\Repositories\RedisProfileRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -32,17 +33,21 @@ use Psr\Log\LoggerInterface;
 class ProfileServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
-     * All the container bindings that should be registered
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         ProfileFactoryContract::class => ProfileFactory::class,
         ProfileDataTransformerContract::class => ProfileDataTransformer::class,
         ProfileManagementContract::class => ProfileService::class,
+        ProfileRepositoryContract::class => ChainProfileRepository::class,
 
-        /*Modules*/
+        /* Modules */
         ModuleFactoryContract::class => ModuleFactory::class,
         ModuleDataTransformerContract::class => ModuleDataTransformer::class,
         ModuleManagementContract::class => ModuleService::class,
+        ModuleRepositoryContract::class => ChainModuleRepository::class,
     ];
 
     /**
@@ -50,33 +55,7 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register(): void
     {
-        $this->app->singletonIf(ProfileRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainProfileRepository;
-
-            $chainRepository->addRepository(
-                $app->make(RedisProfileRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentProfileRepository::class)
-                );
-
-            return $chainRepository;
-        });
-
-        $this->app->singletonIf(ModuleRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainModuleRepository;
-
-            $chainRepository->addRepository(
-                $app->make(RedisModuleRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentModuleRepository::class)
-                );
-
-            return $chainRepository;
-        });
-
-        //Commands
+        // Commands
         $this->app->singletonIf(ProfileWarmup::class, function (Application $app) {
             return new ProfileWarmup(
                 $app->make(LoggerInterface::class),
@@ -97,6 +76,26 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     }
 
     /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $profileRepository = $this->app->make(ProfileRepositoryContract::class);
+        $profileRepository->addRepository(
+            $this->app->make(RedisProfileRepository::class),
+            $this->app->make(EloquentProfileRepository::class)
+        );
+
+        $moduleRepository = $this->app->make(ModuleRepositoryContract::class);
+        $moduleRepository->addRepository(
+            $this->app->make(RedisModuleRepository::class),
+            $this->app->make(EloquentModuleRepository::class)
+        );
+    }
+
+    /**
      * Get the services provided by the provider.
      *
      * @return array<int, string>
@@ -104,21 +103,17 @@ class ProfileServiceProvider extends ServiceProvider implements DeferrableProvid
     public function provides(): array
     {
         return [
+            // Profile Provides
             ProfileFactoryContract::class,
             ProfileDataTransformerContract::class,
             ProfileManagementContract::class,
+            ProfileRepositoryContract::class,
 
+            // Module Provides
             ModuleFactoryContract::class,
             ModuleDataTransformerContract::class,
             ModuleManagementContract::class,
+            ModuleRepositoryContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-
     }
 }

@@ -3,9 +3,6 @@
 namespace Core\Profile\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use DateTime;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Profile extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -33,7 +29,7 @@ class Profile extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'pro_state' => 1,
@@ -42,7 +38,7 @@ class Profile extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'pro_id',
@@ -66,13 +62,17 @@ class Profile extends Model
         'deleted_at' => 'datetime',
     ];
 
-    protected $touches = ['user','pivotModules','modules'];
+    /** @var string[] */
+    protected $touches = ['user', 'pivotModules', 'modules'];
 
     /**
      * The search field associated with the table.
      */
     protected string $mainSearchField = 'pro_search';
 
+    /**
+     * @return string[]
+     */
     protected function casts(): array
     {
         return [
@@ -87,11 +87,17 @@ class Profile extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return HasMany<User, $this>
+     */
     public function user(): HasMany
     {
         return $this->hasMany(User::class, 'user__pro_id', 'pro_id');
     }
 
+    /**
+     * @return BelongsToMany<Module, $this>
+     */
     public function pivotModules(): BelongsToMany
     {
         $relation = $this->belongsToMany(
@@ -119,109 +125,138 @@ class Profile extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('pro_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('pro_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
     {
         $this->setAttribute('pro_id', $id);
+
         return $this;
     }
 
     public function name(): ?string
     {
-        return $this->getAttribute('pro_name');
+        /** @var string|null $name */
+        $name = $this->getAttribute('pro_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
     {
         $this->setAttribute('pro_name', $name);
+
         return $this;
     }
 
     public function state(): int
     {
-        return $this->getAttribute('pro_state');
+        /** @var int $state */
+        $state = $this->getAttribute('pro_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
     {
         $this->setAttribute('pro_state', $state);
+
         return $this;
     }
 
     public function search(): ?string
     {
-        return $this->getAttribute('pro_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('pro_search');
+
+        return $search;
     }
 
     public function changeSearch(?string $search): self
     {
         $this->setAttribute('pro_search', $search);
+
         return $this;
     }
 
     public function description(): ?string
     {
-        return $this->getAttribute('pro_description');
+        /** @var string|null $description */
+        $description = $this->getAttribute('pro_description');
+
+        return $description;
     }
 
     public function changeDescription(string $description): self
     {
         $this->setAttribute('pro_description', $description);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(DateTime $datetime): self
+    public function changeCreatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(DateTime $datetime): self
+    public function changeUpdatedAt(\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(DateTime $datetime): self
+    public function changeDeletedAt(\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
+
         return $this;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

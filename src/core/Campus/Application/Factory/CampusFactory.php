@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 13:12:20
@@ -20,17 +21,14 @@ use Core\Campus\Domain\ValueObjects\CampusPhone;
 use Core\Campus\Domain\ValueObjects\CampusSearch;
 use Core\Campus\Domain\ValueObjects\CampusState;
 use Core\Campus\Domain\ValueObjects\CampusUpdatedAt;
-use DateTime;
-use Exception;
 
 class CampusFactory implements CampusFactoryContract
 {
     public function buildCampus(
         CampusId $id,
         CampusInstitutionId $institutionId,
-        CampusName $name
+        CampusName $name,
     ): Campus {
-
         return new Campus(
             $id,
             $institutionId,
@@ -39,30 +37,44 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string, mixed> $data
+     *
+     * @throws \Exception
      */
     public function buildCampusFromArray(array $data): Campus
     {
-        $data = $data[Campus::TYPE];
+        /** @var array{
+         *     id: int|null,
+         *     institutionId: int,
+         *     name: string,
+         *     address: string|null,
+         *     phone: string,
+         *     email: string,
+         *     observations: string|null,
+         *     state: int,
+         *     createdAt: string|null,
+         *     updatedAt: string|null
+         *     } $dataCampus */
+        $dataCampus = $data[Campus::TYPE];
 
         $campus = $this->buildCampus(
-            $this->buildCampusId($data['id']),
-            $this->buildCampusInstitutionId($data['institutionId']),
-            $this->buildCampusName($data['name'])
+            $this->buildCampusId($dataCampus['id']),
+            $this->buildCampusInstitutionId($dataCampus['institutionId']),
+            $this->buildCampusName($dataCampus['name'])
         );
 
-        $campus->address()->setValue($data['address']);
-        $campus->phone()->setValue($data['phone']);
-        $campus->email()->setValue($data['email']);
-        $campus->observations()->setValue($data['observations']);
-        $campus->state()->setValue($data['state']);
+        $campus->address()->setValue($dataCampus['address']);
+        $campus->phone()->setValue($dataCampus['phone']);
+        $campus->email()->setValue($dataCampus['email']);
+        $campus->observations()->setValue($dataCampus['observations']);
+        $campus->state()->setValue($dataCampus['state']);
 
-        if (isset($data['createdAt'])) {
-            $campus->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($dataCampus['createdAt'])) {
+            $campus->createdAt()->setValue($this->getDateTime($dataCampus['createdAt']));
         }
 
-        if (isset($data['updatedAt'])) {
-            $campus->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        if (isset($dataCampus['updatedAt'])) {
+            $campus->updatedAt()->setValue($this->getDateTime($dataCampus['updatedAt']));
         }
 
         return $campus;
@@ -109,19 +121,19 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function buildCampusState(int $state): CampusState
     {
         return new CampusState($state);
     }
 
-    public function buildCampusCreatedAt(DateTime $dateTime): CampusCreatedAt
+    public function buildCampusCreatedAt(\DateTime $dateTime): CampusCreatedAt
     {
         return new CampusCreatedAt($dateTime);
     }
 
-    public function buildCampusUpdatedAt(?DateTime $dateTime = null): CampusUpdatedAt
+    public function buildCampusUpdatedAt(?\DateTime $dateTime = null): CampusUpdatedAt
     {
         return new CampusUpdatedAt($dateTime);
     }
@@ -132,10 +144,10 @@ class CampusFactory implements CampusFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

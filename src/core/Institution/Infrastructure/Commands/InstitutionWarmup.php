@@ -4,7 +4,6 @@ namespace Core\Institution\Infrastructure\Commands;
 
 use Core\Institution\Domain\Contracts\InstitutionFactoryContract;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
-use Exception;
 use Illuminate\Console\Command;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command as CommandSymfony;
@@ -32,8 +31,7 @@ class InstitutionWarmup extends Command
      *
      * @var string
      */
-    protected $signature = 'institution:warmup
-                                {id: The ID institution}';
+    protected $signature = 'institution:warmup {id: The ID institution}';
 
     /**
      * The console command description.
@@ -47,15 +45,18 @@ class InstitutionWarmup extends Command
      */
     public function handle(): int
     {
-        $institutionId = $this->institutionFactory->buildInstitutionId($this->argument('id'));
+        $id = is_numeric($this->argument('id')) ? intval($this->argument('id')) : null;
+        $institutionId = $this->institutionFactory->buildInstitutionId($id);
 
         try {
             $institution = $this->readRepository->find($institutionId);
 
             foreach ($this->repositories as $repository) {
-                $repository->persistInstitution($institution);
+                if (!is_null($institution)) {
+                    $repository->persistInstitution($institution);
+                }
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return CommandSymfony::FAILURE;

@@ -27,7 +27,7 @@ class UserPasswordTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $expected = '12345';
         $result = $this->valueObject->value();
@@ -36,7 +36,7 @@ class UserPasswordTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_setValue_should_change_value_and_return_object(): void
+    public function testSetValueShouldChangeValueAndReturnObject(): void
     {
         $expected = 'abcde';
         $original = $this->valueObject->value();

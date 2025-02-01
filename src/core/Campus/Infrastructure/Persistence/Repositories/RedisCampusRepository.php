@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 15:52:28
@@ -16,7 +17,6 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\Campus\Exceptions\CampusPersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
@@ -42,6 +42,7 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
@@ -51,13 +52,15 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
     public function find(CampusId $id): ?Campus
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->campusKey($id));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new CampusNotFoundException(sprintf('Campus not found by id %s', $id->value()));
         }
 
-        if (isset($data)) {
+        if (!empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
             return $this->campusFactory->buildCampusFromArray($dataArray);
@@ -86,7 +89,7 @@ class RedisCampusRepository implements ChainPriority, CampusRepositoryContract
 
         try {
             Redis::set($campusKey, json_encode($campusData));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new CampusPersistException(sprintf('It could not persist Campus with key %s in redis', $campusKey));
         }

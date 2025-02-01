@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-22 13:44:10
@@ -8,6 +9,9 @@ namespace Tests\Feature\Core\Institution\Application\UseCases\UpdateInstitution\
 
 final class DataProviderUpdateInstitution
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
         return [
@@ -19,12 +23,12 @@ final class DataProviderUpdateInstitution
                     'logo' => 'logo',
                     'observations' => 'observations',
                     'address' => 'address',
-                    'phone' => 'phone',
-                    'email' => 'email',
+                    'phone' => '123456789',
+                    'email' => 'algo@algo.com',
                     'state' => 2,
-                    'updatedAt' => new \DateTime,
-                ]
-            ]
+                    'updatedAt' => new \DateTime(),
+                ],
+            ],
         ];
     }
 }

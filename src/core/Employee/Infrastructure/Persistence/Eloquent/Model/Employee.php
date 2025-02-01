@@ -4,9 +4,6 @@ namespace Core\Employee\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use DateTime;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,7 +14,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Employee extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -37,7 +33,7 @@ class Employee extends Model
     /**
      * The model's default values for attributes.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $attributes = [
         'emp_state' => 1,
@@ -46,7 +42,7 @@ class Employee extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'emp_id',
@@ -68,6 +64,7 @@ class Employee extends Model
         'deleted_at',
     ];
 
+    /** @var string[] */
     protected $touches = ['relationWithUser'];
 
     /**
@@ -86,6 +83,9 @@ class Employee extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -100,11 +100,17 @@ class Employee extends Model
         return $this->mainSearchField;
     }
 
+    /**
+     * @return BelongsTo<Institution, $this>
+     */
     public function relationWithInstitution(): BelongsTo
     {
         return $this->belongsTo(Institution::class, 'emp__inst_id', 'inst_id');
     }
 
+    /**
+     * @return HasOne<User, $this>
+     */
     public function relationWithUser(): HasOne
     {
         return $this->hasOne(User::class, 'user__emp_id', 'emp_id');
@@ -117,7 +123,10 @@ class Employee extends Model
 
     public function id(): ?int
     {
-        return $this->getAttribute('emp_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('emp_id');
+
+        return $id;
     }
 
     public function changeId(?int $id): self
@@ -129,18 +138,25 @@ class Employee extends Model
 
     public function institutionId(): ?int
     {
-        return $this->getAttribute('emp__inst_id');
+        /** @var int|null $id */
+        $id = $this->getAttribute('emp__inst_id');
+
+        return $id;
     }
 
     public function changeInstitutionId(int $institutionId): self
     {
         $this->setAttribute('emp__inst_id', $institutionId);
+
         return $this;
     }
 
     public function identification(): ?string
     {
-        return $this->getAttribute('emp_identification');
+        /** @var string|null $identification */
+        $identification = $this->getAttribute('emp_identification');
+
+        return $identification;
     }
 
     public function changeIdentification(string $identification): self
@@ -152,7 +168,10 @@ class Employee extends Model
 
     public function name(): ?string
     {
-        return $this->getAttribute('emp_name');
+        /** @var string|null $name */
+        $name = $this->getAttribute('emp_name');
+
+        return $name;
     }
 
     public function changeName(string $name): self
@@ -164,7 +183,10 @@ class Employee extends Model
 
     public function lastname(): ?string
     {
-        return $this->getAttribute('emp_lastname');
+        /** @var string|null $lastname */
+        $lastname = $this->getAttribute('emp_lastname');
+
+        return $lastname;
     }
 
     public function changeLastname(string $lastname): self
@@ -176,7 +198,10 @@ class Employee extends Model
 
     public function phone(): ?string
     {
-        return $this->getAttribute('emp_phone_number');
+        /** @var string|null $phone */
+        $phone = $this->getAttribute('emp_phone_number');
+
+        return $phone;
     }
 
     public function changePhone(string $phone): self
@@ -188,7 +213,10 @@ class Employee extends Model
 
     public function email(): ?string
     {
-        return $this->getAttribute('emp_email');
+        /** @var string|null $email */
+        $email = $this->getAttribute('emp_email');
+
+        return $email;
     }
 
     public function changeEmail(string $email): self
@@ -200,7 +228,10 @@ class Employee extends Model
 
     public function address(): ?string
     {
-        return $this->getAttribute('emp_address');
+        /** @var string|null $address */
+        $address = $this->getAttribute('emp_address');
+
+        return $address;
     }
 
     public function changeAddress(?string $address): self
@@ -212,7 +243,10 @@ class Employee extends Model
 
     public function state(): int
     {
-        return $this->getAttribute('emp_state');
+        /** @var int $state */
+        $state = $this->getAttribute('emp_state');
+
+        return $state;
     }
 
     public function changeState(int $state): self
@@ -223,16 +257,17 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function createdAt(): ?DateTime
+    public function createdAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('created_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeCreatedAt(?DateTime $datetime): self
+    public function changeCreatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('created_at', $datetime);
 
@@ -240,16 +275,17 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function updatedAt(): ?DateTime
+    public function updatedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('updated_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeUpdatedAt(?DateTime $datetime): self
+    public function changeUpdatedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('updated_at', $datetime);
 
@@ -257,16 +293,17 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function deletedAt(): ?DateTime
+    public function deletedAt(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('deleted_at');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeDeletedAt(?DateTime $datetime): self
+    public function changeDeletedAt(?\DateTime $datetime): self
     {
         $this->setAttribute('deleted_at', $datetime);
 
@@ -275,7 +312,10 @@ class Employee extends Model
 
     public function search(): ?string
     {
-        return $this->getAttribute('emp_search');
+        /** @var string|null $search */
+        $search = $this->getAttribute('emp_search');
+
+        return $search;
     }
 
     public function changeSearch(string $search): self
@@ -286,16 +326,17 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function birthdate(): ?DateTime
+    public function birthdate(): ?\DateTime
     {
+        /** @var string|null $datetime */
         $datetime = $this->getAttribute('emp_birthdate');
 
-        return ($datetime) ? $this->getDateTime($datetime) : $datetime;
+        return null !== $datetime ? $this->getDateTime($datetime) : null;
     }
 
-    public function changeBirthdate(?DateTime $date): self
+    public function changeBirthdate(?\DateTime $date): self
     {
         $this->setAttribute('emp_birthdate', $date);
 
@@ -304,7 +345,10 @@ class Employee extends Model
 
     public function observations(): ?string
     {
-        return $this->getAttribute('emp_observations');
+        /** @var string|null $observations */
+        $observations = $this->getAttribute('emp_observations');
+
+        return $observations;
     }
 
     public function changeObservations(?string $observations): self
@@ -316,7 +360,10 @@ class Employee extends Model
 
     public function identificationType(): string
     {
-        return $this->getAttribute('emp_identification_type');
+        /** @var string $identificationType */
+        $identificationType = $this->getAttribute('emp_identification_type');
+
+        return $identificationType;
     }
 
     public function changeIdentificationType(string $type): self
@@ -328,7 +375,10 @@ class Employee extends Model
 
     public function image(): ?string
     {
-        return $this->getAttribute('emp_image');
+        /** @var string $image */
+        $image = $this->getAttribute('emp_image');
+
+        return $image;
     }
 
     public function changeImage(?string $image): self
@@ -339,10 +389,10 @@ class Employee extends Model
     }
 
     /**
-     * @throws Exception
+     * @throws \DateMalformedStringException
      */
-    private function getDateTime(?string $datetime = null): DateTime
+    private function getDateTime(string $datetime = 'now'): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

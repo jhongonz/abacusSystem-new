@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Profile\StoreProfileRequest;
+use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Profile;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -14,15 +15,19 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        ViewFactory $viewFactory,
-        LoggerInterface $logger
+        private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
+        protected ViewFactory $viewFactory,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
     }
 
     public function index(): JsonResponse|string
@@ -35,21 +40,31 @@ class ProfileController extends Controller implements HasMiddleware
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getProfiles(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-profiles', $request);
+        $dataProfiles = $this->orchestrators->handler('retrieve-profiles', $request);
+
+        $datatable = $this->dataTables->collection($dataProfiles);
+        $datatable->addColumn('tools', function (array $element) {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateProfile(Request $request): JsonResponse
     {
         try {
-            /** @var Profile $profile */
-            $profile = $this->orchestrators->handler('change-state-profile', $request);
+            /** @var array{profile: Profile} $dataProfile */
+            $dataProfile = $this->orchestrators->handler('change-state-profile', $request);
+            $profile = $dataProfile['profile'];
 
-            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
-        } catch (Exception $exception) {
+            /** @var int $profileId */
+            $profileId = $profile->id()->value();
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($profileId));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -64,20 +79,22 @@ class ProfileController extends Controller implements HasMiddleware
             $request->merge(['profileId' => $id]);
 
             $this->orchestrators->handler('delete-profile', $request);
-            ProfileUpdatedOrDeletedEvent::dispatch($id);
 
-        } catch (Exception $exception) {
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($id));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
-            return new JsonResponse(status:Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new JsonResponse(status: Response::HTTP_OK);
     }
 
-    public function getProfile(Request $request, ?int $id = null): JsonResponse
+    public function getProfile(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['profileId' => $id]);
+
+        /** @var array<int|string, mixed> $dataProfile */
         $dataProfile = $this->orchestrators->handler('detail-profile', $request);
 
         $view = $this->viewFactory->make('profile.profile-form', $dataProfile)
@@ -91,11 +108,14 @@ class ProfileController extends Controller implements HasMiddleware
         try {
             $method = (is_null($request->input('profileId'))) ? 'create-profile' : 'update-profile';
 
-            /** @var Profile $profile */
-            $profile = $this->orchestrators->handler($method, $request);
+            /** @var array{profile: Profile} $dataProfile */
+            $dataProfile = $this->orchestrators->handler($method, $request);
+            $profile = $dataProfile['profile'];
 
-            ProfileUpdatedOrDeletedEvent::dispatch($profile->id()->value());
-        } catch (Exception $exception) {
+            /** @var int $profileId */
+            $profileId = $profile->id()->value();
+            $this->eventDispatcher->dispatch(new ProfileUpdatedOrDeletedEvent($profileId));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(

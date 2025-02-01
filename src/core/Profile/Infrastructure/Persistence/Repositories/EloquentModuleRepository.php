@@ -7,14 +7,11 @@ use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
-use Core\Profile\Exceptions\ModulesNotFoundException;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
 use Core\Profile\Infrastructure\Persistence\Translators\ModuleTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContract
 {
@@ -42,7 +39,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @throws ModuleNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(ModuleId $id): Module
     {
@@ -62,7 +59,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistModule(Module $module): Module
     {
@@ -90,30 +87,27 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
-     * @throws ModulesNotFoundException
-     * @throws Exception
+     * @param array{q?: string|null} $filters
      */
     public function getAll(array $filters = []): ?Modules
     {
-        /** @var Builder $builder */
         $builder = $this->database->table($this->getTable())
             ->where('mod_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 
         $builder->orderBy('mod_position');
         $moduleCollection = $builder->get(['mod_id']);
 
-        if (empty($moduleCollection)) {
-            throw new ModulesNotFoundException('Modules not found');
-        }
-
         $collection = [];
         foreach ($moduleCollection as $item) {
             $moduleModel = $this->updateAttributesModelModule((array) $item);
-            $collection[] = $moduleModel->id();
+
+            if (!is_null($moduleModel->id())) {
+                $collection[] = $moduleModel->id();
+            }
         }
 
         $modules = $this->moduleTranslator->setCollection($collection)->toDomainCollection();
@@ -124,7 +118,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
 
     /**
      * @throws ModuleNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteModule(ModuleId $id): void
     {
@@ -161,13 +155,16 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         $model->changePosition($domain->position()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (! is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function updateAttributesModelModule(array $data = []): ModuleModel
     {
         $this->model->fill($data);
@@ -181,7 +178,7 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

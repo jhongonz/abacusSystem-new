@@ -20,6 +20,8 @@ class Module
     private ModuleUpdatedAt $updatedAt;
     private ModuleSearch $search;
     private ModulePosition $position;
+
+    /** @var Module[] */
     private array $options = [];
     private bool $expanded = false;
 
@@ -28,13 +30,13 @@ class Module
         private ModuleMenuKey $menuKey,
         private ModuleName $name,
         private ModuleRoute $route,
-        private ModuleIcon $icon = new ModuleIcon,
-        private ModuleState $state = new ModuleState,
-        private ModuleCreatedAt $createdAt = new ModuleCreatedAt,
+        private ModuleIcon $icon = new ModuleIcon(),
+        private ModuleState $state = new ModuleState(),
+        private ModuleCreatedAt $createdAt = new ModuleCreatedAt(),
     ) {
-        $this->search = new ModuleSearch;
-        $this->updatedAt = new ModuleUpdatedAt;
-        $this->position = new ModulePosition;
+        $this->search = new ModuleSearch();
+        $this->updatedAt = new ModuleUpdatedAt();
+        $this->position = new ModulePosition();
     }
 
     public function id(): ModuleId
@@ -145,11 +147,19 @@ class Module
         return $this;
     }
 
+    /**
+     * @return Module[]
+     */
     public function options(): array
     {
         return $this->options;
     }
 
+    /**
+     * @param Module[] $data
+     *
+     * @return $this
+     */
     public function setOptions(array $data): self
     {
         $this->options = $data;
@@ -165,6 +175,7 @@ class Module
     public function setPosition(ModulePosition $position): self
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -187,16 +198,24 @@ class Module
 
     public function refreshSearch(): self
     {
+        /** @var string $icon */
+        $icon = $this->icon->value();
+
         $data = [
-            $this->menuKey->value(),
-            $this->name->value(),
-            $this->route->value(),
-            $this->icon->value(),
+            trim(strtolower($this->menuKey->value())),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($this->route->value())),
+            trim(strtolower($icon)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;
+    }
+
+    public function isParent(): bool
+    {
+        return empty($this->route()->value());
     }
 }

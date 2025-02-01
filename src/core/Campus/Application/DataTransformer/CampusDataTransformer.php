@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 13:33:10
@@ -16,16 +17,23 @@ class CampusDataTransformer implements CampusDataTransformerContract
     public function write(Campus $campus): self
     {
         $this->campus = $campus;
+
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
-          Campus::TYPE => $this->retrieveData()
+            Campus::TYPE => $this->retrieveData(),
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array
     {
         $data = $this->retrieveData();
@@ -34,6 +42,9 @@ class CampusDataTransformer implements CampusDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

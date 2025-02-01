@@ -31,7 +31,7 @@ class SearchModuleByIdRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_moduleId_should_return_value_object(): void
+    public function testModuleIdShouldReturnValueObject(): void
     {
         $result = $this->request->moduleId();
 

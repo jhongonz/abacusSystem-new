@@ -51,7 +51,7 @@ class ProfileTranslatorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setModel_should_return_self(): void
+    public function testSetModelShouldReturnSelf(): void
     {
         $model = $this->createMock(ProfileModel::class);
         $return = $this->translator->setModel($model);
@@ -64,7 +64,7 @@ class ProfileTranslatorTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_toDomain_should_return_object(): void
+    public function testToDomainShouldReturnObject(): void
     {
         $this->model = $this->createMock(ProfileModel::class);
         $profileMock = $this->createMock(Profile::class);
@@ -97,7 +97,7 @@ class ProfileTranslatorTest extends TestCase
             ->willReturn($state);
 
         $datetime = new \DateTime('2024-05-14 13:08:00');
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($datetime);
         $createdAt = $this->createMock(ProfileCreatedAt::class);
@@ -124,7 +124,7 @@ class ProfileTranslatorTest extends TestCase
             ->with('test')
             ->willReturn($search);
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($datetime);
         $updatedAt = $this->createMock(ProfileUpdatedAt::class);
@@ -167,15 +167,15 @@ class ProfileTranslatorTest extends TestCase
         $this->assertIsArray($result->modulesAggregator());
     }
 
-    public function test_setCollection_should_return_self(): void
+    public function testSetCollectionShouldReturnSelf(): void
     {
-        $result = $this->translator->setCollection(['testing']);
+        $result = $this->translator->setCollection([1]);
 
         $this->assertInstanceOf(ProfileTranslator::class, $result);
         $this->assertSame($this->translator, $result);
     }
 
-    public function test_toDomainCollection_should_return_object(): void
+    public function testToDomainCollectionShouldReturnObject(): void
     {
         $this->translator->setCollection([1]);
         $result = $this->translator->toDomainCollection();

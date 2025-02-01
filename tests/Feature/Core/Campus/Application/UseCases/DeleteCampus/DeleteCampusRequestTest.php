@@ -34,7 +34,7 @@ class DeleteCampusRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_object(): void
+    public function testIdShouldReturnObject(): void
     {
         $result = $this->request->id();
 

@@ -27,6 +27,7 @@ class DeleteCampusOrchestratorTest extends TestCase
         $this->campusManagementMock = $this->createMock(CampusManagementContract::class);
         $this->orchestrator = new DeleteCampusOrchestrator($this->campusManagementMock);
     }
+
     protected function tearDown(): void
     {
         unset(
@@ -37,14 +38,13 @@ class DeleteCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_delete_campus_should_return_true(): void
+    public function testMakeShouldDeleteCampusShouldReturnTrue(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -53,13 +53,10 @@ class DeleteCampusOrchestratorTest extends TestCase
             ->with(1);
 
         $result = $this->orchestrator->make($requestMock);
-        $this->assertTrue($result);
+        $this->assertIsArray($result);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

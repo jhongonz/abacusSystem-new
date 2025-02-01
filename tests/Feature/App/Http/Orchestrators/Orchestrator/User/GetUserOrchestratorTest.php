@@ -39,7 +39,7 @@ class GetUserOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_user_when_search_by_id(): void
+    public function testMakeShouldReturnUserWhenSearchById(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -48,7 +48,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('userId')
             ->willReturn(1);
 
@@ -60,14 +60,16 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertSame($userMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user', $result);
+        $this->assertInstanceOf(User::class, $result['user']);
+        $this->assertSame($userMock, $result['user']);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_return_user_when_search_by_login(): void
+    public function testMakeShouldReturnUserWhenSearchByLogin(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -76,7 +78,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(true);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('string')
             ->with('login')
             ->willReturn('test');
 
@@ -88,14 +90,16 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertSame($userMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('user', $result);
+        $this->assertInstanceOf(User::class, $result['user']);
+        $this->assertSame($userMock, $result['user']);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_return_null_when_search_by_id(): void
+    public function testMakeShouldReturnNullWhenSearchById(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -104,7 +108,7 @@ class GetUserOrchestratorTest extends TestCase
             ->willReturn(false);
 
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('userId')
             ->willReturn(1);
 
@@ -115,11 +119,11 @@ class GetUserOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertNotInstanceOf(User::class, $result);
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(User::class, $result['user']);
+        $this->assertNull($result['user']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

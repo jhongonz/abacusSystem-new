@@ -31,7 +31,7 @@ class SearchInstitutionByIdRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_id_should_return_value_object(): void
+    public function testIdShouldReturnValueObject(): void
     {
         $result = $this->request->institutionId();
 

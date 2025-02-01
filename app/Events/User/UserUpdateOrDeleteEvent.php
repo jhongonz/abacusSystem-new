@@ -17,7 +17,7 @@ class UserUpdateOrDeleteEvent
      * Create a new event instance.
      */
     public function __construct(
-        private readonly int $userId
+        private readonly int $userId,
     ) {
     }
 

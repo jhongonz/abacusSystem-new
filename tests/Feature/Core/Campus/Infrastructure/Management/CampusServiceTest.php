@@ -74,7 +74,7 @@ class CampusServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchCampusById_should_return_object(): void
+    public function testSearchCampusByIdShouldReturnObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
@@ -100,7 +100,7 @@ class CampusServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchCampusById_should_return_null(): void
+    public function testSearchCampusByIdShouldReturnNull(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
@@ -124,7 +124,7 @@ class CampusServiceTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_searchCampusCollection_should_return_object(): void
+    public function testSearchCampusCollectionShouldReturnObject(): void
     {
         $campusInstitutionIdMock = $this->createMock(CampusInstitutionId::class);
         $this->campusFactory->expects(self::once())
@@ -165,7 +165,7 @@ class CampusServiceTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_updateCampus_should_return_object(): void
+    public function testUpdateCampusShouldReturnObject(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
@@ -190,7 +190,7 @@ class CampusServiceTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_createCampus_should_return_object(): void
+    public function testCreateCampusShouldReturnObject(): void
     {
         $campusMock = $this->createMock(Campus::class);
         $this->campusFactory->expects(self::once())
@@ -214,7 +214,7 @@ class CampusServiceTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_deleteCampus_should_return_void(): void
+    public function testDeleteCampusShouldReturnVoid(): void
     {
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())

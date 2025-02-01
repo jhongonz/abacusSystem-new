@@ -10,8 +10,6 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
-use Exception;
-use Throwable;
 
 class ChainEmployeeRepository extends AbstractChainRepository implements EmployeeRepositoryContract
 {
@@ -23,33 +21,39 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      * @throws EmployeeNotFoundException
      */
     public function find(EmployeeId $id): ?Employee
     {
         try {
-            return $this->read(__FUNCTION__, $id);
-        } catch (Exception $exception) {
+            /** @var Employee|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
+        } catch (\Exception $exception) {
             throw new EmployeeNotFoundException('Employee not found by id '.$id->value());
         }
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      * @throws EmployeeNotFoundException
      */
     public function findCriteria(EmployeeIdentification $identification): ?Employee
     {
         try {
-            return $this->read(__FUNCTION__, $identification);
-        } catch (Exception $exception) {
+            /** @var Employee|null $result */
+            $result = $this->read(__FUNCTION__, $identification);
+
+            return $result;
+        } catch (\Exception $exception) {
             throw new EmployeeNotFoundException('Employee not found by identification '.$identification->value());
         }
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function delete(EmployeeId $id): void
     {
@@ -57,24 +61,32 @@ class ChainEmployeeRepository extends AbstractChainRepository implements Employe
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistEmployee(Employee $employee): Employee
     {
-        return $this->write(__FUNCTION__, $employee);
+        /** @var Employee $result */
+        $result = $this->write(__FUNCTION__, $employee);
+
+        return $result;
     }
 
     /**
-     * @throws Throwable
-     * @throws EmployeeNotFoundException
+     * @param array<string, mixed> $filters
+     *
+     * @throws EmployeesNotFoundException
+     * @throws \Throwable
      */
     public function getAll(array $filters = []): ?Employees
     {
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $filters);
-        } catch (Exception $exception) {
+            /** @var Employees|null $result */
+            $result = $this->read(__FUNCTION__, $filters);
+
+            return $result;
+        } catch (\Exception $exception) {
             throw new EmployeesNotFoundException('Employees not found');
         }
     }

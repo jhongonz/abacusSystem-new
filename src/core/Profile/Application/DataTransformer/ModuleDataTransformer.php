@@ -4,7 +4,6 @@ namespace Core\Profile\Application\DataTransformer;
 
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Module;
-use Exception;
 
 class ModuleDataTransformer implements ModuleDataTransformerContract
 {
@@ -17,6 +16,9 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
     public function read(): array
     {
         return [
@@ -25,7 +27,7 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
     }
 
     /**
-     * @throws Exception
+     * @return array<string, mixed>
      */
     public function readToShare(): array
     {
@@ -35,6 +37,9 @@ class ModuleDataTransformer implements ModuleDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

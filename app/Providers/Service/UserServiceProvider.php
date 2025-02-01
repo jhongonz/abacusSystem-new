@@ -13,6 +13,7 @@ use Core\User\Infrastructure\Management\UserService;
 use Core\User\Infrastructure\Persistence\Repositories\ChainUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\EloquentUserRepository;
 use Core\User\Infrastructure\Persistence\Repositories\RedisUserRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
@@ -21,12 +22,15 @@ use Psr\Log\LoggerInterface;
 class UserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
-     * All the container bindings that should be registered
+     * All the container bindings that should be registered.
+     *
+     * @var array<string, string>
      */
     public array $singletons = [
         UserFactoryContract::class => UserFactory::class,
         UserManagementContract::class => UserService::class,
         UserDataTransformerContract::class => UserDataTransformer::class,
+        UserRepositoryContract::class => ChainUserRepository::class,
     ];
 
     /**
@@ -34,20 +38,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register(): void
     {
-        $this->app->singletonIf(UserRepositoryContract::class, function (Application $app) {
-            $chainRepository = new ChainUserRepository;
-
-            $chainRepository->addRepository(
-                $app->make(RedisUserRepository::class)
-            )
-                ->addRepository(
-                    $app->make(EloquentUserRepository::class)
-                );
-
-            return $chainRepository;
-        });
-
-        //Commands
+        // Commands
         $this->app->singletonIf(UserWarmup::class, function (Application $app) {
             return new UserWarmup(
                 $app->make(LoggerInterface::class),
@@ -56,6 +47,20 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
                 $app->make(RedisUserRepository::class),
             );
         });
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @throws BindingResolutionException
+     */
+    public function boot(): void
+    {
+        $userRepository = $this->app->make(UserRepositoryContract::class);
+        $userRepository->addRepository(
+            $this->app->make(RedisUserRepository::class),
+            $this->app->make(EloquentUserRepository::class)
+        );
     }
 
     /**
@@ -69,14 +74,7 @@ class UserServiceProvider extends ServiceProvider implements DeferrableProvider
             UserFactoryContract::class,
             UserManagementContract::class,
             UserDataTransformerContract::class,
+            UserRepositoryContract::class,
         ];
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-
     }
 }

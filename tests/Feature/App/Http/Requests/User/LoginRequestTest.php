@@ -14,7 +14,7 @@ class LoginRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new LoginRequest;
+        $this->request = new LoginRequest();
     }
 
     public function tearDown(): void
@@ -23,24 +23,38 @@ class LoginRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_authorize_should_return_true(): void
+    public function testAuthorizeShouldReturnTrue(): void
     {
         $result = $this->request->authorize();
         $this->assertTrue($result);
     }
 
-    public function test_rules_should_return_array(): void
+    public function testRulesShouldReturnArray(): void
     {
+        $expected = [
+            'login' => ['required', 'max:150'],
+            'password' => ['required'],
+        ];
+
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
+        $this->assertEquals($expected, $result);
     }
-    public function test_messages_should_return_array(): void
+
+    public function testMessagesShouldReturnArray(): void
     {
+        $expected = [
+            'login.required' => 'El campo login es requerido',
+            'login.max' => 'El campo login debe tener maximo 255 caracteres',
+            'password.required' => 'El campo password es requerido',
+        ];
+
         $result = $this->request->messages();
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+        $this->assertEquals($expected, $result);
     }
 }

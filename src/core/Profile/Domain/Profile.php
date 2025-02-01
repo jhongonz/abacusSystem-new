@@ -18,18 +18,22 @@ class Profile
     private ProfileSearch $search;
     private ProfileDescription $description;
     private Modules $modules;
+
+    /**
+     * @var array<int<0, max>, int|null>
+     */
     private array $modulesAggregator = [];
 
     public function __construct(
         private ProfileId $id,
         private ProfileName $name,
-        private ProfileState $state = new ProfileState,
-        private ProfileCreatedAt $createdAt = new ProfileCreatedAt
+        private ProfileState $state = new ProfileState(),
+        private ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
     ) {
-        $this->search = new ProfileSearch;
-        $this->updatedAt = new ProfileUpdatedAt;
-        $this->modules = new Modules;
-        $this->description = new ProfileDescription;
+        $this->search = new ProfileSearch();
+        $this->updatedAt = new ProfileUpdatedAt();
+        $this->modules = new Modules();
+        $this->description = new ProfileDescription();
     }
 
     public function id(): ProfileId
@@ -104,11 +108,19 @@ class Profile
         return $this;
     }
 
+    /**
+     * @return array<int<0, max>, int|null>
+     */
     public function modulesAggregator(): array
     {
         return $this->modulesAggregator;
     }
 
+    /**
+     * @param array<int<0, max>, int|null> $ids
+     *
+     * @return $this
+     */
     public function setModulesAggregator(array $ids): self
     {
         $this->modulesAggregator = $ids;
@@ -142,12 +154,15 @@ class Profile
 
     public function refreshSearch(): self
     {
+        /** @var string $description */
+        $description = $this->description->value();
+
         $data = [
-            $this->name->value(),
-            $this->description->value(),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($description)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 17:09:23
@@ -11,9 +12,12 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 
 class SearchCampusCollectionRequest implements RequestService
 {
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function __construct(
         private readonly CampusInstitutionId $institutionId,
-        private readonly array $filters = []
+        private readonly array $filters = [],
     ) {
     }
 
@@ -22,6 +26,9 @@ class SearchCampusCollectionRequest implements RequestService
         return $this->institutionId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;

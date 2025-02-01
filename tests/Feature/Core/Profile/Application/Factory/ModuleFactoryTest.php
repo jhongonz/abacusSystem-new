@@ -18,18 +18,19 @@ use Core\Profile\Domain\ValueObjects\ModuleUpdatedAt;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\Feature\Core\Profile\Application\Factory\DataProvider\DataProviderFactory;
 use Tests\TestCase;
 
 #[CoversClass(ModuleFactory::class)]
 class ModuleFactoryTest extends TestCase
 {
-    private ModuleFactory $factory;
+    private ModuleFactory|MockObject $factory;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->factory = new ModuleFactory;
+        $this->factory = new ModuleFactory();
     }
 
     public function tearDown(): void
@@ -39,55 +40,129 @@ class ModuleFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     *
      * @throws \Exception
+     * @throws Exception
      */
-    #[DataProviderExternal(DataProvider\DataProviderFactory::class, 'providerModule')]
-    public function test_buildModuleFromArray_should_return_module_object(array $dataObject): void
+    #[DataProviderExternal(DataProviderFactory::class, 'providerModule')]
+    public function testBuildModuleFromArrayShouldReturnModuleObject(array $dataObject): void
     {
+        $dataProvider = $dataObject[Module::TYPE];
+        $this->factory = $this->getMockBuilder(ModuleFactory::class)
+            ->onlyMethods([
+                'buildModule',
+                'buildModuleId',
+                'buildModuleMenuKey',
+                'buildModuleName',
+                'buildModuleRoute',
+            ])
+            ->getMock();
+
+        $idMock = $this->createMock(ModuleId::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleId')
+            ->with($dataProvider['id'])
+            ->willReturn($idMock);
+
+        $keyMock = $this->createMock(ModuleMenuKey::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleMenuKey')
+            ->with($dataProvider['key'])
+            ->willReturn($keyMock);
+
+        $nameMock = $this->createMock(ModuleName::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleName')
+            ->with($dataProvider['name'])
+            ->willReturn($nameMock);
+
+        $routeMock = $this->createMock(ModuleRoute::class);
+        $this->factory->expects(self::once())
+            ->method('buildModuleRoute')
+            ->with($dataProvider['route'])
+            ->willReturn($routeMock);
+
+        $moduleMock = $this->createMock(Module::class);
+
+        $iconMock = $this->createMock(ModuleIcon::class);
+        $iconMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataProvider['icon'])
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('icon')
+            ->willReturn($iconMock);
+
+        $stateMock = $this->createMock(ModuleState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataProvider['state'])
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
+        $positionMock = $this->createMock(ModulePosition::class);
+        $positionMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataProvider['position'])
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('position')
+            ->willReturn($positionMock);
+
+        $createdAt = $this->createMock(ModuleCreatedAt::class);
+        $createdAt->expects(self::once())
+            ->method('setValue')
+            ->with(new \DateTime($dataProvider['createdAt']))
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('createdAt')
+            ->willReturn($createdAt);
+
+        $updatedAt = $this->createMock(ModuleUpdatedAt::class);
+        $updatedAt->expects(self::once())
+            ->method('setValue')
+            ->with(new \DateTime($dataProvider['updatedAt']))
+            ->willReturnSelf();
+        $moduleMock->expects(self::once())
+            ->method('updatedAt')
+            ->willReturn($updatedAt);
+
+        $this->factory->expects(self::once())
+            ->method('buildModule')
+            ->with(
+                $idMock,
+                $keyMock,
+                $nameMock,
+                $routeMock,
+            )
+            ->willReturn($moduleMock);
+
         $result = $this->factory->buildModuleFromArray($dataObject);
-        $data = $dataObject[Module::TYPE];
 
         $this->assertInstanceOf(Module::class, $result);
-
-        $this->assertSame($data['id'], $result->id()->value());
-        $this->assertInstanceOf(ModuleId::class, $result->id());
-
-        $this->assertSame($data['key'], $result->menuKey()->value());
-        $this->assertInstanceOf(ModuleMenuKey::class, $result->menuKey());
-
-        $this->assertSame($data['name'], $result->name()->value());
-        $this->assertInstanceOf(ModuleName::class, $result->name());
-
-        $this->assertSame($data['route'], $result->route()->value());
-        $this->assertInstanceOf(ModuleRoute::class, $result->route());
-
-        $this->assertSame($data['icon'], $result->icon()->value());
-        $this->assertInstanceOf(ModuleIcon::class, $result->icon());
-
-        $this->assertSame($data['state'], $result->state()->value());
-        $this->assertInstanceOf(ModuleState::class, $result->state());
-
-        $this->assertSame($data['position'], $result->position()->value());
-        $this->assertInstanceOf(ModulePosition::class, $result->position());
+        $this->assertSame($moduleMock, $result);
     }
 
-    public function test_buildModuleCreatedAt_should_return_value_object_with_datetime(): void
+    public function testBuildModuleCreatedAtShouldReturnValueObjectWithDatetime(): void
     {
-        $result = $this->factory->buildModuleCreatedAt(new \DateTime);
+        $result = $this->factory->buildModuleCreatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }
 
-    public function test_buildModuleUpdatedAt_should_return_value_object_with_null(): void
+    public function testBuildModuleUpdatedAtShouldReturnValueObjectWithNull(): void
     {
         $result = $this->factory->buildModuleUpdatedAt();
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
         $this->assertNull($result->value());
     }
 
-    public function test_buildModuleUpdatedAt_should_return_value_object_with_datetime(): void
+    public function testBuildModuleUpdatedAtShouldReturnValueObjectWithDatetime(): void
     {
-        $result = $this->factory->buildModuleUpdatedAt(new \DateTime);
+        $result = $this->factory->buildModuleUpdatedAt(new \DateTime());
         $this->assertInstanceOf(ModuleUpdatedAt::class, $result);
         $this->assertInstanceOf(\DateTime::class, $result->value());
     }
@@ -95,7 +170,7 @@ class ModuleFactoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_buildModules_should_return_modules_object(): void
+    public function testBuildModulesShouldReturnModulesObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
         $result = $this->factory->buildModules($moduleMock);
@@ -103,7 +178,7 @@ class ModuleFactoryTest extends TestCase
         $this->assertInstanceOf(Modules::class, $result);
     }
 
-    public function test_buildModuleSearch_should_return_object_with_null(): void
+    public function testBuildModuleSearchShouldReturnObjectWithNull(): void
     {
         $result = $this->factory->buildModuleSearch();
 
@@ -112,10 +187,12 @@ class ModuleFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataObject
+     *
      * @throws \Exception
      */
     #[DataProviderExternal(DataProviderFactory::class, 'providerModules')]
-    public function test_buildModulesFromArray_should_return_modules(array $dataObject): void
+    public function testBuildModulesFromArrayShouldReturnModules(array $dataObject): void
     {
         $result = $this->factory->buildModulesFromArray($dataObject);
 
@@ -124,11 +201,31 @@ class ModuleFactoryTest extends TestCase
         $this->assertIsArray($result->items());
     }
 
-    public function test_buildModulePosition_should_return_value_object(): void
+    public function testBuildModulePositionShouldReturnValueObject(): void
     {
         $result = $this->factory->buildModulePosition();
 
         $this->assertInstanceOf(ModulePosition::class, $result);
         $this->assertIsInt($result->value());
+        $this->assertSame(1, $result->value());
+    }
+
+    public function testBuildModuleIconShouldReturnValueObject(): void
+    {
+        $result = $this->factory->buildModuleIcon();
+
+        $this->assertInstanceOf(ModuleIcon::class, $result);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testBuildModuleStateShouldReturnValueObject(): void
+    {
+        $result = $this->factory->buildModuleState();
+
+        $this->assertInstanceOf(ModuleState::class, $result);
+        $this->assertIsInt($result->value());
+        $this->assertSame(1, $result->value());
     }
 }

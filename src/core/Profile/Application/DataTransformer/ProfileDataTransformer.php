@@ -4,7 +4,6 @@ namespace Core\Profile\Application\DataTransformer;
 
 use Core\Profile\Domain\Contracts\ProfileDataTransformerContract;
 use Core\Profile\Domain\Profile;
-use Exception;
 
 class ProfileDataTransformer implements ProfileDataTransformerContract
 {
@@ -17,6 +16,9 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -25,7 +27,7 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
     }
 
     /**
-     * @throws Exception
+     * @return array<string, mixed>
      */
     public function readToShare(): array
     {
@@ -35,6 +37,9 @@ class ProfileDataTransformer implements ProfileDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [

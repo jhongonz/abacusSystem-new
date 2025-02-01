@@ -16,7 +16,6 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
-use Exception;
 
 class ModuleService implements ModuleManagementContract
 {
@@ -31,7 +30,7 @@ class ModuleService implements ModuleManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchModuleById(?int $id): ?Module
     {
@@ -43,15 +42,19 @@ class ModuleService implements ModuleManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchModules(array $filters = []): Modules
     {
         $request = new SearchModulesRequest($filters);
 
+        /** @var Modules $modules */
         $modules = $this->searchModules->execute($request);
+
         foreach ($modules->aggregator() as $item) {
+            /** @var Module $module */
             $module = $this->searchModuleById($item);
+
             $modules->addItem($module);
         }
 
@@ -59,7 +62,7 @@ class ModuleService implements ModuleManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateModule(int $moduleId, array $data): Module
     {
@@ -72,7 +75,7 @@ class ModuleService implements ModuleManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteModule(int $moduleId): void
     {
@@ -84,7 +87,7 @@ class ModuleService implements ModuleManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function createModule(array $dataModule): Module
     {

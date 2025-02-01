@@ -53,11 +53,12 @@ class UpdateUserTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataUpdate
+     *
      * @throws Exception
-     * @throws \Exception
      */
     #[DataProviderExternal(DataProviderUpdateUser::class, 'provider')]
-    public function test_execute_should_return_user_object(array $dataUpdate): void
+    public function testExecuteShouldReturnUserObject(array $dataUpdate): void
     {
         $userIdMock = $this->createMock(UserId::class);
 
@@ -163,7 +164,7 @@ class UpdateUserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_request_fail_should_return_exception(): void
+    public function testExecuteRequestFailShouldReturnException(): void
     {
         $requestMock = $this->createMock(CreateUserRequest::class);
 
@@ -171,5 +172,19 @@ class UpdateUserTest extends TestCase
         $this->expectExceptionMessage('Request not valid');
 
         $this->useCase->execute($requestMock);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testGetFunctionNameShouldReturnNameValid(): void
+    {
+        $reflection = new \ReflectionClass(UpdateUser::class);
+        $method = $reflection->getMethod('getFunctionName');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->useCase, 'name');
+        $this->assertIsString($result);
+        $this->assertSame('changeName', $result);
     }
 }

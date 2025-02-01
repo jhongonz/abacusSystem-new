@@ -14,7 +14,7 @@ class CampusObservationsTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusObservations;
+        $this->valueObject = new CampusObservations();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class CampusObservationsTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject->setValue('testing');
         $result = $this->valueObject->value();
@@ -38,7 +38,7 @@ class CampusObservationsTest extends TestCase
         $this->assertSame('testing', $result);
     }
 
-    public function test_setValue_should_return_object(): void
+    public function testSetValueShouldReturnObject(): void
     {
         $result = $this->valueObject->setValue('sandbox');
 

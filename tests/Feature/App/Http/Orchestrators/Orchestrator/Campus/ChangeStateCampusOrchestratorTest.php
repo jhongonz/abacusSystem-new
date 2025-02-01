@@ -7,6 +7,7 @@ use App\Http\Orchestrators\Orchestrator\Campus\ChangeStateCampusOrchestrator;
 use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
 use Core\Campus\Domain\ValueObjects\CampusState;
+use Core\Campus\Exceptions\CampusNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -40,14 +41,14 @@ class ChangeStateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
+     * @throws CampusNotFoundException
      */
-    public function test_make_should_active_when_is_new_and_return_campus(): void
+    public function testMakeShouldActiveWhenIsNewAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -81,19 +82,21 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
     /**
-     * @return void
      * @throws Exception
+     * @throws CampusNotFoundException
      */
-    public function test_make_should_inactive_when_is_active_and_return_campus(): void
+    public function testMakeShouldInactiveWhenIsActiveAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('campusId')
             ->willReturn(1);
 
@@ -138,14 +141,36 @@ class ChangeStateCampusOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
     /**
-     * @return void
+     * @throws CampusNotFoundException
+     * @throws Exception
      */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('campusId')
+            ->willReturn(1);
+
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->expectException(CampusNotFoundException::class);
+        $this->expectExceptionMessage('Campus not found with id 1');
+
+        $this->orchestrator->make($requestMock);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

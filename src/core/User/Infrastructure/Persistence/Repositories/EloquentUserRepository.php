@@ -15,7 +15,6 @@ use Core\User\Domain\ValueObjects\UserLogin;
 use Core\User\Exceptions\UserNotFoundException;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User as UserModel;
 use Core\User\Infrastructure\Persistence\Translators\UserTranslator;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentUserRepository implements ChainPriority, UserRepositoryContract
@@ -26,12 +25,12 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         private readonly DatabaseManager $database,
         private readonly UserTranslator $userTranslator,
         private readonly UserModel $model,
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(UserId $id): ?User
     {
@@ -50,7 +49,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function findCriteria(UserLogin $login): ?User
     {
@@ -69,7 +68,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistUser(User $user): User
     {
@@ -108,7 +107,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
 
     /**
      * @throws UserNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function delete(UserId $id): void
     {
@@ -128,7 +127,7 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function domainToModel(User $domain): UserModel
     {
@@ -138,21 +137,30 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         $model = $this->updateAttributesModelUser((array) $data);
 
         $model->changeId($domain->id()->value());
-        $model->changeEmployeeId($domain->employeeId()->value());
-        $model->changeProfileId($domain->profileId()->value());
         $model->changeLogin($domain->login()->value());
         $model->changePassword($domain->password()->value());
         $model->changeState($domain->state()->value());
         $model->changePhoto($domain->photo()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
-        if (! is_null($domain->updatedAt()->value())) {
+        if (!is_null($domain->employeeId()->value())) {
+            $model->changeEmployeeId($domain->employeeId()->value());
+        }
+
+        if (!is_null($domain->profileId()->value())) {
+            $model->changeProfileId($domain->profileId()->value());
+        }
+
+        if (!is_null($domain->updatedAt()->value())) {
             $model->changeUpdatedAt($domain->updatedAt()->value());
         }
 
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function updateAttributesModelUser(array $data = []): UserModel
     {
         $this->model->fill($data);
@@ -165,11 +173,8 @@ class EloquentUserRepository implements ChainPriority, UserRepositoryContract
         return $this->model->getTable();
     }
 
-    /**
-     * @throws Exception
-     */
-    private function getDateTime(string $datetime = 'now'): \DateTime
+    private function getDateTime(): \DateTime
     {
-        return new \DateTime($datetime);
+        return new \DateTime('now');
     }
 }

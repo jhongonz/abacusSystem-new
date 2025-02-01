@@ -40,9 +40,12 @@ class CreateInstitutionTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_save_and_return_object(): void
+    public function testExecuteShouldSaveAndReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
+        $institutionMock->expects(self::once())
+            ->method('refreshSearch')
+            ->willReturnSelf();
 
         $requestMock = $this->createMock(CreateInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -64,7 +67,7 @@ class CreateInstitutionTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $requestMock = $this->createMock(SearchInstitutionByIdRequest::class);
 

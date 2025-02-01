@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Campus\StoreCampusRequest;
+use App\Traits\DataTablesTrait;
 use Core\Campus\Domain\Campus;
 use Core\Employee\Domain\Employee;
 use Illuminate\Contracts\Session\Session;
@@ -14,16 +15,20 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
+use Yajra\DataTables\Exceptions\Exception;
 
 class CampusController extends Controller implements HasMiddleware
 {
+    use DataTablesTrait;
+
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly Session $session,
-        LoggerInterface $logger,
-        ViewFactory $viewFactory
+        private readonly DataTables $datatables,
+        protected ViewFactory $viewFactory,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
     }
 
     public function index(): JsonResponse|string
@@ -35,18 +40,30 @@ class CampusController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getCampusCollection(Request $request): JsonResponse
     {
         /** @var Employee $employee */
         $employee = $this->session->get('employee');
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
-        return $this->orchestrators->handler('retrieve-campus-collection', $request);
+        $dataCampus = $this->orchestrators->handler('retrieve-campus-collection', $request);
+
+        $dataTable = $this->datatables->collection($dataCampus);
+        $dataTable->addColumn('tools', function (array $element): string {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $dataTable->escapeColumns([])->toJson();
     }
 
     public function getCampus(Request $request, ?int $campusId = null): JsonResponse|string
     {
         $request->merge(['campusId' => $campusId]);
+
+        /** @var array<string, mixed> $dataCampus */
         $dataCampus = $this->orchestrators->handler('detail-campus', $request);
 
         $view = $this->viewFactory->make('campus.campus-form', $dataCampus)
@@ -62,11 +79,11 @@ class CampusController extends Controller implements HasMiddleware
         $request->merge(['institutionId' => $employee->institutionId()->value()]);
 
         try {
-            $method = (! $request->filled('campusId')) ? 'create-campus' : 'update-campus';
+            $method = (!$request->filled('campusId')) ? 'create-campus' : 'update-campus';
 
-            /** @var Campus $campus */
-            $campus = $this->orchestrators->handler($method, $request);
-
+            /** @var array{campus: Campus} $dataCampus */
+            $dataCampus = $this->orchestrators->handler($method, $request);
+            $campus = $dataCampus['campus'];
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -89,7 +106,7 @@ class CampusController extends Controller implements HasMiddleware
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(status:Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function deleteCampus(Request $request, int $campusId): JsonResponse
@@ -115,7 +132,7 @@ class CampusController extends Controller implements HasMiddleware
         return [
             new Middleware(['auth', 'verify-session']),
             new Middleware('only.ajax-request', only: [
-                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus','getCampus'
+                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus', 'getCampus',
             ]),
         ];
     }
