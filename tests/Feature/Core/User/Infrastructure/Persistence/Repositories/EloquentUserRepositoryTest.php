@@ -419,9 +419,10 @@ class EloquentUserRepositoryTest extends TestCase
             ->with('user_id', null)
             ->andReturnSelf();
 
+        $objectMock = new \stdClass();
         $builderMock->shouldReceive('first')
             ->once()
-            ->andReturn([]);
+            ->andReturn($objectMock);
 
         $this->database->shouldReceive('table')
             ->times(2)
@@ -624,32 +625,40 @@ class EloquentUserRepositoryTest extends TestCase
     }
 
     /**
-     * @param array<string, mixed> $dataReturn
-     *
      * @throws Exception
      * @throws UserNotFoundException
      */
-    #[DataProviderExternal(DataProviderEloquentRepository::class, 'providerDelete')]
-    public function testDeleteShouldDeleteRow(array $dataReturn): void
+    public function testDeleteShouldDeleteRow(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
             ->method('value')
             ->willReturn(7);
 
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('first')
-            ->once()
-            ->andReturn($dataReturn);
-
         $this->model->expects(self::once())
             ->method('getTable')
             ->willReturn('users');
+
+        $objectMock = new \stdClass();
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn($objectMock);
 
         $this->database->shouldReceive('table')
             ->once()
             ->with('users')
             ->andReturn($builderMock);
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeDeletedAt')
+            ->withAnyParameters()
+            ->willReturnSelf();
 
         $builderMock->shouldReceive('where')
             ->once()
@@ -659,7 +668,7 @@ class EloquentUserRepositoryTest extends TestCase
         $builderMock->shouldReceive('update')
             ->once()
             ->with([])
-            ->andReturn(1);
+            ->andReturnSelf();
 
         $this->model->expects(self::once())
             ->method('toArray')

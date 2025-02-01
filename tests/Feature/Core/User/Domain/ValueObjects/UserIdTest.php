@@ -6,6 +6,7 @@
 
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
+use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
@@ -69,6 +70,16 @@ class UserIdTest extends TestCase
         $this->expectExceptionMessage($expectedMessage);
 
         $this->valueObject->setValue(0);
+    }
+
+    public function testConstructValueShouldReturnException(): void
+    {
+        $expectedMessage = '<Core\User\Domain\ValueObjects\UserId> does not allow the value <0>.';
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $this->valueObject = new UserId(0);
     }
 
     /**

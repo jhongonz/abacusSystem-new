@@ -66,25 +66,4 @@ final class DataProviderEloquentRepository
             ],
         ];
     }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public static function providerDelete(): array
-    {
-        return [
-            [
-                'dataReturn' => [
-                    'user_state' => 1,
-                    'user_id' => 7,
-                    'user__emp_id' => 1,
-                    'user__pro_id' => 1,
-                    'user_login' => 'login',
-                    'user_photo' => 'image.jpg',
-                    'created_at' => '2024-04-28T09:46:00.000000Z',
-                    'updated_at' => '2024-04-28T09:46:00.000000Z',
-                ],
-            ],
-        ];
-    }
 }
