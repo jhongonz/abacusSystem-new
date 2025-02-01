@@ -7,11 +7,13 @@ use App\Http\Orchestrators\Orchestrator\Institution\InstitutionOrchestrator;
 use Core\Institution\Domain\Contracts\InstitutionManagementContract;
 use Core\Institution\Domain\Institution;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(CreateInstitutionOrchestrator::class)]
@@ -49,14 +51,13 @@ class CreateInstitutionOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_institution(): void
+    public function testMakeShouldReturnInstitution(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(9))
+        $requestMock->expects(self::exactly(7))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                null,
                 'name',
                 'code',
                 'shortname',
@@ -64,13 +65,24 @@ class CreateInstitutionOrchestratorTest extends TestCase
                 'address',
                 'phone',
                 'email',
-                'token'
             );
+
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->willReturn(0);
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->willReturn('token');
 
         $requestMock->expects(self::once())
             ->method('filled')
             ->with('token')
             ->willReturn(true);
+
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('eadbfeac-5258-45c2-bab7-ccb9b5ef74f9');
+        });
 
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
@@ -88,19 +100,34 @@ class CreateInstitutionOrchestratorTest extends TestCase
             ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
             ->willReturn($imageMock);
 
+        $dataInstitutionExpected = [
+            'id' => 0,
+            'name' => 'name',
+            'code' => 'code',
+            'shortname' => 'shortname',
+            'observations' => 'observations',
+            'address' => 'address',
+            'phone' => 'phone',
+            'email' => 'email',
+            'state' => 1,
+            'logo' => 'eadbfeac-5258-45c2-bab7-ccb9b5ef74f9.jpg',
+        ];
+
         $institutionMock = $this->createMock(Institution::class);
         $this->institutionManagement->expects(self::once())
             ->method('createInstitution')
-            ->withAnyParameters()
+            ->with([Institution::TYPE => $dataInstitutionExpected])
             ->willReturn($institutionMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Institution::class, $result);
-        $this->assertSame($institutionMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('institution', $result);
+        $this->assertInstanceOf(Institution::class, $result['institution']);
+        $this->assertSame($institutionMock, $result['institution']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

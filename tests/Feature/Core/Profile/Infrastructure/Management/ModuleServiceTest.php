@@ -73,7 +73,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchModuleById_should_return_object(): void
+    public function testSearchModuleByIdShouldReturnObject(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $this->factory->expects(self::once())
@@ -99,7 +99,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchModuleById_should_return_null(): void
+    public function testSearchModuleByIdShouldReturnNull(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $this->factory->expects(self::once())
@@ -123,7 +123,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchModules_should_return_object(): void
+    public function testSearchModulesShouldReturnObject(): void
     {
         $filters = [];
         $request = new SearchModulesRequest($filters);
@@ -164,7 +164,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updateModule_should_return_void(): void
+    public function testUpdateModuleShouldReturnVoid(): void
     {
         $data = [];
         $moduleId = $this->createMock(ModuleId::class);
@@ -191,7 +191,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_deleteModule_should_return_void(): void
+    public function testDeleteModuleShouldReturnVoid(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $this->factory->expects(self::once())
@@ -214,7 +214,7 @@ class ModuleServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createModule_should_return_object(): void
+    public function testCreateModuleShouldReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
         $this->factory->expects(self::once())

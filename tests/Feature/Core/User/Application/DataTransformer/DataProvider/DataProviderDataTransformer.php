@@ -8,6 +8,9 @@ namespace Tests\Feature\Core\User\Application\DataTransformer\DataProvider;
 
 final class DataProviderDataTransformer
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
         $datetime = '2024-04-20 22:08:42';

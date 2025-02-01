@@ -8,7 +8,7 @@ use Core\Profile\Domain\Module;
 class CreateModuleRequest implements RequestService
 {
     public function __construct(
-        private readonly Module $module
+        private readonly Module $module,
     ) {
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\View\Composers;
 
-use App\Traits\UtilsDateTimeTrait;
 use Core\Employee\Domain\Employee;
 use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
@@ -13,14 +12,13 @@ use Core\User\Domain\User;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class MenuComposer
 {
-    use UtilsDateTimeTrait;
-
     private ModuleFactoryContract $moduleFactory;
     private Config $config;
     private Router $router;
@@ -33,7 +31,7 @@ class MenuComposer
         Config $config,
         Router $router,
         Session $session,
-        UrlGenerator $urlGenerator
+        UrlGenerator $urlGenerator,
     ) {
         $this->moduleFactory = $moduleFactory;
         $this->config = $config;
@@ -43,6 +41,9 @@ class MenuComposer
         $this->imagePathFull = '/images/full/';
     }
 
+    /**
+     * @throws \Exception
+     */
     public function compose(View $view): void
     {
         /** @var User $user */
@@ -55,7 +56,9 @@ class MenuComposer
         $employee = $this->session->get('employee');
 
         $menu = $this->prepareMenu($profile->modules());
-        $image = $this->urlGenerator->to($this->imagePathFull.$user->photo()->value().'?v='.Str::random(10));
+        $image = $this->urlGenerator->to(
+            sprintf('%s%s?v=%s', $this->imagePathFull, $user->photo()->value(), Str::random())
+        );
 
         $view->with('menu', $menu);
         $view->with('user', $user);
@@ -64,49 +67,59 @@ class MenuComposer
         $view->with('image', $image);
     }
 
+    /**
+     * @return array<int, mixed>
+     *
+     * @throws \Exception
+     */
     private function prepareMenu(Modules $modules): array
     {
         $menuWithChildren = [];
         $menuUnique = [];
-        foreach ($this->config->get('menu.options') as $index => $item) {
-            $item['id'] = 0;
-            $item['state'] = ValueObjectStatus::STATE_ACTIVE;
-            $item['createdAt'] = $this->getCurrentTime()->format(self::DATE_FORMAT);
 
-            if (empty($item['route'])) {
-                $options = $modules->moduleElementsOfKey($index);
+        /** @var array<string> $menuOptions */
+        $menuOptions = $this->config->get('menu.options');
 
-                if (count($options) > 0) {
-                    $item['key'] = $index;
-                    $item['route'] = '';
+        /**
+         * @var array<string, mixed> $item
+         */
+        foreach ($menuOptions as $item) {
+            $module = $this->moduleFactory->buildModuleFromArray([Module::TYPE => $item]);
+            $module->id()->setValue(0);
+            $module->state()->setValue(ValueObjectStatus::STATE_ACTIVE);
+            $menuKey = $module->menuKey()->value();
 
-                    $mainModule = $this->changeExpandedToModule($options, $this->getModuleMenu($item));
-                    $menuWithChildren[] = $mainModule;
+            if ($module->isParent()) {
+                $options = $modules->moduleElementsOfKey($menuKey);
+
+                if (!empty($options)) {
+                    $module->menuKey()->setValue($menuKey);
+                    $module->route()->setValue('');
+
+                    $module = $this->changeExpandedToModule($options, $module);
+                    $menuWithChildren[] = $module;
                 }
             } else {
-                $item['key'] = '';
-                $menuUnique[] = $this->getModuleMenu($item);
+                $module->menuKey()->setValue('');
+                $menuUnique[] = $module;
             }
         }
 
         return array_merge($menuWithChildren, $menuUnique);
     }
 
-    private function getModuleMenu(array $data): Module
-    {
-        return $this->moduleFactory->buildModuleFromArray([Module::TYPE => $data]);
-    }
-
     /**
-     * @param  array<Module>  $modules
+     * @param array<Module> $modules
      */
     private function changeExpandedToModule(array $modules, Module $mainModule): Module
     {
-        $routeCurrent = $this->router->current()->uri();
+        /** @var Route $routeCurrent */
+        $routeCurrent = $this->router->current();
+        $uriCurrent = $routeCurrent->uri();
 
-        foreach ($modules as $item) {
-            if ($item->route()->value() === $routeCurrent) {
-                $item->setExpanded(true);
+        foreach ($modules as $module) {
+            if ($module->route()->value() === $uriCurrent) {
+                $module->setExpanded(true);
                 $mainModule->setExpanded(true);
             }
         }

@@ -18,7 +18,7 @@ class CampusUpdatedOrDeletedEvent
      * Create a new event instance.
      */
     public function __construct(
-        private readonly int $campusId
+        private readonly int $campusId,
     ) {
     }
 

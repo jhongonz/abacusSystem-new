@@ -8,7 +8,7 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 class SearchEmployeeByIdentificationRequest implements RequestService
 {
     public function __construct(
-        private readonly EmployeeIdentification $identification
+        private readonly EmployeeIdentification $identification,
     ) {
     }
 

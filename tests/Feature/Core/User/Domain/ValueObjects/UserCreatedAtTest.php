@@ -7,7 +7,6 @@
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
 use Core\User\Domain\ValueObjects\UserCreatedAt;
-use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -16,12 +15,12 @@ class UserCreatedAtTest extends TestCase
 {
     private UserCreatedAt $valueObject;
 
-    private DateTime $dateTime;
+    private \DateTime $dateTime;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->dateTime = new DateTime('2024-04-20 21:25:00');
+        $this->dateTime = new \DateTime('2024-04-20 21:25:00');
         $this->valueObject = new UserCreatedAt($this->dateTime);
     }
 
@@ -31,34 +30,34 @@ class UserCreatedAtTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_datetime(): void
+    public function testValueShouldReturnDatetime(): void
     {
         $result = $this->valueObject->value();
 
         $this->assertSame($this->dateTime, $result);
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_setValue_should_change_value_and_return_object(): void
+    public function testSetValueShouldChangeValueAndReturnObject(): void
     {
-        $expected = new DateTime('2024-04-20 21:27:00');
+        $expected = new \DateTime('2024-04-20 21:27:00');
         $original = $this->valueObject->value();
         $object = $this->valueObject->setValue($expected);
 
         $return = $this->valueObject->value();
         $this->assertSame($expected, $return);
         $this->assertInstanceOf(UserCreatedAt::class, $object);
-        $this->assertInstanceOf(DateTime::class, $return);
+        $this->assertInstanceOf(\DateTime::class, $return);
         $this->assertNotEquals($expected, $original);
     }
 
-    public function test___toString_should_return_string(): void
+    public function testToStringShouldReturnString(): void
     {
         $dateTime = new \DateTime('2024-04-20 21:27:00');
         $result = $this->valueObject->setValue($dateTime);
 
         $this->assertInstanceOf(UserCreatedAt::class, $result);
         $this->assertSame($this->valueObject, $result);
-        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+        $this->assertSame('2024-04-20 21:27:00', (string) $result);
     }
 }

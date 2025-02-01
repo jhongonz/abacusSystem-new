@@ -6,7 +6,6 @@ use Core\Profile\Application\UseCasesModule\RequestService;
 use Core\Profile\Application\UseCasesModule\UseCasesService;
 use Core\Profile\Domain\Contracts\ModuleRepositoryContract;
 use Core\Profile\Domain\Module;
-use Exception;
 
 class UpdateModule extends UseCasesService
 {
@@ -16,7 +15,7 @@ class UpdateModule extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): Module
     {
@@ -25,7 +24,7 @@ class UpdateModule extends UseCasesService
         /** @var UpdateModuleRequest $request */
         $module = $this->moduleRepository->find($request->moduleId());
         foreach ($request->data() as $field => $value) {
-            $methodName = 'change'.\ucfirst($field);
+            $methodName = $this->getFunctionName($field);
 
             if (\is_callable([$this, $methodName])) {
                 $module = $this->{$methodName}($module, $value);
@@ -35,6 +34,11 @@ class UpdateModule extends UseCasesService
         $module->refreshSearch();
 
         return $this->moduleRepository->persistModule($module);
+    }
+
+    protected function getFunctionName(string $field): string
+    {
+        return sprintf('change%s', ucfirst($field));
     }
 
     private function changeName(Module $module, string $value): Module
@@ -66,7 +70,7 @@ class UpdateModule extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function changeState(Module $module, int $value): Module
     {

@@ -18,7 +18,6 @@ use Core\User\Domain\ValueObjects\UserPhoto;
 use Core\User\Domain\ValueObjects\UserProfileId;
 use Core\User\Domain\ValueObjects\UserState;
 use Core\User\Domain\ValueObjects\UserUpdatedAt;
-use DateTime;
 use Mockery\Mock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProviderExternal;
@@ -40,7 +39,7 @@ class UserDataTransformerTest extends TestCase
     {
         parent::setUp();
         $this->user = $this->createMock(User::class);
-        $this->dataTransformer = new UserDataTransformer;
+        $this->dataTransformer = new UserDataTransformer();
     }
 
     public function tearDown(): void
@@ -49,7 +48,7 @@ class UserDataTransformerTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_write_should_return_object(): void
+    public function testWriteShouldReturnObject(): void
     {
         $result = $this->dataTransformer->write($this->user);
 
@@ -57,11 +56,13 @@ class UserDataTransformerTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $expected
+     *
      * @throws Exception
-     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     #[DataProviderExternal(DataProviderDataTransformer::class, 'provider')]
-    public function test_read_should_return_array(array $expected, string $datetime): void
+    public function testReadShouldReturnArray(array $expected, string $datetime): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $userIdMock->expects(self::once())
@@ -108,13 +109,13 @@ class UserDataTransformerTest extends TestCase
         $userCreatedAtMock = $this->createMock(UserCreatedAt::class);
         $userCreatedAtMock->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->user->method('createdAt')->willReturn($userCreatedAtMock);
 
         $userUpdatedAtMock = $this->createMock(UserUpdatedAt::class);
         $userUpdatedAtMock->expects(self::once())
             ->method('toFormattedString')
-            ->willReturn((new DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
+            ->willReturn((new \DateTime($datetime))->format(dateTimeModel::DATE_FORMAT));
         $this->user->method('updatedAt')->willReturn($userUpdatedAtMock);
 
         $this->dataTransformer->write($this->user);

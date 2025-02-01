@@ -52,7 +52,7 @@ class RedisProfileRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -60,7 +60,7 @@ class RedisProfileRepositoryTest extends TestCase
         $this->assertSame(100, $result);
     }
 
-    public function test_changePriority_should_return_self(): void
+    public function testChangePriorityShouldReturnSelf(): void
     {
         $result = $this->repository->changePriority(50);
 
@@ -69,7 +69,7 @@ class RedisProfileRepositoryTest extends TestCase
         $this->assertSame(50, $result->priority());
     }
 
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
@@ -78,7 +78,7 @@ class RedisProfileRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteProfile_should_return_void(): void
+    public function testDeleteProfileShouldReturnVoid(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -98,7 +98,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_object(): void
+    public function testFindShouldReturnObject(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -126,7 +126,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::once())
@@ -150,7 +150,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $profileId = $this->createMock(ProfileId::class);
         $profileId->expects(self::exactly(2))
@@ -179,7 +179,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_findCriteria_should_return_object(): void
+    public function testFindCriteriaShouldReturnObject(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::once())
@@ -207,7 +207,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::once())
@@ -231,7 +231,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfileNotFoundException
      * @throws Exception
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $profileName = $this->createMock(ProfileName::class);
         $profileName->expects(self::exactly(2))
@@ -260,7 +260,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfilePersistException
      * @throws Exception
      */
-    public function test_persistProfile_should_return_object(): void
+    public function testPersistProfileShouldReturnObject(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $profileIdMock->expects(self::once())
@@ -310,7 +310,7 @@ class RedisProfileRepositoryTest extends TestCase
      * @throws ProfilePersistException
      * @throws Exception
      */
-    public function test_persistProfile_should_return_exception(): void
+    public function testPersistProfileShouldReturnException(): void
     {
         $profileIdMock = $this->createMock(ProfileId::class);
         $profileIdMock->expects(self::once())

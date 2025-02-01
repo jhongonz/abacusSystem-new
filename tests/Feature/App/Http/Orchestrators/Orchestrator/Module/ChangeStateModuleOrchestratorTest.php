@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Module\ChangeStateModuleOrchestrator;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\ValueObjects\ModuleState;
+use Core\Profile\Exceptions\ModuleNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -39,12 +40,13 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws ModuleNotFoundException
      */
-    public function test_make_should_return_module_when_is_activate(): void
+    public function testMakeShouldReturnModuleWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(1);
 
@@ -82,18 +84,21 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($moduleMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('module', $result);
+        $this->assertInstanceOf(Module::class, $result['module']);
+        $this->assertSame($moduleMock, $result['module']);
     }
 
     /**
      * @throws Exception
+     * @throws ModuleNotFoundException
      */
-    public function test_make_should_return_module_when_is_inactivate(): void
+    public function testMakeShouldReturnModuleWhenIsInactivate(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('moduleId')
             ->willReturn(1);
 
@@ -139,11 +144,30 @@ class ChangeStateModuleOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Module::class, $result);
-        $this->assertSame($moduleMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('module', $result);
+        $this->assertInstanceOf(Module::class, $result['module']);
+        $this->assertSame($moduleMock, $result['module']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnExceptionWhenModuleIsNull(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('moduleId')
+            ->willReturn(1);
+
+        $this->expectException(ModuleNotFoundException::class);
+        $this->expectExceptionMessage('Module with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

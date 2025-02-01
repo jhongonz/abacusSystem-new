@@ -39,18 +39,15 @@ class CreateCampusOrchestratorTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_make_should_create_and_return_campus(): void
+    public function testMakeShouldCreateAndReturnCampus(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(7))
+        $requestMock->expects(self::exactly(5))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                1,
-                2,
                 'name',
                 '123456789',
                 'sandbox@local.com',
@@ -58,22 +55,39 @@ class CreateCampusOrchestratorTest extends TestCase
                 'observations'
             );
 
+        $requestMock->expects(self::exactly(2))
+            ->method('integer')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(1, 2);
+
+        $paramsExpected = [
+            Campus::TYPE => [
+                'id' => 1,
+                'institutionId' => 2,
+                'name' => 'name',
+                'phone' => '123456789',
+                'email' => 'sandbox@local.com',
+                'address' => 'address',
+                'observations' => 'observations',
+                'state' => 1,
+            ],
+        ];
+
         $campusMock = $this->createMock(Campus::class);
         $this->campusManagementMock->expects(self::once())
             ->method('createCampus')
-            ->withAnyParameters()
+            ->with($paramsExpected)
             ->willReturn($campusMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Campus::class, $result);
-        $this->assertSame($campusMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('campus', $result);
+        $this->assertInstanceOf(Campus::class, $result['campus']);
+        $this->assertSame($campusMock, $result['campus']);
     }
 
-    /**
-     * @return void
-     */
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

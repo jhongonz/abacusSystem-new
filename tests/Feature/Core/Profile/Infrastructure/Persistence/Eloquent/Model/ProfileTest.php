@@ -21,7 +21,7 @@ class ProfileTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Profile;
+        $this->model = new Profile();
     }
 
     public function tearDown(): void
@@ -30,7 +30,7 @@ class ProfileTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getSearchField_should_return_string(): void
+    public function testGetSearchFieldShouldReturnString(): void
     {
         $result = $this->model->getSearchField();
 
@@ -41,7 +41,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_user_should_return_relation(): void
+    public function testUserShouldReturnRelation(): void
     {
         $relationHasMany = $this->createMock(HasMany::class);
         $this->modelMock = $this->getMockBuilder(Profile::class)
@@ -62,7 +62,7 @@ class ProfileTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_pivotModules_should_return_relation(): void
+    public function testPivotModulesShouldReturnRelation(): void
     {
         $relationMock = $this->createMock(BelongsToMany::class);
         $relationMock->expects(self::once())
@@ -96,13 +96,13 @@ class ProfileTest extends TestCase
         $this->assertSame($relationMock, $result);
     }
 
-    public function test_modules_should_return_model(): void
+    public function testModulesShouldReturnModel(): void
     {
         $result = $this->model->modules();
         $this->assertInstanceOf(Module::class, $result);
     }
 
-    public function test_id_should_return_int(): void
+    public function testIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -119,7 +119,7 @@ class ProfileTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_id_should_return_null(): void
+    public function testIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -135,7 +135,7 @@ class ProfileTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeId_should_return_self(): void
+    public function testChangeIdShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -152,7 +152,7 @@ class ProfileTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_name_should_return_string(): void
+    public function testNameShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -169,7 +169,7 @@ class ProfileTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_name_should_return_null(): void
+    public function testNameShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -185,7 +185,7 @@ class ProfileTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeName_should_return_self(): void
+    public function testChangeNameShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -202,7 +202,7 @@ class ProfileTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_state_should_return_int(): void
+    public function testStateShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -219,7 +219,7 @@ class ProfileTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_changeState_should_return_self(): void
+    public function testChangeStateShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -236,7 +236,7 @@ class ProfileTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_search_should_return_string(): void
+    public function testSearchShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -253,7 +253,7 @@ class ProfileTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_search_should_return_null(): void
+    public function testSearchShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -269,7 +269,7 @@ class ProfileTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeSearch_should_return_self(): void
+    public function testChangeSearchShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -286,7 +286,7 @@ class ProfileTest extends TestCase
         $this->assertSame($this->modelMock, $result);
     }
 
-    public function test_description_should_return_string(): void
+    public function testDescriptionShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -303,7 +303,7 @@ class ProfileTest extends TestCase
         $this->assertSame('test', $result);
     }
 
-    public function test_description_should_return_null(): void
+    public function testDescriptionShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -319,7 +319,7 @@ class ProfileTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_changeDescription_should_return_self(): void
+    public function testChangeDescriptionShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -339,7 +339,7 @@ class ProfileTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_createdAt_should_return_datetime(): void
+    public function testCreatedAtShouldReturnDatetime(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -355,7 +355,7 @@ class ProfileTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_changeCreatedAt_should_return_self(): void
+    public function testChangeCreatedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -376,7 +376,7 @@ class ProfileTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_datetime(): void
+    public function testUpdatedAtShouldReturnDatetime(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -392,7 +392,7 @@ class ProfileTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_changeUpdatedAt_should_return_self(): void
+    public function testChangeUpdatedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -413,7 +413,7 @@ class ProfileTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_deletedAt_should_return_datetime(): void
+    public function testDeletedAtShouldReturnDatetime(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['getAttribute'])
@@ -429,7 +429,7 @@ class ProfileTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_changeDeletedAt_should_return_self(): void
+    public function testChangeDeletedAtShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(Profile::class)
             ->onlyMethods(['setAttribute'])
@@ -445,5 +445,27 @@ class ProfileTest extends TestCase
 
         $this->assertInstanceOf(Profile::class, $result);
         $this->assertSame($this->modelMock, $result);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArray(): void
+    {
+        $this->modelMock = new Profile();
+
+        $reflection = new \ReflectionClass(Profile::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->modelMock);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+        $this->assertIsArray($result);
+        $this->assertSame($dataExpected, $result);
     }
 }

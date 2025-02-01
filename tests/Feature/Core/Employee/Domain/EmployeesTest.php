@@ -4,77 +4,110 @@ namespace Tests\Feature\Core\Employee\Domain;
 
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
+use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
+#[CoversClass(ArrayIterator::class)]
 #[CoversClass(Employees::class)]
 class EmployeesTest extends TestCase
 {
-    private Employee|MockObject $employee;
-
     private Employees $employees;
 
-    /**
-     * @throws Exception
-     */
     public function setUp(): void
     {
         parent::setUp();
-        $this->employee = $this->createMock(Employee::class);
-        $this->employees = new Employees([$this->employee]);
     }
 
     public function tearDown(): void
     {
-        unset(
-            $this->employee,
-            $this->employees
-        );
+        unset($this->employees);
         parent::tearDown();
     }
 
     /**
      * @throws Exception
      */
-    public function test_addItem_should_add_and_return_self(): void
+    public function testConstructValueCollectionCorrectly(): void
     {
+        $employeeMock = $this->createMock(Employee::class);
+        $employeeMock2 = $this->createMock(Employee::class);
+
+        $this->employees = new Employees([$employeeMock, $employeeMock2]);
+
+        $this->assertCount(2, $this->employees->items());
+        $this->assertSame([$employeeMock, $employeeMock2], $this->employees->items());
+    }
+
+    public function testConstructValueCollectionShouldReturnException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Item is not valid to collection Core\Employee\Domain\Employees');
+
+        $this->employees = new Employees(['testing']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAddItemShouldAddAndReturnSelf(): void
+    {
+        $this->employees = new Employees();
+
         $employeeMock = $this->createMock(Employee::class);
         $result = $this->employees->addItem($employeeMock);
 
         $this->assertInstanceOf(Employees::class, $result);
         $this->assertSame($result, $this->employees);
+        $this->assertSame([$employeeMock], $result->items());
     }
 
-    public function test_items_should_return_array(): void
+    /**
+     * @throws Exception
+     */
+    public function testItemsShouldReturnArray(): void
     {
+        $employeeMock = $this->createMock(Employee::class);
+        $this->employees = new Employees([$employeeMock]);
+
         $result = $this->employees->items();
         $this->assertIsArray($result);
+        $this->assertSame([$employeeMock], $result);
     }
 
-    public function test_addId_should_add_and_return_self(): void
+    public function testAddIdShouldAddAndReturnSelf(): void
     {
+        $this->employees = new Employees();
+
         $result = $this->employees->addId(1);
+
         $this->assertInstanceOf(Employees::class, $result);
         $this->assertSame($result, $this->employees);
+        $this->assertSame([1], $this->employees->aggregator());
     }
 
-    public function test_aggregator_should_return_array(): void
+    public function testAggregatorShouldReturnArray(): void
     {
+        $this->employees = new Employees();
+
         $result = $this->employees->aggregator();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
+        $this->employees = new Employees();
+
         $result = $this->employees->filters();
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_change_and_return_self(): void
+    public function testSetFiltersShouldChangeAndReturnSelf(): void
     {
+        $this->employees = new Employees();
         $result = $this->employees->setFilters(['hello']);
+
         $this->assertInstanceOf(Employees::class, $result);
         $this->assertSame($result, $this->employees);
         $this->assertSame(['hello'], $this->employees->filters());

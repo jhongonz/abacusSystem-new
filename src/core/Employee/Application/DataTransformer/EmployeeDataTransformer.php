@@ -4,7 +4,6 @@ namespace Core\Employee\Application\DataTransformer;
 
 use Core\Employee\Domain\Contracts\EmployeeDataTransformerContract;
 use Core\Employee\Domain\Employee;
-use Exception;
 
 class EmployeeDataTransformer implements EmployeeDataTransformerContract
 {
@@ -13,9 +12,13 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     public function write(Employee $employee): self
     {
         $this->employee = $employee;
+
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function read(): array
     {
         return [
@@ -24,7 +27,9 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
     }
 
     /**
-     * @throws Exception
+     * @return array<string, mixed>
+     *
+     * @throws \Exception
      */
     public function readToShare(): array
     {
@@ -34,6 +39,9 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [
@@ -55,10 +63,10 @@ class EmployeeDataTransformer implements EmployeeDataTransformerContract
         ];
 
         $birthdate = $this->employee->birthdate()->toFormattedString();
-        $data['birthdate'] = (empty($birthdate)) ? $birthdate : null;
+        $data['birthdate'] = !empty($birthdate) ? $birthdate : null;
 
         $updatedAt = $this->employee->updatedAt()->toFormattedString();
-        $data['updated_at'] = (empty($updatedAt)) ? $updatedAt : null;
+        $data['updatedAt'] = !empty($updatedAt) ? $updatedAt : null;
 
         return $data;
     }

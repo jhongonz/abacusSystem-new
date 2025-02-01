@@ -23,7 +23,7 @@ class SearchInstitutionsRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->request->filters();
 

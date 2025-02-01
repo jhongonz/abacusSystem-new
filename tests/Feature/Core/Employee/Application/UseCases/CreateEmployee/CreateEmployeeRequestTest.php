@@ -35,7 +35,7 @@ class CreateEmployeeRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_employee_should_return_object(): void
+    public function testEmployeeShouldReturnObject(): void
     {
         $result = $this->request->employee();
 

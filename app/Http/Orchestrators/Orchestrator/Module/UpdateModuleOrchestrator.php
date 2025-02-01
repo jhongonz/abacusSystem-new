@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 18:04:20
@@ -10,7 +11,6 @@ use App\Http\Exceptions\RouteNotFoundException;
 use App\Traits\RouterTrait;
 use Assert\AssertionFailedException;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
-use Core\Profile\Domain\Module;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Psr\Log\LoggerInterface;
@@ -23,26 +23,25 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
     public function __construct(
         ModuleManagementContract $moduleManagement,
         protected Router $router,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($moduleManagement);
-        $this->setRouter($this->router);
     }
 
     /**
-     * @param Request $request
-     * @return Module
+     * @return array<string, mixed>
+     *
      * @throws RouteNotFoundException
      */
-    public function make(Request $request): Module
+    public function make(Request $request): array
     {
-        $route = $request->input('route');
+        $route = $request->string('route');
 
         try {
             $this->validateRoute($route);
         } catch (AssertionFailedException $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
-            throw new RouteNotFoundException('Route <'.$route.'> not found', Response::HTTP_NOT_FOUND);
+            throw new RouteNotFoundException(sprintf('Route <%s> not found', $route), Response::HTTP_NOT_FOUND);
         }
 
         $dataUpdate = [
@@ -53,12 +52,11 @@ class UpdateModuleOrchestrator extends ModuleOrchestrator
             'key' => $request->input('key'),
         ];
 
-        return $this->moduleManagement->updateModule($request->input('moduleId'), $dataUpdate);
+        $module = $this->moduleManagement->updateModule($request->integer('moduleId'), $dataUpdate);
+
+        return ['module' => $module];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'update-module';

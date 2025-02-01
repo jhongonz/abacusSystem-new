@@ -16,7 +16,7 @@ class ModuleStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleState;
+        $this->valueObject = new ModuleState();
     }
 
     public function tearDown(): void
@@ -25,7 +25,7 @@ class ModuleStateTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $result = $this->valueObject->value();
 
@@ -36,7 +36,7 @@ class ModuleStateTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
         $result = $this->valueObject->setValue(2);
 
@@ -45,7 +45,7 @@ class ModuleStateTest extends TestCase
         $this->assertSame(2, $result->value());
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ModuleState> does not allow the invalid state: <10>.');
@@ -53,7 +53,7 @@ class ModuleStateTest extends TestCase
         $this->valueObject->setValue(10);
     }
 
-    public function test_value_literal_should_return_with__string(): void
+    public function testValueLiteralShouldReturnWithString(): void
     {
         $result = $this->valueObject->__toString();
 

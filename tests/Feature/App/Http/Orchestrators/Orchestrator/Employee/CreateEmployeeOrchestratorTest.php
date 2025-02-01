@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(CreateEmployeeOrchestrator::class)]
@@ -47,16 +49,15 @@ class CreateEmployeeOrchestratorTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Exception
      */
-    public function test_make_should_create_and_return_employee(): void
+    public function testMakeShouldCreateAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(11))
+        $requestMock->expects(self::exactly(8))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                1,
-                1,
                 'identification',
                 'name',
                 'lastname',
@@ -64,9 +65,18 @@ class CreateEmployeeOrchestratorTest extends TestCase
                 'observations',
                 'email',
                 'phone',
-                'address',
-                'token',
+                'address'
             );
+
+        $requestMock->expects(self::exactly(2))
+            ->method('integer')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls(1, 1);
+
+        $requestMock->expects(self::once())
+            ->method('string')
+            ->with('token')
+            ->willReturn('token');
 
         $requestMock->expects(self::once())
             ->method('filled')
@@ -84,6 +94,10 @@ class CreateEmployeeOrchestratorTest extends TestCase
             ->with('birthdate', 'd/m/Y')
             ->willReturn($carbonMock);
 
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('46aa4b5e-615d-466c-ab38-6674ec52637b');
+        });
+
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
             ->method('save')
@@ -100,19 +114,38 @@ class CreateEmployeeOrchestratorTest extends TestCase
             ->with('/var/www/abacusSystem-new/public/images/tmp/token.jpg')
             ->willReturn($imageMock);
 
+        $dataExpected = [
+            'id' => 1,
+            'userId' => null,
+            'institutionId' => 1,
+            'identification' => 'identification',
+            'name' => 'name',
+            'lastname' => 'lastname',
+            'identification_type' => 'identification_type',
+            'observations' => 'observations',
+            'email' => 'email',
+            'phone' => 'phone',
+            'address' => 'address',
+            'state' => 1,
+            'birthdate' => '2024-06-11 00:00:00',
+            'image' => '46aa4b5e-615d-466c-ab38-6674ec52637b.jpg',
+        ];
+
         $employeeMock = $this->createMock(Employee::class);
         $this->employeeManagement->expects(self::once())
             ->method('createEmployee')
-            ->withAnyParameters()
+            ->with([Employee::TYPE => $dataExpected])
             ->willReturn($employeeMock);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

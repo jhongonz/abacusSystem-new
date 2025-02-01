@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-10-17 21:24:30
@@ -12,11 +13,13 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
 use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Repositories\ChainInstitutionRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainInstitutionRepository::class)]
 class ChainInstitutionRepositoryTest extends TestCase
 {
@@ -26,7 +29,7 @@ class ChainInstitutionRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainInstitutionRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -36,10 +39,7 @@ class ChainInstitutionRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -48,10 +48,9 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception|\Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $institutionIdMock = $this->createMock(InstitutionId::class);
         $institutionMock = $this->createMock(Institution::class);
@@ -68,10 +67,9 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception|\Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $institutionIdMock = $this->createMock(InstitutionId::class);
 
@@ -87,10 +85,9 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception|\Throwable
      */
-    public function test_find_should_return_Exception(): void
+    public function testFindShouldReturnException(): void
     {
         $institutionIdMock = $this->createMock(InstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -100,7 +97,7 @@ class ChainInstitutionRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $institutionIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(InstitutionNotFoundException::class);
         $this->expectExceptionMessage('Institution not found by id 1');
@@ -109,11 +106,10 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Throwable
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $institutionsMock = $this->createMock(Institutions::class);
 
@@ -129,11 +125,10 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Throwable
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
@@ -147,16 +142,31 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Throwable
      */
-    public function test_getAll_should_return_Exception(): void
+    public function testGetAllShouldChangeCanPersist(): void
+    {
+        $reflection = new \ReflectionClass(ChainInstitutionRepository::class);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $this->repository->getAll();
+        $result = $method->invoke($this->repository);
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
             ->with('getAll', [])
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(InstitutionsNotFoundException::class);
         $this->expectExceptionMessage('Institutions not found');
@@ -165,11 +175,10 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Exception
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $institutionId = $this->createMock(InstitutionId::class);
 
@@ -181,11 +190,10 @@ class ChainInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistEmployee_should_return_void(): void
+    public function testPersistEmployeeShouldReturnVoid(): void
     {
         $institutionMock = $this->createMock(Institution::class);
 

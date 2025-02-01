@@ -14,7 +14,7 @@ class StoreCampusRequestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->request = new StoreCampusRequest;
+        $this->request = new StoreCampusRequest();
     }
 
     protected function tearDown(): void
@@ -23,24 +23,42 @@ class StoreCampusRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_authorize_should_return_true(): void
+    public function testAuthorizeShouldReturnTrue(): void
     {
         $result = $this->request->authorize();
         $this->assertTrue($result);
     }
 
-    public function test_rules_should_return_array(): void
+    public function testRulesShouldReturnArray(): void
     {
+        $expected = [
+            'campusId' => ['nullable'],
+            'name' => ['required'],
+            'email' => ['email:rfc', 'nullable'],
+            'phone' => ['nullable'],
+            'address' => ['required'],
+            'observations' => ['nullable'],
+        ];
+
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(6, $result);
+        $this->assertEquals($expected, $result);
     }
-    public function test_messages_should_return_array(): void
+
+    public function testMessagesShouldReturnArray(): void
     {
+        $expected = [
+            'name.required' => 'El campo name es requerido',
+            'email.email' => 'El campo email debe ser una dirección email valida',
+            'address.required' => 'El campo Address es requerido',
+        ];
+
         $result = $this->request->messages();
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+        $this->assertEquals($expected, $result);
     }
 }

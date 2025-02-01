@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 22:56:24
@@ -7,7 +8,6 @@
 namespace App\Http\Orchestrators\Orchestrator\Profile;
 
 use Core\Profile\Domain\Contracts\ProfileManagementContract;
-use Core\Profile\Domain\Profile;
 use Illuminate\Http\Request;
 
 class GetProfileOrchestrator extends ProfileOrchestrator
@@ -18,19 +18,16 @@ class GetProfileOrchestrator extends ProfileOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return Profile|null
+     * @return array<string, mixed>
      */
-    public function make(Request $request): ?Profile
+    public function make(Request $request): array
     {
-        $profileId = $request->input('profileId');
+        $profileId = $request->integer('profileId');
+        $profile = $this->profileManagement->searchProfileById($profileId);
 
-        return $this->profileManagement->searchProfileById($profileId);
+        return ['profile' => $profile];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-profile';

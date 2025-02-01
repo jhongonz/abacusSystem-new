@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 18:13:48
@@ -6,41 +7,29 @@
 
 namespace App\Http\Orchestrators\Orchestrator\Module;
 
-use App\Traits\DataTablesTrait;
 use Core\Profile\Domain\Contracts\ModuleDataTransformerContract;
 use Core\Profile\Domain\Contracts\ModuleManagementContract;
 use Core\Profile\Domain\Module;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\View\Factory as ViewFactory;
-use Yajra\DataTables\DataTables;
-use Yajra\DataTables\Exceptions\Exception;
 
 class GetModulesOrchestrator extends ModuleOrchestrator
 {
-    use DataTablesTrait;
-
     public function __construct(
         ModuleManagementContract $moduleManagement,
         private readonly ModuleDataTransformerContract $moduleDataTransformer,
-        private readonly DataTables $dataTables,
-        protected ViewFactory $viewFactory,
     ) {
         parent::__construct($moduleManagement);
-        $this->setViewFactory($viewFactory);
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
+     * @return array<int|string, mixed>
      */
-    public function make(Request $request): JsonResponse
+    public function make(Request $request): array
     {
-        $modules = $this->moduleManagement->searchModules(
-            $request->input('filters')
-        );
+        /** @var array<string, mixed> $filters */
+        $filters = $request->input('filters');
+
+        $modules = $this->moduleManagement->searchModules($filters);
 
         $dataModules = [];
         if ($modules->count()) {
@@ -50,18 +39,9 @@ class GetModulesOrchestrator extends ModuleOrchestrator
             }
         }
 
-        $collection = new Collection($dataModules);
-        $datatable = $this->dataTables->collection($collection);
-        $datatable->addColumn('tools', function (array $item) {
-            return $this->retrieveMenuOptionHtml($item);
-        });
-
-        return $datatable->escapeColumns([])->toJson();
+        return $dataModules;
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-modules';

@@ -51,7 +51,7 @@ class RedisModuleRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -59,7 +59,7 @@ class RedisModuleRepositoryTest extends TestCase
         $this->assertSame(100, $result);
     }
 
-    public function test_changePriority_should_return_self(): void
+    public function testChangePriorityShouldReturnSelf(): void
     {
         $result = $this->repository->changePriority(75);
 
@@ -72,7 +72,7 @@ class RedisModuleRepositoryTest extends TestCase
      * @throws ModuleNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_object(): void
+    public function testFindShouldReturnObject(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $moduleId->expects(self::once())
@@ -100,7 +100,7 @@ class RedisModuleRepositoryTest extends TestCase
      * @throws ModuleNotFoundException
      * @throws Exception
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $moduleId->expects(self::once())
@@ -124,7 +124,7 @@ class RedisModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $moduleId->expects(self::exactly(2))
@@ -149,7 +149,7 @@ class RedisModuleRepositoryTest extends TestCase
         $this->repository->find($moduleId);
     }
 
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $result = $this->repository->getAll();
         $this->assertNull($result);
@@ -158,7 +158,7 @@ class RedisModuleRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteModule_should_return_void(): void
+    public function testDeleteModuleShouldReturnVoid(): void
     {
         $moduleId = $this->createMock(ModuleId::class);
         $moduleId->expects(self::once())
@@ -178,7 +178,7 @@ class RedisModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModulePersistException
      */
-    public function test_persistModule_should_return_object(): void
+    public function testPersistModuleShouldReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
 
@@ -215,7 +215,7 @@ class RedisModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModulePersistException
      */
-    public function test_persistModule_should_return_exception(): void
+    public function testPersistModuleShouldReturnException(): void
     {
         $moduleMock = $this->createMock(Module::class);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-04-29 17:57:23
@@ -6,8 +7,11 @@
 
 namespace Tests\Feature\Core\Employee\Application\Factory\DataProvider;
 
-final class DataProviderEmployeeFactory
+final class EmployeeFactoryDataProvider
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider(): array
     {
         return [

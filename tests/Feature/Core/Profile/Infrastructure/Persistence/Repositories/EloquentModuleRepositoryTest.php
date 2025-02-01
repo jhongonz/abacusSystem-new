@@ -9,6 +9,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -22,8 +23,10 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tests\Feature\Core\Profile\Infrastructure\Persistence\Repositories\DataProvider\EloquentModuleRepositoryDataProvider;
 use Tests\TestCase;
 
 #[CoversClass(EloquentModuleRepository::class)]
@@ -61,7 +64,7 @@ class EloquentModuleRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -69,7 +72,7 @@ class EloquentModuleRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -82,14 +85,14 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_find_should_return_module_object(): void
+    public function testFindShouldReturnModuleObject(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
 
-        $modelMock = new \stdClass;
+        $modelMock = new \stdClass();
 
         $this->model->expects(self::once())
             ->method('getTable')
@@ -141,7 +144,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))
@@ -189,16 +192,19 @@ class EloquentModuleRepositoryTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $dataProvider
+     *
      * @throws Exception
      */
-    public function test_persistModule_should_return_object(): void
+    #[DataProviderExternal(EloquentModuleRepositoryDataProvider::class, 'providerCreateModule')]
+    public function testPersistModuleShouldReturnObject(array $dataProvider): void
     {
         $moduleMock = $this->createMock(Module::class);
 
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))
             ->method('value')
-            ->willReturn(null);
+            ->willReturn($dataProvider['id']);
         $moduleIdMock->expects(self::once())
             ->method('setValue')
             ->with(2)
@@ -207,88 +213,58 @@ class EloquentModuleRepositoryTest extends TestCase
             ->method('id')
             ->willReturn($moduleIdMock);
 
-        $this->model->expects(self::once())
-            ->method('changeId')
-            ->with(null)
-            ->willReturnSelf();
-
         $nameMock = $this->createMock(ModuleName::class);
         $nameMock->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['name']);
         $moduleMock->expects(self::once())
             ->method('name')
             ->willReturn($nameMock);
-        $this->model->expects(self::once())
-            ->method('changeName')
-            ->with('test')
-            ->willReturnSelf();
 
         $menuKey = $this->createMock(ModuleMenuKey::class);
         $menuKey->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['menuKey']);
         $moduleMock->expects(self::once())
             ->method('menuKey')
             ->willReturn($menuKey);
-        $this->model->expects(self::once())
-            ->method('changeMenuKey')
-            ->with('test')
-            ->willReturnSelf();
 
         $route = $this->createMock(ModuleRoute::class);
         $route->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['route']);
         $moduleMock->expects(self::once())
             ->method('route')
             ->willReturn($route);
-        $this->model->expects(self::once())
-            ->method('changeRoute')
-            ->with('test')
-            ->willReturnSelf();
 
         $icon = $this->createMock(ModuleIcon::class);
         $icon->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['icon']);
         $moduleMock->expects(self::once())
             ->method('icon')
             ->willReturn($icon);
-        $this->model->expects(self::once())
-            ->method('changeIcon')
-            ->with('test')
-            ->willReturnSelf();
 
         $state = $this->createMock(ModuleState::class);
         $state->expects(self::once())
             ->method('value')
-            ->willReturn(1);
+            ->willReturn($dataProvider['state']);
         $moduleMock->expects(self::once())
             ->method('state')
             ->willReturn($state);
-        $this->model->expects(self::once())
-            ->method('changeState')
-            ->with(1)
-            ->willReturnSelf();
 
         $search = $this->createMock(ModuleSearch::class);
         $search->expects(self::once())
             ->method('value')
-            ->willReturn('test');
+            ->willReturn($dataProvider['search']);
         $moduleMock->expects(self::once())
             ->method('search')
             ->willReturn($search);
-        $this->model->expects(self::once())
-            ->method('changeSearch')
-            ->with('test')
-            ->willReturnSelf();
 
-        $datetime = new \DateTime;
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dataProvider['createdAt']);
         $createdAt->expects(self::once())
             ->method('setValue')
             ->withAnyParameters()
@@ -296,26 +272,41 @@ class EloquentModuleRepositoryTest extends TestCase
         $moduleMock->expects(self::exactly(2))
             ->method('createdAt')
             ->willReturn($createdAt);
-        $this->model->expects(self::once())
-            ->method('changeCreatedAt')
-            ->with($datetime)
-            ->willReturnSelf();
 
         $updatedAt = $this->createMock(ModuleUpdatedAt::class);
         $updatedAt->expects(self::exactly(2))
             ->method('value')
-            ->willReturn($datetime);
+            ->willReturn($dataProvider['updatedAt']);
         $moduleMock->expects(self::exactly(2))
             ->method('updatedAt')
             ->willReturn($updatedAt);
-        $this->model->expects(self::once())
-            ->method('changeUpdatedAt')
-            ->with($datetime)
-            ->willReturnSelf();
+
+        $positionMock = $this->createMock(ModulePosition::class);
+        $positionMock->expects(self::once())
+            ->method('value')
+            ->willReturn($dataProvider['position']);
+        $moduleMock->expects(self::once())
+            ->method('position')
+            ->willReturn($positionMock);
 
         $this->model->expects(self::exactly(2))
             ->method('getTable')
             ->willReturn('modules');
+
+        $builderMock = $this->mock(Builder::class);
+        $builderMock->shouldReceive('where')
+            ->once()
+            ->with('mod_id', $dataProvider['id'])
+            ->andReturnSelf();
+
+        $builderMock->shouldReceive('first')
+            ->once()
+            ->andReturn(null);
+
+        $this->databaseManager->shouldReceive('table')
+            ->times(2)
+            ->with('modules')
+            ->andReturn($builderMock);
 
         $this->model->expects(self::once())
             ->method('fill')
@@ -323,32 +314,67 @@ class EloquentModuleRepositoryTest extends TestCase
             ->willReturnSelf();
 
         $this->model->expects(self::once())
-            ->method('id')
-            ->willReturn(null);
+            ->method('changeId')
+            ->with($dataProvider['id'])
+            ->willReturnSelf();
 
         $this->model->expects(self::once())
-            ->method('toArray')
-            ->willReturn([]);
+            ->method('changeName')
+            ->with($dataProvider['name'])
+            ->willReturnSelf();
 
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('mod_id', null)
-            ->andReturnSelf();
+        $this->model->expects(self::once())
+            ->method('changeMenuKey')
+            ->with($dataProvider['menuKey'])
+            ->willReturnSelf();
 
-        $builderMock->shouldReceive('first')
-            ->once()
-            ->andReturn([]);
+        $this->model->expects(self::once())
+            ->method('changeRoute')
+            ->with($dataProvider['route'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeIcon')
+            ->with($dataProvider['icon'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with($dataProvider['state'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeSearch')
+            ->with($dataProvider['search'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changePosition')
+            ->with($dataProvider['position'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeCreatedAt')
+            ->with($dataProvider['createdAt'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeUpdatedAt')
+            ->with($dataProvider['updatedAt'])
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('id')
+            ->willReturn(null);
 
         $builderMock->shouldReceive('insertGetId')
             ->once()
             ->withAnyArgs()
             ->andReturn(2);
 
-        $this->databaseManager->shouldReceive('table')
-            ->times(2)
-            ->with('modules')
-            ->andReturn($builderMock);
+        $this->model->expects(self::once())
+            ->method('toArray')
+            ->willReturn([]);
 
         $result = $this->repository->persistModule($moduleMock);
 
@@ -359,7 +385,7 @@ class EloquentModuleRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistModule_should_update_and_return_object(): void
+    public function testPersistModuleShouldUpdateAndReturnObject(): void
     {
         $moduleMock = $this->createMock(Module::class);
 
@@ -450,7 +476,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with('test')
             ->willReturnSelf();
 
-        $datetime = new \DateTime;
+        $datetime = new \DateTime();
         $createdAt = $this->createMock(ModuleCreatedAt::class);
         $createdAt->expects(self::once())
             ->method('value')
@@ -529,7 +555,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws ModulesNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $filters = ['q' => 'test'];
 
@@ -574,7 +600,7 @@ class EloquentModuleRepositoryTest extends TestCase
             ->with((array) $modelMock)
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 
@@ -600,64 +626,10 @@ class EloquentModuleRepositoryTest extends TestCase
     }
 
     /**
-     * @throws ModulesNotFoundException
-     * @throws Exception
-     */
-    public function test_getAll_should_return_exception(): void
-    {
-        $filters = ['q' => 'test'];
-
-        $builderMock = $this->mock(Builder::class);
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('mod_state', '>', -1)
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('mod_search', 'test')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('orderBy')
-            ->once()
-            ->with('mod_position')
-            ->andReturnSelf();
-
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('modules');
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('modules')
-            ->andReturn($builderMock);
-
-        $this->model->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('mod_search');
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['mod_id'])
-            ->andReturn([]);
-
-        $this->translator->expects(self::never())
-            ->method('setCollection');
-
-        $this->translator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(ModulesNotFoundException::class);
-        $this->expectExceptionMessage('Modules not found');
-
-        $this->repository->getAll($filters);
-    }
-
-    /**
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_deleteModule_should_return_void(): void
+    public function testDeleteModuleShouldReturnVoid(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::once())
@@ -677,6 +649,16 @@ class EloquentModuleRepositoryTest extends TestCase
 
         $this->model->expects(self::once())
             ->method('fill')
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeState')
+            ->with(-1)
+            ->willReturnSelf();
+
+        $this->model->expects(self::once())
+            ->method('changeDeletedAt')
+            ->withAnyParameters()
             ->willReturnSelf();
 
         $this->model->expects(self::once())
@@ -705,7 +687,7 @@ class EloquentModuleRepositoryTest extends TestCase
      * @throws Exception
      * @throws ModuleNotFoundException
      */
-    public function test_deleteModule_should_return_exception(): void
+    public function testDeleteModuleShouldReturnException(): void
     {
         $moduleIdMock = $this->createMock(ModuleId::class);
         $moduleIdMock->expects(self::exactly(2))

@@ -53,28 +53,32 @@ class CampusWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('campus:warmup', $this->command->getName());
-        $this->assertSame('Warmup campus in memory', $this->command->getDescription());
+        $this->assertSame('Warmup campus in memory redis', $this->command->getDescription());
     }
 
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_campus_in_repositories(): void
+    public function testHandleShouldUpdateCampusInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
-            ->willReturn(1);
+            ->willReturn('1');
 
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
             ->method('buildCampusId')
             ->with(1)
-            ->willReturn($campusIdMock);
+            ->willReturnCallback(function ($id) use ($campusIdMock) {
+                $this->assertIsInt($id);
+
+                return $campusIdMock;
+            });
 
         $campusMock = $this->createMock(Campus::class);
         $this->readRepository->expects(self::once())
@@ -101,19 +105,23 @@ class CampusWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception(): void
+    public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
-            ->willReturn(1);
+            ->willReturn('1');
 
         $campusIdMock = $this->createMock(CampusId::class);
         $this->campusFactory->expects(self::once())
             ->method('buildCampusId')
             ->with(1)
-            ->willReturn($campusIdMock);
+            ->willReturnCallback(function ($id) use ($campusIdMock) {
+                $this->assertIsInt($id);
+
+                return $campusIdMock;
+            });
 
         $this->readRepository->expects(self::once())
             ->method('find')

@@ -12,7 +12,7 @@ use Core\User\Domain\User;
 class CreateUserRequest implements RequestService
 {
     public function __construct(
-        private readonly User $user
+        private readonly User $user,
     ) {
     }
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
+use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use Core\Institution\Domain\Institution;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
@@ -17,20 +17,20 @@ use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class InstitutionController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
+    use DataTablesTrait;
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
+        private readonly DataTables $dataTables,
         protected ImageManagerInterface $imageManager,
-        LoggerInterface $logger,
-        ViewFactory $viewFactory,
+        protected ViewFactory $viewFactory,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
-        $this->setImageManager($imageManager);
     }
 
     public function index(): JsonResponse|string
@@ -43,13 +43,13 @@ class InstitutionController extends Controller implements HasMiddleware
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function changeStateInstitution(Request $request): JsonResponse
     {
         try {
             $this->orchestrators->handler('change-state-institution', $request);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -58,14 +58,26 @@ class InstitutionController extends Controller implements HasMiddleware
         return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getInstitutions(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-institutions', $request);
+        $dataInstitutions = $this->orchestrators->handler('retrieve-institutions', $request);
+
+        $datatable = $this->dataTables->collection($dataInstitutions);
+        $datatable->addColumn('tools', function (array $element) {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function getInstitution(Request $request, ?int $id = null): JsonResponse|string
     {
         $request->merge(['institutionId' => $id]);
+
+        /** @var array<int|string, mixed> $dataInstitution */
         $dataInstitution = $this->orchestrators->handler('detail-institution', $request);
 
         $view = $this->viewFactory->make('institution.institution-form', $dataInstitution)
@@ -76,9 +88,10 @@ class InstitutionController extends Controller implements HasMiddleware
 
     public function setLogoInstitution(Request $request): JsonResponse
     {
-        if ($request->file('file')->isValid()) {
-            $random = Str::random(10);
-            $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
+        $uploadedFile = $request->file('file');
+        if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
+            $random = Str::random();
+            $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
         }
@@ -91,10 +104,10 @@ class InstitutionController extends Controller implements HasMiddleware
         try {
             $method = (is_null($request->input('institutionId'))) ? 'create-institution' : 'update-institution';
 
-            /** @var Institution $institution */
-            $institution = $this->orchestrators->handler($method, $request);
-
-        } catch (Exception $exception) {
+            /** @var array{institution: Institution} $dataInstitution */
+            $dataInstitution = $this->orchestrators->handler($method, $request);
+            $institution = $dataInstitution['institution'];
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -104,7 +117,7 @@ class InstitutionController extends Controller implements HasMiddleware
         }
 
         return new JsonResponse([
-            'institutionId' => $institution->id()->value()
+            'institutionId' => $institution->id()->value(),
         ], Response::HTTP_CREATED);
     }
 
@@ -114,7 +127,7 @@ class InstitutionController extends Controller implements HasMiddleware
 
         try {
             $this->orchestrators->handler('delete-institution', $request);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);

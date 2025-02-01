@@ -11,7 +11,6 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Exceptions\ModuleNotFoundException;
 use Core\Profile\Exceptions\ModulePersistException;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
-use Exception;
 use Illuminate\Support\Facades\Redis;
 use Psr\Log\LoggerInterface;
 
@@ -45,21 +44,23 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
 
     /**
      * @throws ModuleNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(ModuleId $id): ?Module
     {
         try {
+            /** @var string $data */
             $data = Redis::get($this->moduleKey($id));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModuleNotFoundException('Module not found by id '.$id->value());
         }
 
-        if (isset($data)) {
+        if (!empty($data)) {
+            /** @var array<string, mixed> $dataArray */
             $dataArray = json_decode($data, true);
 
-            /** @var Module */
+            /* @var Module */
             return $this->moduleFactory->buildModuleFromArray($dataArray);
         }
 
@@ -76,7 +77,7 @@ class RedisModuleRepository implements ChainPriority, ModuleRepositoryContract
         $moduleData = $this->moduleDataTransformer->write($module)->read();
         try {
             Redis::set($moduleKey, json_encode($moduleData));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             throw new ModulePersistException('It could not persist Module with key '.$moduleKey.' in redis');
         }

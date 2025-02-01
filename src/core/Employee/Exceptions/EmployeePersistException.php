@@ -2,8 +2,6 @@
 
 namespace Core\Employee\Exceptions;
 
-use Exception;
-
-class EmployeePersistException extends Exception
+class EmployeePersistException extends \Exception
 {
 }

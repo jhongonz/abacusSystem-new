@@ -18,7 +18,7 @@ class ProfileUpdatedOrDeletedEvent
      * Create a new event instance.
      */
     public function __construct(
-        private readonly int $profileId
+        private readonly int $profileId,
     ) {
     }
 

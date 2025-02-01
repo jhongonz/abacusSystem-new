@@ -6,8 +6,6 @@
 
 namespace Core\User\Exceptions;
 
-use Exception;
-
-class UserDeleteException extends Exception
+class UserDeleteException extends \Exception
 {
 }

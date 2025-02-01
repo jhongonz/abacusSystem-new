@@ -22,6 +22,8 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(CampusController::class)]
 #[CoversClass(Controller::class)]
@@ -29,8 +31,9 @@ class CampusControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestratorHandlerMock;
     private Session|MockObject $sessionMock;
-    private LoggerInterface|MockObject $loggerMock;
+    private DataTables|MockObject $dataTablesMock;
     private ViewFactory|MockObject $viewFactoryMock;
+    private LoggerInterface|MockObject $loggerMock;
     private CampusController $controller;
 
     /**
@@ -41,14 +44,16 @@ class CampusControllerTest extends TestCase
         parent::setUp();
         $this->orchestratorHandlerMock = $this->createMock(OrchestratorHandlerContract::class);
         $this->sessionMock = $this->createMock(Session::class);
+        $this->dataTablesMock = $this->createMock(DataTables::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
         $this->viewFactoryMock = $this->createMock(ViewFactory::class);
 
         $this->controller = new CampusController(
             $this->orchestratorHandlerMock,
             $this->sessionMock,
-            $this->loggerMock,
-            $this->viewFactoryMock
+            $this->dataTablesMock,
+            $this->viewFactoryMock,
+            $this->loggerMock
         );
     }
 
@@ -59,7 +64,8 @@ class CampusControllerTest extends TestCase
             $this->sessionMock,
             $this->loggerMock,
             $this->viewFactoryMock,
-            $this->controller
+            $this->controller,
+            $this->dataTablesMock
         );
         parent::tearDown();
     }
@@ -67,7 +73,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -111,7 +117,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -155,8 +161,9 @@ class CampusControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_getCampusCollection_should_return_json_response(): void
+    public function testGetCampusCollectionShouldReturnJsonResponse(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -179,22 +186,64 @@ class CampusControllerTest extends TestCase
             ->with(['institutionId' => 2])
             ->willReturnSelf();
 
-        $jsonResponseMock = $this->createMock(JsonResponse::class);
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('retrieve-campus-collection', $requestMock)
-            ->willReturn($jsonResponseMock);
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactoryMock->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
+            ->willReturn($responseMock);
+
+        $this->dataTablesMock->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getCampusCollection($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertSame($jsonResponseMock, $result);
+        $this->assertSame($responseMock, $result);
     }
 
     /**
      * @throws Exception
      */
-    public function test_getCampus_with_null_should_return_json_response(): void
+    public function testGetCampusWithNullShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -234,7 +283,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getCampus_with_data_should_return_json_response(): void
+    public function testGetCampusWithDataShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -275,7 +324,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_json_response_when_create_new_object(): void
+    public function testStoreCampusShouldReturnJsonResponseWhenCreateNewObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -307,7 +356,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('create-campus', $request)
-            ->willReturn($campusMock);
+            ->willReturn(['campus' => $campusMock]);
 
         $result = $this->controller->storeCampus($request);
 
@@ -319,7 +368,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_json_response_when_update_object(): void
+    public function testStoreCampusShouldReturnJsonResponseWhenUpdateObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -351,7 +400,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('update-campus', $request)
-            ->willReturn($campusMock);
+            ->willReturn(['campus' => $campusMock]);
 
         $result = $this->controller->storeCampus($request);
 
@@ -363,7 +412,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeCampus_should_return_exception_when_create_new_object(): void
+    public function testStoreCampusShouldReturnExceptionWhenCreateNewObject(): void
     {
         $institutionIdMock = $this->createMock(EmployeeInstitutionId::class);
         $institutionIdMock->expects(self::once())
@@ -410,7 +459,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateCampus_should_inactivate_and_return_json_response(): void
+    public function testChangeStateCampusShouldInactivateAndReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -427,7 +476,7 @@ class CampusControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateCampus_should_return_exception(): void
+    public function testChangeStateCampusShouldReturnException(): void
     {
         $request = $this->createMock(Request::class);
 
@@ -447,10 +496,9 @@ class CampusControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_deleteCampus_should_return_json_response(): void
+    public function testDeleteCampusShouldReturnJsonResponse(): void
     {
         $campusId = 1;
 
@@ -463,7 +511,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('delete-campus', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
 
         $result = $this->controller->deleteCampus($requestMock, $campusId);
 
@@ -472,10 +520,9 @@ class CampusControllerTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
      */
-    public function test_deleteCampus_should_return_exception(): void
+    public function testDeleteCampusShouldReturnException(): void
     {
         $campusId = 1;
 
@@ -500,15 +547,19 @@ class CampusControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    /**
-     * @return void
-     */
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getCampusCollection', 'deleteCampus', 'changeStateCampus', 'storeCampus', 'getCampus',
+            ]),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

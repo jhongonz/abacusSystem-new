@@ -6,6 +6,7 @@ use App\Http\Orchestrators\Orchestrator\Employee\ChangeStateEmployeeOrchestrator
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeState;
+use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -37,11 +38,11 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_active_when_is_new_and_return_employee(): void
+    public function testMakeShouldActiveWhenIsNewAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('id')
             ->willReturn(1);
 
@@ -78,18 +79,20 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_active_when_is_isActivated_and_return_employee(): void
+    public function testMakeShouldActiveWhenIsIsActivatedAndReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('id')
             ->willReturn(1);
 
@@ -134,11 +137,35 @@ class ChangeStateEmployeeOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Employee::class, $result);
-        $this->assertSame($employeeMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('employee', $result);
+        $this->assertInstanceOf(Employee::class, $result['employee']);
+        $this->assertSame($employeeMock, $result['employee']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('id')
+            ->willReturn(1);
+
+        $this->employeeManagement->expects(self::once())
+            ->method('searchEmployeeById')
+            ->with(1)
+            ->willReturn(null);
+
+        $this->expectException(EmployeeNotFoundException::class);
+        $this->expectExceptionMessage('Employee with id 1 not found');
+
+        $this->orchestrator->make($requestMock);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

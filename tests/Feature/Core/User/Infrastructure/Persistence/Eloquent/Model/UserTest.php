@@ -5,7 +5,6 @@ namespace Tests\Feature\Core\User\Infrastructure\Persistence\Eloquent\Model;
 use Core\Employee\Infrastructure\Persistence\Eloquent\Model\Employee;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Profile;
 use Core\User\Infrastructure\Persistence\Eloquent\Model\User;
-use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
@@ -22,7 +21,7 @@ class UserTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new User;
+        $this->model = new User();
     }
 
     public function tearDown(): void
@@ -31,7 +30,7 @@ class UserTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getSearchField_should_return_string(): void
+    public function testGetSearchFieldShouldReturnString(): void
     {
         $expected = 'user_login';
         $result = $this->model->getSearchField();
@@ -43,7 +42,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_relationWithEmployee_should_return_belongsTo(): void
+    public function testRelationWithEmployeeShouldReturnBelongsTo(): void
     {
         $relationMock = $this->createMock(BelongsTo::class);
 
@@ -62,7 +61,7 @@ class UserTest extends TestCase
         $this->assertSame($relationMock, $result);
     }
 
-    public function test_employee_should_return_employee_model(): void
+    public function testEmployeeShouldReturnEmployeeModel(): void
     {
         $result = $this->model->employee();
         $this->assertInstanceOf(Employee::class, $result);
@@ -71,7 +70,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_relationWithProfile_should_return_belongsTo(): void
+    public function testRelationWithProfileShouldReturnBelongsTo(): void
     {
         $relationMock = $this->createMock(BelongsTo::class);
 
@@ -90,7 +89,7 @@ class UserTest extends TestCase
         $this->assertSame($relationMock, $result);
     }
 
-    public function test_profile_should_return_profile_model(): void
+    public function testProfileShouldReturnProfileModel(): void
     {
         $result = $this->model->profile();
         $this->assertInstanceOf(Profile::class, $result);
@@ -99,7 +98,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_id_should_return_int(): void
+    public function testIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -119,7 +118,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_id_should_return_null(): void
+    public function testIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -138,7 +137,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeId_should_return_self(): void
+    public function testChangeIdShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -158,7 +157,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_employeeId_should_return_int(): void
+    public function testEmployeeIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -178,7 +177,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_employeeId_should_return_null(): void
+    public function testEmployeeIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -197,7 +196,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeEmployeeId_should_return_self(): void
+    public function testChangeEmployeeIdShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -217,7 +216,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_profileId_should_return_int(): void
+    public function testProfileIdShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -237,7 +236,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_profileId_should_return_null(): void
+    public function testProfileIdShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -256,7 +255,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeProfileId_should_return_self(): void
+    public function testChangeProfileIdShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -276,7 +275,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_login_should_return_string(): void
+    public function testLoginShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -296,7 +295,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_login_should_return_null(): void
+    public function testLoginShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -315,7 +314,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeLogin_should_return_self(): void
+    public function testChangeLoginShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -335,7 +334,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_password_should_return_string(): void
+    public function testPasswordShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -355,7 +354,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_password_should_return_null(): void
+    public function testPasswordShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -374,7 +373,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changePassword_should_return_self(): void
+    public function testChangePasswordShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -394,7 +393,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_state_should_return_int(): void
+    public function testStateShouldReturnInt(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -414,7 +413,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeState_should_return_self(): void
+    public function testChangeStateShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -435,10 +434,10 @@ class UserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createdAt_should_return_datetime(): void
+    public function testCreatedAtShouldReturnDatetime(): void
     {
         $datetimeString = '2024-04-26 06:29:00';
-        $expected = new DateTime($datetimeString);
+        $expected = new \DateTime($datetimeString);
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
             ->getMock();
@@ -451,14 +450,14 @@ class UserTest extends TestCase
         $result = $this->modelMock->createdAt();
 
         $this->assertSame($datetimeString, $result->format('Y-m-d h:i:s'));
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
     }
 
     /**
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createdAt_should_return_null(): void
+    public function testCreatedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -477,9 +476,9 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeCreatedAt_should_return_self(): void
+    public function testChangeCreatedAtShouldReturnSelf(): void
     {
-        $datetime = new DateTime('2024-04-26 6:35:00');
+        $datetime = new \DateTime('2024-04-26 6:35:00');
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -499,7 +498,7 @@ class UserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_datetime(): void
+    public function testUpdatedAtShouldReturnDatetime(): void
     {
         $datetimeString = '2024-04-26 06:40:00';
         $this->modelMock = $this->getMockBuilder(User::class)
@@ -514,14 +513,14 @@ class UserTest extends TestCase
         $result = $this->modelMock->updatedAt();
 
         $this->assertSame($datetimeString, $result->format('Y-m-d h:i:s'));
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
     }
 
     /**
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updatedAt_should_return_null(): void
+    public function testUpdatedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -540,9 +539,9 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeUpdatedAt_should_return_self(): void
+    public function testChangeUpdatedAtShouldReturnSelf(): void
     {
-        $datetime = new DateTime('2024-04-26 6:45:00');
+        $datetime = new \DateTime('2024-04-26 6:45:00');
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -562,7 +561,7 @@ class UserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_deletedAt_should_return_null(): void
+    public function testDeletedAtShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -581,9 +580,9 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeDeletedAt_should_return_self(): void
+    public function testChangeDeletedAtShouldReturnSelf(): void
     {
-        $datetime = new DateTime('2024-04-26 6:45:00');
+        $datetime = new \DateTime('2024-04-26 6:45:00');
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
             ->getMock();
@@ -602,7 +601,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_photo_should_return_string(): void
+    public function testPhotoShouldReturnString(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -622,7 +621,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_photo_should_return_null(): void
+    public function testPhotoShouldReturnNull(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['getAttribute'])
@@ -641,7 +640,7 @@ class UserTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changePhoto_should_return_self(): void
+    public function testChangePhotoShouldReturnSelf(): void
     {
         $this->modelMock = $this->getMockBuilder(User::class)
             ->onlyMethods(['setAttribute'])
@@ -656,5 +655,27 @@ class UserTest extends TestCase
 
         $this->assertInstanceOf(User::class, $result);
         $this->assertSame($result, $this->modelMock);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArrayWithCasts(): void
+    {
+        $reflection = new \ReflectionClass(User::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invokeArgs($this->model, []);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+            'email_verified_at' => 'datetime:Y-m-d H:i:s',
+        ];
+
+        $this->assertIsArray($result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

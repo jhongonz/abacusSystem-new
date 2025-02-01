@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-20 21:58:12
@@ -11,12 +12,10 @@ use Core\Institution\Domain\Institution;
 use Core\Institution\Domain\Institutions;
 use Core\Institution\Domain\ValueObjects\InstitutionId;
 use Core\Institution\Exceptions\InstitutionNotFoundException;
-use Core\Institution\Exceptions\InstitutionsNotFoundException;
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution as InstitutionModel;
 use Core\Institution\Infrastructure\Persistence\Translators\InstitutionTranslator;
 use Core\SharedContext\Infrastructure\Persistence\ChainPriority;
 use Core\SharedContext\Model\ValueObjectStatus;
-use Exception;
 use Illuminate\Database\DatabaseManager;
 
 class EloquentInstitutionRepository implements InstitutionRepositoryContract, ChainPriority
@@ -28,7 +27,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         private readonly InstitutionModel $model,
         private readonly InstitutionTranslator $institutionTranslator,
         private readonly DatabaseManager $databaseManager,
-        private int $priority = self::PRIORITY_DEFAULT
+        private int $priority = self::PRIORITY_DEFAULT,
     ) {
     }
 
@@ -40,12 +39,13 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     public function changePriority(int $priority): self
     {
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * @throws InstitutionNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function find(InstitutionId $id): ?Institution
     {
@@ -56,36 +56,35 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException(
-                sprintf('Institution not found with id %s', $id->value())
-            );
+            throw new InstitutionNotFoundException(sprintf('Institution not found with id %s', $id->value()));
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
+
         return $this->institutionTranslator->setModel($institutionModel)->toDomain();
     }
 
     /**
-     * @throws InstitutionsNotFoundException
+     * @param array{q?: string|null} $filters
      */
     public function getAll(array $filters = []): ?Institutions
     {
         $builder = $this->databaseManager->table($this->getTable())
             ->where('inst_state', '>', ValueObjectStatus::STATE_DELETE);
 
-        if (array_key_exists('q', $filters) && isset($filters['q'])) {
+        if (!empty($filters['q'])) {
             $builder->whereFullText($this->model->getSearchField(), $filters['q']);
         }
 
         $institutionCollection = $builder->get(['inst_id']);
-        if (is_null($institutionCollection)) {
-            throw new InstitutionsNotFoundException('Institutions not found');
-        }
 
         $collection = [];
         foreach ($institutionCollection as $item) {
             $institutionModel = $this->updateAttributesModelInstitution((array) $item);
-            $collection[] = $institutionModel->id();
+
+            if (!is_null($institutionModel->id())) {
+                $collection[] = $institutionModel->id();
+            }
         }
 
         $institutions = $this->institutionTranslator->setCollection($collection)->toDomainCollection();
@@ -96,7 +95,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
 
     /**
      * @throws InstitutionNotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function delete(InstitutionId $id): void
     {
@@ -105,9 +104,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $data = $builder->first();
 
         if (is_null($data)) {
-            throw new InstitutionNotFoundException(
-                sprintf('Institution not found with id %s', $id->value())
-            );
+            throw new InstitutionNotFoundException(sprintf('Institution not found with id %s', $id->value()));
         }
 
         $institutionModel = $this->updateAttributesModelInstitution((array) $data);
@@ -118,7 +115,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistInstitution(Institution $institution): Institution
     {
@@ -157,11 +154,11 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         $model->changeShortname($domain->shortname()->value());
         $model->changeCode($domain->code()->value());
         $model->changeLogo($domain->logo()->value());
-        $model->changeObservations($domain->observations()->value());
+        $model->changeObservations($domain->observations()->value() ?? '');
         $model->changeAddress($domain->address()->value());
-        $model->changePhone($domain->phone()->value());
+        $model->changePhone($domain->phone()->value() ?? '');
         $model->changeEmail($domain->email()->value());
-        $model->changeSearch($domain->search()->value());
+        $model->changeSearch($domain->search()->value() ?? '');
         $model->changeState($domain->state()->value());
         $model->changeCreatedAt($domain->createdAt()->value());
 
@@ -172,6 +169,9 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
         return $model;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     private function updateAttributesModelInstitution(array $data = []): InstitutionModel
     {
         $this->model->fill($data);
@@ -185,7 +185,7 @@ class EloquentInstitutionRepository implements InstitutionRepositoryContract, Ch
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateTime(string $datetime = 'now'): \DateTime
     {

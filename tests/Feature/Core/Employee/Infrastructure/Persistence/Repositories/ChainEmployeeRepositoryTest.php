@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-10-17 20:22:30
@@ -13,12 +14,13 @@ use Core\Employee\Domain\ValueObjects\EmployeeIdentification;
 use Core\Employee\Exceptions\EmployeeNotFoundException;
 use Core\Employee\Exceptions\EmployeesNotFoundException;
 use Core\Employee\Infrastructure\Persistence\Repositories\ChainEmployeeRepository;
+use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
+#[CoversClass(AbstractChainRepository::class)]
 #[CoversClass(ChainEmployeeRepository::class)]
 class ChainEmployeeRepositoryTest extends TestCase
 {
@@ -28,7 +30,7 @@ class ChainEmployeeRepositoryTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(ChainEmployeeRepository::class)
-            ->onlyMethods(['read', 'readFromRepositories','write'])
+            ->onlyMethods(['read', 'readFromRepositories', 'write'])
             ->getMock();
     }
 
@@ -38,10 +40,7 @@ class ChainEmployeeRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @return void
-     */
-    public function test_functionNamePersist_should_return_string(): void
+    public function testFunctionNamePersistShouldReturnString(): void
     {
         $result = $this->repository->functionNamePersist();
 
@@ -50,10 +49,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_value_object(): void
+    public function testFindShouldReturnValueObject(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeMock = $this->createMock(Employee::class);
@@ -70,10 +68,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_null(): void
+    public function testFindShouldReturnNull(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
 
@@ -89,10 +86,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $employeeIdMock = $this->createMock(EmployeeId::class);
         $employeeIdMock->expects(self::once())
@@ -102,7 +98,7 @@ class ChainEmployeeRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('find', $employeeIdMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(EmployeeNotFoundException::class);
         $this->expectExceptionMessage('Employee not found by id 1');
@@ -111,10 +107,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_findCriteria_should_return_value_object(): void
+    public function testFindCriteriaShouldReturnValueObject(): void
     {
         $identificationMock = $this->createMock(EmployeeIdentification::class);
         $employeeMock = $this->createMock(Employee::class);
@@ -131,10 +126,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_findCriteria_should_return_null(): void
+    public function testFindCriteriaShouldReturnNull(): void
     {
         $identificationMock = $this->createMock(EmployeeIdentification::class);
 
@@ -150,10 +144,9 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception|Throwable
+     * @throws Exception|\Throwable
      */
-    public function test_findCriteria_should_return_exception(): void
+    public function testFindCriteriaShouldReturnException(): void
     {
         $identificationMock = $this->createMock(EmployeeIdentification::class);
         $identificationMock->expects(self::once())
@@ -163,7 +156,7 @@ class ChainEmployeeRepositoryTest extends TestCase
         $this->repository->expects(self::once())
             ->method('read')
             ->with('findCriteria', $identificationMock)
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(EmployeeNotFoundException::class);
         $this->expectExceptionMessage('Employee not found by identification 12345');
@@ -172,12 +165,11 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Exception
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
 
@@ -189,11 +181,10 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws \Exception
      * @throws Exception
      */
-    public function test_persistEmployee_should_return_void(): void
+    public function testPersistEmployeeShouldReturnVoid(): void
     {
         $employeeMock = $this->createMock(Employee::class);
 
@@ -209,11 +200,10 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $employeesMock = $this->createMock(Employees::class);
 
@@ -229,11 +219,10 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
      */
-    public function test_getAll_should_return_null(): void
+    public function testGetAllShouldReturnNull(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
@@ -247,16 +236,31 @@ class ChainEmployeeRepositoryTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws Exception
-     * @throws Throwable
+     * @throws \Throwable
+     * @throws EmployeesNotFoundException
      */
-    public function test_getAll_should_return_exception(): void
+    public function testGetAllShouldChangePropertyToFalse(): void
+    {
+        $this->repository->getAll();
+
+        $reflection = new \ReflectionClass(ChainEmployeeRepository::class);
+        $method = $reflection->getMethod('canPersist');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->repository);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Throwable
+     */
+    public function testGetAllShouldReturnException(): void
     {
         $this->repository->expects(self::once())
             ->method('read')
             ->with('getAll', [])
-            ->willThrowException(new \Exception);
+            ->willThrowException(new \Exception());
 
         $this->expectException(EmployeesNotFoundException::class);
         $this->expectExceptionMessage('Employees not found');

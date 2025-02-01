@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-19 08:36:36
@@ -19,28 +20,26 @@ class CreateCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return Campus
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Campus
+    public function make(Request $request): array
     {
         $dataCampus = [
-            'id' => $request->input('campusId'),
-            'institutionId' => $request->input('institutionId'),
+            'id' => $request->integer('campusId'),
+            'institutionId' => $request->integer('institutionId'),
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
             'address' => $request->input('address'),
             'observations' => $request->input('observations'),
-            'state' => ValueObjectStatus::STATE_NEW
+            'state' => ValueObjectStatus::STATE_NEW,
         ];
 
-        return $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);
+        $campus = $this->campusManagement->createCampus([Campus::TYPE => $dataCampus]);
+
+        return ['campus' => $campus];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-campus';

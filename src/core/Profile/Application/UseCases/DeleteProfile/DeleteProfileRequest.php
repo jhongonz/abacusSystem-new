@@ -8,7 +8,7 @@ use Core\Profile\Domain\ValueObjects\ProfileId;
 class DeleteProfileRequest implements RequestService
 {
     public function __construct(
-        private readonly ProfileId $id
+        private readonly ProfileId $id,
     ) {
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 12:56:37
@@ -10,7 +11,6 @@ use Core\Institution\Application\UseCases\RequestService;
 use Core\Institution\Application\UseCases\UseCasesService;
 use Core\Institution\Domain\Contracts\InstitutionRepositoryContract;
 use Core\Institution\Domain\Institutions;
-use Exception;
 
 class SearchInstitutions extends UseCasesService
 {
@@ -20,9 +20,9 @@ class SearchInstitutions extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function execute(RequestService $request): null|Institutions
+    public function execute(RequestService $request): ?Institutions
     {
         $this->validateRequest($request, SearchInstitutionsRequest::class);
 

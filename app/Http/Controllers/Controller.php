@@ -5,19 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
-use Illuminate\View\Factory as ViewFactory;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class Controller
 {
-    public function __construct(
-        protected readonly LoggerInterface $logger,
-        protected readonly ViewFactory $viewFactory,
-    ) {
-    }
-
-    public function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
+    protected function renderView(string $html, int $code = Response::HTTP_OK): JsonResponse|string
     {
         /** @var Request $requestService */
         $requestService = app(Request::class);
@@ -33,19 +25,23 @@ abstract class Controller
         return $html;
     }
 
-    public function getPagination(?string $route = null): string
+    protected function getPagination(?string $route = null): string|false
     {
         if (is_null($route)) {
-
             /** @var Router $routerService */
             $routerService = app(Router::class);
-            $route = $routerService->current()->uri();
+
+            $routeCurrent = $routerService->current();
+            $route = ($routeCurrent) ? $routeCurrent->uri() : '';
         }
 
-        return json_encode([
+        /** @var non-empty-string|false $dataResponse */
+        $dataResponse = json_encode([
             'start' => 0,
             'filters' => [],
-            'uri' => $route
+            'uri' => $route,
         ]);
+
+        return $dataResponse;
     }
 }

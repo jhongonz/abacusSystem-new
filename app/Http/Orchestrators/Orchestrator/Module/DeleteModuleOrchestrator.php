@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 18:10:24
@@ -12,25 +13,21 @@ use Illuminate\Http\Request;
 class DeleteModuleOrchestrator extends ModuleOrchestrator
 {
     public function __construct(
-        ModuleManagementContract $moduleManagement
+        ModuleManagementContract $moduleManagement,
     ) {
         parent::__construct($moduleManagement);
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
-        $this->moduleManagement->deleteModule($request->input('moduleId'));
+        $this->moduleManagement->deleteModule($request->integer('moduleId'));
 
-        return true;
+        return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-module';

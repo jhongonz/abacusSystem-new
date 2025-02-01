@@ -6,11 +6,14 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Infrastructure\Persistence\Eloquent\Model\Module as ModuleModel;
-use Exception;
 
 class ModuleTranslator
 {
     private ModuleModel $model;
+
+    /**
+     * @var array<int<0, max>, int>
+     */
     private array $collection = [];
 
     public function __construct(
@@ -26,15 +29,15 @@ class ModuleTranslator
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function toDomain(): Module
     {
         $module = $this->moduleFactory->buildModule(
             $this->moduleFactory->buildModuleId($this->model->id()),
-            $this->moduleFactory->buildModuleMenuKey($this->model->menuKey()),
+            $this->moduleFactory->buildModuleMenuKey($this->model->menuKey() ?? ''),
             $this->moduleFactory->buildModuleName($this->model->name()),
-            $this->moduleFactory->buildModuleRoute($this->model->route()),
+            $this->moduleFactory->buildModuleRoute($this->model->route() ?? ''),
             $this->moduleFactory->buildModuleIcon($this->model->icon()),
             $this->moduleFactory->buildModuleState($this->model->state()),
             $this->moduleFactory->buildModuleCreatedAt($this->model->createdAt())
@@ -51,6 +54,11 @@ class ModuleTranslator
         return $module;
     }
 
+    /**
+     * @param array<int<0, max>, int> $collection
+     *
+     * @return $this
+     */
     public function setCollection(array $collection): self
     {
         $this->collection = $collection;
@@ -60,7 +68,7 @@ class ModuleTranslator
 
     public function toDomainCollection(): Modules
     {
-        $modules = new Modules;
+        $modules = new Modules();
         foreach ($this->collection as $id) {
             $modules->addId($id);
         }

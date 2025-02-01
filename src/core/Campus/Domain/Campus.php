@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 12:26:54
@@ -33,15 +34,15 @@ class Campus
         private CampusId $id,
         private CampusInstitutionId $institutionId,
         private CampusName $name,
-        private CampusState $state = new CampusState,
-        private CampusCreatedAt $createdAt = new CampusCreatedAt
+        private CampusState $state = new CampusState(),
+        private CampusCreatedAt $createdAt = new CampusCreatedAt(),
     ) {
-        $this->address = new CampusAddress;
-        $this->phone = new CampusPhone;
-        $this->email = new CampusEmail;
-        $this->observations = new CampusObservations;
-        $this->search = new CampusSearch;
-        $this->updatedAt = new CampusUpdatedAt;
+        $this->address = new CampusAddress();
+        $this->phone = new CampusPhone();
+        $this->email = new CampusEmail();
+        $this->observations = new CampusObservations();
+        $this->search = new CampusSearch();
+        $this->updatedAt = new CampusUpdatedAt();
     }
 
     public function id(): CampusId
@@ -52,6 +53,7 @@ class Campus
     public function setId(CampusId $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -63,6 +65,7 @@ class Campus
     public function setInstitutionId(CampusInstitutionId $institutionId): self
     {
         $this->institutionId = $institutionId;
+
         return $this;
     }
 
@@ -74,6 +77,7 @@ class Campus
     public function setName(CampusName $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -85,6 +89,7 @@ class Campus
     public function setAddress(CampusAddress $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -96,6 +101,7 @@ class Campus
     public function setPhone(CampusPhone $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -107,6 +113,7 @@ class Campus
     public function setEmail(CampusEmail $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -118,6 +125,7 @@ class Campus
     public function setObservations(CampusObservations $observations): self
     {
         $this->observations = $observations;
+
         return $this;
     }
 
@@ -129,6 +137,7 @@ class Campus
     public function setSearch(CampusSearch $search): self
     {
         $this->search = $search;
+
         return $this;
     }
 
@@ -140,6 +149,7 @@ class Campus
     public function setState(CampusState $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -151,6 +161,7 @@ class Campus
     public function setCreatedAt(CampusCreatedAt $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -162,21 +173,35 @@ class Campus
     public function setUpdatedAt(CampusUpdatedAt $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
     public function refreshSearch(): self
     {
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
         $data = [
-            $this->name->value(),
-            $this->address->value(),
-            $this->phone->value(),
-            $this->email->value(),
-            $this->observations->value()
+            trim(strtolower($this->name->value())),
+            trim(strtolower($address)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
+            trim(strtolower($observations)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
+
         return $this;
     }
 }

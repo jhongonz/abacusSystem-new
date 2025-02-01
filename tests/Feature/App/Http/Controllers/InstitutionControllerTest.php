@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -16,6 +15,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
@@ -24,16 +24,18 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(InstitutionController::class)]
 #[CoversClass(Controller::class)]
 class InstitutionControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
-    private ActionExecutorHandler|MockObject $actionExecutorHandler;
-    private LoggerInterface|MockObject $logger;
-    private ViewFactory|MockObject $viewFactory;
+    private DataTables|MockObject $datatables;
     private ImageManagerInterface|MockObject $imageManager;
+    private ViewFactory|MockObject $viewFactory;
+    private LoggerInterface|MockObject $logger;
     private InstitutionController $controller;
 
     /**
@@ -43,17 +45,17 @@ class InstitutionControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->datatables = $this->createMock(DataTables::class);
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
-        $this->actionExecutorHandler = $this->createMock(ActionExecutorHandler::class);
+        $this->viewFactory = $this->createMock(ViewFactory::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
 
         $this->controller = new InstitutionController(
             $this->orchestrator,
-            $this->actionExecutorHandler,
+            $this->datatables,
             $this->imageManager,
-            $this->logger,
-            $this->viewFactory
+            $this->viewFactory,
+            $this->logger
         );
     }
 
@@ -61,11 +63,11 @@ class InstitutionControllerTest extends TestCase
     {
         unset(
             $this->orchestrator,
-            $this->actionExecutorHandler,
             $this->controller,
             $this->logger,
             $this->viewFactory,
-            $this->imageManager
+            $this->imageManager,
+            $this->datatables
         );
         parent::tearDown();
     }
@@ -73,7 +75,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -118,7 +120,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -163,7 +165,7 @@ class InstitutionControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_changeStateInstitution_should_return_json_response_when_is_activate(): void
+    public function testChangeStateInstitutionShouldReturnJsonResponseWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -171,7 +173,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('change-state-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->changeStateInstitution($requestMock);
 
@@ -183,7 +185,7 @@ class InstitutionControllerTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_changeStateInstitution_should_return_json_response_when_is_exception(): void
+    public function testChangeStateInstitutionShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -204,16 +206,59 @@ class InstitutionControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_getInstitutions_should_return_json_response(): void
+    public function testGetInstitutionsShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $responseMock = $this->createMock(JsonResponse::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-institutions', $requestMock)
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
             ->willReturn($responseMock);
+
+        $this->datatables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getInstitutions($requestMock);
 
@@ -224,7 +269,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getInstitution_should_return_json_response_with_id_int(): void
+    public function testGetInstitutionShouldReturnJsonResponseWithIdInt(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -264,7 +309,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getInstitution_should_return_string_with_id_null(): void
+    public function testGetInstitutionShouldReturnStringWithIdNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -303,7 +348,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLogoInstitution_should_return_json_response(): void
+    public function testSetLogoInstitutionShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
@@ -316,10 +361,14 @@ class InstitutionControllerTest extends TestCase
             ->method('getRealPath')
             ->willReturn('localhost');
 
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('file')
             ->with('file')
             ->willReturn($uploadFileMock);
+
+        Str::createRandomStringsUsing(function () {
+            return '248ec6063c';
+        });
 
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::once())
@@ -343,19 +392,15 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_setLogoInstitution_should_return_internal_error(): void
+    public function testSetLogoInstitutionShouldReturnInternalError(): void
     {
         $request = $this->createMock(Request::class);
 
-        $fileMock = $this->createMock(UploadedFile::class);
-        $fileMock->expects(self::once())
-            ->method('isValid')
-            ->willReturn(false);
-
+        $uploadFileMock = $this->createMock(\stdClass::class);
         $request->expects(self::once())
             ->method('file')
             ->with('file')
-            ->willReturn($fileMock);
+            ->willReturn($uploadFileMock);
 
         $result = $this->controller->setLogoInstitution($request);
 
@@ -367,7 +412,21 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeInstitution_should_return_json_response_when_create_institution(): void
+    public function testSetLogoInstitutionShouldReturnInternalErrorWhenObjectIsNotValid(): void
+    {
+        $request = $this->createMock(Request::class);
+
+        $result = $this->controller->setLogoInstitution($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $result);
+        $this->assertSame(500, $result->getStatusCode());
+        $this->assertArrayHasKey('msg', $result->getData(true));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testStoreInstitutionShouldReturnJsonResponseWhenCreateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -388,7 +447,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('create-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->storeInstitution($requestMock);
 
@@ -400,7 +459,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeInstitution_should_return_json_response_with_exception_when_create_institution(): void
+    public function testStoreInstitutionShouldReturnJsonResponseWithExceptionWhenCreateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -427,7 +486,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_updateInstitution_should_return_json_response_when_update_institution(): void
+    public function testUpdateInstitutionShouldReturnJsonResponseWhenUpdateInstitution(): void
     {
         $requestMock = $this->createMock(StoreInstitutionRequest::class);
         $requestMock->expects(self::once())
@@ -448,7 +507,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-institution', $requestMock)
-            ->willReturn($institutionMock);
+            ->willReturn(['institution' => $institutionMock]);
 
         $result = $this->controller->storeInstitution($requestMock);
 
@@ -460,7 +519,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteInstitution_should_return_json_response(): void
+    public function testDeleteInstitutionShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -471,7 +530,7 @@ class InstitutionControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('delete-institution', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
 
         $result = $this->controller->deleteInstitution($requestMock, 1);
 
@@ -482,7 +541,7 @@ class InstitutionControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteInstitution_should_return_json_response_with_exception(): void
+    public function testDeleteInstitutionShouldReturnJsonResponseWithException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -505,12 +564,16 @@ class InstitutionControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+        ];
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

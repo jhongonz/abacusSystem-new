@@ -7,5 +7,5 @@ use Core\Campus\Domain\CampusCollection;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|Campus|CampusCollection;
+    public function execute(RequestService $request): Campus|CampusCollection|null;
 }

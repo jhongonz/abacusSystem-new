@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-19 14:50:09
@@ -17,18 +18,15 @@ class DeleteCampusOrchestrator extends CampusOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
-        $this->campusManagement->deleteCampus($request->input('campusId'));
-        return true;
+        $this->campusManagement->deleteCampus($request->integer('campusId'));
+
+        return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-campus';

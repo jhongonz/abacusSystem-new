@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 07:20:09
@@ -16,36 +17,31 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
     private const IMAGE_PATH_FULL = '/images/full/';
 
     public function __construct(
-        InstitutionManagementContract $institutionManagement
+        InstitutionManagementContract $institutionManagement,
     ) {
         parent::__construct($institutionManagement);
     }
 
     /**
-     * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {
-        $institutionId = $request->input('institutionId');
-        if (! is_null($institutionId)) {
+        $institutionId = $request->integer('institutionId');
+        $institution = $this->institutionManagement->searchInstitutionById($institutionId);
 
-            /** @var Institution $institution */
-            $institution = $this->institutionManagement->searchInstitutionById($institutionId);
-
-            $urlFile = url(self::IMAGE_PATH_FULL.$institution->logo()->value().'?v='.Str::random(10));
+        if ($institution instanceof Institution) {
+            $path = sprintf('%s%s?v=%s', self::IMAGE_PATH_FULL, $institution->logo()->value(), Str::random());
+            $urlFile = url($path);
         }
 
         return [
             'institutionId' => $institutionId,
-            'institution' => $institution ?? null,
-            'image' => $urlFile ?? null
+            'institution' => $institution,
+            'image' => $urlFile ?? null,
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-institution';

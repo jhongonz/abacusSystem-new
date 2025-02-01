@@ -39,11 +39,11 @@ class GetProfileOrchestratorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_make_should_return_profile(): void
+    public function testMakeShouldReturnProfile(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -55,18 +55,20 @@ class GetProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(Profile::class, $result);
-        $this->assertSame($profileMock, $result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertInstanceOf(Profile::class, $result['profile']);
+        $this->assertSame($profileMock, $result['profile']);
     }
 
     /**
      * @throws Exception
      */
-    public function test_make_should_return_null(): void
+    public function testMakeShouldReturnNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
-            ->method('input')
+            ->method('integer')
             ->with('profileId')
             ->willReturn(1);
 
@@ -77,11 +79,13 @@ class GetProfileOrchestratorTest extends TestCase
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertNotInstanceOf(Profile::class, $result);
-        $this->assertNull($result);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('profile', $result);
+        $this->assertNotInstanceOf(Profile::class, $result['profile']);
+        $this->assertNull($result['profile']);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

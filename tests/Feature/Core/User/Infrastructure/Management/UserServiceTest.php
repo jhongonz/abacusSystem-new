@@ -83,7 +83,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_search_user_by_login_should_return_user(): void
+    public function testSearchUserByLoginShouldReturnUser(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $this->factory->expects(self::once())
@@ -110,7 +110,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_search_user_by_login_should_return_null(): void
+    public function testSearchUserByLoginShouldReturnNull(): void
     {
         $loginMock = $this->createMock(UserLogin::class);
         $this->factory->expects(self::once())
@@ -134,7 +134,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_search_user_by_id_should_return_user(): void
+    public function testSearchUserByIdShouldReturnUser(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $this->factory->expects(self::once())
@@ -160,7 +160,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_search_user_by_id_should_return_null(): void
+    public function testSearchUserByIdShouldReturnNull(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $this->factory->expects(self::once())
@@ -184,7 +184,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_update_user_should_void(): void
+    public function testUpdateUserShouldVoid(): void
     {
         $dataUpdate = [];
         $userIdMock = $this->createMock(UserId::class);
@@ -212,7 +212,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_create_user_should_void(): void
+    public function testCreateUserShouldVoid(): void
     {
         $userMock = $this->createMock(User::class);
         $this->factory->expects(self::once())
@@ -237,7 +237,7 @@ class UserServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_delete_user_should_void(): void
+    public function testDeleteUserShouldVoid(): void
     {
         $userIdMock = $this->createMock(UserId::class);
         $this->factory->expects(self::once())

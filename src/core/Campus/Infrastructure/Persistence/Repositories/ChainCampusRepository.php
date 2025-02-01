@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 14:22:41
@@ -14,7 +15,6 @@ use Core\Campus\Domain\ValueObjects\CampusInstitutionId;
 use Core\Campus\Exceptions\CampusCollectionNotFoundException;
 use Core\Campus\Exceptions\CampusNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
-use Throwable;
 
 class ChainCampusRepository extends AbstractChainRepository implements CampusRepositoryContract
 {
@@ -26,12 +26,15 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function find(CampusId $id): ?Campus
     {
         try {
-            return $this->read(__FUNCTION__, $id);
+            /** @var Campus|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
         } catch (\Exception $exception) {
             throw new CampusNotFoundException(sprintf('Campus not found by id %s', $id->value()));
         }
@@ -39,14 +42,17 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
 
     /**
      * @throws CampusCollectionNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function getAll(CampusInstitutionId $id, array $filters = []): ?CampusCollection
     {
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $id, $filters);
+            /** @var CampusCollection|null $result */
+            $result = $this->read(__FUNCTION__, $id, $filters);
+
+            return $result;
         } catch (\Exception $exception) {
             throw new CampusCollectionNotFoundException('Campus collection not found');
         }
@@ -65,6 +71,9 @@ class ChainCampusRepository extends AbstractChainRepository implements CampusRep
      */
     public function persistCampus(Campus $campus): Campus
     {
-        return $this->write(__FUNCTION__, $campus);
+        /** @var Campus $result */
+        $result = $this->write(__FUNCTION__, $campus);
+
+        return $result;
     }
 }

@@ -34,7 +34,7 @@ class SearchCampusCollectionRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_institutionId_should_return_object(): void
+    public function testInstitutionIdShouldReturnObject(): void
     {
         $result = $this->request->institutionId();
 
@@ -42,7 +42,7 @@ class SearchCampusCollectionRequestTest extends TestCase
         $this->assertSame($this->institutionId, $result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->request->filters();
 

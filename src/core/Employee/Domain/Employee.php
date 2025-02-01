@@ -37,21 +37,21 @@ class Employee
         private EmployeeId $id,
         private EmployeeIdentification $identification,
         private EmployeeName $name,
-        private EmployeeLastname $lastname = new EmployeeLastname,
-        private EmployeeState $state = new EmployeeState,
-        private EmployeePhone $phone = new EmployeePhone,
-        private EmployeeEmail $email = new EmployeeEmail,
-        private EmployeeAddress $address = new EmployeeAddress,
-        private EmployeeCreatedAt $createdAt = new EmployeeCreatedAt
+        private EmployeeLastname $lastname = new EmployeeLastname(),
+        private EmployeeState $state = new EmployeeState(),
+        private EmployeePhone $phone = new EmployeePhone(),
+        private EmployeeEmail $email = new EmployeeEmail(),
+        private EmployeeAddress $address = new EmployeeAddress(),
+        private EmployeeCreatedAt $createdAt = new EmployeeCreatedAt(),
     ) {
-        $this->search = new EmployeeSearch;
-        $this->updateAt = new EmployeeUpdatedAt;
-        $this->userId = new EmployeeUserId;
-        $this->institutionId = new EmployeeInstitutionId;
-        $this->birthdate = new EmployeeBirthdate;
-        $this->observations = new EmployeeObservations;
-        $this->identificationType = new EmployeeIdentificationType;
-        $this->image = new EmployeeImage;
+        $this->search = new EmployeeSearch();
+        $this->updateAt = new EmployeeUpdatedAt();
+        $this->userId = new EmployeeUserId();
+        $this->institutionId = new EmployeeInstitutionId();
+        $this->birthdate = new EmployeeBirthdate();
+        $this->observations = new EmployeeObservations();
+        $this->identificationType = new EmployeeIdentificationType();
+        $this->image = new EmployeeImage();
     }
 
     public function id(): EmployeeId
@@ -203,17 +203,39 @@ class Employee
      */
     public function refreshSearch(): self
     {
+        /** @var string $identification */
+        $identification = $this->identification->value();
+
+        /** @var string $lastname */
+        $lastname = $this->lastname->value();
+
+        /** @var string $phone */
+        $phone = $this->phone->value();
+
+        /** @var string $email */
+        $email = $this->email->value();
+
+        /** @var string $address */
+        $address = $this->address->value();
+
+        /** @var string $observations */
+        $observations = $this->observations->value();
+
+        /** @var string $image */
+        $image = $this->image->value();
+
         $data = [
-            $this->identification->value(),
-            $this->name->value(),
-            $this->lastname->value(),
-            $this->phone->value(),
-            $this->email->value(),
-            $this->address->value(),
-            $this->observations->value(),
+            trim(strtolower($identification)),
+            trim(strtolower($this->name->value())),
+            trim(strtolower($lastname)),
+            trim(strtolower($phone)),
+            trim(strtolower($email)),
+            trim(strtolower($address)),
+            trim(strtolower($observations)),
+            trim(strtolower($image)),
         ];
 
-        $dataSearch = trim(strtolower(implode(' ', $data)));
+        $dataSearch = implode(' ', $data);
         $this->search->setValue($dataSearch);
 
         return $this;
@@ -275,6 +297,7 @@ class Employee
     public function setInstitutionId(EmployeeInstitutionId $institutionId): self
     {
         $this->institutionId = $institutionId;
+
         return $this;
     }
 }

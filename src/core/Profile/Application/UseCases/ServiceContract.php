@@ -7,5 +7,5 @@ use Core\Profile\Domain\Profiles;
 
 interface ServiceContract
 {
-    public function execute(RequestService $request): null|Profile|Profiles;
+    public function execute(RequestService $request): Profile|Profiles|null;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 06:51:01
@@ -6,26 +7,18 @@
 
 namespace App\Traits;
 
-use DateTime;
-use Exception;
-
 trait UtilsDateTimeTrait
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
-
-    /**
-     * @return DateTime
-     */
-    public function getCurrentTime(): DateTime
+    private function getCurrentTime(): \DateTime
     {
-        return new DateTime;
+        return new \DateTime();
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getDateTime(string $datetime): DateTime
+    private function getDateTime(string $datetime): \DateTime
     {
-        return new DateTime($datetime);
+        return new \DateTime($datetime);
     }
 }

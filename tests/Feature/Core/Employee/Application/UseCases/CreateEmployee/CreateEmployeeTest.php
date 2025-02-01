@@ -48,7 +48,7 @@ class CreateEmployeeTest extends TestCase
      * @throws \Exception
      * @throws Exception
      */
-    public function test_execute_should_persist_and_return_object_employee(): void
+    public function testExecuteShouldPersistAndReturnObjectEmployee(): void
     {
         $employeeMock = $this->createMock(Employee::class);
         $employeeMock->expects(self::once())
@@ -74,13 +74,12 @@ class CreateEmployeeTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Request not valid');
 
         $requestMock = $this->createMock(DeleteEmployeeRequest::class);
         $this->useCase->execute($requestMock);
-
     }
 }

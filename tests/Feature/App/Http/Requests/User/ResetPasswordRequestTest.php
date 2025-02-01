@@ -14,7 +14,7 @@ class ResetPasswordRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new ResetPasswordRequest;
+        $this->request = new ResetPasswordRequest();
     }
 
     public function tearDown(): void
@@ -23,20 +23,28 @@ class ResetPasswordRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_authorize_should_return_true(): void
+    public function testAuthorizeShouldReturnTrue(): void
     {
         $result = $this->request->authorize();
         $this->assertTrue($result);
     }
 
-    public function test_rules_should_return_array(): void
+    public function testRulesShouldReturnArray(): void
     {
         $result = $this->request->rules();
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
+
+        foreach ($result as $index => $item) {
+            $this->assertIsString($index);
+
+            $this->assertIsArray($item);
+            $this->assertNotEmpty($item);
+        }
     }
-    public function test_messages_should_return_array(): void
+
+    public function testMessagesShouldReturnArray(): void
     {
         $result = $this->request->messages();
 

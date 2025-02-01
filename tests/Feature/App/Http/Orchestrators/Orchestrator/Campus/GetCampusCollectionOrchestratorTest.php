@@ -7,17 +7,11 @@ use Core\Campus\Domain\Campus;
 use Core\Campus\Domain\CampusCollection;
 use Core\Campus\Domain\Contracts\CampusDataTransformerContract;
 use Core\Campus\Domain\Contracts\CampusManagementContract;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\View\Factory as ViewFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
-use Yajra\DataTables\CollectionDataTable;
-use Yajra\DataTables\DataTables;
 
 #[CoversClass(GetCampusCollectionOrchestrator::class)]
 #[CoversClass(CampusCollection::class)]
@@ -25,8 +19,6 @@ class GetCampusCollectionOrchestratorTest extends TestCase
 {
     private CampusManagementContract|MockObject $campusManagementMock;
     private CampusDataTransformerContract|MockObject $campusDataTransformerMock;
-    private DataTables|MockObject $dataTablesMock;
-    private ViewFactory|MockObject $viewFactoryMock;
     private GetCampusCollectionOrchestrator $orchestrator;
 
     /**
@@ -37,13 +29,9 @@ class GetCampusCollectionOrchestratorTest extends TestCase
         parent::setUp();
         $this->campusManagementMock = $this->createMock(CampusManagementContract::class);
         $this->campusDataTransformerMock = $this->createMock(CampusDataTransformerContract::class);
-        $this->dataTablesMock = $this->createMock(DataTables::class);
-        $this->viewFactoryMock = $this->createMock(ViewFactory::class);
         $this->orchestrator = new GetCampusCollectionOrchestrator(
             $this->campusManagementMock,
             $this->campusDataTransformerMock,
-            $this->dataTablesMock,
-            $this->viewFactoryMock
         );
     }
 
@@ -52,94 +40,89 @@ class GetCampusCollectionOrchestratorTest extends TestCase
         unset(
             $this->campusManagementMock,
             $this->campusDataTransformerMock,
-            $this->dataTablesMock,
-            $this->viewFactoryMock,
             $this->orchestrator
         );
         parent::tearDown();
     }
 
     /**
-     * @return void
      * @throws Exception
-     * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_make_should_return_json_response(): void
+    public function testMakeShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('institutionId')
+            ->willReturn(1);
+
+        $requestMock->expects(self::once())
             ->method('input')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(1, []);
+            ->with('filters')
+            ->willReturn([]);
 
         $campusMock = $this->createMock(Campus::class);
-        $campusCollectionMock = new CampusCollection([$campusMock]);
-
-        $this->campusDataTransformerMock->expects(self::once())
-            ->method('write')
-            ->with($campusMock)
-            ->willReturnSelf();
-
-        $this->campusDataTransformerMock->expects(self::once())
-            ->method('readToShare')
-            ->willReturn([]);
+        $campusMock2 = $this->createMock(Campus::class);
+        $campusCollectionMock = new CampusCollection([$campusMock, $campusMock2]);
 
         $this->campusManagementMock->expects(self::once())
             ->method('searchCampusCollection')
             ->with(1, [])
             ->willReturn($campusCollectionMock);
 
-        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
-        $collectionDataTableMock->expects(self::once())
-            ->method('addColumn')
-            ->with('tools', $this->callback(function ($closure) {
-
-                $viewMock = $this->createMock(View::class);
-                $viewMock->expects(self::exactly(2))
-                    ->method('with')
-                    ->withAnyParameters()
-                    ->willReturnSelf();
-
-                $viewMock->expects(self::once())
-                    ->method('render')
-                    ->willReturn('<html lang="es"></html>');
-
-                $this->viewFactoryMock->expects(self::once())
-                    ->method('make')
-                    ->with('components.menu-options-datatable')
-                    ->willReturn($viewMock);
-
-                $view = $closure(['id' => 1,'state' => 2]);
-
-                $this->assertIsString($view);
-                $this->assertSame('<html lang="es"></html>', $view);
-                return true;
-            }))
+        $this->campusDataTransformerMock->expects(self::exactly(2))
+            ->method('write')
+            ->withAnyParameters()
             ->willReturnSelf();
 
-        $collectionDataTableMock->expects(self::once())
-            ->method('escapeColumns')
-            ->with([])
-            ->willReturnSelf();
-
-        $responseMock = $this->createMock(JsonResponse::class);
-        $collectionDataTableMock->expects(self::once())
-            ->method('toJson')
-            ->willReturn($responseMock);
-
-        $collectionMock = new Collection([[]]);
-        $this->dataTablesMock->expects(self::once())
-            ->method('collection')
-            ->with($collectionMock)
-            ->willReturn($collectionDataTableMock);
+        $data1 = ['name' => 'data1'];
+        $data2 = ['name' => 'data2'];
+        $this->campusDataTransformerMock->expects(self::exactly(2))
+            ->method('readToShare')
+            ->willReturnOnConsecutiveCalls($data1, $data2);
 
         $result = $this->orchestrator->make($requestMock);
 
-        $this->assertInstanceOf(JsonResponse::class, $result);
-        $this->assertSame($responseMock, $result);
+        $this->assertIsArray($result);
+        $this->assertCount(2, $result);
+        $this->assertEquals([$data1, $data2], $result);
     }
 
-    public function test_canOrchestrate_should_return_string(): void
+    /**
+     * @throws Exception
+     */
+    public function testMakeShouldReturnArrayWithCollectionNull(): void
+    {
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->with('institutionId')
+            ->willReturn(1);
+
+        $requestMock->expects(self::once())
+            ->method('input')
+            ->with('filters')
+            ->willReturn([]);
+
+        $this->campusManagementMock->expects(self::once())
+            ->method('searchCampusCollection')
+            ->with(1, [])
+            ->willReturn(null);
+
+        $this->campusDataTransformerMock->expects(self::never())
+            ->method('write');
+
+        $this->campusDataTransformerMock->expects(self::never())
+            ->method('readToShare');
+
+        $result = $this->orchestrator->make($requestMock);
+
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+        $this->assertEquals([], $result);
+    }
+
+    public function testCanOrchestrateShouldReturnString(): void
     {
         $result = $this->orchestrator->canOrchestrate();
 

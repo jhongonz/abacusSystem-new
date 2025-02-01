@@ -45,7 +45,7 @@ class VerifySessionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_json_response(): void
+    public function testHandleShouldReturnJsonResponse(): void
     {
         $this->sessionMock->expects(self::once())
             ->method('exists')
@@ -57,7 +57,9 @@ class VerifySessionTest extends TestCase
             ->method('ajax')
             ->willReturn(true);
 
-        $result = $this->middleware->handle($requestMock, function () {});
+        $result = $this->middleware->handle($requestMock, function ($request) {
+            return new Response();
+        });
 
         $this->assertInstanceOf(JsonResponse::class, $result);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED, $result->getStatusCode());
@@ -69,7 +71,7 @@ class VerifySessionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_redirect_response(): void
+    public function testHandleShouldReturnRedirectResponse(): void
     {
         $this->sessionMock->expects(self::once())
             ->method('exists')
@@ -87,7 +89,9 @@ class VerifySessionTest extends TestCase
             ->with('/')
             ->willReturn($responseMock);
 
-        $result = $this->middleware->handle($requestMock, function () {});
+        $result = $this->middleware->handle($requestMock, function ($request) {
+            return new Response();
+        });
 
         $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame($responseMock, $result);
@@ -96,7 +100,7 @@ class VerifySessionTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_response(): void
+    public function testHandleShouldReturnResponse(): void
     {
         $this->sessionMock->expects(self::once())
             ->method('exists')

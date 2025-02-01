@@ -26,7 +26,7 @@ class EmployeeUpdateOrDeletedEventTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_employeeId_should_return_int(): void
+    public function testEmployeeIdShouldReturnInt(): void
     {
         $result = $this->event->employeeId();
 
@@ -34,14 +34,12 @@ class EmployeeUpdateOrDeletedEventTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_broadcastOn_should_return_array_object(): void
+    public function testBroadcastOnShouldReturnArrayObject(): void
     {
         $result = $this->event->broadcastOn();
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
-        foreach ($result as $item) {
-            $this->assertInstanceOf(PrivateChannel::class, $item);
-        }
+        $this->assertContainsOnlyInstancesOf(PrivateChannel::class, $result);
     }
 }

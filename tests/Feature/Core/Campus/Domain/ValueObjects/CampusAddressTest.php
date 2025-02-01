@@ -14,7 +14,7 @@ class CampusAddressTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusAddress;
+        $this->valueObject = new CampusAddress();
     }
 
     public function tearDown(): void
@@ -23,13 +23,13 @@ class CampusAddressTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_null(): void
+    public function testValueShouldReturnNull(): void
     {
         $result = $this->valueObject->value();
         $this->assertNull($result);
     }
 
-    public function test_setValue_should_return_object(): void
+    public function testSetValueShouldReturnObject(): void
     {
         $result = $this->valueObject->setValue('testing');
 
@@ -38,7 +38,7 @@ class CampusAddressTest extends TestCase
         $this->assertSame('testing', $result->value());
     }
 
-    public function test_value_should_return_string(): void
+    public function testValueShouldReturnString(): void
     {
         $this->valueObject = new CampusAddress('testing');
         $result = $this->valueObject->value();

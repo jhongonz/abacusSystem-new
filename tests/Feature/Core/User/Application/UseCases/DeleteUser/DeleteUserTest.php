@@ -6,6 +6,7 @@
 
 namespace Tests\Feature\Core\User\Application\UseCases\DeleteUser;
 
+use Core\User\Application\UseCases\CreateUser\CreateUserRequest;
 use Core\User\Application\UseCases\DeleteUser\DeleteUser;
 use Core\User\Application\UseCases\DeleteUser\DeleteUserRequest;
 use Core\User\Application\UseCases\UseCasesService;
@@ -44,7 +45,7 @@ class DeleteUserTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_user_object(): void
+    public function testExecuteShouldDeleteUserAndReturnVoid(): void
     {
         $userId = $this->createMock(UserId::class);
 
@@ -58,7 +59,20 @@ class DeleteUserTest extends TestCase
             ->with($userId);
 
         $result = $this->useCase->execute($requestMock);
-
         $this->assertNull($result);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    public function testExecuteShouldReturnException(): void
+    {
+        $requestMock = $this->createMock(CreateUserRequest::class);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Request not valid');
+
+        $this->useCase->execute($requestMock);
     }
 }

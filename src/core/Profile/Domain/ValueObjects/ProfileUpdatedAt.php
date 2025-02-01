@@ -3,21 +3,20 @@
 namespace Core\Profile\Domain\ValueObjects;
 
 use Core\SharedContext\Model\dateTimeModel;
-use DateTime;
 
 class ProfileUpdatedAt implements dateTimeModel
 {
     public function __construct(
-        private ?DateTime $value = null
+        private ?\DateTime $value = null,
     ) {
     }
 
-    public function value(): ?DateTime
+    public function value(): ?\DateTime
     {
         return $this->value;
     }
 
-    public function setValue(DateTime $value): self
+    public function setValue(\DateTime $value): self
     {
         $this->value = $value;
 
@@ -31,6 +30,6 @@ class ProfileUpdatedAt implements dateTimeModel
 
     public function toFormattedString(): string
     {
-        return (! is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
+        return (!is_null($this->value)) ? $this->value->format(self::DATE_FORMAT) : '';
     }
 }

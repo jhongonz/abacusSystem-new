@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-17 12:56:02
@@ -12,6 +13,9 @@ class CampusCollection extends ArrayIterator
 {
     public const TYPE = 'campus-collection';
 
+    /**
+     * @param array<int|string, Campus> $items
+     */
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
@@ -23,12 +27,14 @@ class CampusCollection extends ArrayIterator
 
     public function addItem(Campus $item): self
     {
-        $this->validateInstanceElement(Campus::class, $item);
-
         $this->append($item);
+
         return $this;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function items(): array
     {
         return $this->getArrayCopy();
@@ -37,22 +43,35 @@ class CampusCollection extends ArrayIterator
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function aggregator(): array
     {
         return $this->aggregator;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param array<int|string, mixed> $filters
+     *
+     * @return $this
+     */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 }

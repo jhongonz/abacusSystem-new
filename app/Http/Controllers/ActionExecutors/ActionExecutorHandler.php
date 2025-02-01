@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-08 06:39:13
@@ -9,9 +10,9 @@ namespace App\Http\Controllers\ActionExecutors;
 use App\Http\Exceptions\ActionExecutorNotFoundException;
 use Illuminate\Http\Request;
 
-class ActionExecutorHandler
+class ActionExecutorHandler implements ActionExecutorHandlerContract
 {
-    /** @var ActionExecutor[]  */
+    /** @var ActionExecutor[] */
     private array $actionExecutors;
 
     public function __construct()
@@ -32,7 +33,7 @@ class ActionExecutorHandler
     public function invoke(string $action, Request $request): mixed
     {
         if (empty($this->actionExecutors[$action])) {
-            throw new ActionExecutorNotFoundException;
+            throw new ActionExecutorNotFoundException();
         }
 
         return $this->actionExecutors[$action]->invoke($request);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-21 12:45:09
@@ -12,7 +13,7 @@ use Core\Institution\Domain\ValueObjects\InstitutionId;
 class SearchInstitutionByIdRequest implements RequestService
 {
     public function __construct(
-        private readonly InstitutionId $id
+        private readonly InstitutionId $id,
     ) {
     }
 

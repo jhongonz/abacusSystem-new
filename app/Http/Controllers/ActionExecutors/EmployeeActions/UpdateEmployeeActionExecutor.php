@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-09 22:04:33
@@ -23,17 +24,11 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
     public function __construct(
         OrchestratorHandlerContract $orchestratorHandler,
         protected ImageManagerInterface $imageManager,
-        protected Hasher $hasher
+        protected Hasher $hasher,
     ) {
         parent::__construct($orchestratorHandler);
-        $this->setImageManager($imageManager);
-        $this->setHasher($hasher);
     }
 
-    /**
-     * @param Request $request
-     * @return Employee
-     */
     public function invoke(Request $request): Employee
     {
         $birthdate = $request->date('birthdate', 'd/m/Y');
@@ -50,17 +45,18 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataUpdate['image'] = $filename;
         }
         $request->merge(['dataUpdate' => json_encode($dataUpdate)]);
 
-        /** @var Employee $employee */
-        $employee = $this->orchestratorHandler->handler('update-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestratorHandler->handler('update-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $dataUpdateUser = [
             'profileId' => $request->input('profile'),
-            'login' => $request->input('login')
+            'login' => $request->input('login'),
         ];
 
         if (isset($dataUpdate['image'])) {
@@ -68,23 +64,23 @@ class UpdateEmployeeActionExecutor extends EmployeeActionExecutor
         }
 
         if ($request->filled('password')) {
-            $dataUpdateUser['password'] = $this->makeHashPassword($request->input('password'));
+            $dataUpdateUser['password'] = $this->makeHashPassword($request->string('password'));
         }
 
         $request->merge(['dataUpdate' => json_encode($dataUpdateUser)]);
+        $actionUser = $request->filled('userId') ? 'update-user' : 'create-user';
 
-        $actionUser = ($request->filled('userId')) ? 'update-user' : 'create-user';
+        /** @var array{user: User} $dataUser */
+        $dataUser = $this->orchestratorHandler->handler($actionUser, $request);
+        $user = $dataUser['user'];
 
-        /** @var User $user */
-        $user = $this->orchestratorHandler->handler($actionUser, $request);
-        $employee->userId()->setValue($user->id()->value());
+        if (!is_null($user->id()->value())) {
+            $employee->userId()->setValue($user->id()->value());
+        }
 
         return $employee;
     }
 
-    /**
-     * @return string
-     */
     public function canExecute(): string
     {
         return 'update-employee-action';

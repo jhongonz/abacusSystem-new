@@ -13,6 +13,9 @@ interface EmployeeRepositoryContract
 
     public function findCriteria(EmployeeIdentification $identification): ?Employee;
 
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function getAll(array $filters = []): ?Employees;
 
     public function delete(EmployeeId $id): void;

@@ -9,7 +9,7 @@ namespace Core\User\Domain\ValueObjects;
 class UserLogin
 {
     public function __construct(
-        private string $value
+        private string $value,
     ) {
     }
 

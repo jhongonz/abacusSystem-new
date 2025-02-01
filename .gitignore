@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 /var/coverage
 /var/infection
+/var/phpstan
+.php-cs-fixer.cache

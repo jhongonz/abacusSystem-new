@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
+use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ModuleController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -20,14 +22,18 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\DataTables;
 
 #[CoversClass(ModuleController::class)]
 #[CoversClass(Controller::class)]
 class ModuleControllerTest extends TestCase
 {
     private OrchestratorHandlerContract|MockObject $orchestrator;
+    private DataTables|MockObject $dataTables;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EventDispatcher|MockObject $eventDispatcher;
     private ModuleController $controller;
 
     /**
@@ -37,11 +43,15 @@ class ModuleControllerTest extends TestCase
     {
         parent::setUp();
         $this->orchestrator = $this->createMock(OrchestratorHandlerContract::class);
+        $this->dataTables = $this->createMock(DataTables::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $this->controller = new ModuleController(
             $this->orchestrator,
+            $this->dataTables,
+            $this->eventDispatcher,
             $this->viewFactory,
             $this->logger,
         );
@@ -54,7 +64,8 @@ class ModuleControllerTest extends TestCase
             $this->viewFactory,
             $this->logger,
             $this->controller,
-            $this->actionExecutorHandler
+            $this->actionExecutorHandler,
+            $this->eventDispatcher
         );
         parent::tearDown();
     }
@@ -62,7 +73,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_json_response(): void
+    public function testIndexShouldReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -107,7 +118,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_index_should_return_string(): void
+    public function testIndexShouldReturnString(): void
     {
         $request = $this->createMock(Request::class);
         $request->expects(self::once())
@@ -150,16 +161,59 @@ class ModuleControllerTest extends TestCase
 
     /**
      * @throws Exception
+     * @throws \Yajra\DataTables\Exceptions\Exception
      */
-    public function test_getModules_should_return_json_response(): void
+    public function testGetModulesShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
 
-        $responseMock = $this->createMock(JsonResponse::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('retrieve-modules', $requestMock)
+            ->willReturn([]);
+
+        $collectionDataTableMock = $this->createMock(CollectionDataTable::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('addColumn')
+            ->with('tools', $this->callback(function ($closure) {
+                $viewMock = $this->createMock(View::class);
+                $viewMock->expects(self::exactly(2))
+                    ->method('with')
+                    ->withAnyParameters()
+                    ->willReturnSelf();
+
+                $viewMock->expects(self::once())
+                    ->method('render')
+                    ->willReturn('<html lang="es"></html>');
+
+                $this->viewFactory->expects(self::once())
+                    ->method('make')
+                    ->with('components.menu-options-datatable')
+                    ->willReturn($viewMock);
+
+                $view = $closure(['id' => 1, 'state' => 2]);
+
+                $this->assertIsString($view);
+                $this->assertSame('<html lang="es"></html>', $view);
+
+                return true;
+            }))
+            ->willReturnSelf();
+
+        $collectionDataTableMock->expects(self::once())
+            ->method('escapeColumns')
+            ->with([])
+            ->willReturnSelf();
+
+        $responseMock = $this->createMock(JsonResponse::class);
+        $collectionDataTableMock->expects(self::once())
+            ->method('toJson')
             ->willReturn($responseMock);
+
+        $this->dataTables->expects(self::once())
+            ->method('collection')
+            ->with([])
+            ->willReturn($collectionDataTableMock);
 
         $result = $this->controller->getModules($requestMock);
 
@@ -170,7 +224,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateModule_should_return_json_response(): void
+    public function testChangeStateModuleShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $moduleMock = $this->createMock(Module::class);
@@ -186,7 +240,12 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('change-state-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
+
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->changeStateModule($requestMock);
 
@@ -197,7 +256,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_changeStateModule_should_return_json_response_when_is_exception(): void
+    public function testChangeStateModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -223,7 +282,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_getModule_should_return_json_response_when_id_is_null(): void
+    public function testGetModuleShouldReturnJsonResponseWhenIdIsNull(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -263,7 +322,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_create_new_module_and_return_json_response(): void
+    public function testStoreModuleShouldCreateNewModuleAndReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -284,7 +343,12 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('create-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
+
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -295,7 +359,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_return_json_response_when_exception_routing(): void
+    public function testStoreModuleShouldReturnJsonResponseWhenExceptionRouting(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -322,7 +386,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_update_module_and_return_json_response(): void
+    public function testStoreModuleShouldUpdateModuleAndReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -343,7 +407,7 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('update-module', $requestMock)
-            ->willReturn($moduleMock);
+            ->willReturn(['module' => $moduleMock]);
 
         $result = $this->controller->storeModule($requestMock);
 
@@ -354,7 +418,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_storeModule_should_return_json_response_when_is_exception(): void
+    public function testStoreModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(StoreModuleRequest::class);
         $requestMock->expects(self::once())
@@ -381,7 +445,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteModule_should_return_json_response(): void
+    public function testDeleteModuleShouldReturnJsonResponse(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -392,7 +456,12 @@ class ModuleControllerTest extends TestCase
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('delete-module', $requestMock)
-            ->willReturn(true);
+            ->willReturn([]);
+
+        $eventMock = new ModuleUpdatedOrDeletedEvent(1);
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock);
 
         $result = $this->controller->deleteModule($requestMock, 1);
 
@@ -403,7 +472,7 @@ class ModuleControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_deleteModule_should_return_json_response_when_is_exception(): void
+    public function testDeleteModuleShouldReturnJsonResponseWhenIsException(): void
     {
         $requestMock = $this->createMock(Request::class);
         $requestMock->expects(self::once())
@@ -426,12 +495,24 @@ class ModuleControllerTest extends TestCase
         $this->assertSame(500, $result->getStatusCode());
     }
 
-    public function test_middleware_should_return_object(): void
+    public function testMiddlewareShouldReturnObject(): void
     {
+        $dataExpected = [
+            new Middleware(['auth', 'verify-session']),
+            new Middleware('only.ajax-request', only: [
+                'getModules',
+                'changeStateModule',
+                'deleteModule',
+                'getModule',
+                'storeModule',
+            ]),
+        ];
+
         $result = $this->controller::middleware();
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
         $this->assertContainsOnlyInstancesOf(Middleware::class, $result);
+        $this->assertEquals($dataExpected, $result);
     }
 }

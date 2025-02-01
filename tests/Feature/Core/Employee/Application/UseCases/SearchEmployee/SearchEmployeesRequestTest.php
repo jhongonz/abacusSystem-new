@@ -14,7 +14,7 @@ class SearchEmployeesRequestTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->request = new SearchEmployeesRequest;
+        $this->request = new SearchEmployeesRequest();
     }
 
     public function tearDown(): void
@@ -23,7 +23,7 @@ class SearchEmployeesRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
         $result = $this->request->filters();
         $this->assertIsArray($result);

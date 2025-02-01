@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
+use App\Events\EventDispatcher;
 use App\Events\User\UserUpdateOrDeleteEvent;
-use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
+use App\Http\Controllers\ActionExecutors\ActionExecutorHandlerContract;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Traits\DataTablesTrait;
 use App\Traits\MultimediaTrait;
 use App\Traits\UserTrait;
 use Core\Employee\Domain\Employee;
-use Exception;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
@@ -20,21 +23,24 @@ use Illuminate\View\Factory as ViewFactory;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller implements HasMiddleware
 {
     use MultimediaTrait;
     use UserTrait;
+    use DataTablesTrait;
 
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
-        private readonly ActionExecutorHandler $actionExecutorHandler,
+        private readonly ActionExecutorHandlerContract $actionExecutorHandler,
+        private readonly DataTables $dataTables,
+        private readonly EventDispatcher $eventDispatcher,
+        private readonly Filesystem $filesystem,
         protected ImageManagerInterface $imageManager,
-        ViewFactory $viewFactory,
-        LoggerInterface $logger,
+        protected ViewFactory $viewFactory,
+        private readonly LoggerInterface $logger,
     ) {
-        parent::__construct($logger, $viewFactory);
-        $this->setImageManager($imageManager);
     }
 
     public function index(): JsonResponse|string
@@ -46,40 +52,58 @@ class EmployeeController extends Controller implements HasMiddleware
         return $this->renderView($view);
     }
 
+    /**
+     * @throws \Yajra\DataTables\Exceptions\Exception
+     */
     public function getEmployees(Request $request): JsonResponse
     {
-        return $this->orchestrators->handler('retrieve-employees', $request);
+        $dataEmployees = $this->orchestrators->handler('retrieve-employees', $request);
+
+        $datatable = $this->dataTables->collection($dataEmployees);
+        $datatable->addColumn('tools', function (array $element): string {
+            return $this->retrieveMenuOptionHtml($element);
+        });
+
+        return $datatable->escapeColumns([])->toJson();
     }
 
     public function changeStateEmployee(Request $request): JsonResponse
     {
         try {
-            /** @var Employee $employee */
-            $employee = $this->orchestrators->handler('change-state-employee', $request);
-        } catch (Exception $exception) {
-            $this->logger->error('Employee can not be updated with id: '.$request->input('id'), $exception->getTrace());
+            /** @var array{employee: Employee} $dataEmployee */
+            $dataEmployee = $this->orchestrators->handler('change-state-employee', $request);
+            $employee = $dataEmployee['employee'];
+        } catch (\Exception $exception) {
+            /** @var string $id */
+            $id = $request->input('id');
+
+            $this->logger->error(
+                sprintf('Employee can not be updated with id: %s', $id),
+                $exception->getTrace()
+            );
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $userId = $employee->userId()->value();
         if (isset($userId)) {
-
             $request->merge([
                 'userId' => $userId,
-                'state' => $employee->state()->value()
+                'state' => $employee->state()->value(),
             ]);
 
             $this->orchestrators->handler('change-state-user', $request);
-            UserUpdateOrDeleteEvent::dispatch($userId);
+            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
         }
 
-        return new JsonResponse(status:Response::HTTP_CREATED);
+        return new JsonResponse(status: Response::HTTP_CREATED);
     }
 
     public function getEmployee(Request $request, ?int $employeeId = null): JsonResponse|string
     {
         $request->merge(['employeeId' => $employeeId]);
+
+        /** @var array<int|string, mixed> $dataEmployee */
         $dataEmployee = $this->orchestrators->handler('detail-employee', $request);
 
         $view = $this->viewFactory->make('employee.employee-form', $dataEmployee)
@@ -91,14 +115,20 @@ class EmployeeController extends Controller implements HasMiddleware
     public function storeEmployee(StoreEmployeeRequest $request): JsonResponse
     {
         try {
-            $method = (! $request->filled('employeeId')) ? 'create-employee-action' : 'update-employee-action';
+            $method = (!$request->filled('employeeId')) ? 'create-employee-action' : 'update-employee-action';
 
             /** @var Employee $employee */
             $employee = $this->actionExecutorHandler->invoke($method, $request);
 
-            EmployeeUpdateOrDeletedEvent::dispatch($employee->id()->value());
-            UserUpdateOrDeleteEvent::dispatch($employee->userId()->value());
-        } catch (Exception $exception) {
+            /** @var int $employeeId */
+            $employeeId = $employee->id()->value();
+
+            /** @var int $userId */
+            $userId = $employee->userId()->value();
+
+            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
+            $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(
@@ -118,9 +148,11 @@ class EmployeeController extends Controller implements HasMiddleware
 
     public function setImageEmployee(Request $request): JsonResponse
     {
-        if ($request->file('file')->isValid()) {
-            $random = Str::random(10);
-            $imageUrl = $this->saveImageTmp($request->file('file')->getRealPath(), $random);
+        $uploadedFile = $request->file('file');
+
+        if ($uploadedFile instanceof UploadedFile && $uploadedFile->isValid()) {
+            $random = Str::random();
+            $imageUrl = $this->saveImageTmp($uploadedFile->getRealPath(), $random);
 
             return new JsonResponse(['token' => $random, 'url' => $imageUrl], Response::HTTP_CREATED);
         }
@@ -132,17 +164,24 @@ class EmployeeController extends Controller implements HasMiddleware
     {
         $request->merge(['employeeId' => $employeeId]);
 
-        /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('retrieve-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestrators->handler('retrieve-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         try {
             $this->orchestrators->handler('delete-employee', $request);
 
             $image = $employee->image()->value();
-            if (!is_null($image)) {
-                $this->deleteImage($image);
+            if (!empty($image)) {
+                /** @var array<string> $files */
+                $files = [
+                    public_path(sprintf('%s%s', self::IMAGE_PATH_FULL, $image)),
+                    public_path(sprintf('%s%s', self::IMAGE_PATH_SMALL, $image)),
+                ];
+
+                $this->filesystem->delete($files);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
             return new JsonResponse(status: Response::HTTP_INTERNAL_SERVER_ERROR);

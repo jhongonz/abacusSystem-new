@@ -12,7 +12,7 @@ use Core\User\Domain\ValueObjects\UserId;
 class DeleteUserRequest implements RequestService
 {
     public function __construct(
-        private readonly UserId $id
+        private readonly UserId $id,
     ) {
     }
 

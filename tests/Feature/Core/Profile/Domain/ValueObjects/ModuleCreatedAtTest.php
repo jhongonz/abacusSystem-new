@@ -3,7 +3,6 @@
 namespace Tests\Feature\Core\Profile\Domain\ValueObjects;
 
 use Core\Profile\Domain\ValueObjects\ModuleCreatedAt;
-use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
@@ -15,7 +14,7 @@ class ModuleCreatedAtTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleCreatedAt;
+        $this->valueObject = new ModuleCreatedAt();
     }
 
     public function tearDown(): void
@@ -24,15 +23,15 @@ class ModuleCreatedAtTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_datetime(): void
+    public function testValueShouldReturnDatetime(): void
     {
         $result = $this->valueObject->value();
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
     }
 
-    public function test_setValue_should_return_self(): void
+    public function testSetValueShouldReturnSelf(): void
     {
-        $datetime = new DateTime('2024-05-05');
+        $datetime = new \DateTime('2024-05-05');
         $result = $this->valueObject->setValue($datetime);
 
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
@@ -40,13 +39,13 @@ class ModuleCreatedAtTest extends TestCase
         $this->assertSame($datetime, $result->value());
     }
 
-    public function test___toString_should_return_string(): void
+    public function testToStringShouldReturnString(): void
     {
         $dateTime = new \DateTime('2024-04-20 21:27:00');
         $result = $this->valueObject->setValue($dateTime);
 
         $this->assertInstanceOf(ModuleCreatedAt::class, $result);
         $this->assertSame($this->valueObject, $result);
-        $this->assertSame('2024-04-20 21:27:00', (string)$result);
+        $this->assertSame('2024-04-20 21:27:00', (string) $result);
     }
 }

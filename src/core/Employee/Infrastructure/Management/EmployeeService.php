@@ -18,7 +18,6 @@ use Core\Employee\Domain\Contracts\EmployeeFactoryContract;
 use Core\Employee\Domain\Contracts\EmployeeManagementContract;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\Employees;
-use Exception;
 
 class EmployeeService implements EmployeeManagementContract
 {
@@ -34,7 +33,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchEmployeeById(?int $id): ?Employee
     {
@@ -46,7 +45,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function searchEmployeeByIdentification(string $identification): ?Employee
     {
@@ -58,14 +57,19 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string, mixed> $filters
+     *
+     * @throws \Exception
      */
     public function searchEmployees(array $filters = []): Employees
     {
         $request = new SearchEmployeesRequest($filters);
+
+        /** @var Employees $employees */
         $employees = $this->searchEmployees->execute($request);
 
         foreach ($employees->aggregator() as $item) {
+            /** @var Employee $employee */
             $employee = $this->searchEmployeeById($item);
             $employees->addItem($employee);
         }
@@ -74,7 +78,9 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string, mixed> $data
+     *
+     * @throws \Exception
      */
     public function updateEmployee(int $id, array $data): Employee
     {
@@ -85,7 +91,9 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @param array<string ,mixed> $data
+     *
+     * @throws \Exception
      */
     public function createEmployee(array $data): Employee
     {
@@ -96,7 +104,7 @@ class EmployeeService implements EmployeeManagementContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteEmployee(int $id): void
     {

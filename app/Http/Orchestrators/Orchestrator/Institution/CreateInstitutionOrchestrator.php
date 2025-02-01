@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-05 07:28:36
@@ -19,20 +20,18 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
 
     public function __construct(
         InstitutionManagementContract $institutionManagement,
-        protected ImageManagerInterface $imageManager
+        protected ImageManagerInterface $imageManager,
     ) {
         parent::__construct($institutionManagement);
-        $this->setImageManager($imageManager);
     }
 
     /**
-     * @param Request $request
-     * @return Institution
+     * @return array<string, mixed>
      */
-    public function make(Request $request): Institution
+    public function make(Request $request): array
     {
         $dataInstitution = [
-            'id' => $request->input('institutionId'),
+            'id' => $request->integer('institutionId'),
             'name' => $request->input('name'),
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),
@@ -40,20 +39,19 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
             'address' => $request->input('address'),
             'phone' => $request->input('phone'),
             'email' => $request->input('email'),
-            'state' => ValueObjectStatus::STATE_NEW
+            'state' => ValueObjectStatus::STATE_NEW,
         ];
 
         if ($request->filled('token')) {
-            $filename = $this->saveImage($request->input('token'));
+            $filename = $this->saveImage($request->string('token'));
             $dataInstitution['logo'] = $filename;
         }
 
-        return $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+        $institution = $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+
+        return ['institution' => $institution];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'create-institution';

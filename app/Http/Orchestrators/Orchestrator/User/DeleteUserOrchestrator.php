@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 17:04:21
@@ -17,18 +18,15 @@ class DeleteUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @return array<null>
      */
-    public function make(Request $request): bool
+    public function make(Request $request): array
     {
-        $this->userManagement->deleteUser($request->input('userId'));
-        return true;
+        $this->userManagement->deleteUser($request->integer('userId'));
+
+        return [];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'delete-user';

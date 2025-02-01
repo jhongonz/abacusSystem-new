@@ -81,7 +81,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchEmployeeById_should_return_object(): void
+    public function testSearchEmployeeByIdShouldReturnObject(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $this->factory->expects(self::once())
@@ -107,7 +107,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchEmployeeById_should_return_null(): void
+    public function testSearchEmployeeByIdShouldReturnNull(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $this->factory->expects(self::once())
@@ -131,7 +131,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchEmployeeByIdentification_should_return_object(): void
+    public function testSearchEmployeeByIdentificationShouldReturnObject(): void
     {
         $identification = $this->createMock(EmployeeIdentification::class);
         $this->factory->expects(self::once())
@@ -157,7 +157,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchEmployeeByIdentification_should_return_null(): void
+    public function testSearchEmployeeByIdentificationShouldReturnNull(): void
     {
         $identification = $this->createMock(EmployeeIdentification::class);
         $this->factory->expects(self::once())
@@ -181,7 +181,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_updateEmployee_should_return_void(): void
+    public function testUpdateEmployeeShouldReturnVoid(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $this->factory->expects(self::once())
@@ -205,7 +205,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_createEmployee_should_return_void(): void
+    public function testCreateEmployeeShouldReturnVoid(): void
     {
         $employeeMock = $this->createMock(Employee::class);
         $this->factory->expects(self::once())
@@ -230,7 +230,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_deleteEmployee_should_return_void(): void
+    public function testDeleteEmployeeShouldReturnVoid(): void
     {
         $employeeId = $this->createMock(EmployeeId::class);
         $this->factory->expects(self::once())
@@ -253,7 +253,7 @@ class EmployeeServiceTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_searchEmployees_should_return_employees(): void
+    public function testSearchEmployeesShouldReturnEmployees(): void
     {
         $request = new SearchEmployeesRequest([]);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-18 23:05:46
@@ -12,32 +13,25 @@ use Illuminate\Http\Request;
 class DetailCampusOrchestrator extends CampusOrchestrator
 {
     public function __construct(
-        CampusManagementContract $campusManagement
+        CampusManagementContract $campusManagement,
     ) {
         parent::__construct($campusManagement);
     }
 
     /**
-     * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public function make(Request $request): array
     {
-        $campusId = $request->input('campusId');
-
-        if (! is_null($campusId)) {
-            $campus = $this->campusManagement->searchCampusById($campusId);
-        }
+        $campusId = $request->integer('campusId');
+        $campus = $this->campusManagement->searchCampusById($campusId);
 
         return [
             'campusId' => $campusId,
-            'campus' => $campus ?? null,
+            'campus' => $campus,
         ];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'detail-campus';

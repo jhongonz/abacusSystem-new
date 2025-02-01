@@ -10,8 +10,6 @@ use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Exceptions\ProfileNotFoundException;
 use Core\Profile\Exceptions\ProfilesNotFoundException;
 use Core\SharedContext\Infrastructure\Persistence\AbstractChainRepository;
-use Exception;
-use Throwable;
 
 class ChainProfileRepository extends AbstractChainRepository implements ProfileRepositoryContract
 {
@@ -24,46 +22,55 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
 
     /**
      * @throws ProfileNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function find(ProfileId $id): ?Profile
     {
         try {
-            return $this->read(__FUNCTION__, $id);
-        } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by id '. $id->value());
+            /** @var Profile|null $result */
+            $result = $this->read(__FUNCTION__, $id);
+
+            return $result;
+        } catch (\Exception $exception) {
+            throw new ProfileNotFoundException('Profile not found by id '.$id->value());
         }
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function findCriteria(ProfileName $name): ?Profile
     {
         try {
-            return $this->read(__FUNCTION__, $name);
-        } catch (Exception $exception) {
-            throw new ProfileNotFoundException('Profile not found by name '. $name->value());
+            /** @var Profile|null $result */
+            $result = $this->read(__FUNCTION__, $name);
+
+            return $result;
+        } catch (\Exception $exception) {
+            throw new ProfileNotFoundException('Profile not found by name '.$name->value());
         }
     }
 
     /**
      * @throws ProfilesNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function getAll(array $filters = []): ?Profiles
     {
         $this->canPersist = false;
 
         try {
-            return $this->read(__FUNCTION__, $filters);
-        } catch (Exception $exception) {
+            /** @var Profiles|null $result */
+            $result = $this->read(__FUNCTION__, $filters);
+
+            return $result;
+        } catch (\Exception $exception) {
             throw new ProfilesNotFoundException('Profiles not found');
         }
     }
 
     /**
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function deleteProfile(ProfileId $id): void
     {
@@ -71,10 +78,13 @@ class ChainProfileRepository extends AbstractChainRepository implements ProfileR
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function persistProfile(Profile $profile): Profile
     {
-        return $this->write(__FUNCTION__, $profile);
+        /** @var Profile $result */
+        $result = $this->write(__FUNCTION__, $profile);
+
+        return $result;
     }
 }

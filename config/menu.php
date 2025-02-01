@@ -2,17 +2,21 @@
 
 return [
     'options' => [
-        'managers' => [
+        [
+            'id' => null,
+            'key' => 'managers',
             'name' => 'Gestión Administrativa',
             'icon' => 'fas fa-tools',
-            'route' => null,
+            'route' => '',
         ],
-        'settings' => [
+        [
+            'id' => null,
+            'key' => 'settings',
             'name' => 'Configuraciones',
             'icon' => 'fas fa-tools',
-            'route' => null,
+            'route' => '',
         ],
-        /*'employee' => [
+        /*[
             'name' => 'Gestión de Empleados',
             'icon' => 'fas fa-tools',
             'route' => 'localhost',

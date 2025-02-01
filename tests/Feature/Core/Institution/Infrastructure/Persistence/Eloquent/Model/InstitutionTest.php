@@ -3,7 +3,6 @@
 namespace Tests\Feature\Core\Institution\Infrastructure\Persistence\Eloquent\Model;
 
 use Core\Institution\Infrastructure\Persistence\Eloquent\Model\Institution;
-use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -17,7 +16,7 @@ class InstitutionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->model = new Institution;
+        $this->model = new Institution();
     }
 
     public function tearDown(): void
@@ -26,7 +25,7 @@ class InstitutionTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getSearchField_should_return_string(): void
+    public function testGetSearchFieldShouldReturnString(): void
     {
         $result = $this->model->getSearchField();
 
@@ -34,14 +33,14 @@ class InstitutionTest extends TestCase
         $this->assertSame('inst_search', $result);
     }
 
-    public function test_relationWithCampus_should_return_hasMany(): void
+    public function testRelationWithCampusShouldReturnHasMany(): void
     {
         $result = $this->model->relationWithCampus();
 
         $this->assertInstanceOf(HasMany::class, $result);
     }
 
-    public function test_campus_should_return_model(): void
+    public function testCampusShouldReturnModel(): void
     {
         $result = $this->model->campus();
 
@@ -49,13 +48,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('campus', $result->getTable());
     }
 
-    public function test_id_should_return_null(): void
+    public function testIdShouldReturnNull(): void
     {
         $result = $this->model->id();
         $this->assertNull($result);
     }
 
-    public function test_id_should_change_and_return_int(): void
+    public function testIdShouldChangeAndReturnInt(): void
     {
         $result = $this->model->changeId(1);
 
@@ -64,13 +63,13 @@ class InstitutionTest extends TestCase
         $this->assertSame(1, $result->id());
     }
 
-    public function test_code_should_return_null(): void
+    public function testCodeShouldReturnNull(): void
     {
         $result = $this->model->code();
         $this->assertNull($result);
     }
 
-    public function test_code_should_change_and_return_string(): void
+    public function testCodeShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeCode('test');
 
@@ -79,13 +78,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->code());
     }
 
-    public function test_name_should_return_null(): void
+    public function testNameShouldReturnNull(): void
     {
         $result = $this->model->name();
         $this->assertNull($result);
     }
 
-    public function test_name_should_change_and_return_string(): void
+    public function testNameShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeName('test');
 
@@ -94,13 +93,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->name());
     }
 
-    public function test_shortname_should_return_null(): void
+    public function testShortnameShouldReturnNull(): void
     {
         $result = $this->model->shortname();
         $this->assertNull($result);
     }
 
-    public function test_shortname_should_change_and_return_string(): void
+    public function testShortnameShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeShortname('test');
 
@@ -109,13 +108,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->shortname());
     }
 
-    public function test_logo_should_return_null(): void
+    public function testLogoShouldReturnNull(): void
     {
         $result = $this->model->logo();
         $this->assertNull($result);
     }
 
-    public function test_logo_should_change_and_return_string(): void
+    public function testLogoShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeLogo('test');
 
@@ -124,13 +123,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->logo());
     }
 
-    public function test_observations_should_return_null(): void
+    public function testObservationsShouldReturnNull(): void
     {
         $result = $this->model->observations();
         $this->assertNull($result);
     }
 
-    public function test_observations_should_change_and_return_string(): void
+    public function testObservationsShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeObservations('test');
 
@@ -139,13 +138,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->observations());
     }
 
-    public function test_address_should_return_null(): void
+    public function testAddressShouldReturnNull(): void
     {
         $result = $this->model->address();
         $this->assertNull($result);
     }
 
-    public function test_address_should_change_and_return_string(): void
+    public function testAddressShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeAddress('test');
 
@@ -154,13 +153,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->address());
     }
 
-    public function test_phone_should_return_null(): void
+    public function testPhoneShouldReturnNull(): void
     {
         $result = $this->model->phone();
         $this->assertNull($result);
     }
 
-    public function test_phone_should_change_and_return_string(): void
+    public function testPhoneShouldChangeAndReturnString(): void
     {
         $result = $this->model->changePhone('test');
 
@@ -169,13 +168,13 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->phone());
     }
 
-    public function test_email_should_return_null(): void
+    public function testEmailShouldReturnNull(): void
     {
         $result = $this->model->email();
         $this->assertNull($result);
     }
 
-    public function test_email_should_change_and_return_string(): void
+    public function testEmailShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeEmail('test');
 
@@ -184,14 +183,14 @@ class InstitutionTest extends TestCase
         $this->assertSame('test', $result->email());
     }
 
-    public function test_state_should_return_int(): void
+    public function testStateShouldReturnInt(): void
     {
         $result = $this->model->state();
         $this->assertIsInt($result);
         $this->assertSame(1, $result);
     }
 
-    public function test_state_should_change_and_return_string(): void
+    public function testStateShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeState(2);
 
@@ -201,18 +200,18 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_createdAt_should_return_null(): void
+    public function testCreatedAtShouldReturnNull(): void
     {
         $result = $this->model->createdAt();
         $this->assertNull($result);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_createdAt_should_change_and_return_datetime(): void
+    public function testCreatedAtShouldChangeAndReturnDatetime(): void
     {
         $datetime = new \DateTime('2024-05-19 22:09:00');
         $result = $this->model->changeCreatedAt($datetime);
@@ -223,18 +222,18 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_updatedAt_should_return_null(): void
+    public function testUpdatedAtShouldReturnNull(): void
     {
         $result = $this->model->updatedAt();
         $this->assertNull($result);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_updatedAt_should_change_and_return_string(): void
+    public function testUpdatedAtShouldChangeAndReturnString(): void
     {
         $datetime = new \DateTime('2024-05-19 22:09:00');
         $result = $this->model->changeUpdatedAt($datetime);
@@ -244,13 +243,13 @@ class InstitutionTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $result->updatedAt());
     }
 
-    public function test_search_should_return_null(): void
+    public function testSearchShouldReturnNull(): void
     {
         $result = $this->model->search();
         $this->assertNull($result);
     }
 
-    public function test_search_should_change_and_return_string(): void
+    public function testSearchShouldChangeAndReturnString(): void
     {
         $result = $this->model->changeSearch('test');
 
@@ -260,18 +259,18 @@ class InstitutionTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_deletedAt_should_return_null(): void
+    public function testDeletedAtShouldReturnNull(): void
     {
         $result = $this->model->deletedAt();
         $this->assertNull($result);
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function test_deletedAt_should_change_and_return_string(): void
+    public function testDeletedAtShouldChangeAndReturnString(): void
     {
         $datetime = new \DateTime('2024-05-19 22:09:00');
         $result = $this->model->changeDeletedAt($datetime);
@@ -279,5 +278,25 @@ class InstitutionTest extends TestCase
         $this->assertInstanceOf(Institution::class, $result);
         $this->assertSame($this->model, $result);
         $this->assertInstanceOf(\DateTime::class, $result->deletedAt());
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testCastsShouldReturnArrayCorrectly(): void
+    {
+        $reflection = new \ReflectionClass(Institution::class);
+        $method = $reflection->getMethod('casts');
+        $this->assertTrue($method->isProtected());
+
+        $result = $method->invoke($this->model);
+
+        $dataExpected = [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+        $this->assertIsArray($result);
+        $this->assertSame($dataExpected, $result);
     }
 }

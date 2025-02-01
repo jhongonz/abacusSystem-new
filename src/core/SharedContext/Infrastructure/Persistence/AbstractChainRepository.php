@@ -2,19 +2,9 @@
 
 namespace Core\SharedContext\Infrastructure\Persistence;
 
-use Closure;
-use Core\Employee\Exceptions\SourceNotFoundException;
-use Exception;
-use Matrix\Enum\TaskStatus;
-use Matrix\Task;
-use Throwable;
-
-/**
- * @codeCoverageIgnore
- */
 abstract class AbstractChainRepository
 {
-    /** @var ChainPriority[] */
+    /** @var array<ChainPriority> */
     private array $repositories;
     protected bool $canPersist = true;
 
@@ -25,47 +15,38 @@ abstract class AbstractChainRepository
         return $this->canPersist;
     }
 
-    public function addRepository(ChainPriority $repository): self
+    public function addRepository(ChainPriority ...$repository): self
     {
-        $this->repositories[] = $repository;
+        foreach ($repository as $item) {
+            $this->repositories[] = $item;
+        }
 
-        usort($this->repositories, $this->prioritySort());
+        $this->sortingPriority();
 
         return $this;
     }
 
-    /**
-     * @throws Exception
-     */
-    protected function write(string $functionName, ...$source)
+    protected function write(string $function, mixed ...$source): mixed
     {
-        $task = new Task(function () use ($functionName, $source) {
+        $repository = end($this->repositories);
 
-            $result = null;
-            $repository = end($this->repositories);
+        do {
+            $callable = [$repository, $function];
+            if (!is_callable($callable)) {
+                throw new \InvalidArgumentException(sprintf('The function %s is not a callable.', $function));
+            }
 
-            do {
-                $callable = [$repository, $functionName];
-                if (is_callable($callable)) {
-                    $result = call_user_func_array($callable, $source);
-                }
-            } while (false !== ($repository = prev($this->repositories)));
+            $result = call_user_func_array($callable, $source);
+        } while (false !== $repository = prev($this->repositories));
 
-            return $result;
-        });
-
-        $task->start();
-        if ($task->getStatus() === TaskStatus::FAILED) {
-            $task->retry();
-        }
-
-        return $task->getResult();
+        return $result;
     }
 
     /**
-     * @throws Throwable
+     * @throws \Exception
+     * @throws \Throwable
      */
-    protected function read(string $functionName, ...$source)
+    protected function read(string $functionName, mixed ...$source): mixed
     {
         $result = $this->readFromRepositories($functionName, ...$source);
 
@@ -77,62 +58,54 @@ abstract class AbstractChainRepository
     }
 
     /**
-     * @throws Throwable
+     * @throws \Exception
+     * @throws \Throwable
      */
-    protected function readFromRepositories(string $functionName, ...$source)
+    protected function readFromRepositories(string $function, mixed ...$source): mixed
     {
-        $task = new Task(function () use ($functionName, $source) {
-            $result = null;
-            $lastThrowable = new SourceNotFoundException('Source not found');
+        $result = null;
+        $lastThrowable = new SourceNotFoundException('Source not found');
+        $repository = reset($this->repositories);
 
-            $repository = reset($this->repositories);
-            do {
-                try {
-                    $callable = [$repository, $functionName];
-                    if (is_callable($callable)) {
-                        $result = call_user_func_array($callable, $source);
-                    }
-                } catch (Throwable $throwable) {
-                    $lastThrowable = $throwable;
+        do {
+            try {
+                $callable = [$repository, $function];
+                if (!is_callable($callable)) {
+                    throw new \InvalidArgumentException(sprintf('The function %s is not a callable.', $function));
                 }
-            } while ((null === $result) and (false !== ($repository = next($this->repositories))));
 
-            if (is_null($result)) {
-                throw $lastThrowable;
+                $result = call_user_func_array($callable, $source);
+            } catch (\Throwable $throwable) {
+                $lastThrowable = $throwable;
             }
 
-            return $result;
-        });
+            $repository = next($this->repositories);
+        } while (is_null($result) and $repository);
 
-        $task->start();
-        if ($task->getStatus() === TaskStatus::FAILED) {
-            $task->retry();
+        if (is_null($result)) {
+            throw $lastThrowable;
         }
 
-        return $task->getResult();
+        return $result;
     }
 
-    protected function persistence(string $functionName, ...$sources): void
+    protected function persistence(string $functionName, mixed ...$sources): void
     {
-        while (false !== ($repository = prev($this->repositories))) {
+        while ($repository = prev($this->repositories)) {
             try {
                 $callable = [$repository, $functionName];
                 if (is_callable($callable)) {
                     call_user_func_array($callable, $sources);
                 }
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
             }
         }
     }
 
-    private function prioritySort(): Closure
+    private function sortingPriority(): void
     {
-        return static function (ChainPriority $current, ChainPriority $next) {
-            if ($current->priority() === $next->priority()) {
-                return 0;
-            }
-
-            return ($current->priority() < $next->priority()) ? 1 : -1;
-        };
+        usort($this->repositories, function (ChainPriority $current, ChainPriority $next) {
+            return $next->priority() <=> $current->priority();
+        });
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-20 07:47:14
@@ -20,13 +21,19 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         return $this;
     }
 
+    /**
+     * @return array<int|string, array<string, mixed>>
+     */
     public function read(): array
     {
         return [
-            Institution::TYPE => $this->retrieveData()
+            Institution::TYPE => $this->retrieveData(),
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function readToShare(): array
     {
         $data = $this->retrieveData();
@@ -35,6 +42,9 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function retrieveData(): array
     {
         $data = [
@@ -49,11 +59,11 @@ class InstitutionDataTransformer implements InstitutionDataTransformerContract
             'email' => $this->institution->email()->value(),
             'state' => $this->institution->state()->value(),
             'search' => $this->institution->search()->value(),
-            'createdAt' => $this->institution->createdAt()->toFormattedString()
+            'createdAt' => $this->institution->createdAt()->toFormattedString(),
         ];
 
         $updatedAt = $this->institution->updatedAt()->toFormattedString();
-        $data['updatedAt'] = (empty($updatedAt)) ? $updatedAt : null;
+        $data['updatedAt'] = !empty($updatedAt) ? $updatedAt : null;
 
         return $data;
     }

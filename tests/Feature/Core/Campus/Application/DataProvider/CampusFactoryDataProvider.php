@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-24 22:57:57
@@ -10,6 +11,9 @@ use Core\Campus\Domain\Campus;
 
 final class CampusFactoryDataProvider
 {
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public static function provider_dataArray(): array
     {
         return [
@@ -25,9 +29,9 @@ final class CampusFactoryDataProvider
                         'observations' => 'observations',
                         'state' => 1,
                         'createdAt' => '2024-06-24 11:02:00',
-                        'updatedAt' => '2024-06-24 11:02:00'
+                        'updatedAt' => '2024-06-24 11:02:00',
                     ],
-                ]
+                ],
             ],
         ];
     }

@@ -3,16 +3,14 @@
 namespace App\Listeners;
 
 use App\Events\Campus\CampusUpdatedOrDeletedEvent;
-use App\Jobs\ProcessCommandWarmup;
 
-class CampusWarmupListener
+class CampusWarmupListener extends WarmupListener
 {
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -20,6 +18,7 @@ class CampusWarmupListener
      */
     public function handle(CampusUpdatedOrDeletedEvent $event): void
     {
-        ProcessCommandWarmup::dispatch(sprintf('campus:warmup %d', $event->campusId()));
+        $processCommand = $this->callCommandWarmup(sprintf('campus:warmup %d', $event->campusId()));
+        $processCommand->handle();
     }
 }

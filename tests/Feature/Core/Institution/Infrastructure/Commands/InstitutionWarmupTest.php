@@ -55,7 +55,7 @@ class InstitutionWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('institution:warmup', $this->command->getName());
         $this->assertSame('Warmup institution in memory', $this->command->getDescription());
@@ -64,10 +64,10 @@ class InstitutionWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_institution_in_repositories(): void
+    public function testHandleShouldUpdateInstitutionInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);
@@ -103,10 +103,10 @@ class InstitutionWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception(): void
+    public function testHandleShouldReturnException(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getArgument')
             ->with('id')
             ->willReturn(1);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Employee;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -26,7 +25,7 @@ class StoreEmployeeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -45,7 +44,7 @@ class StoreEmployeeRequest extends FormRequest
         $userId = $this->request->get('userId');
         $password = $this->request->get('password');
 
-        if (is_null($userId) || ($userId > 0 && isset($password))) {
+        if (empty($userId) || !empty($password)) {
             $rules['password'] = ['required', 'confirmed', 'min:7'];
         }
 

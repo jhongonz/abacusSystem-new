@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-05-20 21:55:11
@@ -14,6 +15,9 @@ interface InstitutionRepositoryContract
 {
     public function find(InstitutionId $id): ?Institution;
 
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function getAll(array $filters = []): ?Institutions;
 
     public function delete(InstitutionId $id): void;

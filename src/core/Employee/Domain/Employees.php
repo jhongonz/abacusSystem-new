@@ -8,6 +8,9 @@ class Employees extends ArrayIterator
 {
     public const TYPE = 'employees';
 
+    /**
+     * @param array<int|string, Employee> $employees
+     */
     public function __construct(array $employees = [])
     {
         foreach ($employees as $employee) {
@@ -19,12 +22,14 @@ class Employees extends ArrayIterator
 
     public function addItem(Employee $item): self
     {
-        $this->validateInstanceElement(Employee::class, $item);
-
         $this->append($item);
+
         return $this;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function items(): array
     {
         return $this->getArrayCopy();
@@ -33,22 +38,35 @@ class Employees extends ArrayIterator
     public function addId(int $id): self
     {
         $this->aggregator[] = $id;
+
         return $this;
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function aggregator(): array
     {
         return $this->aggregator;
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function filters(): array
     {
         return $this->filters;
     }
 
+    /**
+     * @param array<int|string, mixed> $filters
+     *
+     * @return $this
+     */
     public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
         return $this;
     }
 }

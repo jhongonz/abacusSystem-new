@@ -65,7 +65,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_priority_should_return_int(): void
+    public function testPriorityShouldReturnInt(): void
     {
         $result = $this->repository->priority();
 
@@ -73,7 +73,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
         $this->assertSame(50, $result);
     }
 
-    public function test_changePriority_should_change_and_return_self(): void
+    public function testChangePriorityShouldChangeAndReturnSelf(): void
     {
         $result = $this->repository->changePriority(100);
 
@@ -86,7 +86,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
      * @throws Exception
      * @throws InstitutionNotFoundException
      */
-    public function test_find_should_return_object(): void
+    public function testFindShouldReturnObject(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::once())
@@ -143,7 +143,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
      * @throws Exception
      * @throws InstitutionNotFoundException
      */
-    public function test_find_should_return_exception(): void
+    public function testFindShouldReturnException(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::exactly(2))
@@ -193,7 +193,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
      * @throws InstitutionsNotFoundException
      * @throws Exception
      */
-    public function test_getAll_should_return_collection(): void
+    public function testGetAllShouldReturnCollection(): void
     {
         $filters = ['q' => 'testing'];
 
@@ -232,7 +232,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
             ->with([1])
             ->willReturnSelf();
 
-        $this->model->expects(self::once())
+        $this->model->expects(self::exactly(2))
             ->method('id')
             ->willReturn(1);
 
@@ -258,66 +258,10 @@ class EloquentInstitutionRepositoryTest extends TestCase
     }
 
     /**
-     * @throws InstitutionsNotFoundException
-     * @throws Exception
-     */
-    public function test_getAll_should_return_exception(): void
-    {
-        $filters = ['q' => 'testing'];
-
-        $builderMock = $this->mock(Builder::class);
-
-        $builderMock->shouldReceive('where')
-            ->once()
-            ->with('inst_state', '>', -1)
-            ->andReturnSelf();
-
-        $this->model->expects(self::once())
-            ->method('getSearchField')
-            ->willReturn('inst_search');
-
-        $builderMock->shouldReceive('whereFullText')
-            ->once()
-            ->with('inst_search', 'testing')
-            ->andReturnSelf();
-
-        $builderMock->shouldReceive('get')
-            ->once()
-            ->with(['inst_id'])
-            ->andReturn(null);
-
-        $this->model->expects(self::once())
-            ->method('getTable')
-            ->willReturn('institutions');
-
-        $this->databaseManager->shouldReceive('table')
-            ->once()
-            ->with('institutions')
-            ->andReturn($builderMock);
-
-        $this->model->expects(self::never())
-            ->method('fill');
-
-        $this->model->expects(self::never())
-            ->method('id');
-
-        $this->translator->expects(self::never())
-            ->method('setCollection');
-
-        $this->translator->expects(self::never())
-            ->method('toDomainCollection');
-
-        $this->expectException(InstitutionsNotFoundException::class);
-        $this->expectExceptionMessage('Institutions not found');
-
-        $this->repository->getAll($filters);
-    }
-
-    /**
      * @throws Exception
      * @throws InstitutionNotFoundException
      */
-    public function test_delete_should_return_void(): void
+    public function testDeleteShouldReturnVoid(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::once())
@@ -375,7 +319,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
      * @throws Exception
      * @throws InstitutionNotFoundException
      */
-    public function test_delete_should_return_exception(): void
+    public function testDeleteShouldReturnException(): void
     {
         $idMock = $this->createMock(InstitutionId::class);
         $idMock->expects(self::exactly(2))
@@ -425,7 +369,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_persistInstitution_should_save_and_return_object(): void
+    public function testPersistInstitutionShouldSaveAndReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
 
@@ -641,7 +585,7 @@ class EloquentInstitutionRepositoryTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_persistInstitution_should_update_and_return_object(): void
+    public function testPersistInstitutionShouldUpdateAndReturnObject(): void
     {
         $institutionMock = $this->createMock(Institution::class);
 

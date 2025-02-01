@@ -16,7 +16,7 @@ class CampusStateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new CampusState;
+        $this->valueObject = new CampusState();
     }
 
     public function tearDown(): void
@@ -25,7 +25,7 @@ class CampusStateTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_value_should_return_int(): void
+    public function testValueShouldReturnInt(): void
     {
         $result = $this->valueObject->value();
 
@@ -36,7 +36,7 @@ class CampusStateTest extends TestCase
     /**
      * @throws \Exception
      */
-    public function test_setValue_should_change_and_return_object(): void
+    public function testSetValueShouldChangeAndReturnObject(): void
     {
         $result = $this->valueObject->setValue(2);
 
@@ -45,7 +45,7 @@ class CampusStateTest extends TestCase
         $this->assertSame(2, $result->value());
     }
 
-    public function test_setValue_should_return_exception(): void
+    public function testSetValueShouldReturnException(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('<Core\Campus\Domain\ValueObjects\CampusState> does not allow the invalid state: <10>.');

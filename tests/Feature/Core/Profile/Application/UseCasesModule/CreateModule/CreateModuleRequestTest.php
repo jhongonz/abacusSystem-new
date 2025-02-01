@@ -34,7 +34,7 @@ class CreateModuleRequestTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_module_should_return_object(): void
+    public function testModuleShouldReturnObject(): void
     {
         $result = $this->request->module();
 

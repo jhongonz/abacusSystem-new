@@ -8,7 +8,7 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 class SearchModuleByIdRequest implements RequestService
 {
     public function __construct(
-        private readonly ModuleId $id
+        private readonly ModuleId $id,
     ) {
     }
 

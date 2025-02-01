@@ -40,7 +40,7 @@ class SearchModulesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_object(): void
+    public function testExecuteShouldReturnObject(): void
     {
         $request = $this->createMock(SearchModulesRequest::class);
         $request->expects(self::once())
@@ -63,7 +63,7 @@ class SearchModulesTest extends TestCase
      * @throws Exception
      * @throws \Exception
      */
-    public function test_execute_should_return_null(): void
+    public function testExecuteShouldReturnNull(): void
     {
         $request = $this->createMock(SearchModulesRequest::class);
         $request->expects(self::once())
@@ -82,7 +82,7 @@ class SearchModulesTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_execute_should_return_exception(): void
+    public function testExecuteShouldReturnException(): void
     {
         $request = $this->createMock(DeleteModuleRequest::class);
 

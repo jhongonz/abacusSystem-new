@@ -56,7 +56,7 @@ class ProfileWarmupTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_name_and_description_should_return_correct(): void
+    public function testNameAndDescriptionShouldReturnCorrect(): void
     {
         $this->assertSame('profile:warmup', $this->command->getName());
         $this->assertSame('Warmup profiles in memory', $this->command->getDescription());
@@ -65,10 +65,10 @@ class ProfileWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_profile_in_repositories(): void
+    public function testHandleShouldUpdateProfileInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->willReturn(0);
 
@@ -112,10 +112,10 @@ class ProfileWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_return_exception_profile_in_repositories(): void
+    public function testHandleShouldReturnExceptionProfileInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
-        $inputMock->expects(self::once())
+        $inputMock->expects(self::exactly(2))
             ->method('getOption')
             ->willReturn(0);
 
@@ -159,7 +159,7 @@ class ProfileWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_should_update_profile_with_id_in_repositories(): void
+    public function testHandleShouldUpdateProfileWithIdInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::exactly(2))
@@ -200,7 +200,7 @@ class ProfileWarmupTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_handle_with_id_should_return_exception_profile_in_repositories(): void
+    public function testHandleWithIdShouldReturnExceptionProfileInRepositories(): void
     {
         $inputMock = $this->createMock(InputInterface::class);
         $inputMock->expects(self::exactly(2))

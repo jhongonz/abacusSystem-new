@@ -8,7 +8,7 @@ use Core\Profile\Domain\Profile;
 class CreateProfileRequest implements RequestService
 {
     public function __construct(
-        private readonly Profile $profile
+        private readonly Profile $profile,
     ) {
     }
 

@@ -7,51 +7,41 @@ use Core\Campus\Domain\CampusCollection;
 use Core\SharedContext\Model\ArrayIterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 #[CoversClass(CampusCollection::class)]
 #[CoversClass(ArrayIterator::class)]
 class CampusCollectionTest extends TestCase
 {
-    private Campus|MockObject $campus;
     private CampusCollection $campusCollection;
 
-    /**
-     * @throws Exception
-     */
     public function setUp(): void
     {
         parent::setUp();
-        $this->campus = $this->createMock(Campus::class);
-        $this->campusCollection = new CampusCollection([$this->campus]);
     }
 
     public function tearDown(): void
     {
-        unset(
-            $this->campus,
-            $this->campusCollection,
-        );
+        unset($this->campusCollection);
         parent::tearDown();
     }
 
     /**
      * @throws Exception
      */
-    public function test_addItem_should_return_self(): void
+    public function testAddItemShouldReturnSelf(): void
     {
-        $campusMock = $this->createMock(Campus::class);
-        $result = $this->campusCollection->addItem($campusMock);
+        $campusMock1 = $this->createMock(Campus::class);
+        $this->campusCollection = new CampusCollection([$campusMock1]);
 
-        $this->assertInstanceOf(CampusCollection::class, $result);
-        $this->assertSame($this->campusCollection, $result);
+        $campusMock2 = $this->createMock(Campus::class);
+        $this->campusCollection->addItem($campusMock2);
+
+        $this->assertSame($this->campusCollection, $this->campusCollection);
+        $this->assertEquals([$campusMock1, $campusMock2], $this->campusCollection->items());
     }
 
-    /**
-     * @return void
-     */
-    public function test_construct_should_return_exception(): void
+    public function testConstructShouldReturnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Item is not valid to collection Core\Campus\Domain\CampusCollection');
@@ -59,36 +49,52 @@ class CampusCollectionTest extends TestCase
         $this->campusCollection = new CampusCollection(['testing']);
     }
 
-    public function test_items_should_return_array(): void
+    /**
+     * @throws Exception
+     */
+    public function testItemsShouldReturnArray(): void
     {
+        $campusMock = $this->createMock(Campus::class);
+        $this->campusCollection = new CampusCollection([$campusMock]);
         $result = $this->campusCollection->items();
 
         $this->assertIsArray($result);
         $this->assertCount(1, $result);
+        $this->assertEquals([$campusMock], $result);
     }
 
-    public function test_addId_should_return_self(): void
+    public function testAddIdShouldReturnSelf(): void
     {
+        $this->campusCollection = new CampusCollection();
         $result = $this->campusCollection->addId(1);
 
         $this->assertInstanceOf(CampusCollection::class, $result);
         $this->assertSame($this->campusCollection, $result);
     }
 
-    public function test_aggregator_should_return_array(): void
+    /**
+     * @throws Exception
+     */
+    public function testAggregatorShouldReturnArray(): void
     {
+        $campusMock = $this->createMock(Campus::class);
+        $this->campusCollection = new CampusCollection([$campusMock]);
+
         $result = $this->campusCollection->aggregator();
         $this->assertIsArray($result);
     }
 
-    public function test_filters_should_return_array(): void
+    public function testFiltersShouldReturnArray(): void
     {
+        $this->campusCollection = new CampusCollection();
         $result = $this->campusCollection->filters();
+
         $this->assertIsArray($result);
     }
 
-    public function test_setFilters_should_return_self(): void
+    public function testSetFiltersShouldReturnSelf(): void
     {
+        $this->campusCollection = new CampusCollection();
         $result = $this->campusCollection->setFilters(['testing']);
 
         $this->assertInstanceOf(CampusCollection::class, $result);

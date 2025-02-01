@@ -24,7 +24,7 @@ class CampusUpdatedOrDeleteEventTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_campusId_should_return_int(): void
+    public function testCampusIdShouldReturnInt(): void
     {
         $result = $this->event->campusId();
 
@@ -32,11 +32,12 @@ class CampusUpdatedOrDeleteEventTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function test_broadcastOn_should_return_array_object(): void
+    public function testBroadcastOnShouldReturnArrayObject(): void
     {
         $result = $this->event->broadcastOn();
 
         $this->assertIsArray($result);
+        $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(PrivateChannel::class, $result);
     }
 }

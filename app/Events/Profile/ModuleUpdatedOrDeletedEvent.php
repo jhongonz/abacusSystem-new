@@ -18,7 +18,7 @@ class ModuleUpdatedOrDeletedEvent
      * Create a new event instance.
      */
     public function __construct(
-        private readonly int $moduleId
+        private readonly int $moduleId,
     ) {
     }
 

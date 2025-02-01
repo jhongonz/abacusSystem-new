@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jhonny Andres Gonzalez <jhonnygonzalezf@gmail.com>
  * Date: 2024-06-04 14:03:16
@@ -7,7 +8,6 @@
 namespace App\Http\Orchestrators\Orchestrator\User;
 
 use Core\User\Domain\Contracts\UserManagementContract;
-use Core\User\Domain\User;
 use Illuminate\Http\Request;
 
 class GetUserOrchestrator extends UserOrchestrator
@@ -18,21 +18,19 @@ class GetUserOrchestrator extends UserOrchestrator
     }
 
     /**
-     * @param Request $request
-     * @return User|null
+     * @return array<string, mixed>
      */
-    public function make(Request $request): ?User
+    public function make(Request $request): array
     {
         if ($request->filled('login')) {
-            return $this->userManagement->searchUserByLogin($request->input('login'));
+            $user = $this->userManagement->searchUserByLogin($request->string('login'));
+        } else {
+            $user = $this->userManagement->searchUserById($request->integer('userId'));
         }
 
-        return $this->userManagement->searchUserById($request->input('userId'));
+        return ['user' => $user];
     }
 
-    /**
-     * @return string
-     */
     public function canOrchestrate(): string
     {
         return 'retrieve-user';

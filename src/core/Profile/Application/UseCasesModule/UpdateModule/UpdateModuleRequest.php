@@ -7,9 +7,12 @@ use Core\Profile\Domain\ValueObjects\ModuleId;
 
 class UpdateModuleRequest implements RequestService
 {
+    /**
+     * @param array<string, mixed> $data
+     */
     public function __construct(
         private readonly ModuleId $moduleId,
-        private readonly array $data
+        private readonly array $data,
     ) {
     }
 
@@ -18,6 +21,9 @@ class UpdateModuleRequest implements RequestService
         return $this->moduleId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function data(): array
     {
         return $this->data;

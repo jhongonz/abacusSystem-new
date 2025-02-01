@@ -15,7 +15,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\View\Factory as ViewFactory;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseFoundation;
 
 class UserController extends Controller implements HasMiddleware
@@ -25,12 +24,9 @@ class UserController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         protected Hasher $hasher,
-        ViewFactory $viewFactory,
-        LoggerInterface $logger,
-        private readonly UrlGenerator $urlGenerator
+        protected ViewFactory $viewFactory,
+        private readonly UrlGenerator $urlGenerator,
     ) {
-        parent::__construct($logger, $viewFactory);
-        $this->setHasher($hasher);
     }
 
     public function index(): JsonResponse|string
@@ -51,8 +47,9 @@ class UserController extends Controller implements HasMiddleware
 
     public function validateAccount(RecoveryAccountRequest $request): JsonResponse
     {
-        /** @var Employee $employee */
-        $employee = $this->orchestrators->handler('retrieve-employee', $request);
+        /** @var array{employee: Employee} $dataEmployee */
+        $dataEmployee = $this->orchestrators->handler('retrieve-employee', $request);
+        $employee = $dataEmployee['employee'];
 
         $link = $this->urlGenerator->route('user.reset-account', ['id' => $employee->userId()->value()]);
 
@@ -74,11 +71,12 @@ class UserController extends Controller implements HasMiddleware
     {
         $dataUpdate = [
             'state' => ValueObjectStatus::STATE_ACTIVE,
-            'password' => $this->makeHashPassword($request->input('password')),
+            'password' => $this->makeHashPassword($request->string('password')),
         ];
 
         $request->merge(['dataUpdate' => $dataUpdate]);
         $this->orchestrators->handler('update-user', $request);
+
         return new JsonResponse(status: ResponseFoundation::HTTP_CREATED);
     }
 
@@ -89,7 +87,7 @@ class UserController extends Controller implements HasMiddleware
     {
         return [
             new Middleware(['auth', 'verify-session']),
-            new Middleware('only.ajax-request', only: ['recoveryAccout', 'resetPassword']),
+            new Middleware('only.ajax-request', only: ['recoveryAccount', 'resetPassword']),
         ];
     }
 }

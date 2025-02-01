@@ -10,7 +10,6 @@ use Core\User\Application\UseCases\RequestService;
 use Core\User\Application\UseCases\UseCasesService;
 use Core\User\Domain\Contracts\UserRepositoryContract;
 use Core\User\Domain\User;
-use Exception;
 
 class SearchUserById extends UseCasesService
 {
@@ -20,7 +19,7 @@ class SearchUserById extends UseCasesService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function execute(RequestService $request): ?User
     {

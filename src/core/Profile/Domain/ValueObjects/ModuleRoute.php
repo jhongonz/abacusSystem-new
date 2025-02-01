@@ -5,7 +5,7 @@ namespace Core\Profile\Domain\ValueObjects;
 class ModuleRoute
 {
     public function __construct(
-        private string $value
+        private string $value,
     ) {
     }
 

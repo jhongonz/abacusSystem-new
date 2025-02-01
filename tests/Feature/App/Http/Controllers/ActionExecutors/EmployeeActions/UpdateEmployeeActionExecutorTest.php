@@ -12,11 +12,13 @@ use Core\User\Domain\ValueObjects\UserId;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Intervention\Image\Interfaces\ImageInterface;
 use Intervention\Image\Interfaces\ImageManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 #[CoversClass(UpdateEmployeeActionExecutor::class)]
@@ -58,7 +60,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
     /**
      * @throws Exception
      */
-    public function test_invoke_should_return_employee(): void
+    public function testInvokeShouldReturnEmployee(): void
     {
         $requestMock = $this->createMock(Request::class);
         $carbonMock = $this->createMock(Carbon::class);
@@ -68,7 +70,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->with('birthdate', 'd/m/Y')
             ->willReturn($carbonMock);
 
-        $requestMock->expects(self::exactly(12))
+        $requestMock->expects(self::exactly(10))
             ->method('input')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
@@ -80,21 +82,52 @@ class UpdateEmployeeActionExecutorTest extends TestCase
                 'phone',
                 'address',
                 'observations',
-                'token',
                 'profile',
-                'login',
-                'password'
+                'login'
             );
+
+        $requestMock->expects(self::exactly(2))
+            ->method('string')
+            ->withAnyParameters()
+            ->willReturnOnConsecutiveCalls('token', 'password');
 
         $requestMock->expects(self::exactly(3))
             ->method('filled')
             ->withAnyParameters()
             ->willReturn(true);
 
+        Str::createUuidsUsing(function () {
+            return Uuid::fromString('4d2cf8c5-831f-40b5-b552-8f29c3277042');
+        });
+
+        $callIndexRequest = 0;
         $requestMock->expects(self::exactly(2))
             ->method('merge')
-            ->withAnyParameters()
-            ->willReturnSelf();
+            ->willReturnCallback(function ($input) use (&$callIndexRequest) {
+                if (0 === $callIndexRequest) {
+                    $this->assertEquals(['dataUpdate' => json_encode([
+                        'identification' => 'identifier',
+                        'identification_type' => 'typeDocument',
+                        'name' => 'name',
+                        'lastname' => 'lastname',
+                        'email' => 'email',
+                        'phone' => 'phone',
+                        'address' => 'address',
+                        'observations' => 'observations',
+                        'birthdate' => null,
+                        'image' => '4d2cf8c5-831f-40b5-b552-8f29c3277042.jpg',
+                    ])], $input);
+                } elseif (1 === $callIndexRequest) {
+                    $this->assertEquals(['dataUpdate' => json_encode([
+                        'profileId' => 'profile',
+                        'login' => 'login',
+                        'image' => '4d2cf8c5-831f-40b5-b552-8f29c3277042.jpg',
+                        'password' => 'password',
+                    ])], $input);
+                }
+
+                ++$callIndexRequest;
+            });
 
         $imageMock = $this->createMock(ImageInterface::class);
         $imageMock->expects(self::exactly(2))
@@ -129,19 +162,32 @@ class UpdateEmployeeActionExecutorTest extends TestCase
             ->willReturn($employeeUserIdMock);
 
         $userIdMock = $this->createMock(UserId::class);
-        $userIdMock->expects(self::once())
+        $userIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
 
         $userMock = $this->createMock(User::class);
-        $userMock->expects(self::once())
+        $userMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($userIdMock);
 
+        $callIndexHandler = 0;
         $this->orchestratorHandler->expects(self::exactly(2))
             ->method('handler')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($employeeMock, $userMock);
+            ->willReturnCallback(function ($input) use (&$callIndexHandler, &$employeeMock, &$userMock) {
+                $return = [];
+                if (0 === $callIndexHandler) {
+                    $this->assertEquals('update-employee', $input);
+                    $return = ['employee' => $employeeMock];
+                } elseif (1 === $callIndexHandler) {
+                    $this->assertEquals('update-user', $input);
+                    $return = ['user' => $userMock];
+                }
+
+                ++$callIndexHandler;
+
+                return $return;
+            });
 
         $result = $this->actionExecutor->invoke($requestMock);
 
@@ -149,7 +195,7 @@ class UpdateEmployeeActionExecutorTest extends TestCase
         $this->assertSame($employeeMock, $result);
     }
 
-    public function test_canExecute_should_return_string(): void
+    public function testCanExecuteShouldReturnString(): void
     {
         $result = $this->actionExecutor->canExecute();
 

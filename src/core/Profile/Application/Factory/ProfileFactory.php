@@ -12,35 +12,46 @@ use Core\Profile\Domain\ValueObjects\ProfileName;
 use Core\Profile\Domain\ValueObjects\ProfileSearch;
 use Core\Profile\Domain\ValueObjects\ProfileState;
 use Core\Profile\Domain\ValueObjects\ProfileUpdatedAt;
-use DateTime;
-use Exception;
+use Core\SharedContext\Model\ValueObjectStatus;
 
 class ProfileFactory implements ProfileFactoryContract
 {
     /**
-     * @throws Exception
+     * @param array<string, mixed> $data
+     *
+     * @throws \Exception
      */
     public function buildProfileFromArray(array $data): Profile
     {
-        $data = $data[Profile::TYPE];
+        /** @var array{
+         *     id: int,
+         *     name: string,
+         *     state: int,
+         *     description: string|null,
+         *     modulesAggregator: array<int<0, max>, int|null>,
+         *     updatedAt: string|null,
+         *     createdAt: string|null
+         * } $dataProfile
+         */
+        $dataProfile = $data[Profile::TYPE];
+
         $profile = $this->buildProfile(
-            $this->buildProfileId($data['id']),
-            $this->buildProfileName($data['name']),
-            $this->buildProfileState($data['state'])
+            $this->buildProfileId($dataProfile['id']),
+            $this->buildProfileName($dataProfile['name']),
         );
 
-        $profile->setDescription(
-            $this->buildProfileDescription($data['description'])
-        );
+        /** @var string $description */
+        $description = $dataProfile['description'];
+        $profile->description()->setValue($description);
 
-        $profile->setModulesAggregator($data['modulesAggregator']);
+        $profile->setModulesAggregator($dataProfile['modulesAggregator']);
 
-        if (isset($data['updatedAt'])) {
-            $profile->updatedAt()->setValue($this->getDateTime($data['updatedAt']));
+        if (isset($dataProfile['updatedAt'])) {
+            $profile->updatedAt()->setValue($this->getDateTime($dataProfile['updatedAt']));
         }
 
-        if (isset($data['createdAt'])) {
-            $profile->createdAt()->setValue($this->getDateTime($data['createdAt']));
+        if (isset($dataProfile['createdAt'])) {
+            $profile->createdAt()->setValue($this->getDateTime($dataProfile['createdAt']));
         }
 
         return $profile;
@@ -49,10 +60,9 @@ class ProfileFactory implements ProfileFactoryContract
     public function buildProfile(
         ProfileId $id,
         ProfileName $name,
-        ProfileState $state = new ProfileState,
-        ProfileCreatedAt $createdAt = new ProfileCreatedAt
+        ProfileState $state = new ProfileState(),
+        ProfileCreatedAt $createdAt = new ProfileCreatedAt(),
     ): Profile {
-
         return new Profile(
             $id,
             $name,
@@ -72,19 +82,19 @@ class ProfileFactory implements ProfileFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    public function buildProfileState(?int $state): ProfileState
+    public function buildProfileState(int $state = ValueObjectStatus::STATE_NEW): ProfileState
     {
         return new ProfileState($state);
     }
 
-    public function buildProfileCreatedAt(DateTime $datetime): ProfileCreatedAt
+    public function buildProfileCreatedAt(\DateTime $datetime): ProfileCreatedAt
     {
         return new ProfileCreatedAt($datetime);
     }
 
-    public function buildProfileUpdateAt(?DateTime $datetime = null): ProfileUpdatedAt
+    public function buildProfileUpdateAt(?\DateTime $datetime = null): ProfileUpdatedAt
     {
         return new ProfileUpdatedAt($datetime);
     }
@@ -105,10 +115,10 @@ class ProfileFactory implements ProfileFactoryContract
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
-    private function getDateTime(string $dateTime): DateTime
+    private function getDateTime(string $dateTime): \DateTime
     {
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }
