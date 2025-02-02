@@ -6,7 +6,6 @@
 
 namespace Tests\Feature\Core\User\Domain\ValueObjects;
 
-use Core\User\Domain\User;
 use Core\User\Domain\ValueObjects\UserId;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
