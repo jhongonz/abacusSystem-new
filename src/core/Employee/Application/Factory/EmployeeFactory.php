@@ -81,8 +81,11 @@ class EmployeeFactory implements EmployeeFactoryContract
             $employee->birthdate()->setValue($this->getDateTime($dataEmployee['birthdate']));
         }
 
+        if (!empty($dataEmployee['image'])) {
+            $employee->image()->setValue($dataEmployee['image']);
+        }
+
         $employee->observations()->setValue($dataEmployee['observations']);
-        $employee->image()->setValue($dataEmployee['image']);
         $employee->institutionId()->setValue($dataEmployee['institutionId']);
 
         if (!empty($dataEmployee['search'])) {
