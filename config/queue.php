@@ -69,6 +69,18 @@ return [
             'block_for' => null,
             'after_commit' => false,
         ],
+
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'hosts' => [
+                'host' => env('RABBITMQ_HOST', 'localhost'),
+                'port' => env('RABBITMQ_PORT', 5672),
+                'vhost' => env('RABBITMQ_VHOST', '/'),
+                'user' => env('RABBITMQ_USER', 'admin'),
+                'password' => env('RABBITMQ_PASS', 'qwerty'),
+            ],
+            'worker' => env('RABBITMQ_WORKER', 'default'),
+        ]
     ],
 
     /*
