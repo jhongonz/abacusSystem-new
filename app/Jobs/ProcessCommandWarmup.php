@@ -52,6 +52,7 @@ class ProcessCommandWarmup extends CommandWarmup
     {
         try {
             if (is_array($this->command)) {
+
                 /** @var string $command */
                 foreach ($this->command as $command) {
                     $this->artisan->call($command);
