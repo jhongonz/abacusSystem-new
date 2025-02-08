@@ -6,7 +6,6 @@ use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Events\EventDispatcher;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Campus\StoreCampusRequest;
-use App\Jobs\ProcessCommandWarmup;
 use App\Traits\DataTablesTrait;
 use Core\Campus\Domain\Campus;
 use Core\Employee\Domain\Employee;
@@ -93,7 +92,6 @@ class CampusController extends Controller implements HasMiddleware
             $campusId = $campus->id()->value();
 
             $this->eventDispatcher->dispatch(new CampusUpdatedOrDeletedEvent($campusId));
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

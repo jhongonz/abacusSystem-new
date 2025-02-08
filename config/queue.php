@@ -86,10 +86,10 @@ return [
                     'queue_max_priority' => 10,
                     'exchange_type' => 'topic',
                     'exchange_routing_key' => '',
-                ]
+                ],
             ],
             'queue' => 'warmupListener',
-        ]
+        ],
     ],
 
     /*

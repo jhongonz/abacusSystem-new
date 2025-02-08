@@ -14,15 +14,11 @@ abstract class WarmupListener implements ShouldQueue
 {
     /**
      * The name of the connection the job should be sent to.
-     *
-     * @var string|null
      */
     public ?string $connection = 'rabbitmq';
 
     /**
      * The name of the queue the job should be sent to.
-     *
-     * @var string|null
      */
     public ?string $queue = 'warmupListener';
 
