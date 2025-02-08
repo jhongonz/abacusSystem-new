@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'database'),
+    'default' => env('QUEUE_CONNECTION', 'rabbitmq'),
 
     /*
     |--------------------------------------------------------------------------
@@ -80,6 +80,15 @@ return [
                 'password' => env('RABBITMQ_PASS', 'qwerty'),
             ],
             'worker' => env('RABBITMQ_WORKER', 'default'),
+            'options' => [
+                'queue' => [
+                    'prioritize_delayed' => true,
+                    'queue_max_priority' => 10,
+                    'exchange_type' => 'topic',
+                    'exchange_routing_key' => '',
+                ]
+            ],
+            'queue' => 'warmupListener',
         ]
     ],
 

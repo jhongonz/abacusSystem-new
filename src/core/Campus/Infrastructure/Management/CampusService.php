@@ -37,7 +37,7 @@ class CampusService implements CampusManagementContract
     /**
      * @throws \Exception
      */
-    public function searchCampusById(int $id): ?Campus
+    public function searchCampusById(?int $id): ?Campus
     {
         $request = new SearchCampusByIdRequest(
             $this->campusFactory->buildCampusId($id)

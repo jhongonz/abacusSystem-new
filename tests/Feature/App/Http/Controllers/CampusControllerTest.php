@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\Controller;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Campus\StoreCampusRequest;
 use Core\Campus\Domain\Campus;
+use Core\Campus\Domain\ValueObjects\CampusId;
 use Core\Employee\Domain\Employee;
 use Core\Employee\Domain\ValueObjects\EmployeeInstitutionId;
 use Illuminate\Contracts\Session\Session;
@@ -32,6 +34,7 @@ class CampusControllerTest extends TestCase
     private OrchestratorHandlerContract|MockObject $orchestratorHandlerMock;
     private Session|MockObject $sessionMock;
     private DataTables|MockObject $dataTablesMock;
+    private EventDispatcher|MockObject $eventDispatcherMock;
     private ViewFactory|MockObject $viewFactoryMock;
     private LoggerInterface|MockObject $loggerMock;
     private CampusController $controller;
@@ -45,6 +48,7 @@ class CampusControllerTest extends TestCase
         $this->orchestratorHandlerMock = $this->createMock(OrchestratorHandlerContract::class);
         $this->sessionMock = $this->createMock(Session::class);
         $this->dataTablesMock = $this->createMock(DataTables::class);
+        $this->eventDispatcherMock = $this->createMock(EventDispatcher::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
         $this->viewFactoryMock = $this->createMock(ViewFactory::class);
 
@@ -52,6 +56,7 @@ class CampusControllerTest extends TestCase
             $this->orchestratorHandlerMock,
             $this->sessionMock,
             $this->dataTablesMock,
+            $this->eventDispatcherMock,
             $this->viewFactoryMock,
             $this->loggerMock
         );
@@ -65,7 +70,8 @@ class CampusControllerTest extends TestCase
             $this->loggerMock,
             $this->viewFactoryMock,
             $this->controller,
-            $this->dataTablesMock
+            $this->dataTablesMock,
+            $this->eventDispatcherMock
         );
         parent::tearDown();
     }
@@ -352,7 +358,16 @@ class CampusControllerTest extends TestCase
             ->with('campusId')
             ->willReturn(false);
 
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
         $campusMock = $this->createMock(Campus::class);
+        $campusMock->expects(self::once())
+            ->method('id')
+            ->willReturn($campusIdMock);
+
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('create-campus', $request)
@@ -396,7 +411,16 @@ class CampusControllerTest extends TestCase
             ->with('campusId')
             ->willReturn(true);
 
+        $campusIdMock = $this->createMock(CampusId::class);
+        $campusIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(1);
+
         $campusMock = $this->createMock(Campus::class);
+        $campusMock->expects(self::once())
+            ->method('id')
+            ->willReturn($campusIdMock);
+
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')
             ->with('update-campus', $request)
