@@ -55,7 +55,6 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
 
         $employeeModel = $this->updateAttributesModel((array) $data);
-
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
@@ -75,7 +74,6 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
 
         $employeeModel = $this->updateAttributesModel((array) $data);
-
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
@@ -175,10 +173,14 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         $model->changeEmail($domain->email()->value() ?? '');
         $model->changeAddress($domain->address()->value());
         $model->changeObservations($domain->observations()->value());
-        $model->changeImage($domain->image()->value());
         $model->changeState($domain->state()->value());
         $model->changeSearch($domain->search()->value() ?? '');
         $model->changeCreatedAt($domain->createdAt()->value());
+
+        $image = $domain->image()->value();
+        if (!is_null($image)) {
+            $model->changeImage($image);
+        }
 
         if (!is_null($domain->institutionId()->value())) {
             $model->changeInstitutionId($domain->institutionId()->value());

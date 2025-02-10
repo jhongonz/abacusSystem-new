@@ -35,10 +35,12 @@ class DetailEmployeeOrchestrator extends EmployeeOrchestrator
      */
     public function make(Request $request): array
     {
-        /** @var int|null $employeeId */
-        $employeeId = $request->input('employeeId');
+        $employeeId = $request->integer('employeeId') ?: null;
 
-        $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+        $employee = null;
+        if (!is_null($employeeId)) {
+            $employee = $this->employeeManagement->searchEmployeeById($employeeId);
+        }
 
         if ($employee instanceof Employee) {
             $userId = $employee->userId()->value();

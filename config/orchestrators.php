@@ -56,7 +56,8 @@ return [
     App\Http\Orchestrators\Orchestrator\Module\DeleteModuleOrchestrator::class,
     App\Http\Orchestrators\Orchestrator\Module\GetModulesOrchestrator::class,
 
-    // ------------- Module Orchestrators
+    // ------------- Campus Orchestrators
+    App\Http\Orchestrators\Orchestrator\Campus\ChangeStateCampusOrchestrator::class,
     App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator::class,
     App\Http\Orchestrators\Orchestrator\Campus\DetailCampusOrchestrator::class,
     App\Http\Orchestrators\Orchestrator\Campus\CreateCampusOrchestrator::class,

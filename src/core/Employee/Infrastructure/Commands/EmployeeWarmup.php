@@ -49,7 +49,6 @@ class EmployeeWarmup extends Command
 
         try {
             $employee = $this->readRepository->find($employeeId);
-
             foreach ($this->repositories as $repository) {
                 if (!is_null($employee)) {
                     $repository->persistEmployee($employee);

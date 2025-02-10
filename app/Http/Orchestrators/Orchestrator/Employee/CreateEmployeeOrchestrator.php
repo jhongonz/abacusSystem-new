@@ -35,7 +35,7 @@ class CreateEmployeeOrchestrator extends EmployeeOrchestrator
     public function make(Request $request): array
     {
         $dataEmployee = [
-            'id' => $request->integer('employeeId'),
+            'id' => null,
             'userId' => null,
             'institutionId' => $request->integer('institutionId'),
             'identification' => $request->input('identifier'),

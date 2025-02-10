@@ -7,10 +7,17 @@
 
 namespace App\Events;
 
+use Illuminate\Contracts\Events\Dispatcher;
+
 class EventDispatcher
 {
+    public function __construct(
+        private readonly Dispatcher $dispatcher
+    ) {
+    }
+
     public function dispatch(object $event): void
     {
-        event($event);
+        $this->dispatcher->dispatch($event);
     }
 }
