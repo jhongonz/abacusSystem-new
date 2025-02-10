@@ -60,6 +60,7 @@ class EmployeeWarmup extends Command
             return CommandSymfony::FAILURE;
         }
 
+        $this->info('Employee command executed');
         $this->logger->info('Employee command executed');
 
         return CommandSymfony::SUCCESS;

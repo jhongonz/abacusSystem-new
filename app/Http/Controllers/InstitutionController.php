@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventDispatcher;
+use App\Events\Institution\InstitutionUpdateOrDeletedEvent;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Http\Requests\Institution\StoreInstitutionRequest;
 use App\Traits\DataTablesTrait;
@@ -27,6 +29,7 @@ class InstitutionController extends Controller implements HasMiddleware
     public function __construct(
         private readonly OrchestratorHandlerContract $orchestrators,
         private readonly DataTables $dataTables,
+        protected readonly EventDispatcher $dispatcher,
         protected ImageManagerInterface $imageManager,
         protected ViewFactory $viewFactory,
         private readonly LoggerInterface $logger,
@@ -49,6 +52,8 @@ class InstitutionController extends Controller implements HasMiddleware
     {
         try {
             $this->orchestrators->handler('change-state-institution', $request);
+
+            $this->dispatcher->dispatch(new InstitutionUpdateOrDeletedEvent($request->integer('institutionId')));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -107,6 +112,8 @@ class InstitutionController extends Controller implements HasMiddleware
             /** @var array{institution: Institution} $dataInstitution */
             $dataInstitution = $this->orchestrators->handler($method, $request);
             $institution = $dataInstitution['institution'];
+
+            $this->dispatcher->dispatch(new InstitutionUpdateOrDeletedEvent($request->integer('institutionId')));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 
