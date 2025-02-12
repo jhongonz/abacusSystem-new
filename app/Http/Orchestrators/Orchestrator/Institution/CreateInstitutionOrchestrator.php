@@ -48,6 +48,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
         }
 
         $institution = $this->institutionManagement->createInstitution([Institution::TYPE => $dataInstitution]);
+
         return ['institution' => $institution];
     }
 

@@ -42,7 +42,7 @@ class DetailInstitutionOrchestrator extends InstitutionOrchestrator
         return [
             'institutionId' => $institutionId,
             'institution' => $institution,
-            'image' => $urlFile ?? null
+            'image' => $urlFile ?? null,
         ];
     }
 

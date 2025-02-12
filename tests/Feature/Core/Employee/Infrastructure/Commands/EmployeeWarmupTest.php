@@ -27,7 +27,7 @@ class EmployeeWarmupTest extends TestCase
 
     private EmployeeRepositoryContract|MockObject $writeRepository;
 
-    private EmployeeWarmup $command;
+    private EmployeeWarmup|MockObject $command;
 
     /**
      * @throws Exception
@@ -40,12 +40,15 @@ class EmployeeWarmupTest extends TestCase
         $this->readRepository = $this->createMock(EmployeeRepositoryContract::class);
         $this->writeRepository = $this->createMock(EmployeeRepositoryContract::class);
 
-        $this->command = new EmployeeWarmup(
-            $this->logger,
-            $this->factory,
-            $this->readRepository,
-            $this->writeRepository
-        );
+        $this->command = $this->getMockBuilder(EmployeeWarmup::class)
+            ->setConstructorArgs([
+                $this->logger,
+                $this->factory,
+                $this->readRepository,
+                $this->writeRepository,
+            ])
+            ->onlyMethods(['info'])
+            ->getMock();
     }
 
     public function tearDown(): void
@@ -95,6 +98,10 @@ class EmployeeWarmupTest extends TestCase
             ->with($employeeMock)
             ->willReturn($employeeMock);
 
+        $this->command->expects(self::once())
+            ->method('info')
+            ->with('Employee command executed');
+
         $this->logger->expects(self::once())
             ->method('info')
             ->with('Employee command executed');
@@ -134,6 +141,9 @@ class EmployeeWarmupTest extends TestCase
         $this->logger->expects(self::once())
             ->method('error')
             ->with('Employee not found with id: 1');
+
+        $this->command->expects(self::never())
+            ->method('info');
 
         $this->command->setInput($inputMock);
         $result = $this->command->handle();

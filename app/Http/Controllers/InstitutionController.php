@@ -113,7 +113,10 @@ class InstitutionController extends Controller implements HasMiddleware
             $dataInstitution = $this->orchestrators->handler($method, $request);
             $institution = $dataInstitution['institution'];
 
-            $this->dispatcher->dispatch(new InstitutionUpdateOrDeletedEvent($request->integer('institutionId')));
+            /** @var int $institutionId */
+            $institutionId = $institution->id()->value();
+
+            $this->dispatcher->dispatch(new InstitutionUpdateOrDeletedEvent($institutionId));
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

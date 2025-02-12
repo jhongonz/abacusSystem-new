@@ -55,6 +55,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
 
         $employeeModel = $this->updateAttributesModel((array) $data);
+
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 
@@ -74,6 +75,7 @@ class EloquentEmployeeRepository implements ChainPriority, EmployeeRepositoryCon
         }
 
         $employeeModel = $this->updateAttributesModel((array) $data);
+
         return $this->employeeTranslator->setModel($employeeModel)->toDomain();
     }
 

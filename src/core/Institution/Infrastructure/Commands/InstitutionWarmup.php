@@ -45,7 +45,6 @@ class InstitutionWarmup extends Command
      */
     public function handle(): int
     {
-
         /** @var int|null $id */
         $id = is_numeric($this->argument('id')) ? intval($this->argument('id')) : null;
 

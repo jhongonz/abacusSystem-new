@@ -74,7 +74,9 @@ class EmployeeController extends Controller implements HasMiddleware
             $dataEmployee = $this->orchestrators->handler('change-state-employee', $request);
             $employee = $dataEmployee['employee'];
 
-            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employee->id()->value()));
+            /** @var int $employeeId */
+            $employeeId = $employee->id()->value();
+            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
         } catch (\Exception $exception) {
             /** @var string $id */
             $id = $request->input('id');
@@ -130,7 +132,6 @@ class EmployeeController extends Controller implements HasMiddleware
 
             $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
             $this->eventDispatcher->dispatch(new UserUpdateOrDeleteEvent($userId));
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
 

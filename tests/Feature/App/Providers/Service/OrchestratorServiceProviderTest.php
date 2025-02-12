@@ -11,7 +11,6 @@ use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator;
 use App\Http\Orchestrators\OrchestratorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Providers\Service\OrchestratorServiceProvider;
-use Illuminate\Contracts\Config\Repository as Configuration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -54,53 +53,23 @@ class OrchestratorServiceProviderTest extends TestCase
      */
     public function testBootServiceProviderShouldInitializedCorrectly(): void
     {
-        $orchestratorsMock = [
-            GetCampusCollectionOrchestrator::class,
-        ];
         $orchestratorMock = $this->createMock(GetCampusCollectionOrchestrator::class);
 
-        $configurationMock = $this->createMock(Configuration::class);
-        $configurationMock->expects(self::once())
-            ->method('get')
+        $this->application->expects(self::once())
+            ->method('tagged')
             ->with('orchestrators')
-            ->willReturn($orchestratorsMock);
+            ->willReturn([$orchestratorMock]);
 
         $orchestratorHandler = $this->createMock(OrchestratorHandler::class);
+        $orchestratorHandler->expects(self::once())
+            ->method('addOrchestrator')
+            ->with($orchestratorMock)
+            ->willReturnSelf();
 
-        $this->application->expects(self::exactly(3))
+        $this->application->expects(self::once())
             ->method('make')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($configurationMock, $orchestratorHandler, $orchestratorMock);
-
-        $serviceProvider = new OrchestratorServiceProvider($this->application);
-        $serviceProvider->boot();
-    }
-
-    /**
-     * @throws BindingResolutionException
-     * @throws Exception
-     */
-    public function testBootServiceProviderShouldReturnException(): void
-    {
-        $orchestratorsMock = [
-            'TestingClass',
-        ];
-
-        $configurationMock = $this->createMock(Configuration::class);
-        $configurationMock->expects(self::once())
-            ->method('get')
-            ->with('orchestrators')
-            ->willReturn($orchestratorsMock);
-
-        $orchestratorHandler = $this->createMock(OrchestratorHandler::class);
-
-        $this->application->expects(self::exactly(2))
-            ->method('make')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($configurationMock, $orchestratorHandler);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The orchestrator class TestingClass does not exists.');
+            ->with(OrchestratorHandlerContract::class)
+            ->willReturn($orchestratorHandler);
 
         $serviceProvider = new OrchestratorServiceProvider($this->application);
         $serviceProvider->boot();

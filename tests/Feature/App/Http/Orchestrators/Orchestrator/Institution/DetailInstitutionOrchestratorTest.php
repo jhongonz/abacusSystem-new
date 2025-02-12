@@ -89,15 +89,13 @@ class DetailInstitutionOrchestratorTest extends TestCase
             ->with('institutionId')
             ->willReturn(0);
 
-        $this->institutionManagement->expects(self::once())
-            ->method('searchInstitutionById')
-            ->with(0)
-            ->willReturn(null);
+        $this->institutionManagement->expects(self::never())
+            ->method('searchInstitutionById');
 
         $result = $this->orchestrator->make($requestMock);
 
         $this->assertIsArray($result);
-        $this->assertIsInt($result['institutionId']);
+        $this->assertNull($result['institutionId']);
         $this->assertEquals(0, $result['institutionId']);
         $this->assertNull($result['institution']);
         $this->assertNull($result['image']);

@@ -49,9 +49,11 @@ class InstitutionTranslator
         $code = $this->institution->code();
         $institution->code()->setValue($code);
 
-        /** @var string $logo */
+        /** @var string|null $logo */
         $logo = $this->institution->logo();
-        $institution->logo()->setValue($logo);
+        if (!is_null($logo)) {
+            $institution->logo()->setValue($logo);
+        }
 
         $institution->state()->setValue($this->institution->state());
 

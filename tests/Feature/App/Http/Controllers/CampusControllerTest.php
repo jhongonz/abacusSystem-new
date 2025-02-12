@@ -486,6 +486,10 @@ class CampusControllerTest extends TestCase
     public function testChangeStateCampusShouldInactivateAndReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
+        $request->expects(self::once())
+            ->method('integer')
+            ->with('campusId')
+            ->willReturn(1);
 
         $this->orchestratorHandlerMock->expects(self::once())
             ->method('handler')

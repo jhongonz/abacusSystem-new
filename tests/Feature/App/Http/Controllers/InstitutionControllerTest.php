@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers;
 
+use App\Events\EventDispatcher;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
@@ -36,6 +37,7 @@ class InstitutionControllerTest extends TestCase
     private ImageManagerInterface|MockObject $imageManager;
     private ViewFactory|MockObject $viewFactory;
     private LoggerInterface|MockObject $logger;
+    private EventDispatcher|MockObject $dispatcher;
     private InstitutionController $controller;
 
     /**
@@ -49,10 +51,12 @@ class InstitutionControllerTest extends TestCase
         $this->imageManager = $this->createMock(ImageManagerInterface::class);
         $this->viewFactory = $this->createMock(ViewFactory::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->dispatcher = $this->createMock(EventDispatcher::class);
 
         $this->controller = new InstitutionController(
             $this->orchestrator,
             $this->datatables,
+            $this->dispatcher,
             $this->imageManager,
             $this->viewFactory,
             $this->logger
@@ -67,7 +71,8 @@ class InstitutionControllerTest extends TestCase
             $this->logger,
             $this->viewFactory,
             $this->imageManager,
-            $this->datatables
+            $this->datatables,
+            $this->dispatcher
         );
         parent::tearDown();
     }
@@ -168,12 +173,19 @@ class InstitutionControllerTest extends TestCase
     public function testChangeStateInstitutionShouldReturnJsonResponseWhenIsActivate(): void
     {
         $requestMock = $this->createMock(Request::class);
+        $requestMock->expects(self::once())
+            ->method('integer')
+            ->willReturn(10);
 
         $institutionMock = $this->createMock(Institution::class);
         $this->orchestrator->expects(self::once())
             ->method('handler')
             ->with('change-state-institution', $requestMock)
             ->willReturn(['institution' => $institutionMock]);
+
+        $this->dispatcher->expects(self::once())
+            ->method('dispatch')
+            ->withAnyParameters();
 
         $result = $this->controller->changeStateInstitution($requestMock);
 
@@ -437,10 +449,10 @@ class InstitutionControllerTest extends TestCase
         $institutionMock = $this->createMock(Institution::class);
 
         $institutionIdMock = $this->createMock(InstitutionId::class);
-        $institutionIdMock->expects(self::once())
+        $institutionIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $institutionMock->expects(self::once())
+        $institutionMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($institutionIdMock);
 
@@ -497,10 +509,10 @@ class InstitutionControllerTest extends TestCase
         $institutionMock = $this->createMock(Institution::class);
 
         $institutionIdMock = $this->createMock(InstitutionId::class);
-        $institutionIdMock->expects(self::once())
+        $institutionIdMock->expects(self::exactly(2))
             ->method('value')
             ->willReturn(1);
-        $institutionMock->expects(self::once())
+        $institutionMock->expects(self::exactly(2))
             ->method('id')
             ->willReturn($institutionIdMock);
 

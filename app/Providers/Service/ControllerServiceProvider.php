@@ -26,6 +26,10 @@ class ControllerServiceProvider extends ServiceProvider implements DeferrablePro
      */
     public function register(): void
     {
+        $this->app->tag([
+            CreateEmployeeActionExecutor::class,
+            UpdateEmployeeActionExecutor::class,
+        ], 'employee.action-executor');
     }
 
     /**
@@ -35,9 +39,12 @@ class ControllerServiceProvider extends ServiceProvider implements DeferrablePro
      */
     public function boot(): void
     {
+        /** @var ActionExecutorHandlerContract $actionHandler */
         $actionHandler = $this->app->make(ActionExecutorHandlerContract::class);
-        $actionHandler->addActionExecutor($this->app->make(CreateEmployeeActionExecutor::class));
-        $actionHandler->addActionExecutor($this->app->make(UpdateEmployeeActionExecutor::class));
+
+        foreach ($this->app->tagged('employee.action-executor') as $executor) {
+            $actionHandler->addActionExecutor($executor);
+        }
     }
 
     /**
