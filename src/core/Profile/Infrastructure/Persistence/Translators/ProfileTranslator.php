@@ -63,14 +63,15 @@ class ProfileTranslator
 
         $modulesModel = $this->model->pivotModules();
         $modules = [];
+
         /** @var Module $item */
         foreach ($modulesModel->get() as $item) {
             if (ValueObjectStatus::STATE_ACTIVE === $item->state()) {
                 $modules[] = $item->id();
             }
         }
-        $profile->setModulesAggregator($modules);
 
+        $profile->setModulesAggregator($modules);
         return $profile;
     }
 

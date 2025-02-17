@@ -85,7 +85,7 @@ class MenuComposer
          */
         foreach ($menuOptions as $item) {
             $module = $this->moduleFactory->buildModuleFromArray([Module::TYPE => $item]);
-            $module->id()->setValue(0);
+
             $module->state()->setValue(ValueObjectStatus::STATE_ACTIVE);
             $menuKey = $module->menuKey()->value();
 

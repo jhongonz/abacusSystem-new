@@ -54,7 +54,6 @@ class EloquentModuleRepository implements ChainPriority, ModuleRepositoryContrac
         }
 
         $moduleModel = $this->updateAttributesModelModule((array) $data);
-
         return $this->moduleTranslator->setModel($moduleModel)->toDomain();
     }
 

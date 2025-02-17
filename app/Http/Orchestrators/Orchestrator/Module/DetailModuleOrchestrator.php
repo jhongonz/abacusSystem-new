@@ -25,12 +25,15 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
      */
     public function make(Request $request): array
     {
-        $moduleId = $request->integer('moduleId');
-        $module = $this->moduleManagement->searchModuleById($moduleId);
+        $moduleId = $request->integer('moduleId') ?: null;
+
+        if (! is_null($moduleId)) {
+            $module = $this->moduleManagement->searchModuleById($moduleId);
+        }
 
         return [
             'moduleId' => $moduleId,
-            'module' => $module,
+            'module' => $module ?? null,
             'menuKeys' => $this->config->get('menu.options'),
         ];
     }

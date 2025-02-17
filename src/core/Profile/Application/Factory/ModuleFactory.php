@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePermission;
 use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
@@ -171,5 +172,10 @@ class ModuleFactory implements ModuleFactoryContract
     private function getDateTime(string $dateTime): \DateTime
     {
         return new \DateTime($dateTime);
+    }
+
+    public function buildModulePermission(string $permission): ModulePermission
+    {
+        return new ModulePermission($permission);
     }
 }

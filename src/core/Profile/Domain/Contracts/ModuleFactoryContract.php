@@ -9,6 +9,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePermission;
 use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
@@ -42,6 +43,8 @@ interface ModuleFactoryContract
     public function buildModuleRoute(string $route = ''): ModuleRoute;
 
     public function buildModuleIcon(?string $icon = null): ModuleIcon;
+
+    public function buildModulePermission(string $permission): ModulePermission;
 
     public function buildModuleState(int $state = ValueObjectStatus::STATE_NEW): ModuleState;
 

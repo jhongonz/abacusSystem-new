@@ -36,8 +36,8 @@
                         <label class="font-weight-semibold"><i class="fas fa-cubes mr-2"></i>Módulos</label>
 
                         @foreach($privileges as $index => $item)
-                            @if (count($item['children']) > 0)
 
+                            @if (count($item['children']) > 0)
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -52,6 +52,7 @@
 
                                 @foreach($item['children'] as $menu)
                                     @php $module = $menu['module'] @endphp
+
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group ml-2">
@@ -62,16 +63,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        {{--<div class="col-sm-6">
                                             <div class="form-group">
                                                 <select name="permit" id="permit_{{$module->id()->value()}}" data-placeholder="Permiso" class="permit form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                                     <option></option>
-                                                    {{--@foreach(PERMISSION as $index => $item)
-                                                        <option value="{{$index}}" @if($child->permission == $index) selected @endif>{{$item}}</option>
-                                                    @endforeach--}}
+                                                    @foreach(config('menu.permission') as $index => $item)
+                                                        <option value="{{$index}}" --}}{{--@if($child->permission == $index) selected @endif--}}{{-->{{$item['name']}}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div>--}}
                                     </div>
                                 @endforeach
                             @else
@@ -85,16 +86,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    {{--<div class="col-sm-6">
                                         <div class="form-group">
                                             <select name="permit" id="permit_{{$module->id}}" data-placeholder="Permiso" class="permit form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                                 <option></option>
-                                                @foreach(PERMISSION as $index => $item)
-                                                    <option value="{{$index}}" @if($module->permission == $index) selected @endif>{{$item}}</option>
+                                                @foreach(config('menu.permission') as $index => $item)
+                                                    <option value="{{$index}}" @if($module->permission == $index) selected @endif>{{$item['name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>--}}
                                 </div>
                             @endif
                         @endforeach
