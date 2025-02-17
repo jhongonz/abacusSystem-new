@@ -46,6 +46,10 @@ class ProfileFactory implements ProfileFactoryContract
 
         $profile->setModulesAggregator($dataProfile['modulesAggregator']);
 
+        if (isset($dataProfile['state'])) {
+            $profile->state()->setValue($dataProfile['state']);
+        }
+
         if (isset($dataProfile['updatedAt'])) {
             $profile->updatedAt()->setValue($this->getDateTime($dataProfile['updatedAt']));
         }
