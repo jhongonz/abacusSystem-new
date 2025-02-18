@@ -64,7 +64,6 @@ class ModuleController extends Controller implements HasMiddleware
             /** @var int $moduleId */
             $moduleId = $module->id()->value();
             $this->eventDispatcher->dispatch(new ModuleUpdatedOrDeletedEvent($moduleId));
-
         } catch (\Exception $exception) {
             /** @var string $moduleId */
             $moduleId = $request->input('moduleId');

@@ -27,7 +27,7 @@ class DetailModuleOrchestrator extends ModuleOrchestrator
     {
         $moduleId = $request->integer('moduleId') ?: null;
 
-        if (! is_null($moduleId)) {
+        if (!is_null($moduleId)) {
             $module = $this->moduleManagement->searchModuleById($moduleId);
         }
 

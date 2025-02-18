@@ -28,13 +28,13 @@ return [
      */
     'permission' => [
         'read' => [
-            'name' => 'Lectura'
+            'name' => 'Lectura',
         ],
         'read-update' => [
-            'name' => 'Lectura y modificación'
+            'name' => 'Lectura y modificación',
         ],
         'read-update-create' => [
-            'name' => 'Lectura, modificación y creación'
-        ]
-    ]
+            'name' => 'Lectura, modificación y creación',
+        ],
+    ],
 ];

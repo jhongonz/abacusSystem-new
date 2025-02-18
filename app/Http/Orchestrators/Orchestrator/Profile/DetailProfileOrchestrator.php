@@ -32,7 +32,7 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         $profileId = $request->integer('profileId') ?: null;
 
         $profile = null;
-        if (! is_null($profileId)) {
+        if (!is_null($profileId)) {
             $profile = $this->profileManagement->searchProfileById($profileId);
         }
 
@@ -63,8 +63,9 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
         $parents = $this->config->get('menu.options');
 
         $privileges = [];
-        foreach ($parents as $item) {
 
+        /** @var array{'key': string} $item */
+        foreach ($parents as $item) {
             /** @var string $key */
             $key = $item['key'];
 

@@ -30,7 +30,8 @@ class ProfileFactory implements ProfileFactoryContract
          *     description: string|null,
          *     modulesAggregator: array<int<0, max>, int|null>,
          *     updatedAt: string|null,
-         *     createdAt: string|null
+         *     createdAt: string|null,
+         *     state: int|null
          * } $dataProfile
          */
         $dataProfile = $data[Profile::TYPE];

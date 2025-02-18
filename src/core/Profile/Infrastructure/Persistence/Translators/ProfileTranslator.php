@@ -72,6 +72,7 @@ class ProfileTranslator
         }
 
         $profile->setModulesAggregator($modules);
+
         return $profile;
     }
 
