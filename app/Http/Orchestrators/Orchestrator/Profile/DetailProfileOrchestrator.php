@@ -64,7 +64,7 @@ class DetailProfileOrchestrator extends ProfileOrchestrator
 
         $privileges = [];
 
-        /** @var array{'key': string} $item */
+        /** @var array{key: string} $item */
         foreach ($parents as $item) {
             /** @var string $key */
             $key = $item['key'];

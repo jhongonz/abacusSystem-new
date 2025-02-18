@@ -8,7 +8,6 @@ use Core\Profile\Domain\Contracts\ModuleFactoryContract;
 use Core\Profile\Domain\Module;
 use Core\Profile\Domain\Modules;
 use Core\Profile\Domain\Profile;
-use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleState;
@@ -110,15 +109,6 @@ class MenuComposerTest extends TestCase
             });
 
         $moduleFirstMock = $this->createMock(Module::class);
-        $moduleFirstIdMock = $this->createMock(ModuleId::class);
-
-        $moduleFirstIdMock->expects(self::once())
-            ->method('setValue')
-            ->with(0)
-            ->willReturnSelf();
-        $moduleFirstMock->expects(self::once())
-            ->method('id')
-            ->willReturn($moduleFirstIdMock);
 
         $moduleFirstSateMock = $this->createMock(ModuleState::class);
         $moduleFirstSateMock->expects(self::once())
@@ -161,15 +151,6 @@ class MenuComposerTest extends TestCase
             ->willReturnSelf();
 
         $moduleSecondMock = $this->createMock(Module::class);
-        $moduleSecondIdMock = $this->createMock(ModuleId::class);
-
-        $moduleSecondIdMock->expects(self::once())
-            ->method('setValue')
-            ->with(0)
-            ->willReturnSelf();
-        $moduleSecondMock->expects(self::once())
-            ->method('id')
-            ->willReturn($moduleSecondIdMock);
 
         $moduleSecondSateMock = $this->createMock(ModuleState::class);
         $moduleSecondSateMock->expects(self::once())
@@ -229,7 +210,6 @@ class MenuComposerTest extends TestCase
             ->willReturnCallback(function (array $dataModule) use ($moduleFirstMock, $moduleSecondMock, $optionsExpected, &$callIndexFactory) {
                 $this->assertEquals([Module::TYPE => $optionsExpected[$callIndexFactory]], $dataModule);
 
-                $result = null;
                 $result = null;
                 if (0 === $callIndexFactory) {
                     $result = $moduleFirstMock;
