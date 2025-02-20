@@ -11,6 +11,7 @@ use App\Http\Orchestrators\Orchestrator\Campus\GetCampusCollectionOrchestrator;
 use App\Http\Orchestrators\OrchestratorHandler;
 use App\Http\Orchestrators\OrchestratorHandlerContract;
 use App\Providers\Service\OrchestratorServiceProvider;
+use Illuminate\Contracts\Config\Repository as Configuration;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -22,6 +23,7 @@ use Tests\TestCase;
 class OrchestratorServiceProviderTest extends TestCase
 {
     private Application|MockObject $application;
+    private Configuration|MockObject $configuration;
 
     /**
      * @throws Exception
@@ -30,11 +32,12 @@ class OrchestratorServiceProviderTest extends TestCase
     {
         parent::setUp();
         $this->application = $this->createMock(Application::class);
+        $this->configuration = $this->createMock(Configuration::class);
     }
 
     protected function tearDown(): void
     {
-        unset($this->application);
+        unset($this->application, $this->configuration);
         parent::tearDown();
     }
 
@@ -45,6 +48,35 @@ class OrchestratorServiceProviderTest extends TestCase
     {
         $instance = $this->app->make(OrchestratorHandlerContract::class);
         $this->assertInstanceOf(OrchestratorHandler::class, $instance);
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function testRegisterShouldTaggedCorrectly(): void
+    {
+        $orchestratorExpected = [
+            'orchestratorOne',
+            'orchestratorTwo',
+            'orchestratorThree',
+        ];
+
+        $this->configuration->expects(self::once())
+            ->method('get')
+            ->with('orchestrators')
+            ->willReturn($orchestratorExpected);
+
+        $this->application->expects(self::once())
+            ->method('tag')
+            ->with($orchestratorExpected, 'orchestrators');
+
+        $this->application->expects(self::once())
+            ->method('make')
+            ->with(Configuration::class)
+            ->willReturn($this->configuration);
+
+        $serviceProvider = new OrchestratorServiceProvider($this->application);
+        $serviceProvider->register();
     }
 
     /**
@@ -83,6 +115,7 @@ class OrchestratorServiceProviderTest extends TestCase
         $dataExpected = [
             OrchestratorHandlerContract::class,
         ];
+
         $this->assertIsArray($provides);
         $this->assertEquals($dataExpected, $provides);
     }

@@ -373,6 +373,10 @@ class CampusControllerTest extends TestCase
             ->with('create-campus', $request)
             ->willReturn(['campus' => $campusMock]);
 
+        $this->eventDispatcherMock->expects(self::once())
+            ->method('dispatch')
+            ->withAnyParameters();
+
         $result = $this->controller->storeCampus($request);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -426,6 +430,10 @@ class CampusControllerTest extends TestCase
             ->with('update-campus', $request)
             ->willReturn(['campus' => $campusMock]);
 
+        $this->eventDispatcherMock->expects(self::once())
+            ->method('dispatch')
+            ->withAnyParameters();
+
         $result = $this->controller->storeCampus($request);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -468,6 +476,9 @@ class CampusControllerTest extends TestCase
             ->method('handler')
             ->with('create-campus', $request)
             ->willThrowException(new \Exception('Can not create new campus'));
+
+        $this->eventDispatcherMock->expects(self::never())
+            ->method('dispatch');
 
         $this->loggerMock->expects(self::once())
             ->method('error')

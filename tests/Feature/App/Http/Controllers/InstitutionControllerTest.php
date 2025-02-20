@@ -461,6 +461,10 @@ class InstitutionControllerTest extends TestCase
             ->with('create-institution', $requestMock)
             ->willReturn(['institution' => $institutionMock]);
 
+        $this->dispatcher->expects(self::once())
+            ->method('dispatch')
+            ->withAnyParameters();
+
         $result = $this->controller->storeInstitution($requestMock);
 
         $this->assertInstanceOf(JsonResponse::class, $result);
@@ -487,6 +491,10 @@ class InstitutionControllerTest extends TestCase
         $this->logger->expects(self::once())
             ->method('error')
             ->with('Can not create new institution');
+
+        $this->dispatcher->expects(self::never())
+            ->method('dispatch')
+            ->withAnyParameters();
 
         $result = $this->controller->storeInstitution($requestMock);
 
@@ -520,6 +528,10 @@ class InstitutionControllerTest extends TestCase
             ->method('handler')
             ->with('update-institution', $requestMock)
             ->willReturn(['institution' => $institutionMock]);
+
+        $this->dispatcher->expects(self::once())
+            ->method('dispatch')
+            ->withAnyParameters();
 
         $result = $this->controller->storeInstitution($requestMock);
 
