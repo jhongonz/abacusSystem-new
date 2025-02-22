@@ -47,7 +47,7 @@
                                         <select name="key" id="key" data-placeholder="Seleccione key" class="key form-control form-control-sm select" data-container-css-class="select-sm" data-fouc>
                                             <option value=""></option>
                                             @foreach($menuKeys as $key => $item)
-                                                <option value="{{$key}}" @isset($module) @if($module->menuKey()->value() === $key) selected @endif @endisset>{{$key}}</option>
+                                                <option value="{{$item['key']}}" @isset($module) @if($module->menuKey()->value() === $item['key']) selected @endif @endisset>{{$item['key']}}</option>
                                             @endforeach
                                         </select>
                                     </div>

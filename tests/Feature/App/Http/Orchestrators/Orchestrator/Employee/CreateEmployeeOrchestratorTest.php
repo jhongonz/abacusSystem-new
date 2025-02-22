@@ -68,10 +68,10 @@ class CreateEmployeeOrchestratorTest extends TestCase
                 'address'
             );
 
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('integer')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(1, 1);
+            ->with('institutionId')
+            ->willReturn(1);
 
         $requestMock->expects(self::once())
             ->method('string')
@@ -115,7 +115,7 @@ class CreateEmployeeOrchestratorTest extends TestCase
             ->willReturn($imageMock);
 
         $dataExpected = [
-            'id' => 1,
+            'id' => null,
             'userId' => null,
             'institutionId' => 1,
             'identification' => 'identification',

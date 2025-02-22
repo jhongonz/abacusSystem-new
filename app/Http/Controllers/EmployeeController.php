@@ -73,6 +73,10 @@ class EmployeeController extends Controller implements HasMiddleware
             /** @var array{employee: Employee} $dataEmployee */
             $dataEmployee = $this->orchestrators->handler('change-state-employee', $request);
             $employee = $dataEmployee['employee'];
+
+            /** @var int $employeeId */
+            $employeeId = $employee->id()->value();
+            $this->eventDispatcher->dispatch(new EmployeeUpdateOrDeletedEvent($employeeId));
         } catch (\Exception $exception) {
             /** @var string $id */
             $id = $request->input('id');

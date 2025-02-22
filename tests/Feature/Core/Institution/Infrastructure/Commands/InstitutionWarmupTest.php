@@ -23,7 +23,7 @@ class InstitutionWarmupTest extends TestCase
     private InstitutionFactoryContract|MockObject $factory;
     private InstitutionRepositoryContract|MockObject $readRepository;
     private InstitutionRepositoryContract|MockObject $writeRepository;
-    private InstitutionWarmup $command;
+    private InstitutionWarmup|MockObject $command;
 
     /**
      * @throws Exception
@@ -35,12 +35,16 @@ class InstitutionWarmupTest extends TestCase
         $this->factory = $this->createMock(InstitutionFactoryContract::class);
         $this->readRepository = $this->createMock(InstitutionRepositoryContract::class);
         $this->writeRepository = $this->createMock(InstitutionRepositoryContract::class);
-        $this->command = new InstitutionWarmup(
-            $this->logger,
-            $this->factory,
-            $this->readRepository,
-            $this->writeRepository
-        );
+
+        $this->command = $this->getMockBuilder(InstitutionWarmup::class)
+            ->setConstructorArgs([
+                $this->logger,
+                $this->factory,
+                $this->readRepository,
+                $this->writeRepository,
+            ])
+            ->onlyMethods(['info'])
+            ->getMock();
     }
 
     public function tearDown(): void
@@ -89,6 +93,10 @@ class InstitutionWarmupTest extends TestCase
             ->with($institutionMock)
             ->willReturn($institutionMock);
 
+        $this->command->expects(self::once())
+            ->method('info')
+            ->with('Institution command executed');
+
         $this->logger->expects(self::once())
             ->method('info')
             ->with('Institution command executed');
@@ -128,6 +136,9 @@ class InstitutionWarmupTest extends TestCase
         $this->logger->expects(self::once())
             ->method('error')
             ->with('Institution not found with id: 1');
+
+        $this->command->expects(self::never())
+            ->method('info');
 
         $this->command->setInput($inputMock);
         $result = $this->command->handle();

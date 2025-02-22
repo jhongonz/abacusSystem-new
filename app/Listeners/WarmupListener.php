@@ -8,9 +8,20 @@
 namespace App\Listeners;
 
 use App\Jobs\ProcessCommandWarmup;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-abstract class WarmupListener
+abstract class WarmupListener implements ShouldQueue
 {
+    /**
+     * The name of the connection the job should be sent to.
+     */
+    public ?string $connection = 'rabbitmq';
+
+    /**
+     * The name of the queue the job should be sent to.
+     */
+    public ?string $queue = 'warmupListener';
+
     /**
      * @param string|array<string> $command
      */

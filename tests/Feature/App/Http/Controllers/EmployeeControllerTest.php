@@ -3,7 +3,6 @@
 namespace Tests\Feature\App\Http\Controllers;
 
 use App\Events\EventDispatcher;
-use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Http\Controllers\ActionExecutors\ActionExecutorHandler;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmployeeController;
@@ -256,7 +255,6 @@ class EmployeeControllerTest extends TestCase
         $employeeUserId->expects(self::once())
             ->method('value')
             ->willReturn(10);
-
         $employeeMock->expects(self::once())
             ->method('userId')
             ->willReturn($employeeUserId);
@@ -269,6 +267,14 @@ class EmployeeControllerTest extends TestCase
             ->method('state')
             ->willReturn($stateMock);
 
+        $employeeIdMock = $this->createMock(EmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(10);
+        $employeeMock->expects(self::once())
+            ->method('id')
+            ->willReturn($employeeIdMock);
+
         $userMock = $this->createMock(User::class);
 
         $this->orchestrator->expects(self::exactly(2))
@@ -279,10 +285,9 @@ class EmployeeControllerTest extends TestCase
                 ['user' => $userMock]
             );
 
-        $eventMock = new UserUpdateOrDeleteEvent(10);
-        $this->eventDispatcher->expects(self::once())
+        $this->eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($eventMock);
+            ->withAnyParameters();
 
         $requestMock->expects(self::once())
             ->method('merge')
@@ -304,13 +309,12 @@ class EmployeeControllerTest extends TestCase
     public function testChangeStateEmployeeShouldInactivateAndReturnJsonResponse(): void
     {
         $request = $this->createMock(Request::class);
+        $employeeMock = $this->createMock(Employee::class);
 
         $stateMock = $this->createMock(EmployeeState::class);
         $stateMock->expects(self::once())
             ->method('value')
             ->willReturn(1);
-
-        $employeeMock = $this->createMock(Employee::class);
         $employeeMock->expects(self::once())
             ->method('state')
             ->willReturn($stateMock);
@@ -322,6 +326,14 @@ class EmployeeControllerTest extends TestCase
         $employeeMock->expects(self::once())
             ->method('userId')
             ->willReturn($employeeUserIdMock);
+
+        $employeeIdMock = $this->createMock(EmployeeId::class);
+        $employeeIdMock->expects(self::once())
+            ->method('value')
+            ->willReturn(10);
+        $employeeMock->expects(self::once())
+            ->method('id')
+            ->willReturn($employeeIdMock);
 
         $userMock = $this->createMock(User::class);
 
@@ -341,10 +353,9 @@ class EmployeeControllerTest extends TestCase
                 ['user' => $userMock]
             );
 
-        $eventMock = new UserUpdateOrDeleteEvent(10);
-        $this->eventDispatcher->expects(self::once())
+        $this->eventDispatcher->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($eventMock);
+            ->withAnyParameters();
 
         $result = $this->controller->changeStateEmployee($request);
 

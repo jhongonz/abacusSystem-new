@@ -132,17 +132,20 @@ class DetailProfileOrchestratorTest extends TestCase
             ->willReturn($modulesMock);
 
         $expectedConfig = [
-            'managers' => [
+            [
+                'key' => 'managers',
                 'name' => 'Gestión Administrativa',
                 'icon' => 'fas fa-tools',
                 'route' => null,
             ],
-            'settings' => [
+            [
+                'key' => 'settings',
                 'name' => 'Configuraciones',
                 'icon' => 'fas fa-tools',
                 'route' => null,
             ],
         ];
+
         $this->config->expects(self::once())
             ->method('get')
             ->with('menu.options')
@@ -157,6 +160,7 @@ class DetailProfileOrchestratorTest extends TestCase
             'privileges' => [
                 'managers' => [
                     'menu' => [
+                        'key' => 'managers',
                         'name' => 'Gestión Administrativa',
                         'icon' => 'fas fa-tools',
                         'route' => null,
@@ -167,6 +171,7 @@ class DetailProfileOrchestratorTest extends TestCase
                 ],
                 'settings' => [
                     'menu' => [
+                        'key' => 'settings',
                         'name' => 'Configuraciones',
                         'icon' => 'fas fa-tools',
                         'route' => null,
@@ -196,10 +201,8 @@ class DetailProfileOrchestratorTest extends TestCase
             ->with('profileId')
             ->willReturn(0);
 
-        $this->profileManagement->expects(self::once())
-            ->method('searchProfileById')
-            ->with(0)
-            ->willReturn(null);
+        $this->profileManagement->expects(self::never())
+            ->method('searchProfileById');
 
         $moduleMock = $this->createMock(Module::class);
 
@@ -208,11 +211,15 @@ class DetailProfileOrchestratorTest extends TestCase
             ->method('searchModules')
             ->willReturn($modulesMock);
 
-        $expectedConfig = ['managers' => [
-            'name' => 'Gestión Administrativa',
-            'icon' => 'fas fa-tools',
-            'route' => null,
-        ]];
+        $expectedConfig = [
+            [
+                'key' => 'managers',
+                'name' => 'Gestión Administrativa',
+                'icon' => 'fas fa-tools',
+                'route' => null,
+            ],
+        ];
+
         $this->config->expects(self::once())
             ->method('get')
             ->with('menu.options')
@@ -222,8 +229,7 @@ class DetailProfileOrchestratorTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('profileId', $result);
-        $this->assertIsInt($result['profileId']);
-        $this->assertEquals(0, $result['profileId']);
+        $this->assertNull($result['profileId']);
         $this->assertArrayHasKey('profile', $result);
         $this->assertNull($result['profile']);
         $this->assertArrayHasKey('modules', $result);

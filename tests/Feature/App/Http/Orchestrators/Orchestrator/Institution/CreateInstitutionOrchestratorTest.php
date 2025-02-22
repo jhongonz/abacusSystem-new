@@ -68,10 +68,6 @@ class CreateInstitutionOrchestratorTest extends TestCase
             );
 
         $requestMock->expects(self::once())
-            ->method('integer')
-            ->willReturn(0);
-
-        $requestMock->expects(self::once())
             ->method('string')
             ->willReturn('token');
 
@@ -101,7 +97,7 @@ class CreateInstitutionOrchestratorTest extends TestCase
             ->willReturn($imageMock);
 
         $dataInstitutionExpected = [
-            'id' => 0,
+            'id' => null,
             'name' => 'name',
             'code' => 'code',
             'shortname' => 'shortname',

@@ -2,12 +2,14 @@
 
 use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Events\Employee\EmployeeUpdateOrDeletedEvent;
+use App\Events\Institution\InstitutionUpdateOrDeletedEvent;
 use App\Events\Profile\ModuleUpdatedOrDeletedEvent;
 use App\Events\Profile\ProfileUpdatedOrDeletedEvent;
 use App\Events\User\RefreshModulesSessionEvent;
 use App\Events\User\UserUpdateOrDeleteEvent;
 use App\Listeners\CampusWarmupListener;
 use App\Listeners\EmployeeWarmupListener;
+use App\Listeners\InstitutionWarmupListener;
 use App\Listeners\ProfilesWarmupListener;
 use App\Listeners\UserRefreshSessionListener;
 use App\Listeners\UserWarmupListener;
@@ -32,4 +34,5 @@ return [
     EmployeeUpdateOrDeletedEvent::class => EmployeeWarmupListener::class,
     UserUpdateOrDeleteEvent::class => UserWarmupListener::class,
     CampusUpdatedOrDeletedEvent::class => CampusWarmupListener::class,
+    InstitutionUpdateOrDeletedEvent::class => InstitutionWarmupListener::class,
 ];

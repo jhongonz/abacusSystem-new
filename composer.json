@@ -10,6 +10,7 @@
         "intervention/image": "^3.5",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.1",
         "yajra/laravel-datatables-oracle": "^11"
     },
     "require-dev": {

@@ -7,6 +7,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePermission;
 use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
@@ -20,6 +21,7 @@ class Module
     private ModuleUpdatedAt $updatedAt;
     private ModuleSearch $search;
     private ModulePosition $position;
+    private ModulePermission $permission;
 
     /** @var Module[] */
     private array $options = [];
@@ -37,6 +39,7 @@ class Module
         $this->search = new ModuleSearch();
         $this->updatedAt = new ModuleUpdatedAt();
         $this->position = new ModulePosition();
+        $this->permission = new ModulePermission();
     }
 
     public function id(): ModuleId
@@ -175,6 +178,18 @@ class Module
     public function setPosition(ModulePosition $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function permission(): ModulePermission
+    {
+        return $this->permission;
+    }
+
+    public function setPermission(ModulePermission $permission): self
+    {
+        $this->permission = $permission;
 
         return $this;
     }

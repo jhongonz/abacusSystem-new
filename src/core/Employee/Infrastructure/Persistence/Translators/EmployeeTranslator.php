@@ -66,9 +66,10 @@ class EmployeeTranslator
         $employee->birthdate()->setValue($this->employee->birthdate());
         $employee->observations()->setValue($this->employee->observations());
 
-        /** @var string $image */
         $image = $this->employee->image();
-        $employee->image()->setValue($image);
+        if (!is_null($image)) {
+            $employee->image()->setValue($image);
+        }
 
         /** @var int $institutionId */
         $institutionId = $this->employee->institutionId();

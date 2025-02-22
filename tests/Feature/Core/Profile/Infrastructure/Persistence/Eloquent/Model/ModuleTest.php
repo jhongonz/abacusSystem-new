@@ -47,6 +47,7 @@ class ModuleTest extends TestCase
             ->with(
                 'pri__pro_id',
                 'pri__mod_id',
+                'pri_permission',
                 'created_at',
                 'updated_at',
                 'deleted_at'

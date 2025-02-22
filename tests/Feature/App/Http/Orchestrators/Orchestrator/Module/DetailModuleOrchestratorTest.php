@@ -88,9 +88,8 @@ class DetailModuleOrchestratorTest extends TestCase
             ->with('moduleId')
             ->willReturn(null);
 
-        $this->moduleManagement->expects(self::once())
-            ->method('searchModuleById')
-            ->willReturn(null);
+        $this->moduleManagement->expects(self::never())
+            ->method('searchModuleById');
 
         $this->config->expects(self::once())
             ->method('get')

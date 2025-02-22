@@ -7,47 +7,46 @@
 
 namespace Tests\Feature\App\Events;
 
-use App\Events\Campus\CampusUpdatedOrDeletedEvent;
 use App\Events\EventDispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Foundation\Testing\TestCase;
-use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[CoversClass(EventDispatcher::class)]
 class EventDispatcherTest extends TestCase
 {
     private EventDispatcher $eventDispatcher;
+    private Dispatcher|MockObject $dispatcherMock;
 
+    /**
+     * @throws Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();
-        $this->eventDispatcher = new EventDispatcher();
+        $this->dispatcherMock = $this->createMock(Dispatcher::class);
+        $this->eventDispatcher = new EventDispatcher($this->dispatcherMock);
     }
 
     protected function tearDown(): void
     {
-        unset($this->eventDispatcher);
+        unset($this->eventDispatcher, $this->dispatcherMock);
         parent::tearDown();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testEventDispatch(): void
     {
-        Event::fake();
+        $eventMock = new class {};
+        $this->dispatcherMock->expects(self::once())
+            ->method('dispatch')
+            ->with($eventMock)
+            ->willReturn(['testing event']);
 
-        $campusId = 1;
-        $this->executeEvent($campusId);
-
-        Event::assertDispatched(CampusUpdatedOrDeletedEvent::class, function ($event) use ($campusId) {
-            /** @var CampusUpdatedOrDeletedEvent $event */
-            return $event->campusId() === $campusId;
-        });
-    }
-
-    private function executeEvent(int $campusId): void
-    {
-        /**
-         * This function can be evaluated with another event of the project.
-         */
-        $this->eventDispatcher->dispatch(new CampusUpdatedOrDeletedEvent($campusId));
+        $this->eventDispatcher->dispatch($eventMock);
     }
 }

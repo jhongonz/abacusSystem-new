@@ -10,6 +10,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePermission;
 use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
@@ -227,5 +228,14 @@ class ModuleFactoryTest extends TestCase
         $this->assertInstanceOf(ModuleState::class, $result);
         $this->assertIsInt($result->value());
         $this->assertSame(1, $result->value());
+    }
+
+    public function testBuildModulePermissionShouldReturnValueObject(): void
+    {
+        $result = $this->factory->buildModulePermission('edit');
+
+        $this->assertInstanceOf(ModulePermission::class, $result);
+        $this->assertIsString($result->value());
+        $this->assertSame('edit', $result->value());
     }
 }

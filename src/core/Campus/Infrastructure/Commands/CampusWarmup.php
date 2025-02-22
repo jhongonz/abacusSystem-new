@@ -60,6 +60,8 @@ class CampusWarmup extends Command
 
             return CommandSymfony::FAILURE;
         }
+
+        $this->info('Campus command executed');
         $this->logger->info('Campus command executed');
 
         return CommandSymfony::SUCCESS;

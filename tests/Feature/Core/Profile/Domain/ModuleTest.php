@@ -8,6 +8,7 @@ use Core\Profile\Domain\ValueObjects\ModuleIcon;
 use Core\Profile\Domain\ValueObjects\ModuleId;
 use Core\Profile\Domain\ValueObjects\ModuleMenuKey;
 use Core\Profile\Domain\ValueObjects\ModuleName;
+use Core\Profile\Domain\ValueObjects\ModulePermission;
 use Core\Profile\Domain\ValueObjects\ModulePosition;
 use Core\Profile\Domain\ValueObjects\ModuleRoute;
 use Core\Profile\Domain\ValueObjects\ModuleSearch;
@@ -334,6 +335,22 @@ class ModuleTest extends TestCase
         $this->assertInstanceOf(Module::class, $result);
         $this->assertSame($result, $this->module);
         $this->assertSame($position, $result->position());
+    }
+
+    public function testPermissionShouldReturnValueObject(): void
+    {
+        $result = $this->module->permission();
+        $this->assertInstanceOf(ModulePermission::class, $result);
+    }
+
+    public function testSetPermissionShouldChangeAndReturnSelf(): void
+    {
+        $permission = new ModulePermission('test');
+        $result = $this->module->setPermission($permission);
+
+        $this->assertInstanceOf(Module::class, $result);
+        $this->assertSame($result, $this->module);
+        $this->assertSame($permission, $result->permission());
     }
 
     public function testIsParentShouldReturnBoolean(): void

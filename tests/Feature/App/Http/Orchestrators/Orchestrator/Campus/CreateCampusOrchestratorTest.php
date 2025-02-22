@@ -55,14 +55,14 @@ class CreateCampusOrchestratorTest extends TestCase
                 'observations'
             );
 
-        $requestMock->expects(self::exactly(2))
+        $requestMock->expects(self::once())
             ->method('integer')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls(1, 2);
+            ->with('institutionId')
+            ->willReturn(2);
 
         $paramsExpected = [
             Campus::TYPE => [
-                'id' => 1,
+                'id' => null,
                 'institutionId' => 2,
                 'name' => 'name',
                 'phone' => '123456789',

@@ -77,6 +77,15 @@ class ProfileFactoryTest extends TestCase
             ->method('description')
             ->willReturn($descriptionMock);
 
+        $stateMock = $this->createMock(ProfileState::class);
+        $stateMock->expects(self::once())
+            ->method('setValue')
+            ->with($dataProvider['state'])
+            ->willReturnSelf();
+        $profileMock->expects(self::once())
+            ->method('state')
+            ->willReturn($stateMock);
+
         $profileMock->expects(self::once())
             ->method('setModulesAggregator')
             ->with($dataProvider['modulesAggregator'])

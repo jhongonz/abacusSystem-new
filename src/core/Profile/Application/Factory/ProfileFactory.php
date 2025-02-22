@@ -30,7 +30,8 @@ class ProfileFactory implements ProfileFactoryContract
          *     description: string|null,
          *     modulesAggregator: array<int<0, max>, int|null>,
          *     updatedAt: string|null,
-         *     createdAt: string|null
+         *     createdAt: string|null,
+         *     state: int|null
          * } $dataProfile
          */
         $dataProfile = $data[Profile::TYPE];
@@ -45,6 +46,10 @@ class ProfileFactory implements ProfileFactoryContract
         $profile->description()->setValue($description);
 
         $profile->setModulesAggregator($dataProfile['modulesAggregator']);
+
+        if (isset($dataProfile['state'])) {
+            $profile->state()->setValue($dataProfile['state']);
+        }
 
         if (isset($dataProfile['updatedAt'])) {
             $profile->updatedAt()->setValue($this->getDateTime($dataProfile['updatedAt']));

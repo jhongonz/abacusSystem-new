@@ -112,6 +112,7 @@ class RedisProfileRepository implements ChainPriority, ProfileRepositoryContract
 
         try {
             $profileData = $this->dataTransformer->write($profile)->read();
+
             Redis::set($profileKey, json_encode($profileData));
             Redis::set($profileKeyName, json_encode($profileData));
         } catch (\Exception $exception) {

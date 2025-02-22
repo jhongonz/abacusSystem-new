@@ -31,7 +31,7 @@ class CreateInstitutionOrchestrator extends InstitutionOrchestrator
     public function make(Request $request): array
     {
         $dataInstitution = [
-            'id' => $request->integer('institutionId'),
+            'id' => null,
             'name' => $request->input('name'),
             'code' => $request->input('code'),
             'shortname' => $request->input('shortname'),

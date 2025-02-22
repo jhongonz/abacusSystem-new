@@ -14,7 +14,6 @@ class ModuleIdTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->valueObject = new ModuleId();
     }
 
     public function tearDown(): void
@@ -25,8 +24,21 @@ class ModuleIdTest extends TestCase
 
     public function testValueShouldReturnNull(): void
     {
+        $this->valueObject = new ModuleId();
         $result = $this->valueObject->value();
+
         $this->assertNull($result);
+    }
+
+    public function testSetValueShouldReturnObject(): void
+    {
+        $this->valueObject = new ModuleId();
+
+        $this->valueObject->setValue(1);
+        $this->assertSame(1, $this->valueObject->value());
+
+        $this->valueObject->setValue(10);
+        $this->assertSame(10, $this->valueObject->value());
     }
 
     public function testValueShouldReturnInt(): void
@@ -38,12 +50,52 @@ class ModuleIdTest extends TestCase
         $this->assertSame(1, $result);
     }
 
-    public function testSetValueShouldReturnSelf(): void
+    public function testSetValueShouldReturnException(): void
     {
-        $result = $this->valueObject->setValue(2);
+        $this->valueObject = new ModuleId();
 
-        $this->assertInstanceOf(ModuleId::class, $result);
-        $this->assertSame($this->valueObject, $result);
-        $this->assertSame(2, $result->value());
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ModuleId> does not allow the value <0>.');
+
+        $this->valueObject->setValue(0);
+    }
+
+    public function testConstructValueShouldReturnException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ModuleId> does not allow the value <0>.');
+
+        $this->valueObject = new ModuleId(0);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testValidateMinRange(): void
+    {
+        $this->valueObject = new ModuleId();
+
+        $reflection = new \ReflectionClass(ModuleId::class);
+        $method = $reflection->getMethod('validate');
+        $this->assertTrue($method->isPrivate());
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('<Core\Profile\Domain\ValueObjects\ModuleId> does not allow the value <-1>.');
+
+        $method->invoke($this->valueObject, -1);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function testValidateAllowsValidValues(): void
+    {
+        $this->valueObject = new ModuleId();
+
+        $reflection = new \ReflectionClass(ModuleId::class);
+        $method = $reflection->getMethod('validate');
+        $this->assertTrue($method->isPrivate());
+
+        $method->invoke($this->valueObject, '2');
     }
 }

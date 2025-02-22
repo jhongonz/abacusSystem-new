@@ -22,9 +22,17 @@ class OrchestratorServiceProvider extends ServiceProvider implements DeferrableP
 
     /**
      * Register services.
+     *
+     * @throws BindingResolutionException
      */
     public function register(): void
     {
+        $configuration = $this->app->make(Configuration::class);
+
+        /** @var array<int, string> $orchestrators */
+        $orchestrators = $configuration->get('orchestrators');
+
+        $this->app->tag($orchestrators, 'orchestrators');
     }
 
     /**
@@ -34,18 +42,10 @@ class OrchestratorServiceProvider extends ServiceProvider implements DeferrableP
      */
     public function boot(): void
     {
-        $configuration = $this->app->make(Configuration::class);
-
-        /** @var array<int, string> $orchestrators */
-        $orchestrators = $configuration->get('orchestrators');
-
         $handler = $this->app->make(OrchestratorHandlerContract::class);
-        foreach ($orchestrators as $orchestrator) {
-            if (class_exists($orchestrator)) {
-                $handler->addOrchestrator($this->app->make($orchestrator));
-            } else {
-                throw new \InvalidArgumentException(sprintf('The orchestrator class %s does not exists.', $orchestrator));
-            }
+
+        foreach ($this->app->tagged('orchestrators') as $orchestrator) {
+            $handler->addOrchestrator($orchestrator);
         }
     }
 
