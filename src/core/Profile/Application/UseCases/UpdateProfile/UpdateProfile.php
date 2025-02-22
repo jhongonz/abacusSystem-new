@@ -23,6 +23,7 @@ class UpdateProfile extends UseCasesService
 
         /** @var UpdateProfileRequest $request */
         $profile = $this->profileRepository->find($request->profileId());
+
         foreach ($request->data() as $field => $value) {
             $methodName = $this->getFunctionName($field);
 

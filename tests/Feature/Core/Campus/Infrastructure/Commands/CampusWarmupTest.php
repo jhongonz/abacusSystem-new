@@ -22,7 +22,7 @@ class CampusWarmupTest extends TestCase
     private CampusFactoryContract|MockObject $campusFactory;
     private CampusRepositoryContract|MockObject $readRepository;
     private CampusRepositoryContract|MockObject $writeRepository;
-    private CampusWarmup $command;
+    private CampusWarmup|MockObject $command;
 
     /**
      * @throws Exception
@@ -34,12 +34,16 @@ class CampusWarmupTest extends TestCase
         $this->campusFactory = $this->createMock(CampusFactoryContract::class);
         $this->readRepository = $this->createMock(CampusRepositoryContract::class);
         $this->writeRepository = $this->createMock(CampusRepositoryContract::class);
-        $this->command = new CampusWarmup(
-            $this->logger,
-            $this->campusFactory,
-            $this->readRepository,
-            $this->writeRepository
-        );
+
+        $this->command = $this->getMockBuilder(CampusWarmup::class)
+            ->setConstructorArgs([
+                $this->logger,
+                $this->campusFactory,
+                $this->readRepository,
+                $this->writeRepository,
+            ])
+            ->onlyMethods(['info'])
+            ->getMock();
     }
 
     public function tearDown(): void
@@ -91,6 +95,10 @@ class CampusWarmupTest extends TestCase
             ->with($campusMock)
             ->willReturn($campusMock);
 
+        $this->command->expects(self::once())
+            ->method('info')
+            ->with('Campus command executed');
+
         $this->logger->expects(self::once())
             ->method('info')
             ->with('Campus command executed');
@@ -137,6 +145,9 @@ class CampusWarmupTest extends TestCase
         $this->logger->expects(self::once())
             ->method('error')
             ->with('Campus not found');
+
+        $this->command->expects(self::never())
+            ->method('info');
 
         $this->command->setInput($inputMock);
         $result = $this->command->handle();

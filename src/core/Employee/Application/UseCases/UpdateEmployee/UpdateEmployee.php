@@ -23,6 +23,7 @@ class UpdateEmployee extends UseCasesService
 
         /** @var UpdateEmployeeRequest $request */
         $employee = $this->employeeRepository->find($request->employeeId());
+
         foreach ($request->data() as $field => $value) {
             $methodName = $this->getFunctionName($field);
 

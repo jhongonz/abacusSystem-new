@@ -3,7 +3,6 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\ViewFactoryServiceProvider::class,
-    App\Providers\EventServiceProvider::class,
     App\Providers\Service\CampusServiceProvider::class,
     App\Providers\Service\ControllerServiceProvider::class,
     App\Providers\Service\EmployeeServiceProvider::class,

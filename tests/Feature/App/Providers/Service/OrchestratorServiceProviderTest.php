@@ -23,6 +23,7 @@ use Tests\TestCase;
 class OrchestratorServiceProviderTest extends TestCase
 {
     private Application|MockObject $application;
+    private Configuration|MockObject $configuration;
 
     /**
      * @throws Exception
@@ -31,11 +32,12 @@ class OrchestratorServiceProviderTest extends TestCase
     {
         parent::setUp();
         $this->application = $this->createMock(Application::class);
+        $this->configuration = $this->createMock(Configuration::class);
     }
 
     protected function tearDown(): void
     {
-        unset($this->application);
+        unset($this->application, $this->configuration);
         parent::tearDown();
     }
 
@@ -50,57 +52,56 @@ class OrchestratorServiceProviderTest extends TestCase
 
     /**
      * @throws BindingResolutionException
-     * @throws Exception
      */
-    public function testBootServiceProviderShouldInitializedCorrectly(): void
+    public function testRegisterShouldTaggedCorrectly(): void
     {
-        $orchestratorsMock = [
-            GetCampusCollectionOrchestrator::class,
+        $orchestratorExpected = [
+            'orchestratorOne',
+            'orchestratorTwo',
+            'orchestratorThree',
         ];
-        $orchestratorMock = $this->createMock(GetCampusCollectionOrchestrator::class);
 
-        $configurationMock = $this->createMock(Configuration::class);
-        $configurationMock->expects(self::once())
+        $this->configuration->expects(self::once())
             ->method('get')
             ->with('orchestrators')
-            ->willReturn($orchestratorsMock);
+            ->willReturn($orchestratorExpected);
 
-        $orchestratorHandler = $this->createMock(OrchestratorHandler::class);
+        $this->application->expects(self::once())
+            ->method('tag')
+            ->with($orchestratorExpected, 'orchestrators');
 
-        $this->application->expects(self::exactly(3))
+        $this->application->expects(self::once())
             ->method('make')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($configurationMock, $orchestratorHandler, $orchestratorMock);
+            ->with(Configuration::class)
+            ->willReturn($this->configuration);
 
         $serviceProvider = new OrchestratorServiceProvider($this->application);
-        $serviceProvider->boot();
+        $serviceProvider->register();
     }
 
     /**
      * @throws BindingResolutionException
      * @throws Exception
      */
-    public function testBootServiceProviderShouldReturnException(): void
+    public function testBootServiceProviderShouldInitializedCorrectly(): void
     {
-        $orchestratorsMock = [
-            'TestingClass',
-        ];
+        $orchestratorMock = $this->createMock(GetCampusCollectionOrchestrator::class);
 
-        $configurationMock = $this->createMock(Configuration::class);
-        $configurationMock->expects(self::once())
-            ->method('get')
+        $this->application->expects(self::once())
+            ->method('tagged')
             ->with('orchestrators')
-            ->willReturn($orchestratorsMock);
+            ->willReturn([$orchestratorMock]);
 
         $orchestratorHandler = $this->createMock(OrchestratorHandler::class);
+        $orchestratorHandler->expects(self::once())
+            ->method('addOrchestrator')
+            ->with($orchestratorMock)
+            ->willReturnSelf();
 
-        $this->application->expects(self::exactly(2))
+        $this->application->expects(self::once())
             ->method('make')
-            ->withAnyParameters()
-            ->willReturnOnConsecutiveCalls($configurationMock, $orchestratorHandler);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('The orchestrator class TestingClass does not exists.');
+            ->with(OrchestratorHandlerContract::class)
+            ->willReturn($orchestratorHandler);
 
         $serviceProvider = new OrchestratorServiceProvider($this->application);
         $serviceProvider->boot();
@@ -114,6 +115,7 @@ class OrchestratorServiceProviderTest extends TestCase
         $dataExpected = [
             OrchestratorHandlerContract::class,
         ];
+
         $this->assertIsArray($provides);
         $this->assertEquals($dataExpected, $provides);
     }

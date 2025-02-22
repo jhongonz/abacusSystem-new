@@ -75,10 +75,9 @@ class DetailCampusOrchestratorTest extends TestCase
             ->with('campusId')
             ->willReturn(0);
 
-        $this->campusManagementMock->expects(self::once())
+        $this->campusManagementMock->expects(self::never())
             ->method('searchCampusById')
-            ->with(0)
-            ->willReturn(null);
+            ->with(0);
 
         $result = $this->orchestrator->make($requestMock);
 

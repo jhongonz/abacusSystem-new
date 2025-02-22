@@ -22,4 +22,19 @@ return [
             'route' => 'localhost',
         ],*/
     ],
+
+    /*
+     * Privileges
+     */
+    'permission' => [
+        'read' => [
+            'name' => 'Lectura',
+        ],
+        'read-update' => [
+            'name' => 'Lectura y modificación',
+        ],
+        'read-update-create' => [
+            'name' => 'Lectura, modificación y creación',
+        ],
+    ],
 ];

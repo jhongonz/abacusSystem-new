@@ -12,7 +12,7 @@ use Core\Campus\Domain\CampusCollection;
 
 interface CampusManagementContract
 {
-    public function searchCampusById(int $id): ?Campus;
+    public function searchCampusById(?int $id): ?Campus;
 
     /**
      * @param array<string, mixed> $filters

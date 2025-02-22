@@ -49,7 +49,6 @@ class EmployeeWarmup extends Command
 
         try {
             $employee = $this->readRepository->find($employeeId);
-
             foreach ($this->repositories as $repository) {
                 if (!is_null($employee)) {
                     $repository->persistEmployee($employee);
@@ -61,6 +60,7 @@ class EmployeeWarmup extends Command
             return CommandSymfony::FAILURE;
         }
 
+        $this->info('Employee command executed');
         $this->logger->info('Employee command executed');
 
         return CommandSymfony::SUCCESS;

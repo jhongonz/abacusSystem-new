@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'database'),
+    'default' => env('QUEUE_CONNECTION', 'rabbitmq'),
 
     /*
     |--------------------------------------------------------------------------
@@ -68,6 +68,27 @@ return [
             'retry_after' => env('REDIS_QUEUE_RETRY_AFTER', 90),
             'block_for' => null,
             'after_commit' => false,
+        ],
+
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'hosts' => [
+                'host' => env('RABBITMQ_HOST', 'localhost'),
+                'port' => env('RABBITMQ_PORT', 5672),
+                'vhost' => env('RABBITMQ_VHOST', '/'),
+                'user' => env('RABBITMQ_USER', 'admin'),
+                'password' => env('RABBITMQ_PASS', 'qwerty'),
+            ],
+            'worker' => env('RABBITMQ_WORKER', 'default'),
+            'options' => [
+                'queue' => [
+                    'prioritize_delayed' => true,
+                    'queue_max_priority' => 10,
+                    'exchange_type' => 'topic',
+                    'exchange_routing_key' => '',
+                ],
+            ],
+            'queue' => 'warmupListener',
         ],
     ],
 
